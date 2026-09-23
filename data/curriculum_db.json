@@ -1,0 +1,515 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "updatedAt": "2026-09-23",
+    "description": "초등학교 교육과정 표준 진도표 데이터베이스 (교생 실습 및 수업 배당용)"
+  },
+  "grades": {
+    "1": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "바른 자세로 읽고 쓰기",
+                  "publisher": "국정",
+                  "totalUnitLessons": 8,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-13", "topic": "글을 읽을 때의 바른 자세 알기" },
+                    { "lesson": "2", "pages": "14-17", "topic": "글씨를 쓸 때의 바른 자세 알기" },
+                    { "lesson": "3~4", "pages": "18-23", "topic": "연필을 바르게 잡고 낱말 따라 쓰기", "isBlock": true },
+                    { "lesson": "5", "pages": "24-27", "topic": "낱말과 그림을 바르게 연결하기" },
+                    { "lesson": "6", "pages": "28-31", "topic": "바른 자세로 책을 읽는 연습하기" },
+                    { "lesson": "7~8", "pages": "32-37", "topic": "바른 자세 실천 계획 세우고 다짐하기", "isBlock": true }
+                  ]
+                },
+                {
+                  "unitNumber": 2,
+                  "unitTitle": "재미있는 낱말 놀이",
+                  "publisher": "국정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "38-41", "topic": "말놀이 동시 재미있게 읽기" },
+                    { "lesson": "2", "pages": "42-45", "topic": "소리와 모양이 어울리는 낱말 흉내 내기" },
+                    { "lesson": "3", "pages": "46-49", "topic": "흉내 내는 말을 넣어 문장 만들기" },
+                    { "lesson": "4~5", "pages": "50-55", "topic": "그림을 보고 흉내 내는 말 찾아 쓰기", "isBlock": true },
+                    { "lesson": "6", "pages": "56-59", "topic": "낱말 퀴즈 놀이하기" }
+                  ]
+                }
+              ]
+            },
+            "수학": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "9까지의 수",
+                  "publisher": "국정",
+                  "totalUnitLessons": 9,
+                  "lessons": [
+                    { "lesson": "1", "pages": "8-11", "topic": "1, 2, 3, 4, 5를 알아볼까요" },
+                    { "lesson": "2", "pages": "12-15", "topic": "1, 2, 3, 4, 5를 쓰고 읽어 볼까요" },
+                    { "lesson": "3", "pages": "16-19", "topic": "몇째인지 알아볼까요" },
+                    { "lesson": "4", "pages": "20-23", "topic": "6, 7, 8, 9를 알아볼까요" },
+                    { "lesson": "5", "pages": "24-27", "topic": "6, 7, 8, 9를 쓰고 읽어 볼까요" },
+                    { "lesson": "6", "pages": "28-31", "topic": "수의 순서를 알아볼까요" },
+                    { "lesson": "7", "pages": "32-35", "topic": "1 큰 수와 1 작은 수를 알아볼까요" },
+                    { "lesson": "8", "pages": "36-39", "topic": "어느 수가 더 클까요" },
+                    { "lesson": "9", "pages": "40-41", "topic": "얼마나 알고 있나요 및 문제 해결" }
+                  ]
+                }
+              ]
+            },
+            "봄": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "학교에 가면",
+                  "publisher": "국정",
+                  "totalUnitLessons": 24,
+                  "lessons": [
+                    { "lesson": "1", "pages": "8-11", "topic": "학교에 온 것을 축하해요" },
+                    { "lesson": "2", "pages": "12-13", "topic": "우리 교실 둘러보기" },
+                    { "lesson": "3", "pages": "14-15", "topic": "친구들과 반갑게 인사하기" },
+                    { "lesson": "4~5", "pages": "16-19", "topic": "내 짝꿍을 소개하는 그림 그리기", "isBlock": true },
+                    { "lesson": "6", "pages": "20-21", "topic": "화장실과 급식실 바르게 이용하기" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "2": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "시를 즐겨요",
+                  "publisher": "국정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "6-11", "topic": "시를 읽고 생각이나 느낌 나누기" },
+                    { "lesson": "2", "pages": "12-15", "topic": "장면을 떠올리며 시 낭송하기" },
+                    { "lesson": "3", "pages": "16-17", "topic": "인물의 마음을 상상하며 시 읽기" },
+                    { "lesson": "4", "pages": "18-21", "topic": "시의 일부분을 바꾸어 표현하기" },
+                    { "lesson": "5", "pages": "22-25", "topic": "마음을 나타내는 말 찾아보기" },
+                    { "lesson": "6", "pages": "26-29", "topic": "소리나 모양을 흉내 내는 말 알기" },
+                    { "lesson": "7~8", "pages": "30-35", "topic": "시를 읽고 떠오르는 생각 글이나 그림으로 표현하기", "isBlock": true },
+                    { "lesson": "9", "pages": "36-39", "topic": "알맞은 낱말을 골라 문장 완성하기" },
+                    { "lesson": "10", "pages": "40-41", "topic": "정리 학습 및 단원 평가" }
+                  ]
+                },
+                {
+                  "unitNumber": 5,
+                  "unitTitle": "마음을 전하는 글",
+                  "publisher": "국정",
+                  "totalUnitLessons": 15,
+                  "lessons": [
+                    { "lesson": "1", "pages": "112-115", "topic": "마음을 전한 경험 이야기하기" },
+                    { "lesson": "2", "pages": "116-117", "topic": "글을 쓴 사람의 마음 짐작하기" },
+                    { "lesson": "3", "pages": "118-120", "topic": "고마운 마음을 담은 편지글 읽기" },
+                    { "lesson": "4", "pages": "120-121", "topic": "마음을 전하는 글의 특징 알기" },
+                    { "lesson": "5", "pages": "121-122", "topic": "마음을 표현하는 방법 익히기" },
+                    { "lesson": "6", "pages": "123-127", "topic": "전하고 싶은 마음을 글로 쓰기" },
+                    { "lesson": "7~8", "pages": "128-133", "topic": "편지를 쓰고 주고받기", "isBlock": true }
+                  ]
+                }
+              ]
+            },
+            "수학": {
+              "units": [
+                {
+                  "unitNumber": 2,
+                  "unitTitle": "여러 가지 도형",
+                  "publisher": "국정",
+                  "totalUnitLessons": 9,
+                  "lessons": [
+                    { "lesson": "1", "pages": "32-35", "topic": "원(동그라미)을 알아볼까요" },
+                    { "lesson": "2", "pages": "36-39", "topic": "삼각형을 알아볼까요" },
+                    { "lesson": "3", "pages": "40-43", "topic": "사각형을 알아볼까요" },
+                    { "lesson": "4", "pages": "44-47", "topic": "칠교판으로 여러 가지 모양 만들기" },
+                    { "lesson": "5", "pages": "48-51", "topic": "쌓기나무로 여러 가지 모양 만들기" },
+                    { "lesson": "6", "pages": "52-55", "topic": "도형들의 같은 점과 다른 점 찾기" },
+                    { "lesson": "7", "pages": "56-57", "topic": "도형으로 패턴 꾸미기" },
+                    { "lesson": "8", "pages": "58-59", "topic": "얼마나 알고 있나요" },
+                    { "lesson": "9", "pages": "60-61", "topic": "수학으로 세상 보기" }
+                  ]
+                }
+              ]
+            },
+            "바생": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "알찬 하루, 건강한 생활",
+                  "publisher": "국정",
+                  "totalUnitLessons": 48,
+                  "lessons": [
+                    { "lesson": "20", "pages": "44-45", "topic": "규칙적인 생활 습관 기르기" },
+                    { "lesson": "21", "pages": "46-47", "topic": "스스로 정리정돈 실천하기" },
+                    { "lesson": "39", "pages": "74-75", "topic": "가족과 함께하는 바른 생활 습관" }
+                  ]
+                }
+              ]
+            },
+            "슬생": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "봄이 오면",
+                  "publisher": "국정",
+                  "totalUnitLessons": 48,
+                  "lessons": [
+                    { "lesson": "19", "pages": "42-43", "topic": "봄 날씨의 특징과 변화 관찰하기" },
+                    { "lesson": "41", "pages": "78-79", "topic": "봄 동식물의 성장 모습 조사하기" }
+                  ]
+                }
+              ]
+            },
+            "즐생": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "봄의 소리와 몸짓",
+                  "publisher": "국정",
+                  "totalUnitLessons": 48,
+                  "lessons": [
+                    { "lesson": "5", "pages": "22-23", "topic": "봄의 소리 탐색하고 표현하기" },
+                    { "lesson": "7", "pages": "24-25", "topic": "봄 노래에 맞춰 리듬 악기 연주하기" },
+                    { "lesson": "14", "pages": "34-35", "topic": "봄바람을 몸으로 표현하기" },
+                    { "lesson": "16", "pages": "36-37", "topic": "새싹의 자람을 몸으로 나타내기" },
+                    { "lesson": "32", "pages": "60-61", "topic": "봄 풍경 협동화 그리기" },
+                    { "lesson": "35", "pages": "68-69", "topic": "꽃과 곤충 가면 만들어 역할 놀이하기" },
+                    { "lesson": "38", "pages": "72-73", "topic": "즐거운 봄 축제 율동 발표회" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "3": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 6,
+                  "unitTitle": "알맞은 높임 표현",
+                  "publisher": "국정",
+                  "totalUnitLessons": 14,
+                  "lessons": [
+                    { "lesson": "2", "pages": "180-183", "topic": "높임 표현을 사용하는 경우 알기" },
+                    { "lesson": "3", "pages": "184-187", "topic": "높임 표현을 사용하는 방법 익히기" },
+                    { "lesson": "5", "pages": "188-197", "topic": "상황에 어울리는 높임 표현 사용하기" },
+                    { "lesson": "7", "pages": "198-200", "topic": "언어 예절을 지키며 대화하기" },
+                    { "lesson": "8", "pages": "201-205", "topic": "높임법을 바르게 사용하여 짧은 글 쓰기" },
+                    { "lesson": "10", "pages": "206-209", "topic": "대화 예절을 점검하고 실천 다짐하기" }
+                  ]
+                }
+              ]
+            },
+            "수학": {
+              "units": [
+                {
+                  "unitNumber": 4,
+                  "unitTitle": "나눗셈",
+                  "publisher": "검정(아이스크림/천재)",
+                  "totalUnitLessons": 12,
+                  "lessons": [
+                    { "lesson": "3", "pages": "84-87", "topic": "똑같이 나누어 주는 나눗셈 알아보기" },
+                    { "lesson": "4", "pages": "88-89", "topic": "곱셈과 나눗셈의 관계 알아보기" },
+                    { "lesson": "5", "pages": "90-91", "topic": "나눗셈의 몫을 곱셈구구로 구하기 (1)" },
+                    { "lesson": "6", "pages": "92-93", "topic": "나눗셈의 몫을 곱셈구구로 구하기 (2)" },
+                    { "lesson": "7", "pages": "94-95", "topic": "실생활에서 나눗셈 문제 해결하기" },
+                    { "lesson": "8", "pages": "96-97", "topic": "놀이와 탐구 활동으로 나눗셈 복습하기" }
+                  ]
+                },
+                {
+                  "unitNumber": 5,
+                  "unitTitle": "길이와 시간",
+                  "publisher": "검정(아이스크림/천재)",
+                  "totalUnitLessons": 4,
+                  "lessons": [
+                    { "lesson": "4", "pages": "112-115", "topic": "1초 단위 시간의 덧셈과 뺄셈 알아보기" }
+                  ]
+                }
+              ]
+            },
+            "사회": {
+              "units": [
+                {
+                  "unitNumber": 2,
+                  "unitTitle": "우리가 알아보는 고장 이야기",
+                  "publisher": "검정(비상/천재)",
+                  "totalUnitLessons": 17,
+                  "lessons": [
+                    { "lesson": "10", "pages": "84-88", "topic": "우리 고장의 지명 유래 조사하기" },
+                    { "lesson": "12", "pages": "89-94", "topic": "고장의 옛이야기와 전설 탐구하기" },
+                    { "lesson": "14", "pages": "95-96", "topic": "우리 고장의 문화유산 지도 만들기" },
+                    { "lesson": "15", "pages": "97-101", "topic": "문화유산을 지키고 보존하는 방법" },
+                    { "lesson": "17", "pages": "102-105", "topic": "우리 고장 자랑거리 소개 발표회" }
+                  ]
+                }
+              ]
+            },
+            "과학": {
+              "units": [
+                {
+                  "unitNumber": 3,
+                  "unitTitle": "동물의 한살이",
+                  "publisher": "검정(아이스크림/비상)",
+                  "totalUnitLessons": 13,
+                  "lessons": [
+                    { "lesson": "2", "pages": "62-63", "topic": "배추흰나비 알과 애벌레 관찰하기" },
+                    { "lesson": "3", "pages": "64-65", "topic": "배추흰나비 번데기와 어른벌레 모습 알기" },
+                    { "lesson": "4", "pages": "66-67", "topic": "곤충의 한살이 과정 비교하기" },
+                    { "lesson": "7", "pages": "72-73", "topic": "새와 동물의 한살이 특징 정리하기" }
+                  ]
+                },
+                {
+                  "unitNumber": 4,
+                  "unitTitle": "물체의 무게",
+                  "publisher": "검정(아이스크림/비상)",
+                  "totalUnitLessons": 12,
+                  "lessons": [
+                    { "lesson": "2", "pages": "82-83", "topic": "용수철저울로 물체의 무게 측정하기" },
+                    { "lesson": "5", "pages": "68-69", "topic": "수평 잡기로 무게 비교하기" },
+                    { "lesson": "6", "pages": "70-71", "topic": "나만의 저울 만들기" }
+                  ]
+                }
+              ]
+            },
+            "도덕": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "스스로 바르게",
+                  "publisher": "국정",
+                  "totalUnitLessons": 14,
+                  "lessons": [
+                    { "lesson": "2", "pages": "2/14", "topic": "자주적인 생활 태도 기르기" }
+                  ]
+                },
+                {
+                  "unitNumber": 4,
+                  "unitTitle": "아껴 쓰는 우리",
+                  "publisher": "국정",
+                  "totalUnitLessons": 4,
+                  "lessons": [
+                    { "lesson": "1", "pages": "116-119", "topic": "물건을 소중히 다루는 마음 갖기" },
+                    { "lesson": "2", "pages": "120-123", "topic": "환경을 보호하며 절약 생활 실천하기" },
+                    { "lesson": "3", "pages": "108-111", "topic": "현명한 소비 계획 세우기" }
+                  ]
+                }
+              ]
+            },
+            "음악": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "노래와 장단 속으로",
+                  "publisher": "검정(동아/미래엔)",
+                  "totalUnitLessons": 4,
+                  "lessons": [
+                    { "lesson": "1", "pages": "102-103", "topic": "봄바람 솔솔 노래 부르기" },
+                    { "lesson": "1", "pages": "72", "topic": "신체 악기로 리듬 표현하기" },
+                    { "lesson": "1", "pages": "64-65", "topic": "국악 민요 자진모리 장단 치기" },
+                    { "lesson": "2", "pages": "73", "topic": "리코더 바른 운지법과 소리 내기" },
+                    { "lesson": "1", "pages": "68-69", "topic": "음악 듣고 그림으로 표현하기" },
+                    { "lesson": "1", "pages": "74-75", "topic": "돌림노래 합창하기" }
+                  ]
+                }
+              ]
+            },
+            "미술": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "마음을 담은 시각 표현",
+                  "publisher": "검정(천재/교학)",
+                  "totalUnitLessons": 4,
+                  "lessons": [
+                    { "lesson": "1", "pages": "68-69", "topic": "여러 가지 색의 느낌과 배색" },
+                    { "lesson": "3", "pages": "70", "topic": "자연물 프로타주 기법 체험" },
+                    { "lesson": "4", "pages": "71", "topic": "종이 콜라주로 표현하는 풍경" },
+                    { "lesson": "1", "pages": "72-73", "topic": "찰흙으로 입체 동물 만들기" },
+                    { "lesson": "3", "pages": "74", "topic": "재활용품을 활용한 조형물 제작" }
+                  ]
+                }
+              ]
+            },
+            "체육": {
+              "units": [
+                {
+                  "unitNumber": 2,
+                  "unitTitle": "신나는 도전과 운동",
+                  "publisher": "검정(동아/천재)",
+                  "totalUnitLessons": 11,
+                  "lessons": [
+                    { "lesson": "1", "pages": "114-115", "topic": "기초 체력 기르기(스트레칭과 줄넘기)" },
+                    { "lesson": "2", "pages": "116-117", "topic": "달리기와 순발력 기르기 놀이" },
+                    { "lesson": "4", "pages": "118-119", "topic": "뜀틀 넘기의 기본 동작 익히기" },
+                    { "lesson": "6", "pages": "120-121", "topic": "매트 구르기(앞구르기/뒤구르기)" },
+                    { "lesson": "8", "pages": "122-123", "topic": "이어달리기와 협동 규칙 지키기" }
+                  ]
+                }
+              ]
+            },
+            "영어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "Hello! I'm Mina",
+                  "publisher": "검정(대교/YBM)",
+                  "totalUnitLessons": 4,
+                  "lessons": [
+                    { "lesson": "1", "pages": "98-99", "topic": "인사하고 자기 이름 소개하기" },
+                    { "lesson": "2", "pages": "100-101", "topic": "알파벳 대문자 A~G 소리 익히기" },
+                    { "lesson": "3", "pages": "102-103", "topic": "짝과 함께 인사 챈트 부르기" },
+                    { "lesson": "4", "pages": "104-105", "topic": "스스로 점검하고 문화 알아보기" },
+                    { "lesson": "1", "pages": "108-109", "topic": "What's this? 사물 묻고 답하기" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "4": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "생각과 느낌을 나누어요",
+                  "publisher": "국정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-15", "topic": "시나 이야기를 읽고 생각 나누기" },
+                    { "lesson": "2~3", "pages": "16-21", "topic": "인물의 마음에 공감하며 이야기 읽기", "isBlock": true },
+                    { "lesson": "4", "pages": "22-25", "topic": "경험을 떠올려 독서 감상문 쓰기" }
+                  ]
+                }
+              ]
+            },
+            "수학": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "큰 수",
+                  "publisher": "검정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "8-11", "topic": "만(10000)을 알아볼까요" },
+                    { "lesson": "2", "pages": "12-15", "topic": "다섯 자리 수를 알아볼까요" },
+                    { "lesson": "3", "pages": "16-19", "topic": "십만, 백만, 천만을 알아볼까요" },
+                    { "lesson": "4", "pages": "20-23", "topic": "억과 조를 알아볼까요" }
+                  ]
+                }
+              ]
+            },
+            "과학": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "지층과 화석",
+                  "publisher": "검정",
+                  "totalUnitLessons": 11,
+                  "lessons": [
+                    { "lesson": "1", "pages": "24-27", "topic": "여러 가지 지층을 관찰해 볼까요" },
+                    { "lesson": "2", "pages": "28-31", "topic": "지층은 어떻게 만들어질까요" },
+                    { "lesson": "3", "pages": "32-35", "topic": "화석은 어떻게 만들어질까요" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "5": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "대화와 공감",
+                  "publisher": "국정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-15", "topic": "상대방을 배려하며 대화하는 방법 알기" },
+                    { "lesson": "2~3", "pages": "16-21", "topic": "공감하며 대화하는 태도 실천하기", "isBlock": true }
+                  ]
+                }
+              ]
+            },
+            "실과": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "나의 균형 잡힌 식생활",
+                  "publisher": "검정",
+                  "totalUnitLessons": 8,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-13", "topic": "식품구성자전거와 6대 영양소 알아보기" },
+                    { "lesson": "2", "pages": "14-17", "topic": "건강한 하루 식단 계획하기" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    },
+    "6": {
+      "semesters": {
+        "1": {
+          "subjects": {
+            "국어": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "비유적 표현",
+                  "publisher": "국정",
+                  "totalUnitLessons": 10,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-15", "topic": "비유적 표현의 특징과 효과 알아보기" },
+                    { "lesson": "2~3", "pages": "16-21", "topic": "비유하는 표현을 생각하며 시 읽기", "isBlock": true }
+                  ]
+                }
+              ]
+            },
+            "사회": {
+              "units": [
+                {
+                  "unitNumber": 1,
+                  "unitTitle": "우리나라의 정치 발전",
+                  "publisher": "검정",
+                  "totalUnitLessons": 16,
+                  "lessons": [
+                    { "lesson": "1", "pages": "10-13", "topic": "4·19 혁명과 민주주의 발전 과정" },
+                    { "lesson": "2", "pages": "14-17", "topic": "5·18 민주화 운동 알아보기" }
+                  ]
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}
