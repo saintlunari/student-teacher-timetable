@@ -25,7 +25,7 @@
     <div class="grid grid-cols-3 gap-4 text-center">
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">총 테스트 케이스</span>
-        <div id="total-tests" class="text-2xl font-black text-white mt-1">9</div>
+        <div id="total-tests" class="text-2xl font-black text-white mt-1">7</div>
       </div>
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">성공 (Passed)</span>
@@ -265,68 +265,42 @@
       },
       {
         id: 'tc9',
-        title: '[신규 기능] 초등 표준 교육과정 DB 조회 및 교과 진도표(Step 2) 자동 적재 무결성 테스트',
-        desc: '1~6학년 교육과정 DB에서 특정 학년·학기·교과·단원의 차시 데이터를 필터링하고 진도표 적재 및 자동 배당 솔버 연동 검증',
+        title: '[신규 기능] 2학년 국어·수학 표준 교과 DB(총 361차시) 탑재 및 일괄 추출 무결성 테스트',
+        desc: '2학년 1·2학기 국어/수학 전 단원 데이터베이스 탑재, 필터링 및 진도표 원클릭 임포트 동작 검증',
         run: () => {
-          App.initCleanDefault();
-          App.initCurriculumDb();
-
-          // 1. 교육과정 DB 로드 검증 (1~6학년 존재 여부)
-          const db = App.curriculumDbData;
-          if (!db || !db.grades || !db.grades['2'] || !db.grades['3']) {
-            return { pass: false, message: '교육과정 DB(1~6학년) 로드 실패' };
+          const db = App.getCurriculumDb ? App.getCurriculumDb() : window.CURRICULUM_DB_GRADE2 || (frame = document.getElementById('app-frame'), frame.contentWindow.CURRICULUM_DB_GRADE2);
+          if (!db) {
+            return { pass: false, message: 'CURRICULUM_DB_GRADE2 데이터베이스 객체를 찾을 수 없음' };
           }
 
-          // 2. 2학년 1학기 국어 1단원 차시 데이터 조회
-          const grade2Sem1 = db.grades['2'].semesters['1'];
-          const korUnit1 = grade2Sem1.subjects['국어'].units[0]; // 1단원. 시를 즐겨요
-          if (!korUnit1 || korUnit1.lessons.length < 3) {
-            return { pass: false, message: '2학년 1학기 국어 1단원 차시 데이터 누락' };
-          }
+          const k1Count = (db.grade2_korean_1 || []).length;
+          const k2Count = (db.grade2_korean_2 || []).length;
+          const m1Count = (db.grade2_math_1 || []).length;
+          const m2Count = (db.grade2_math_2 || []).length;
+          const totalCount = k1Count + k2Count + m1Count + m2Count;
 
-          // 3. 해당 단원의 차시들을 진도표(App.curriculum)에 가상 적재
-          const initialLen = App.curriculum.length;
-          korUnit1.lessons.slice(0, 3).forEach(l => {
-            App.curriculum.push({
-              id: 'c_test_' + l.lesson,
-              subject: '국어',
-              pages: l.pages,
-              lesson: l.lesson,
-              totalLesson: korUnit1.totalUnitLessons,
-              topic: l.topic,
-              isDemo: false,
-              designatedTeacher: ''
-            });
-          });
+          const countsValid = (k1Count === 118 && k2Count === 117 && m1Count === 64 && m2Count === 62 && totalCount === 361);
 
-          const loadedSuccess = App.curriculum.length === initialLen + 3;
-          const sampleItem = App.curriculum.find(c => c.id === 'c_test_1');
-          const schemaIntegrity = sampleItem && sampleItem.subject === '국어' && sampleItem.pages === '6-11' && sampleItem.totalLesson === 10;
+          // 2. 모달 임포트 기능 검증
+          App.setCurriculumDbSemester('1학기');
+          App.setCurriculumDbSubject('수학');
+          App.onCurriculumDbUnitChange('1. 세 자리 수');
+          App.toggleAllCurriculumDb(true);
+          const selCount = App.curriculumDbState.selectedIndices.size;
 
-          // 4. 프리셋 로드 후 자동 배당 솔버 실행 연동 테스트
-          App.loadPreset('grade2', false);
-          // DB 차시 1개 추가 주입
-          App.curriculum.push({
-            id: 'c_db_injected',
-            subject: '바생',
-            pages: '80-81',
-            lesson: '40',
-            totalLesson: 48,
-            topic: '스스로 실천하기',
-            isDemo: false,
-            designatedTeacher: ''
-          });
+          // 진도표에 임포트
+          const prevLen = App.curriculum.length;
+          App.importSelectedCurriculumDb(false);
 
-          App.runAutoAllocation(false);
-          const allocatedCell = Object.values(App.timetable).find(c => c && c.curriculumId === 'c_db_injected');
-          const solverPass = !!allocatedCell && allocatedCell.subject === '바생' && !!allocatedCell.teacher;
+          const newLen = App.curriculum.length;
+          const importSuccess = (newLen === prevLen + selCount) && (selCount === 9);
 
-          const pass = loadedSuccess && schemaIntegrity && solverPass;
+          const pass = countsValid && importSuccess;
           return {
             pass,
             message: pass
-              ? `1~6학년 표준 DB 로드 성공, 2학년 국어 1단원 차시 적재 무결성 만족, 솔버 시간표 자동 배당 정상 연동 완료`
-              : `검증 실패 (loaded: ${loadedSuccess}, schema: ${schemaIntegrity}, solver: ${solverPass})`
+              ? `2학년 1·2학기 국어·수학 361차시 완벽 탑재(2-1국:118, 2-2국:117, 2-1수:64, 2-2수:62) 및 '1. 세 자리 수'(9차시) 진도표 임포트 100% 성공`
+              : `DB 검증 실패 (k1:${k1Count}, k2:${k2Count}, m1:${m1Count}, m2:${m2Count}, total:${totalCount}, import:${importSuccess})`
           };
         }
       }
@@ -391,6 +365,10 @@
         if (frame && frame.contentWindow && frame.contentWindow.App) {
           App = frame.contentWindow.App;
           window.App = App;
+          frame.contentWindow.alert = () => {};
+          frame.contentWindow.confirm = () => true;
+          window.alert = () => {};
+          window.confirm = () => true;
           runnerStarted = true;
           runAllTests();
           return;

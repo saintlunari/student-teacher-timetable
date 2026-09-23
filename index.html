@@ -208,7 +208,7 @@
           <div class="space-y-3">
             <div>
               <label class="block text-xs font-medium text-slate-600 mb-1">배당표 제목</label>
-              <input type="text" id="cfg-title" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="교육실습Ⅲ, Ⅳ (수업, 종합) 교육 실습생 수업배당표(0학년)">
+              <input type="text" id="cfg-title" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="교육실습IV(종합) 교육 실습생 수업배당표(0학년)">
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div>
@@ -280,7 +280,7 @@
           <div class="bg-indigo-50/50 p-3 rounded-xl border border-indigo-100/80 text-xs text-indigo-900 flex items-start gap-2">
             <i data-lucide="info" class="w-4 h-4 text-indigo-600 mt-0.5 shrink-0"></i>
             <div>
-              <strong>배당 최적화 & 레이더 지표:</strong> 실습생의 전공 심화 교과가 우선 배려되며, 전공 일치도와 교과군(인문, 수리과학, 예체능 등) 시수 밸런스가 레이더 차트에 자동 반영됩니다.
+              <strong>배당 최적화 & 레이더 지표:</strong> 실습생의 전공 심화 교과가 우선 배려되며, 전공 일치도와 4대 교과군(인문, 수리과학, 예체능, 생활통합) 시수 밸런스가 레이더 차트에 자동 반영됩니다.
             </div>
           </div>
         </div>
@@ -306,8 +306,8 @@
           </div>
 
           <div class="flex items-center gap-2">
-            <button onclick="App.openCurriculumDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg transition border border-sky-200 shadow-sm">
-              <i data-lucide="library" class="w-3.5 h-3.5 text-sky-600"></i> 표준 교육과정 차시 불러오기
+            <button onclick="App.openCurriculumDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition shadow-sm">
+              <i data-lucide="database" class="w-3.5 h-3.5"></i> 📚 2학년 교과 DB 불러오기
             </button>
             <button onclick="App.openCurriculumBatchModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
               <i data-lucide="clipboard-paste" class="w-3.5 h-3.5 text-emerald-600"></i> 표 붙여넣기(일괄등록)
@@ -818,168 +818,6 @@
   </main>
 
   <!-- ========================================================= -->
-  <!-- MODAL: 초등 표준 교육과정 차시 불러오기 모달 -->
-  <!-- ========================================================= -->
-  <div id="modal-curriculum-db" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
-      <!-- Header -->
-      <div class="flex items-center justify-between pb-3 border-b border-slate-100 flex-shrink-0">
-        <div class="flex items-center gap-2">
-          <div class="p-2 rounded-xl bg-sky-50 text-sky-600">
-            <i data-lucide="library" class="w-5 h-5"></i>
-          </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-              초등 교육과정 표준 차시 불러오기
-              <span class="text-[10px] px-2 py-0.5 rounded-full bg-sky-100 text-sky-700 font-bold">2022/2015 개정</span>
-            </h3>
-            <p class="text-xs text-slate-500 mt-0.5">학년·교과·단원을 선택하여 표준 교과서 차시를 진도표(Step 2)에 즉시 등록합니다.</p>
-          </div>
-        </div>
-        <button onclick="App.closeCurriculumDbModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg">
-          <i data-lucide="x" class="w-5 h-5"></i>
-        </button>
-      </div>
-
-      <!-- Navigation Tabs (DB / Excel) -->
-      <div class="flex items-center gap-2 border-b border-slate-100 pb-2 flex-shrink-0">
-        <button id="curriculum-db-tab-btn-db" onclick="App.switchCurriculumDbTab('db')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-100 text-sky-800 flex items-center gap-1.5 transition">
-          <i data-lucide="search" class="w-3.5 h-3.5"></i> 표준 교육과정 DB 검색
-        </button>
-        <button id="curriculum-db-tab-btn-excel" onclick="App.switchCurriculumDbTab('excel')" class="px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1.5 transition">
-          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-emerald-600"></i> 내 엑셀(.xlsx) 진도표 올리기
-        </button>
-      </div>
-
-      <!-- TAB 1: DB SEARCH -->
-      <div id="curriculum-db-tab-db" class="space-y-4 flex-1 overflow-y-auto">
-        <!-- Filter Controls -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 p-3.5 bg-slate-50 rounded-xl border border-slate-200/80">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">학년</label>
-            <select id="curriculum-db-grade" onchange="App.onCurriculumDbGradeChange(this.value)" class="w-full text-xs px-2.5 py-1.5 border rounded-lg bg-white font-semibold text-slate-800 shadow-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <option value="1">1학년</option>
-              <option value="2" selected>2학년</option>
-              <option value="3">3학년</option>
-              <option value="4">4학년</option>
-              <option value="5">5학년</option>
-              <option value="6">6학년</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">학기</label>
-            <select id="curriculum-db-semester" onchange="App.onCurriculumDbSemesterChange(this.value)" class="w-full text-xs px-2.5 py-1.5 border rounded-lg bg-white font-semibold text-slate-800 shadow-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <option value="1" selected>1학기</option>
-              <option value="2">2학기</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">교과목</label>
-            <select id="curriculum-db-subject" onchange="App.onCurriculumDbSubjectChange(this.value)" class="w-full text-xs px-2.5 py-1.5 border rounded-lg bg-white font-semibold text-slate-800 shadow-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <!-- Dynamically populated -->
-            </select>
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">단원</label>
-            <select id="curriculum-db-unit" onchange="App.onCurriculumDbUnitChange(this.value)" class="w-full text-xs px-2.5 py-1.5 border rounded-lg bg-white font-semibold text-slate-800 shadow-sm focus:ring-2 focus:ring-sky-500 focus:outline-none">
-              <!-- Dynamically populated -->
-            </select>
-          </div>
-        </div>
-
-        <!-- Unit Meta Info Banner -->
-        <div id="curriculum-db-unit-info" class="flex flex-wrap items-center justify-between gap-2 px-3.5 py-2 bg-sky-50/60 rounded-xl border border-sky-100 text-xs">
-          <div class="flex items-center gap-2 text-sky-900 font-semibold">
-            <span id="curriculum-db-unit-title-display">단원 정보</span>
-            <span id="curriculum-db-unit-publisher-display" class="px-2 py-0.5 rounded-full bg-white text-sky-700 text-[10px] border border-sky-200">국정</span>
-            <span id="curriculum-db-unit-total-display" class="text-slate-500 text-[11px]">총 0차시</span>
-          </div>
-          <button type="button" onclick="App.importEntireDbUnit()" class="px-3 py-1 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-lg shadow-sm transition flex items-center gap-1">
-            <i data-lucide="check-check" class="w-3.5 h-3.5"></i> 단원 전체 차시 일괄 추가
-          </button>
-        </div>
-
-        <!-- Lessons Table with Checkboxes -->
-        <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-          <div class="max-h-[280px] overflow-y-auto">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-slate-100/80 text-slate-600 font-semibold sticky top-0 border-b border-slate-200 z-10">
-                <tr>
-                  <th class="py-2.5 px-3 w-10 text-center">
-                    <input type="checkbox" id="curriculum-db-check-all" onchange="App.toggleSelectAllDbLessons(this.checked)" class="w-4 h-4 text-sky-600 rounded focus:ring-sky-500 cursor-pointer">
-                  </th>
-                  <th class="py-2.5 px-3 w-20 text-center">차시</th>
-                  <th class="py-2.5 px-3 w-28 text-center">교과서 쪽수</th>
-                  <th class="py-2.5 px-3">학습 주제 및 활동 내용</th>
-                  <th class="py-2.5 px-3 w-16 text-center">비고</th>
-                </tr>
-              </thead>
-              <tbody id="curriculum-db-lessons-body" class="divide-y divide-slate-100 bg-white">
-                <!-- Javascript rendered rows -->
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- TAB 2: EXCEL IMPORT -->
-      <div id="curriculum-db-tab-excel" class="hidden space-y-4 flex-1 overflow-y-auto">
-        <div class="p-6 border-2 border-dashed border-slate-300 hover:border-emerald-500 rounded-2xl bg-slate-50 text-center space-y-3 transition cursor-pointer" onclick="document.getElementById('curriculum-excel-input').click()" ondragover="event.preventDefault()" ondrop="App.handleCurriculumExcelDrop(event)">
-          <input type="file" id="curriculum-excel-input" accept=".xlsx, .xls" class="hidden" onchange="App.handleCurriculumExcelFile(this.files[0])">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto">
-            <i data-lucide="upload-cloud" class="w-6 h-6"></i>
-          </div>
-          <div>
-            <h4 class="text-sm font-bold text-slate-800">학교 교육과정 진도표 엑셀(.xlsx) 파일 업로드</h4>
-            <p class="text-xs text-slate-500 mt-1">파일을 여기로 드래그하거나 클릭하여 선택하세요.</p>
-          </div>
-          <div class="inline-block px-3 py-1 bg-white border border-slate-200 rounded-lg text-[11px] text-slate-600 font-mono">
-            인식 가능한 열: [교과], [쪽수], [차시], [총차시], [주제]
-          </div>
-        </div>
-
-        <div id="curriculum-excel-preview-box" class="hidden space-y-2">
-          <div class="flex items-center justify-between text-xs">
-            <span class="font-bold text-slate-700 flex items-center gap-1.5">
-              <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-              파싱 결과: <strong id="curriculum-excel-parsed-count" class="text-emerald-700">0</strong>개 차시 감지됨
-            </span>
-          </div>
-          <div class="max-h-[220px] overflow-y-auto border rounded-xl">
-            <table class="w-full text-xs text-left">
-              <thead class="bg-slate-50 text-slate-500 border-b">
-                <tr>
-                  <th class="py-2 px-3">교과</th>
-                  <th class="py-2 px-3">쪽수</th>
-                  <th class="py-2 px-3 text-center">차시</th>
-                  <th class="py-2 px-3 text-center">총차시</th>
-                  <th class="py-2 px-3">주제</th>
-                </tr>
-              </thead>
-              <tbody id="curriculum-excel-preview-body" class="divide-y divide-slate-100"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Footer Buttons -->
-      <div class="flex items-center justify-between pt-3 border-t border-slate-100 flex-shrink-0">
-        <div class="text-xs text-slate-500">
-          <span id="curriculum-db-selection-summary">선택된 차시: 0개</span>
-        </div>
-        <div class="flex items-center gap-2">
-          <button type="button" onclick="App.closeCurriculumDbModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition">
-            닫기
-          </button>
-          <button id="curriculum-db-submit-btn" type="button" onclick="App.importSelectedDbLessons()" class="px-5 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-xl shadow-md transition flex items-center gap-1.5">
-            <i data-lucide="plus-circle" class="w-4 h-4"></i> 선택한 차시 진도표에 추가
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ========================================================= -->
   <!-- MODAL: 교과 진도표 엑셀/표 일괄 붙여넣기 모달 -->
   <!-- ========================================================= -->
   <div id="modal-curriculum-batch" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -1000,6 +838,115 @@
       <div class="flex justify-end gap-2">
         <button onclick="App.closeCurriculumBatchModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
         <button onclick="App.applyCurriculumBatch()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg">등록하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 2학년 표준 교과 진도표 DB 불러오기 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-curriculum-db" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-4xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-xl bg-amber-100 text-amber-700">
+            <i data-lucide="database" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 flex items-center gap-2">
+              <span>2학년 표준 교과 진도표 데이터베이스</span>
+              <span id="curriculum-db-total-badge" class="text-xs px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold border border-amber-200">총 361차시 탑재</span>
+            </h3>
+            <p class="text-xs text-slate-500">2학년 1·2학기 국어 및 수학 전 단원 차시를 검색하여 진도표에 즉시 추가할 수 있습니다.</p>
+          </div>
+        </div>
+        <button onclick="App.closeCurriculumDbModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Controls: 학기 / 교과 / 단원 / 검색어 -->
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-2.5">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <!-- 학기 & 과목 선택 버튼군 -->
+          <div class="flex items-center gap-2 text-xs">
+            <span class="font-bold text-slate-700">학기:</span>
+            <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5" id="db-semester-tabs">
+              <button type="button" onclick="App.setCurriculumDbSemester('1학기')" id="db-sem-1" class="px-3 py-1 rounded-md font-bold text-sky-700 bg-sky-100 shadow-xs">1학기</button>
+              <button type="button" onclick="App.setCurriculumDbSemester('2학기')" id="db-sem-2" class="px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">2학기</button>
+            </div>
+
+            <div class="h-4 w-px bg-slate-200 mx-1"></div>
+
+            <span class="font-bold text-slate-700">교과:</span>
+            <div class="inline-flex rounded-lg border border-slate-200 bg-white p-0.5" id="db-subject-tabs">
+              <button type="button" onclick="App.setCurriculumDbSubject('국어')" id="db-sub-kor" class="px-3 py-1 rounded-md font-bold text-indigo-700 bg-indigo-100 shadow-xs">국어</button>
+              <button type="button" onclick="App.setCurriculumDbSubject('수학')" id="db-sub-math" class="px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900">수학</button>
+            </div>
+          </div>
+
+          <!-- 일괄 선택 액션 버튼군 -->
+          <div class="flex items-center gap-1.5 text-xs">
+            <button type="button" onclick="App.toggleAllCurriculumDb(true)" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-slate-700 font-semibold transition">
+              전체 선택
+            </button>
+            <button type="button" onclick="App.toggleAllCurriculumDb(false)" class="px-2.5 py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg text-slate-700 font-medium transition">
+              선택 해제
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <div>
+            <select id="db-unit-select" onchange="App.onCurriculumDbUnitChange(this.value)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg bg-white font-medium text-slate-800">
+              <option value="">(전체 단원 보기)</option>
+            </select>
+          </div>
+          <div class="relative">
+            <input type="text" id="db-search-input" oninput="App.onCurriculumDbSearch(this.value)" placeholder="학습내용 또는 쪽수 검색 (예: 덧셈, 6~9)..." class="w-full px-3 py-1.5 pl-8 border border-slate-300 rounded-lg bg-white text-xs">
+            <i data-lucide="search" class="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table View (Scrollable) -->
+      <div class="overflow-y-auto border border-slate-200 rounded-xl flex-1 max-h-[420px]">
+        <table class="w-full text-xs text-left">
+          <thead class="text-slate-600 bg-slate-100 border-b border-slate-200 sticky top-0 z-10 font-bold">
+            <tr>
+              <th class="py-2 px-3 w-10 text-center">선택</th>
+              <th class="py-2 px-2.5 w-12 text-center">순번</th>
+              <th class="py-2 px-3 w-40">단원</th>
+              <th class="py-2 px-3">학습내용</th>
+              <th class="py-2 px-2.5 w-20 text-center">차시</th>
+              <th class="py-2 px-2.5 w-24 text-center">쪽수</th>
+            </tr>
+          </thead>
+          <tbody id="curriculum-db-tbody" class="divide-y divide-slate-100 font-mono">
+            <!-- JS rendered rows -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Actions -->
+      <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200 text-xs">
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-slate-700">선택된 차시:</span>
+          <span id="curriculum-db-selected-count" class="font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">0개</span>
+          <label class="flex items-center gap-1.5 text-slate-600 ml-2 cursor-pointer">
+            <input type="checkbox" id="db-replace-mode" class="rounded text-amber-600 focus:ring-amber-500">
+            <span>기존 진도표 지우고 새로 채우기</span>
+          </label>
+        </div>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="App.closeCurriculumDbModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition">
+            취소
+          </button>
+          <button type="button" onclick="App.importSelectedCurriculumDb()" class="px-5 py-2 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <i data-lucide="download" class="w-4 h-4"></i> 진도표에 추가하기
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1275,520 +1222,11 @@
 
   <!-- JAVASCRIPT LOGIC ENGINE -->
   <script>
+    // --- 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 361차시) ---
+    var CURRICULUM_DB_GRADE2 = window.CURRICULUM_DB_GRADE2 = {"grade2_korean_1": [{"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "6~9"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "6~9"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "말차례 알아보기", "lesson": "3", "totalLesson": 14, "pages": "10~11"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -1-", "lesson": "4", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -2-", "lesson": "5", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -3-", "lesson": "6", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "소개할 내용 정리하기 -1-", "lesson": "7", "totalLesson": 14, "pages": "28~31"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "소개할 내용 정리하기 -2-", "lesson": "8", "totalLesson": 14, "pages": "28~31"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "자신을 소개하는 글 쓰기 -1-", "lesson": "9", "totalLesson": 14, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "자신을 소개하는 글 쓰기 -2-", "lesson": "10", "totalLesson": 14, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "36~37"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "36~37"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "38~41"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "38~41"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "42~45"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "42~45"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -3-", "lesson": "5", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "주변에서 여러 낱말을 찾아 이야기 만들기 -1-", "lesson": "6", "totalLesson": 15, "pages": "52~55"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "주변에서 여러 낱말을 찾아 이야기 만들기 -2-", "lesson": "7", "totalLesson": 15, "pages": "52~55"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "글을 읽고 자신의 생각이나 느낌 표현하기 -1-", "lesson": "8", "totalLesson": 15, "pages": "56~63"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "글을 읽고 자신의 생각이나 느낌 표현하기 -2-", "lesson": "9", "totalLesson": 15, "pages": "56~63"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "책에서 좋아하는 문장을 찾아 소개하기 -1-", "lesson": "10", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "책에서 좋아하는 문장을 찾아 소개하기 -2-", "lesson": "11", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "66~67"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "66~67"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "68~71"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "68~71"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "72~75"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "72~75"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말을 넣어 문장 쓰기 -1-", "lesson": "3", "totalLesson": 15, "pages": "76~79"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말을 넣어 문장 쓰기 -2-", "lesson": "4", "totalLesson": 15, "pages": "76~79"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말이 들어간 문장 읽기 -1-", "lesson": "5", "totalLesson": 15, "pages": "80~93"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말이 들어간 문장 읽기 -2-", "lesson": "6", "totalLesson": 15, "pages": "80~93"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일에서 일기 글감을 정하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "94~100"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일에서 일기 글감을 정하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "94~100"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -1-", "lesson": "9", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -2-", "lesson": "10", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -3-", "lesson": "11", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "106~107"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "106~107"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "108~111"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "108~111"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "112~117"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "112~117"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -1-", "lesson": "3", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -2-", "lesson": "4", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -3-", "lesson": "5", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말에 주의하며 글 읽기 -1-", "lesson": "6", "totalLesson": 15, "pages": "123~127"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말에 주의하며 글 읽기 -2-", "lesson": "7", "totalLesson": 15, "pages": "123~127"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위기 살펴보기 -1-", "lesson": "8", "totalLesson": 15, "pages": "128~132"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위기 살펴보기 -2-", "lesson": "9", "totalLesson": 15, "pages": "128~132"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위를 생각하며 소리 내어 읽기 -1-", "lesson": "10", "totalLesson": 15, "pages": "133~137"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위를 생각하며 소리 내어 읽기 -2-", "lesson": "11", "totalLesson": 15, "pages": "133~137"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "138~139"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "138~139"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "140~143"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "140~143"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "152~155"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "152~155"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하기 -1-", "lesson": "3", "totalLesson": 14, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하기 -2-", "lesson": "4", "totalLesson": 14, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하며 글 읽기 -1-", "lesson": "5", "totalLesson": 14, "pages": "160~165"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하며 글 읽기 -2-", "lesson": "6", "totalLesson": 14, "pages": "160~165"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "헷갈리기 쉬운 낱말에 주의하며 읽기 -1-", "lesson": "7", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "헷갈리기 쉬운 낱말에 주의하며 읽기 -2-", "lesson": "8", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "자연스럽게 띄어 읽기 -1-", "lesson": "9", "totalLesson": 14, "pages": "170~177"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "자연스럽게 띄어 읽기 -2-", "lesson": "10", "totalLesson": 14, "pages": "170~177"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "178~179"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "178~179"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "180~183"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "180~183"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "184~187"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "184~187"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 중요한 내용을 찾는 방법 알아보기 -1-", "lesson": "3", "totalLesson": 15, "pages": "188~191"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 중요한 내용을 찾는 방법 알아보기 -2-", "lesson": "4", "totalLesson": 15, "pages": "188~191"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "중요한 내용을 생각하며 글 읽기 -1-", "lesson": "5", "totalLesson": 15, "pages": "192~197"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "중요한 내용을 생각하며 글 읽기 -2-", "lesson": "6", "totalLesson": 15, "pages": "192~197"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 인물의 생각과 그 까닭 파악하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 인물의 생각과 그 까닭 파악하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -3-", "lesson": "11", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "210~211"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "210~211"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "212~215"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "212~215"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "216~219"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "216~219"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험을 떠올리며 이야기 듣기 -1-", "lesson": "3", "totalLesson": 15, "pages": "220~223"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험을 떠올리며 이야기 듣기 -2-", "lesson": "4", "totalLesson": 15, "pages": "220~223"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험 발표하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험 발표하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "다른 사람의 마음을 생각하며 고운 말로 대화하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "다른 사람의 마음을 생각하며 고운 말로 대화하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -1-", "lesson": "9", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -2-", "lesson": "10", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -3-", "lesson": "11", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "240~241"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "240~241"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "242~245"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "242~245"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "246~249"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "246~249"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "시를 낭송하고 생각이나 느낌 나누기 -1-", "lesson": "3", "totalLesson": 15, "pages": "250~254"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "시를 낭송하고 생각이나 느낌 나누기 -2-", "lesson": "4", "totalLesson": 15, "pages": "250~254"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "이야기를 읽고 생각이나 느낌 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "255~263"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "이야기를 읽고 생각이나 느낌 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "255~263"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 인물의 마음 짐작하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "264~267"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 인물의 마음 짐작하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "264~267"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기", "lesson": "11", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "274~275"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "274~275"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "276~279"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "276~279"}], "grade2_korean_2": [{"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "6~9"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "6~9"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 장면 상상하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "10~13"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 장면 상상하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "10~13"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 생각이나 느낌 나누기 -1-", "lesson": "5", "totalLesson": 15, "pages": "14~17"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 생각이나 느낌 나누기 -2-", "lesson": "6", "totalLesson": 15, "pages": "14~17"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 인물의 마음 상상하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "18~25"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 인물의 마음 상상하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "18~25"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 생각이나 느낌 나누기 -1-", "lesson": "9", "totalLesson": 15, "pages": "26~33"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 생각이나 느낌 나누기 -2-", "lesson": "10", "totalLesson": 15, "pages": "26~33"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "36~39"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "36~39"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하는 방법 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하는 방법 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "48~51"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "48~51"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "칭찬이나 조언하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "52~59"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "칭찬이나 조언하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "52~59"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "대화를 나누면서 말하는 사람에게 적절히 반응하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "60~63"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "대화를 나누면서 말하는 사람에게 적절히 반응하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "60~63"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "66~69"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "66~69"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "70~73"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "70~73"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 중심 내용을 파악하는 방법 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "74~77"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 중심 내용을 파악하는 방법 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "74~77"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 내용을 간추리기 -1-", "lesson": "5", "totalLesson": 15, "pages": "78~83"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 내용을 간추리기 -2-", "lesson": "6", "totalLesson": 15, "pages": "78~83"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "사물을 설명하는 글을 쓰는 방법 알기 -1-", "lesson": "7", "totalLesson": 15, "pages": "84~87"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "사물을 설명하는 글을 쓰는 방법 알기 -2-", "lesson": "8", "totalLesson": 15, "pages": "84~87"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "자신이 좋아하는 사물을 설명하는 글 쓰기 -1-", "lesson": "9", "totalLesson": 15, "pages": "88~91"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "자신이 좋아하는 사물을 설명하는 글 쓰기 -2-", "lesson": "10", "totalLesson": 15, "pages": "88~91"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "94~99"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "94~99"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 13, "pages": "100~105"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 13, "pages": "100~105"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "여러 가지 문장의 종류 알기 -1-", "lesson": "3", "totalLesson": 13, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "여러 가지 문장의 종류 알기 -2-", "lesson": "4", "totalLesson": 13, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "글쓴이의 마음을 파악하며 글 읽기 -1-", "lesson": "5", "totalLesson": 13, "pages": "110~113"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "글쓴이의 마음을 파악하며 글 읽기 -2-", "lesson": "6", "totalLesson": 13, "pages": "110~113"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "인물의 마음을 생각하며 실감 나게 읽기 -1-", "lesson": "7", "totalLesson": 13, "pages": "114~119"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "인물의 마음을 생각하며 실감 나게 읽기 -2-", "lesson": "8", "totalLesson": 13, "pages": "114~119"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "이야기를 듣고 인물에게 내 생각 전하기 -1-", "lesson": "9", "totalLesson": 13, "pages": "120~123"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "이야기를 듣고 인물에게 내 생각 전하기 -2-", "lesson": "10", "totalLesson": 13, "pages": "120~123"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 13, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 13, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 마무리하기", "lesson": "13", "totalLesson": 13, "pages": "126~129"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "138~141"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "138~141"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "바른 말 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "142~145"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "바른 말 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "142~145"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "자신의 생각을 바른 말로 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "146~149"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "자신의 생각을 바른 말로 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "146~149"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "이야기를 듣고 일이 일어 난 차례 말하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "150~153"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "이야기를 듣고 일이 일어 난 차례 말하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "150~153"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "글을 읽고 일이 일어난 차례 말하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "154~159"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "글을 읽고 일이 일어난 차례 말하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "154~159"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "162~165"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "162~165"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림이 나타내는 뜻을 생각하며 읽기 -1-", "lesson": "3", "totalLesson": 14, "pages": "170~173"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림이 나타내는 뜻을 생각하며 읽기 -2-", "lesson": "4", "totalLesson": 14, "pages": "170~173"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림을 관련지으며 지기 그림책 읽기 -1-", "lesson": "5", "totalLesson": 14, "pages": "174~183"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림을 관련지으며 지기 그림책 읽기 -2-", "lesson": "6", "totalLesson": 14, "pages": "174~183"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "친숙한 매체와 매체 자료에 흥미와 관심 가지기 -1-", "lesson": "7", "totalLesson": 14, "pages": "184~187"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "친숙한 매체와 매체 자료에 흥미와 관심 가지기 -2-", "lesson": "8", "totalLesson": 14, "pages": "184~187"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "매체와 연결 지어 글과 그림으로 표현하기 -1-", "lesson": "9", "totalLesson": 14, "pages": "188~191"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "매체와 연결 지어 글과 그림으로 표현하기 -2-", "lesson": "10", "totalLesson": 14, "pages": "188~191"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "192~193"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "192~193"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "194~197"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "194~197"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글을 읽고 글쓴이의 생각 파악하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "202~206"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글을 읽고 글쓴이의 생각 파악하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "202~206"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글쓴이의 생각에 대한 자신의 생각 발표하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "207~210"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글쓴이의 생각에 대한 자신의 생각 발표하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "207~210"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -3-", "lesson": "9", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "친구들이 쓴 글에 대한 자신의 생각 쓰기", "lesson": "10", "totalLesson": 15, "pages": "220~221"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현한 작품 감상하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "232~237"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현한 작품 감상하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "232~237"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "238~243"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "238~243"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이어질 이야기를 상상하며 작품 감상하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "244~251"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이어질 이야기를 상상하며 작품 감상하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "244~251"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이야기를 읽고 이어질 이야기 상상하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "252~259"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이야기를 읽고 이어질 이야기 상상하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "252~259"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "262~265"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "262~265"}], "grade2_math_1": [{"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학을 찾아요", "lesson": "1", "totalLesson": 3, "pages": "6~7"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학과 놀아요", "lesson": "2", "totalLesson": 3, "pages": "8~9"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학으로 이야기해요", "lesson": "3", "totalLesson": 3, "pages": "10~11"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "12~15"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "백을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "16~17"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "몇백을 알아볼까요", "lesson": "3", "totalLesson": 9, "pages": "18~19"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "세 자리 수를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "20~21"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "각 자리의 숫자는 얼마를 나타낼까요", "lesson": "5", "totalLesson": 9, "pages": "22~23"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "뛰어 세어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "24~25"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수의 크기를 비교해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "26~27"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "28~29"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "30~31"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "△을 알아보고 찾아볼까요", "lesson": "2", "totalLesson": 9, "pages": "36~39"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "□을 알아보고 찾아볼까요", "lesson": "3", "totalLesson": 9, "pages": "40~43"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "○을 알아보고 찾아볼까요", "lesson": "4", "totalLesson": 9, "pages": "44~47"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "칠교판으로 모양을 만들어 볼까요", "lesson": "5", "totalLesson": 9, "pages": "48~51"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "쌓은 모양을 알아볼까요", "lesson": "6", "totalLesson": 9, "pages": "52~53"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "여러 가지 모양으로 쌓아 볼까요", "lesson": "7", "totalLesson": 9, "pages": "54~55"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "56~57"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "58~59"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "단원도입", "lesson": "1", "totalLesson": 14, "pages": "60~63"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑴", "lesson": "2", "totalLesson": 14, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑵ -1-", "lesson": "3", "totalLesson": 14, "pages": "66~69"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑵ -2-", "lesson": "4", "totalLesson": 14, "pages": "66~69"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "덧셈을 해 볼까요", "lesson": "5", "totalLesson": 14, "pages": "70~71"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑴", "lesson": "6", "totalLesson": 14, "pages": "72~73"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑵ -1-", "lesson": "7", "totalLesson": 14, "pages": "74~77"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑵ -2-", "lesson": "8", "totalLesson": 14, "pages": "74~77"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "뺄셈을 해 볼까요", "lesson": "9", "totalLesson": 14, "pages": "78~79"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "세 수의 계산을 해 볼까요", "lesson": "10", "totalLesson": 14, "pages": "80~81"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "덧셈과 뺄셈의 관계를 식으로 나타내 볼까요", "lesson": "11", "totalLesson": 14, "pages": "82~83"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "□가 사용된 식을 만들고 □의 값을 구해 볼까요", "lesson": "12", "totalLesson": 14, "pages": "84~85"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "수학이랑 확인해요", "lesson": "13", "totalLesson": 14, "pages": "86~87"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "수학이랑 만들어요", "lesson": "14", "totalLesson": 14, "pages": "88~89"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "90~93"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "길이를 비교하는 방법을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "94~95"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "여러 가지 단위로 길이를 재어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "96~99"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "1cm를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "100~103"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "자로 길이를 재는 방법을 알아볼까요", "lesson": "5", "totalLesson": 9, "pages": "104~107"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "자로 길이를 재어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "108~109"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "길이를 어림하고 어떻게 어림했는지 말해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "110~111"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "112~113"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "114~115"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "단원 도입", "lesson": "1", "totalLesson": 7, "pages": "116~119"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류는 어떻게 할까요", "lesson": "2", "totalLesson": 7, "pages": "120~121"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "기준에 따라 분류해 볼까요", "lesson": "3", "totalLesson": 7, "pages": "122~125"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류하고 세어 볼까요", "lesson": "4", "totalLesson": 7, "pages": "126~129"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류한 결과를 말해 볼까요", "lesson": "5", "totalLesson": 7, "pages": "130~131"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "수학이랑 확인해요", "lesson": "6", "totalLesson": 7, "pages": "132~133"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "수학이랑 만들어요", "lesson": "7", "totalLesson": 7, "pages": "134~135"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "136~139"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "여러 가지 방법으로 세어 볼까요", "lesson": "2", "totalLesson": 9, "pages": "140~141"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "묶어 세어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "142~143"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "몇의 몇 배를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "144~145"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "몇의 몇 배로 나타내 볼까요", "lesson": "5", "totalLesson": 9, "pages": "146~147"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "곱셈을 알아볼까요", "lesson": "6", "totalLesson": 9, "pages": "148~149"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "곱셈식으로 나타내 볼까요", "lesson": "7", "totalLesson": 9, "pages": "150~151"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "152~153"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "154~155"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "사용하지 않는 물건을 찾아볼까요", "lesson": "1", "totalLesson": 4, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "친구들과 함께 나눔 장터를 계획해요", "lesson": "2", "totalLesson": 4, "pages": "160~161"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "나눔 장터를 열어요", "lesson": "3", "totalLesson": 4, "pages": "162~163"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "나눔 장터로 달라진 지구를 표현해요", "lesson": "4", "totalLesson": 4, "pages": "164~165"}], "grade2_math_2": [{"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학을 찾아요", "lesson": "1", "totalLesson": 3, "pages": "6~7"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학과 놀아요", "lesson": "2", "totalLesson": 3, "pages": "8~9"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학으로 이야기해요", "lesson": "3", "totalLesson": 3, "pages": "10~11"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "12~15"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "천을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "16~17"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "몇천을 알아볼까요", "lesson": "3", "totalLesson": 9, "pages": "18~19"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "네 자리 수를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "20~21"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "각 자리의 숫자는 얼마를 나타낼까요", "lesson": "5", "totalLesson": 9, "pages": "22~23"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "뛰어 세어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "24~25"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수의 크기를 비교해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "26~27"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "28~29"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "30~31"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "단원 도입", "lesson": "1", "totalLesson": 10, "pages": "32~35"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "2단 곱셈구구를 알아볼까요", "lesson": "2", "totalLesson": 10, "pages": "36~37"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "5단 곱셈구구를 알아볼까요", "lesson": "3", "totalLesson": 10, "pages": "38~39"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "3단, 6단 곱셈구구를 알아볼까요", "lesson": "4", "totalLesson": 10, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "4단, 8단 곱셈구구를 알아볼까요", "lesson": "5", "totalLesson": 10, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "7단 곱셈구구를 알아볼까요", "lesson": "6", "totalLesson": 10, "pages": "48~49"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "9단 곱셈구구를 알아볼까요", "lesson": "7", "totalLesson": 10, "pages": "50~51"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "1단 곱셈구구와 0의 곱을 알아볼까요", "lesson": "8", "totalLesson": 10, "pages": "52~53"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "곱셈표를 만들어 볼까요", "lesson": "9", "totalLesson": 10, "pages": "54~55"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "곱셈구구를 이용하여 문제를 해결해 볼까요", "lesson": "10", "totalLesson": 10, "pages": "56~57"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "62~65"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "cm보다 더 큰 단위를 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "66~67"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "자로 길이를 재어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "68~69"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이의 합을 구해 볼까요", "lesson": "4", "totalLesson": 9, "pages": "70~71"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이의 차를 구해 볼까요", "lesson": "5", "totalLesson": 9, "pages": "72~73"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이를 어림해 볼까요(1)", "lesson": "6", "totalLesson": 9, "pages": "74~75"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이를 어림해 볼까요(2)", "lesson": "7", "totalLesson": 9, "pages": "76~77"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "78~79"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "80~81"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "단원 도입", "lesson": "1", "totalLesson": 10, "pages": "82~85"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "몇 시 몇 분을 읽어 볼까요(1)", "lesson": "2", "totalLesson": 10, "pages": "86~87"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "몇 시 몇 분을 읽어 볼까요(2)", "lesson": "3", "totalLesson": 10, "pages": "88~89"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "여러 가지 방법으로 시각을 읽어 볼까요", "lesson": "4", "totalLesson": 10, "pages": "90~91"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "1시간을 알아볼까요", "lesson": "5", "totalLesson": 10, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "걸린 시간을 알아볼까요", "lesson": "6", "totalLesson": 10, "pages": "94~95"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "하루의 시간을 알아볼까요", "lesson": "7", "totalLesson": 10, "pages": "96~97"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "달력을 알아볼까요", "lesson": "8", "totalLesson": 10, "pages": "98~101"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "수학이랑 확인해요", "lesson": "9", "totalLesson": 10, "pages": "102~103"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "수학이랑 만들어요", "lesson": "10", "totalLesson": 10, "pages": "104~105"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "단원 도입", "lesson": "1", "totalLesson": 8, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 분류하여 표로 나타내 볼까요", "lesson": "2", "totalLesson": 8, "pages": "110~111"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 조사하여 표로 나타내 볼까요", "lesson": "3", "totalLesson": 8, "pages": "112~113"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 분류하여 그래프로 나타내 볼까요", "lesson": "4", "totalLesson": 8, "pages": "114~117"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "표와 그래프를 보고 무엇을 알 수 있을까요", "lesson": "5", "totalLesson": 8, "pages": "118~121"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "표와 그래프로 나타내 볼까요", "lesson": "6", "totalLesson": 8, "pages": "122~123"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "수학이랑 확인해요", "lesson": "7", "totalLesson": 8, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "수학이랑 만들어요", "lesson": "8", "totalLesson": 8, "pages": "126~127"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "128~131"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "무늬에서 규칙을 찾아볼까요(1)", "lesson": "2", "totalLesson": 9, "pages": "132~133"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "무늬에서 규칙을 찾아볼까요(2)", "lesson": "3", "totalLesson": 9, "pages": "134~135"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "쌓은 모양에서 규칙을 찾아볼까요", "lesson": "4", "totalLesson": 9, "pages": "136~137"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "덧셈표에서 규칙을 찾아볼까요", "lesson": "5", "totalLesson": 9, "pages": "138~139"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "곱셈표에서 규칙을 찾아볼까요", "lesson": "6", "totalLesson": 9, "pages": "140~141"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "생활에서 규칙을 찾아볼까요", "lesson": "7", "totalLesson": 9, "pages": "142~143"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "144~145"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "146~147"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "단원 도입", "lesson": "1", "totalLesson": 4, "pages": "148~151"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관의 실천을 계획해요", "lesson": "2", "totalLesson": 4, "pages": "152~153"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관을 실천해요", "lesson": "3", "totalLesson": 4, "pages": "154~155"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관을 다짐해요", "lesson": "4", "totalLesson": 4, "pages": "156~157"}]};
+
     // --- 초등학교 13대 교과군 ---
     const ELEMENTARY_SUBJECTS = ['국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어', '바생', '슬생', '즐생'];
-
-    // --- 초등 표준 교육과정 진도표 데이터베이스 시드 (오프라인 로컬 및 웹 공용) ---
-    const DEFAULT_CURRICULUM_DB = {
-      grades: {
-        "1": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "바른 자세로 읽고 쓰기",
-                      publisher: "국정",
-                      totalUnitLessons: 8,
-                      lessons: [
-                        { lesson: "1", pages: "10-13", topic: "글을 읽을 때의 바른 자세 알기" },
-                        { lesson: "2", pages: "14-17", topic: "글씨를 쓸 때의 바른 자세 알기" },
-                        { lesson: "3~4", pages: "18-23", topic: "연필을 바르게 잡고 낱말 따라 쓰기", isBlock: true },
-                        { lesson: "5", pages: "24-27", topic: "낱말과 그림을 바르게 연결하기" },
-                        { lesson: "6", pages: "28-31", topic: "바른 자세로 책을 읽는 연습하기" },
-                        { lesson: "7~8", pages: "32-37", topic: "바른 자세 실천 계획 세우고 다짐하기", isBlock: true }
-                      ]
-                    },
-                    {
-                      unitNumber: 2,
-                      unitTitle: "재미있는 낱말 놀이",
-                      publisher: "국정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "38-41", topic: "말놀이 동시 재미있게 읽기" },
-                        { lesson: "2", pages: "42-45", topic: "소리와 모양이 어울리는 낱말 흉내 내기" },
-                        { lesson: "3", pages: "46-49", topic: "흉내 내는 말을 넣어 문장 만들기" },
-                        { lesson: "4~5", pages: "50-55", topic: "그림을 보고 흉내 내는 말 찾아 쓰기", isBlock: true },
-                        { lesson: "6", pages: "56-59", topic: "낱말 퀴즈 놀이하기" }
-                      ]
-                    }
-                  ]
-                },
-                "수학": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "9까지의 수",
-                      publisher: "국정",
-                      totalUnitLessons: 9,
-                      lessons: [
-                        { lesson: "1", pages: "8-11", topic: "1, 2, 3, 4, 5를 알아볼까요" },
-                        { lesson: "2", pages: "12-15", topic: "1, 2, 3, 4, 5를 쓰고 읽어 볼까요" },
-                        { lesson: "3", pages: "16-19", topic: "몇째인지 알아볼까요" },
-                        { lesson: "4", pages: "20-23", topic: "6, 7, 8, 9를 알아볼까요" },
-                        { lesson: "5", pages: "24-27", topic: "6, 7, 8, 9를 쓰고 읽어 볼까요" },
-                        { lesson: "6", pages: "28-31", topic: "수의 순서를 알아볼까요" },
-                        { lesson: "7", pages: "32-35", topic: "1 큰 수와 1 작은 수를 알아볼까요" },
-                        { lesson: "8", pages: "36-39", topic: "어느 수가 더 클까요" },
-                        { lesson: "9", pages: "40-41", topic: "얼마나 알고 있나요 및 문제 해결" }
-                      ]
-                    }
-                  ]
-                },
-                "봄": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "학교에 가면",
-                      publisher: "국정",
-                      totalUnitLessons: 24,
-                      lessons: [
-                        { lesson: "1", pages: "8-11", topic: "학교에 온 것을 축하해요" },
-                        { lesson: "2", pages: "12-13", topic: "우리 교실 둘러보기" },
-                        { lesson: "3", pages: "14-15", topic: "친구들과 반갑게 인사하기" },
-                        { lesson: "4~5", pages: "16-19", topic: "내 짝꿍을 소개하는 그림 그리기", isBlock: true },
-                        { lesson: "6", pages: "20-21", topic: "화장실과 급식실 바르게 이용하기" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "2": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "시를 즐겨요",
-                      publisher: "국정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "6-11", topic: "시를 읽고 생각이나 느낌 나누기" },
-                        { lesson: "2", pages: "12-15", topic: "장면을 떠올리며 시 낭송하기" },
-                        { lesson: "3", pages: "16-17", topic: "인물의 마음을 상상하며 시 읽기" },
-                        { lesson: "4", pages: "18-21", topic: "시의 일부분을 바꾸어 표현하기" },
-                        { lesson: "5", pages: "22-25", topic: "마음을 나타내는 말 찾아보기" },
-                        { lesson: "6", pages: "26-29", topic: "소리나 모양을 흉내 내는 말 알기" },
-                        { lesson: "7~8", pages: "30-35", topic: "시를 읽고 떠오르는 생각 글이나 그림으로 표현하기", isBlock: true },
-                        { lesson: "9", pages: "36-39", topic: "알맞은 낱말을 골라 문장 완성하기" },
-                        { lesson: "10", pages: "40-41", topic: "정리 학습 및 단원 평가" }
-                      ]
-                    },
-                    {
-                      unitNumber: 5,
-                      unitTitle: "마음을 전하는 글",
-                      publisher: "국정",
-                      totalUnitLessons: 15,
-                      lessons: [
-                        { lesson: "1", pages: "112-115", topic: "마음을 전한 경험 이야기하기" },
-                        { lesson: "2", pages: "116-117", topic: "글을 쓴 사람의 마음 짐작하기" },
-                        { lesson: "3", pages: "118-120", topic: "고마운 마음을 담은 편지글 읽기" },
-                        { lesson: "4", pages: "120-121", topic: "마음을 전하는 글의 특징 알기" },
-                        { lesson: "5", pages: "121-122", topic: "마음을 표현하는 방법 익히기" },
-                        { lesson: "6", pages: "123-127", topic: "전하고 싶은 마음을 글로 쓰기" },
-                        { lesson: "7~8", pages: "128-133", topic: "편지를 쓰고 주고받기", isBlock: true }
-                      ]
-                    }
-                  ]
-                },
-                "수학": {
-                  units: [
-                    {
-                      unitNumber: 2,
-                      unitTitle: "여러 가지 도형",
-                      publisher: "국정",
-                      totalUnitLessons: 9,
-                      lessons: [
-                        { lesson: "1", pages: "32-35", topic: "원(동그라미)을 알아볼까요" },
-                        { lesson: "2", pages: "36-39", topic: "삼각형을 알아볼까요" },
-                        { lesson: "3", pages: "40-43", topic: "사각형을 알아볼까요" },
-                        { lesson: "4", pages: "44-47", topic: "칠교판으로 여러 가지 모양 만들기" },
-                        { lesson: "5", pages: "48-51", topic: "쌓기나무로 여러 가지 모양 만들기" },
-                        { lesson: "6", pages: "52-55", topic: "도형들의 같은 점과 다른 점 찾기" },
-                        { lesson: "7", pages: "56-57", topic: "도형으로 패턴 꾸미기" },
-                        { lesson: "8", pages: "58-59", topic: "얼마나 알고 있나요" },
-                        { lesson: "9", pages: "60-61", topic: "수학으로 세상 보기" }
-                      ]
-                    }
-                  ]
-                },
-                "바생": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "알찬 하루, 건강한 생활",
-                      publisher: "국정",
-                      totalUnitLessons: 48,
-                      lessons: [
-                        { lesson: "20", pages: "44-45", topic: "규칙적인 생활 습관 기르기" },
-                        { lesson: "21", pages: "46-47", topic: "스스로 정리정돈 실천하기" },
-                        { lesson: "39", pages: "74-75", topic: "가족과 함께하는 바른 생활 습관" }
-                      ]
-                    }
-                  ]
-                },
-                "슬생": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "봄이 오면",
-                      publisher: "국정",
-                      totalUnitLessons: 48,
-                      lessons: [
-                        { lesson: "19", pages: "42-43", topic: "봄 날씨의 특징과 변화 관찰하기" },
-                        { lesson: "41", pages: "78-79", topic: "봄 동식물의 성장 모습 조사하기" }
-                      ]
-                    }
-                  ]
-                },
-                "즐생": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "봄의 소리와 몸짓",
-                      publisher: "국정",
-                      totalUnitLessons: 48,
-                      lessons: [
-                        { lesson: "5", pages: "22-23", topic: "봄의 소리 탐색하고 표현하기" },
-                        { lesson: "7", pages: "24-25", topic: "봄 노래에 맞춰 리듬 악기 연주하기" },
-                        { lesson: "14", pages: "34-35", topic: "봄바람을 몸으로 표현하기" },
-                        { lesson: "16", pages: "36-37", topic: "새싹의 자람을 몸으로 나타내기" },
-                        { lesson: "32", pages: "60-61", topic: "봄 풍경 협동화 그리기" },
-                        { lesson: "35", pages: "68-69", topic: "꽃과 곤충 가면 만들어 역할 놀이하기" },
-                        { lesson: "38", pages: "72-73", topic: "즐거운 봄 축제 율동 발표회" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "3": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 6,
-                      unitTitle: "알맞은 높임 표현",
-                      publisher: "국정",
-                      totalUnitLessons: 14,
-                      lessons: [
-                        { lesson: "2", pages: "180-183", topic: "높임 표현을 사용하는 경우 알기" },
-                        { lesson: "3", pages: "184-187", topic: "높임 표현을 사용하는 방법 익히기" },
-                        { lesson: "5", pages: "188-197", topic: "상황에 어울리는 높임 표현 사용하기" },
-                        { lesson: "7", pages: "198-200", topic: "언어 예절을 지키며 대화하기" },
-                        { lesson: "8", pages: "201-205", topic: "높임법을 바르게 사용하여 짧은 글 쓰기" },
-                        { lesson: "10", pages: "206-209", topic: "대화 예절을 점검하고 실천 다짐하기" }
-                      ]
-                    }
-                  ]
-                },
-                "수학": {
-                  units: [
-                    {
-                      unitNumber: 4,
-                      unitTitle: "나눗셈",
-                      publisher: "검정",
-                      totalUnitLessons: 12,
-                      lessons: [
-                        { lesson: "3", pages: "84-87", topic: "똑같이 나누어 주는 나눗셈 알아보기" },
-                        { lesson: "4", pages: "88-89", topic: "곱셈과 나눗셈의 관계 알아보기" },
-                        { lesson: "5", pages: "90-91", topic: "나눗셈의 몫을 곱셈구구로 구하기 (1)" },
-                        { lesson: "6", pages: "92-93", topic: "나눗셈의 몫을 곱셈구구로 구하기 (2)" },
-                        { lesson: "7", pages: "94-95", topic: "실생활에서 나눗셈 문제 해결하기" },
-                        { lesson: "8", pages: "96-97", topic: "놀이와 탐구 활동으로 나눗셈 복습하기" }
-                      ]
-                    },
-                    {
-                      unitNumber: 5,
-                      unitTitle: "길이와 시간",
-                      publisher: "검정",
-                      totalUnitLessons: 4,
-                      lessons: [
-                        { lesson: "4", pages: "112-115", topic: "1초 단위 시간의 덧셈과 뺄셈 알아보기" }
-                      ]
-                    }
-                  ]
-                },
-                "사회": {
-                  units: [
-                    {
-                      unitNumber: 2,
-                      unitTitle: "우리가 알아보는 고장 이야기",
-                      publisher: "검정",
-                      totalUnitLessons: 17,
-                      lessons: [
-                        { lesson: "10", pages: "84-88", topic: "우리 고장의 지명 유래 조사하기" },
-                        { lesson: "12", pages: "89-94", topic: "고장의 옛이야기와 전설 탐구하기" },
-                        { lesson: "14", pages: "95-96", topic: "우리 고장의 문화유산 지도 만들기" },
-                        { lesson: "15", pages: "97-101", topic: "문화유산을 지키고 보존하는 방법" },
-                        { lesson: "17", pages: "102-105", topic: "우리 고장 자랑거리 소개 발표회" }
-                      ]
-                    }
-                  ]
-                },
-                "과학": {
-                  units: [
-                    {
-                      unitNumber: 3,
-                      unitTitle: "동물의 한살이",
-                      publisher: "검정",
-                      totalUnitLessons: 13,
-                      lessons: [
-                        { lesson: "2", pages: "62-63", topic: "배추흰나비 알과 애벌레 관찰하기" },
-                        { lesson: "3", pages: "64-65", topic: "배추흰나비 번데기와 어른벌레 모습 알기" },
-                        { lesson: "4", pages: "66-67", topic: "곤충의 한살이 과정 비교하기" },
-                        { lesson: "7", pages: "72-73", topic: "새와 동물의 한살이 특징 정리하기" }
-                      ]
-                    },
-                    {
-                      unitNumber: 4,
-                      unitTitle: "물체의 무게",
-                      publisher: "검정",
-                      totalUnitLessons: 12,
-                      lessons: [
-                        { lesson: "2", pages: "82-83", topic: "용수철저울로 물체의 무게 측정하기" },
-                        { lesson: "5", pages: "68-69", topic: "수평 잡기로 무게 비교하기" },
-                        { lesson: "6", pages: "70-71", topic: "나만의 저울 만들기" }
-                      ]
-                    }
-                  ]
-                },
-                "도덕": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "스스로 바르게",
-                      publisher: "국정",
-                      totalUnitLessons: 14,
-                      lessons: [
-                        { lesson: "2", pages: "2/14", topic: "자주적인 생활 태도 기르기" }
-                      ]
-                    },
-                    {
-                      unitNumber: 4,
-                      unitTitle: "아껴 쓰는 우리",
-                      publisher: "국정",
-                      totalUnitLessons: 4,
-                      lessons: [
-                        { lesson: "1", pages: "116-119", topic: "물건을 소중히 다루는 마음 갖기" },
-                        { lesson: "2", pages: "120-123", topic: "환경을 보호하며 절약 생활 실천하기" },
-                        { lesson: "3", pages: "108-111", topic: "현명한 소비 계획 세우기" }
-                      ]
-                    }
-                  ]
-                },
-                "음악": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "노래와 장단 속으로",
-                      publisher: "검정",
-                      totalUnitLessons: 4,
-                      lessons: [
-                        { lesson: "1", pages: "102-103", topic: "봄바람 솔솔 노래 부르기" },
-                        { lesson: "1", pages: "72", topic: "신체 악기로 리듬 표현하기" },
-                        { lesson: "1", pages: "64-65", topic: "국악 민요 자진모리 장단 치기" },
-                        { lesson: "2", pages: "73", topic: "리코더 바른 운지법과 소리 내기" },
-                        { lesson: "1", pages: "68-69", topic: "음악 듣고 그림으로 표현하기" },
-                        { lesson: "1", pages: "74-75", topic: "돌림노래 합창하기" }
-                      ]
-                    }
-                  ]
-                },
-                "미술": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "마음을 담은 시각 표현",
-                      publisher: "검정",
-                      totalUnitLessons: 4,
-                      lessons: [
-                        { lesson: "1", pages: "68-69", topic: "여러 가지 색의 느낌과 배색" },
-                        { lesson: "3", pages: "70", topic: "자연물 프로타주 기법 체험" },
-                        { lesson: "4", pages: "71", topic: "종이 콜라주로 표현하는 풍경" },
-                        { lesson: "1", pages: "72-73", topic: "찰흙으로 입체 동물 만들기" },
-                        { lesson: "3", pages: "74", topic: "재활용품을 활용한 조형물 제작" }
-                      ]
-                    }
-                  ]
-                },
-                "체육": {
-                  units: [
-                    {
-                      unitNumber: 2,
-                      unitTitle: "신나는 도전과 운동",
-                      publisher: "검정",
-                      totalUnitLessons: 11,
-                      lessons: [
-                        { lesson: "1", pages: "114-115", topic: "기초 체력 기르기(스트레칭과 줄넘기)" },
-                        { lesson: "2", pages: "116-117", topic: "달리기와 순발력 기르기 놀이" },
-                        { lesson: "4", pages: "118-119", topic: "뜀틀 넘기의 기본 동작 익히기" },
-                        { lesson: "6", pages: "120-121", topic: "매트 구르기(앞구르기/뒤구르기)" },
-                        { lesson: "8", pages: "122-123", topic: "이어달리기와 협동 규칙 지키기" }
-                      ]
-                    }
-                  ]
-                },
-                "영어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "Hello! I'm Mina",
-                      publisher: "검정",
-                      totalUnitLessons: 4,
-                      lessons: [
-                        { lesson: "1", pages: "98-99", topic: "인사하고 자기 이름 소개하기" },
-                        { lesson: "2", pages: "100-101", topic: "알파벳 대문자 A~G 소리 익히기" },
-                        { lesson: "3", pages: "102-103", topic: "짝과 함께 인사 챈트 부르기" },
-                        { lesson: "4", pages: "104-105", topic: "스스로 점검하고 문화 알아보기" },
-                        { lesson: "1", pages: "108-109", topic: "What's this? 사물 묻고 답하기" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "4": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "생각과 느낌을 나누어요",
-                      publisher: "국정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "10-15", topic: "시나 이야기를 읽고 생각 나누기" },
-                        { lesson: "2~3", pages: "16-21", topic: "인물의 마음에 공감하며 이야기 읽기", isBlock: true },
-                        { lesson: "4", pages: "22-25", topic: "경험을 떠올려 독서 감상문 쓰기" }
-                      ]
-                    }
-                  ]
-                },
-                "수학": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "큰 수",
-                      publisher: "검정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "8-11", topic: "만(10000)을 알아볼까요" },
-                        { lesson: "2", pages: "12-15", topic: "다섯 자리 수를 알아볼까요" },
-                        { lesson: "3", pages: "16-19", topic: "십만, 백만, 천만을 알아볼까요" },
-                        { lesson: "4", pages: "20-23", topic: "억과 조를 알아볼까요" }
-                      ]
-                    }
-                  ]
-                },
-                "과학": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "지층과 화석",
-                      publisher: "검정",
-                      totalUnitLessons: 11,
-                      lessons: [
-                        { lesson: "1", pages: "24-27", topic: "여러 가지 지층을 관찰해 볼까요" },
-                        { lesson: "2", pages: "28-31", topic: "지층은 어떻게 만들어질까요" },
-                        { lesson: "3", pages: "32-35", topic: "화석은 어떻게 만들어질까요" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "5": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "대화와 공감",
-                      publisher: "국정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "10-15", topic: "상대방을 배려하며 대화하는 방법 알기" },
-                        { lesson: "2~3", pages: "16-21", topic: "공감하며 대화하는 태도 실천하기", isBlock: true }
-                      ]
-                    }
-                  ]
-                },
-                "실과": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "나의 균형 잡힌 식생활",
-                      publisher: "검정",
-                      totalUnitLessons: 8,
-                      lessons: [
-                        { lesson: "1", pages: "10-13", topic: "식품구성자전거와 6대 영양소 알아보기" },
-                        { lesson: "2", pages: "14-17", topic: "건강한 하루 식단 계획하기" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        },
-        "6": {
-          semesters: {
-            "1": {
-              subjects: {
-                "국어": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "비유적 표현",
-                      publisher: "국정",
-                      totalUnitLessons: 10,
-                      lessons: [
-                        { lesson: "1", pages: "10-15", topic: "비유적 표현의 특징과 효과 알아보기" },
-                        { lesson: "2~3", pages: "16-21", topic: "비유하는 표현을 생각하며 시 읽기", isBlock: true }
-                      ]
-                    }
-                  ]
-                },
-                "사회": {
-                  units: [
-                    {
-                      unitNumber: 1,
-                      unitTitle: "우리나라의 정치 발전",
-                      publisher: "검정",
-                      totalUnitLessons: 16,
-                      lessons: [
-                        { lesson: "1", pages: "10-13", topic: "4·19 혁명과 민주주의 발전 과정" },
-                        { lesson: "2", pages: "14-17", topic: "5·18 민주화 운동 알아보기" }
-                      ]
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      }
-    };
 
     // --- 4대 교과군 분류 매핑 함수 ---
     const SUBJECT_CATEGORIES = {
@@ -2079,17 +1517,11 @@
       morningDuty: {},
       timetable: {},
 
-      // Curriculum DB state
-      curriculumDbData: (typeof DEFAULT_CURRICULUM_DB !== 'undefined') ? JSON.parse(JSON.stringify(DEFAULT_CURRICULUM_DB)) : null,
-      curriculumDbTab: 'db',
-      parsedExcelCurriculum: [],
-
       // Charts instance
       radarChartInstance: null,
       barChartInstance: null,
 
       init() {
-        this.initCurriculumDb();
         this.loadCustomStamps();
         this.initCleanDefault();
         this.renderAll();
@@ -2434,6 +1866,226 @@
         alert(`${subject} ${start}~${end}차시 (${end - start + 1}개)가 추가되었습니다.`);
       },
 
+
+      // -----------------------------------------------------------------------
+      // 2학년 교과 진도표 데이터베이스 (DB 불러오기 & 모달)
+      // -----------------------------------------------------------------------
+      getCurriculumDb() { return CURRICULUM_DB_GRADE2; },
+      curriculumDbState: {
+        semester: '1학기',
+        subject: '국어',
+        unit: '',
+        search: '',
+        selectedIndices: new Set()
+      },
+
+      openCurriculumDbModal() {
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+        document.getElementById('modal-curriculum-db').classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeCurriculumDbModal() {
+        document.getElementById('modal-curriculum-db').classList.add('hidden');
+      },
+
+      setCurriculumDbSemester(sem) {
+        this.curriculumDbState.semester = sem;
+        this.curriculumDbState.unit = '';
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+      },
+
+      setCurriculumDbSubject(sub) {
+        this.curriculumDbState.subject = sub;
+        this.curriculumDbState.unit = '';
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+      },
+
+      onCurriculumDbUnitChange(unit) {
+        this.curriculumDbState.unit = unit;
+        this.renderCurriculumDbList();
+      },
+
+      onCurriculumDbSearch(query) {
+        this.curriculumDbState.search = query.trim().toLowerCase();
+        this.renderCurriculumDbList();
+      },
+
+      updateCurriculumDbControls() {
+        const { semester, subject } = this.curriculumDbState;
+        const sem1Btn = document.getElementById('db-sem-1');
+        const sem2Btn = document.getElementById('db-sem-2');
+        if (sem1Btn && sem2Btn) {
+          if (semester === '1학기') {
+            sem1Btn.className = 'px-3 py-1 rounded-md font-bold text-sky-700 bg-sky-100 shadow-xs';
+            sem2Btn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          } else {
+            sem2Btn.className = 'px-3 py-1 rounded-md font-bold text-sky-700 bg-sky-100 shadow-xs';
+            sem1Btn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          }
+        }
+
+        const subKorBtn = document.getElementById('db-sub-kor');
+        const subMathBtn = document.getElementById('db-sub-math');
+        if (subKorBtn && subMathBtn) {
+          if (subject === '국어') {
+            subKorBtn.className = 'px-3 py-1 rounded-md font-bold text-indigo-700 bg-indigo-100 shadow-xs';
+            subMathBtn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          } else {
+            subMathBtn.className = 'px-3 py-1 rounded-md font-bold text-indigo-700 bg-indigo-100 shadow-xs';
+            subKorBtn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          }
+        }
+
+        const key = (subject === '국어') 
+          ? (semester === '1학기' ? 'grade2_korean_1' : 'grade2_korean_2')
+          : (semester === '1학기' ? 'grade2_math_1' : 'grade2_math_2');
+        const items = CURRICULUM_DB_GRADE2[key] || [];
+        const units = Array.from(new Set(items.map(it => it.unit)));
+        const unitSelect = document.getElementById('db-unit-select');
+        if (unitSelect) {
+          let opts = `<option value="">(전체 ${units.length}개 단원 보기)</option>`;
+          units.forEach(u => {
+            const count = items.filter(it => it.unit === u).length;
+            opts += `<option value="${u}" ${this.curriculumDbState.unit === u ? 'selected' : ''}>${u} (${count}차시)</option>`;
+          });
+          unitSelect.innerHTML = opts;
+        }
+      },
+
+      getCurrentDbItems() {
+        const { semester, subject, unit, search } = this.curriculumDbState;
+        const key = (subject === '국어') 
+          ? (semester === '1학기' ? 'grade2_korean_1' : 'grade2_korean_2')
+          : (semester === '1학기' ? 'grade2_math_1' : 'grade2_math_2');
+        let items = CURRICULUM_DB_GRADE2[key] || [];
+
+        return items.filter((it, origIdx) => {
+          it._origIdx = origIdx;
+          if (unit && it.unit !== unit) return false;
+          if (search) {
+            const matchTopic = (it.topic || '').toLowerCase().includes(search);
+            const matchUnit = (it.unit || '').toLowerCase().includes(search);
+            const matchPages = (it.pages || '').toLowerCase().includes(search);
+            if (!matchTopic && !matchUnit && !matchPages) return false;
+          }
+          return true;
+        });
+      },
+
+      renderCurriculumDbList() {
+        const tbody = document.getElementById('curriculum-db-tbody');
+        if (!tbody) return;
+        const items = this.getCurrentDbItems();
+        const countBadge = document.getElementById('curriculum-db-total-badge');
+        if (countBadge) {
+          countBadge.innerText = `${this.curriculumDbState.semester} ${this.curriculumDbState.subject} (표시: ${items.length}차시)`;
+        }
+
+        if (items.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">검색 조건에 맞는 차시가 없습니다.</td></tr>`;
+          this.updateCurriculumDbSelectedCount();
+          return;
+        }
+
+        let html = '';
+        items.forEach((it, displayIdx) => {
+          const isChecked = this.curriculumDbState.selectedIndices.has(it._origIdx);
+          html += `
+            <tr class="hover:bg-amber-50/60 transition ${isChecked ? 'bg-amber-50/90 font-medium' : ''}">
+              <td class="py-2 px-3 text-center">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="App.toggleCurriculumDbItem(${it._origIdx}, this.checked)" class="rounded text-amber-600 focus:ring-amber-500 cursor-pointer w-4 h-4">
+              </td>
+              <td class="py-2 px-2.5 text-center text-slate-400 text-xs">${displayIdx + 1}</td>
+              <td class="py-2 px-3 font-semibold text-slate-800 text-xs">${it.unit}</td>
+              <td class="py-2 px-3 text-slate-900 text-xs">${it.topic}</td>
+              <td class="py-2 px-2.5 text-center font-bold text-indigo-700 text-xs">${it.lesson}/${it.totalLesson}</td>
+              <td class="py-2 px-2.5 text-center text-slate-600 text-xs font-medium">${it.pages}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+        this.updateCurriculumDbSelectedCount();
+      },
+
+      toggleCurriculumDbItem(origIdx, checked) {
+        if (checked) {
+          this.curriculumDbState.selectedIndices.add(origIdx);
+        } else {
+          this.curriculumDbState.selectedIndices.delete(origIdx);
+        }
+        this.updateCurriculumDbSelectedCount();
+      },
+
+      toggleAllCurriculumDb(selectAll) {
+        const items = this.getCurrentDbItems();
+        if (selectAll) {
+          items.forEach(it => this.curriculumDbState.selectedIndices.add(it._origIdx));
+        } else {
+          items.forEach(it => this.curriculumDbState.selectedIndices.delete(it._origIdx));
+        }
+        this.renderCurriculumDbList();
+      },
+
+      updateCurriculumDbSelectedCount() {
+        const countSpan = document.getElementById('curriculum-db-selected-count');
+        if (countSpan) {
+          countSpan.innerText = `${this.curriculumDbState.selectedIndices.size}개`;
+        }
+      },
+
+      importSelectedCurriculumDb(showAlert = true) {
+        const selected = Array.from(this.curriculumDbState.selectedIndices);
+        if (selected.length === 0) {
+          if (showAlert) alert('진도표에 추가할 차시를 1개 이상 선택해주세요.');
+          return;
+        }
+
+        const { semester, subject } = this.curriculumDbState;
+        const key = (subject === '국어') 
+          ? (semester === '1학기' ? 'grade2_korean_1' : 'grade2_korean_2')
+          : (semester === '1학기' ? 'grade2_math_1' : 'grade2_math_2');
+        const dbItems = CURRICULUM_DB_GRADE2[key] || [];
+
+        selected.sort((a, b) => a - b);
+
+        const replaceMode = document.getElementById('db-replace-mode')?.checked;
+        if (replaceMode) {
+          if (showAlert && !confirm(`기존에 등록된 진도표(${this.curriculum.length}차시)를 모두 지우고, 선택한 ${selected.length}개 차시로 새로 교체하시겠습니까?`)) {
+            return;
+          }
+          this.curriculum = [];
+        }
+
+        selected.forEach(idx => {
+          const it = dbItems[idx];
+          if (!it) return;
+          this.curriculum.push({
+            id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            subject: it.subject,
+            pages: it.pages,
+            lesson: String(it.lesson),
+            totalLesson: it.totalLesson,
+            unit: it.unit,
+            topic: `${it.unit} - ${it.topic}`,
+            isDemo: false,
+            designatedTeacher: ''
+          });
+        });
+
+        this.renderCurriculumTable();
+        this.closeCurriculumDbModal();
+        if (showAlert) {
+          alert(`2학년 ${semester} ${subject} ${selected.length}개 차시가 진도표에 성공적으로 등록되었습니다!`);
+        }
+      },
+
       openCurriculumBatchModal() {
         document.getElementById('modal-curriculum-batch').classList.remove('hidden');
       },
@@ -2446,18 +2098,47 @@
         const lines = text.split('\n');
         let count = 0;
         lines.forEach(line => {
-          const parts = line.split(/[\t,]+/).map(p => p.trim()).filter(Boolean);
+          const parts = line.split(/[\t]+/).map(p => p.trim());
           if (parts.length >= 4) {
-            const subject = parts[0];
-            const pages = parts[1];
-            const lesson = parts[2]; // support '3~4'
-            const totalLesson = parseInt(parts[3], 10) || 10;
+            let subject = '국어';
+            let pages = '';
+            let lesson = '';
+            let totalLesson = 10;
+            let topic = '';
+            let unit = '';
+
+            const isLessonCol2 = /^\d+(\s*[~-]\s*\d+)?$/.test(parts[2]);
+            const isTotalCol3 = /^\d+$/.test(parts[3]);
+
+            if (parts.length >= 5 && isLessonCol2 && isTotalCol3) {
+              unit = parts[0];
+              topic = parts[1];
+              lesson = parts[2];
+              totalLesson = parseInt(parts[3], 10) || 10;
+              pages = parts[4];
+              if (unit.includes('수학') || topic.includes('수학') || unit.includes('수') || topic.includes('곱셈') || topic.includes('도형')) {
+                subject = '수학';
+              } else {
+                subject = '국어';
+              }
+            } else {
+              subject = parts[0];
+              pages = parts[1];
+              lesson = parts[2];
+              totalLesson = parseInt(parts[3], 10) || 10;
+              topic = parts[4] || '';
+            }
+
             this.curriculum.push({
-              id: 'c' + Date.now() + '_' + Math.random(),
+              id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
               subject,
               pages,
-              lesson,
-              totalLesson
+              lesson: String(lesson),
+              totalLesson,
+              unit,
+              topic: (unit ? `${unit} - ` : '') + (topic || ''),
+              isDemo: false,
+              designatedTeacher: ''
             });
             count++;
           }
@@ -2465,420 +2146,6 @@
         this.renderCurriculumTable();
         this.closeCurriculumBatchModal();
         alert(`${count}개의 진도표 차시가 성공적으로 등록되었습니다.`);
-      },
-
-      // -----------------------------------------------------------------------
-      // CURRICULUM DATABASE & EXCEL IMPORTER
-      // -----------------------------------------------------------------------
-      initCurriculumDb() {
-        if (!this.curriculumDbData && typeof DEFAULT_CURRICULUM_DB !== 'undefined') {
-          this.curriculumDbData = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM_DB));
-        }
-        // GitHub Pages 등 웹 호스팅 환경에서 data/curriculum_db.json 최신 데이터 동적 fetch
-        if (typeof window !== 'undefined' && window.location && (window.location.protocol === 'http:' || window.location.protocol === 'https:')) {
-          fetch('data/curriculum_db.json')
-            .then(res => {
-              if (res.ok) return res.json();
-              throw new Error('Network response not ok');
-            })
-            .then(data => {
-              if (data && data.grades) {
-                this.curriculumDbData = data;
-                console.log('[Curriculum DB] External curriculum_db.json loaded successfully.');
-              }
-            })
-            .catch(err => {
-              console.log('[Curriculum DB] Using built-in default curriculum database.');
-            });
-        }
-      },
-
-      openCurriculumDbModal() {
-        this.initCurriculumDb();
-        const modal = document.getElementById('modal-curriculum-db');
-        if (!modal) return;
-        modal.classList.remove('hidden');
-
-        // Step 1 학년/반(예: "2학년 1반", "3학년 2반")에 맞춰 기본 학년 스마트 선택
-        const gradeSelect = document.getElementById('curriculum-db-grade');
-        if (gradeSelect && this.config && this.config.gradeClass) {
-          const match = this.config.gradeClass.match(/(\d+)학년/);
-          if (match && match[1]) {
-            const detectedGrade = match[1];
-            if (['1','2','3','4','5','6'].includes(detectedGrade)) {
-              gradeSelect.value = detectedGrade;
-            }
-          }
-        }
-
-        this.switchCurriculumDbTab('db');
-        this.renderCurriculumDbSubjects();
-        lucide.createIcons();
-      },
-
-      closeCurriculumDbModal() {
-        const modal = document.getElementById('modal-curriculum-db');
-        if (modal) modal.classList.add('hidden');
-      },
-
-      switchCurriculumDbTab(tab) {
-        this.curriculumDbTab = tab;
-        const btnDb = document.getElementById('curriculum-db-tab-btn-db');
-        const btnExcel = document.getElementById('curriculum-db-tab-btn-excel');
-        const paneDb = document.getElementById('curriculum-db-tab-db');
-        const paneExcel = document.getElementById('curriculum-db-tab-excel');
-        const submitBtn = document.getElementById('curriculum-db-submit-btn');
-
-        if (tab === 'db') {
-          if (btnDb) btnDb.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-sky-100 text-sky-800 flex items-center gap-1.5 transition';
-          if (btnExcel) btnExcel.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1.5 transition';
-          if (paneDb) paneDb.classList.remove('hidden');
-          if (paneExcel) paneExcel.classList.add('hidden');
-          if (submitBtn) submitBtn.innerHTML = `<i data-lucide="plus-circle" class="w-4 h-4"></i> 선택한 차시 진도표에 추가`;
-        } else {
-          if (btnExcel) btnExcel.className = 'px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-100 text-emerald-800 flex items-center gap-1.5 transition';
-          if (btnDb) btnDb.className = 'px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 hover:bg-slate-100 flex items-center gap-1.5 transition';
-          if (paneExcel) paneExcel.classList.remove('hidden');
-          if (paneDb) paneDb.classList.add('hidden');
-          if (submitBtn) submitBtn.innerHTML = `<i data-lucide="file-check" class="w-4 h-4"></i> 엑셀 파싱 차시 진도표에 등록`;
-        }
-        lucide.createIcons();
-      },
-
-      onCurriculumDbGradeChange(grade) {
-        this.renderCurriculumDbSubjects();
-      },
-
-      onCurriculumDbSemesterChange(sem) {
-        this.renderCurriculumDbSubjects();
-      },
-
-      onCurriculumDbSubjectChange(sub) {
-        this.renderCurriculumDbUnits();
-      },
-
-      onCurriculumDbUnitChange(unitIdx) {
-        this.renderCurriculumDbLessons();
-      },
-
-      getCurriculumDbSemesterData() {
-        if (!this.curriculumDbData || !this.curriculumDbData.grades) return null;
-        const gradeEl = document.getElementById('curriculum-db-grade');
-        const semEl = document.getElementById('curriculum-db-semester');
-        const grade = (gradeEl && gradeEl.value) || '2';
-        const semester = (semEl && semEl.value) || '1';
-        const gradeObj = this.curriculumDbData.grades[grade];
-        if (!gradeObj || !gradeObj.semesters) return null;
-        return gradeObj.semesters[semester] || null;
-      },
-
-      renderCurriculumDbSubjects() {
-        const semData = this.getCurriculumDbSemesterData();
-        const subSelect = document.getElementById('curriculum-db-subject');
-        if (!subSelect) return;
-        subSelect.innerHTML = '';
-
-        if (!semData || !semData.subjects || Object.keys(semData.subjects).length === 0) {
-          subSelect.innerHTML = '<option value="">(등록된 교과 없음)</option>';
-          this.renderCurriculumDbUnits();
-          return;
-        }
-
-        const subjects = Object.keys(semData.subjects);
-        subjects.forEach(sub => {
-          const opt = document.createElement('option');
-          opt.value = sub;
-          opt.innerText = sub;
-          subSelect.appendChild(opt);
-        });
-
-        this.renderCurriculumDbUnits();
-      },
-
-      renderCurriculumDbUnits() {
-        const semData = this.getCurriculumDbSemesterData();
-        const subSelect = document.getElementById('curriculum-db-subject');
-        const unitSelect = document.getElementById('curriculum-db-unit');
-        if (!unitSelect) return;
-        unitSelect.innerHTML = '';
-
-        const curSubject = subSelect ? subSelect.value : '';
-        if (!semData || !curSubject || !semData.subjects[curSubject]) {
-          unitSelect.innerHTML = '<option value="">(등록된 단원 없음)</option>';
-          this.renderCurriculumDbLessons();
-          return;
-        }
-
-        const units = semData.subjects[curSubject].units || [];
-        if (units.length === 0) {
-          unitSelect.innerHTML = '<option value="">(등록된 단원 없음)</option>';
-          this.renderCurriculumDbLessons();
-          return;
-        }
-
-        units.forEach((u, idx) => {
-          const opt = document.createElement('option');
-          opt.value = idx;
-          opt.innerText = `${u.unitNumber}단원. ${u.unitTitle} (${u.totalUnitLessons}차시)`;
-          unitSelect.appendChild(opt);
-        });
-
-        this.renderCurriculumDbLessons();
-      },
-
-      renderCurriculumDbLessons() {
-        const semData = this.getCurriculumDbSemesterData();
-        const subSelect = document.getElementById('curriculum-db-subject');
-        const unitSelect = document.getElementById('curriculum-db-unit');
-        const tbody = document.getElementById('curriculum-db-lessons-body');
-        if (!tbody) return;
-        tbody.innerHTML = '';
-
-        const checkAll = document.getElementById('curriculum-db-check-all');
-        if (checkAll) checkAll.checked = false;
-
-        const curSubject = subSelect ? subSelect.value : '';
-        const unitIdx = unitSelect ? parseInt(unitSelect.value, 10) : NaN;
-
-        const titleEl = document.getElementById('curriculum-db-unit-title-display');
-        const pubEl = document.getElementById('curriculum-db-unit-publisher-display');
-        const totalEl = document.getElementById('curriculum-db-unit-total-display');
-
-        if (!semData || !curSubject || !semData.subjects[curSubject] || isNaN(unitIdx)) {
-          if (titleEl) titleEl.innerText = '단원을 선택하세요.';
-          if (pubEl) pubEl.innerText = '-';
-          if (totalEl) totalEl.innerText = '0차시';
-          this.updateCurriculumDbSelectionSummary();
-          return;
-        }
-
-        const unit = semData.subjects[curSubject].units[unitIdx];
-        if (!unit) return;
-
-        if (titleEl) titleEl.innerText = `${curSubject} ${unit.unitNumber}단원. ${unit.unitTitle}`;
-        if (pubEl) pubEl.innerText = unit.publisher || '국정';
-        if (totalEl) totalEl.innerText = `총 ${unit.totalUnitLessons}차시 (${unit.lessons ? unit.lessons.length : 0}개 등록됨)`;
-
-        const lessons = unit.lessons || [];
-        if (lessons.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-slate-400">등록된 차시 데이터가 없습니다.</td></tr>`;
-          this.updateCurriculumDbSelectionSummary();
-          return;
-        }
-
-        lessons.forEach((l) => {
-          const tr = document.createElement('tr');
-          tr.className = 'hover:bg-sky-50/50 transition cursor-pointer';
-          tr.onclick = (e) => {
-            if (e.target.tagName !== 'INPUT') {
-              const chk = tr.querySelector('.curriculum-db-lesson-checkbox');
-              if (chk) {
-                chk.checked = !chk.checked;
-                this.updateCurriculumDbSelectionSummary();
-              }
-            }
-          };
-
-          const isBlock = l.isBlock || String(l.lesson).includes('~') || String(l.lesson).includes('-');
-          tr.innerHTML = `
-            <td class="py-2.5 px-3 text-center">
-              <input type="checkbox" class="curriculum-db-lesson-checkbox w-4 h-4 text-sky-600 rounded focus:ring-sky-500 cursor-pointer" 
-                data-subject="${curSubject}" 
-                data-lesson="${l.lesson}" 
-                data-pages="${l.pages}" 
-                data-total="${unit.totalUnitLessons || 10}" 
-                data-topic="${(l.topic || '').replace(/"/g, '&quot;')}"
-                data-unit="${unit.unitNumber}"
-                onchange="App.updateCurriculumDbSelectionSummary()">
-            </td>
-            <td class="py-2.5 px-3 text-center font-bold font-mono text-slate-800">${l.lesson}차시</td>
-            <td class="py-2.5 px-3 text-center text-slate-600 font-mono">${l.pages}쪽</td>
-            <td class="py-2.5 px-3 font-medium text-slate-700">${l.topic}</td>
-            <td class="py-2.5 px-3 text-center">
-              ${isBlock ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-bold">블록</span>' : '<span class="text-[10px] text-slate-400">1차시</span>'}
-            </td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        this.updateCurriculumDbSelectionSummary();
-      },
-
-      toggleSelectAllDbLessons(checked) {
-        const checkboxes = document.querySelectorAll('.curriculum-db-lesson-checkbox');
-        checkboxes.forEach(cb => { cb.checked = checked; });
-        this.updateCurriculumDbSelectionSummary();
-      },
-
-      updateCurriculumDbSelectionSummary() {
-        const checkboxes = document.querySelectorAll('.curriculum-db-lesson-checkbox:checked');
-        const summary = document.getElementById('curriculum-db-selection-summary');
-        if (summary) {
-          summary.innerText = `선택된 차시: ${checkboxes.length}개`;
-        }
-      },
-
-      importSelectedDbLessons() {
-        if (this.curriculumDbTab === 'excel') {
-          this.importExcelParsedCurriculum();
-          return;
-        }
-
-        const checkboxes = document.querySelectorAll('.curriculum-db-lesson-checkbox:checked');
-        if (checkboxes.length === 0) {
-          alert('진도표에 추가할 차시를 1개 이상 선택해주세요.');
-          return;
-        }
-
-        let addedCount = 0;
-        checkboxes.forEach(cb => {
-          const subject = cb.dataset.subject;
-          const pages = cb.dataset.pages;
-          const lesson = cb.dataset.lesson;
-          const totalLesson = parseInt(cb.dataset.total, 10) || 10;
-          const topic = cb.dataset.topic;
-
-          this.curriculum.push({
-            id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-            subject,
-            pages,
-            lesson,
-            totalLesson,
-            topic,
-            isDemo: false,
-            designatedTeacher: ''
-          });
-          addedCount++;
-        });
-
-        this.renderCurriculumTable();
-        this.closeCurriculumDbModal();
-        alert(`표준 교육과정 DB에서 ${addedCount}개 차시가 교과 진도표(Step 2)에 성공적으로 추가되었습니다!`);
-      },
-
-      importEntireDbUnit() {
-        const checkboxes = document.querySelectorAll('.curriculum-db-lesson-checkbox');
-        if (checkboxes.length === 0) {
-          alert('현재 단원에 등록된 차시가 없습니다.');
-          return;
-        }
-        checkboxes.forEach(cb => { cb.checked = true; });
-        this.updateCurriculumDbSelectionSummary();
-        this.importSelectedDbLessons();
-      },
-
-      handleCurriculumExcelDrop(e) {
-        e.preventDefault();
-        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-          this.handleCurriculumExcelFile(e.dataTransfer.files[0]);
-        }
-      },
-
-      async handleCurriculumExcelFile(file) {
-        if (!file) return;
-        if (typeof ExcelJS === 'undefined') {
-          alert('ExcelJS 라이브러리를 불러오지 못했습니다.');
-          return;
-        }
-
-        try {
-          const buffer = await file.arrayBuffer();
-          const workbook = new ExcelJS.Workbook();
-          await workbook.xlsx.load(buffer);
-          const worksheet = workbook.worksheets[0];
-          if (!worksheet) {
-            alert('엑셀 시트를 찾을 수 없습니다.');
-            return;
-          }
-
-          let colSubject = -1, colPages = -1, colLesson = -1, colTotal = -1, colTopic = -1;
-          const headerRow = worksheet.getRow(1);
-          headerRow.eachCell((cell, colNumber) => {
-            const val = String(cell.value || '').trim();
-            if (val.includes('교과') || val.includes('과목')) colSubject = colNumber;
-            else if (val.includes('쪽') || val.includes('페이지')) colPages = colNumber;
-            else if (val.includes('차시') && !val.includes('전체') && !val.includes('총')) colLesson = colNumber;
-            else if (val.includes('전체') || val.includes('총차시')) colTotal = colNumber;
-            else if (val.includes('주제') || val.includes('내용') || val.includes('단원')) colTopic = colNumber;
-          });
-
-          if (colSubject === -1) colSubject = 1;
-          if (colPages === -1) colPages = 2;
-          if (colLesson === -1) colLesson = 3;
-          if (colTotal === -1) colTotal = 4;
-          if (colTopic === -1) colTopic = 5;
-
-          const parsed = [];
-          for (let rowNum = 2; rowNum <= worksheet.rowCount; rowNum++) {
-            const row = worksheet.getRow(rowNum);
-            const rawSub = row.getCell(colSubject).value;
-            if (!rawSub) continue;
-            const subject = String(rawSub).trim();
-            const pages = String(row.getCell(colPages).value || '1-2').trim();
-            const lesson = String(row.getCell(colLesson).value || (rowNum - 1)).trim();
-            const totalLesson = parseInt(row.getCell(colTotal).value, 10) || 10;
-            const topic = String(row.getCell(colTopic).value || '').trim();
-
-            parsed.push({ subject, pages, lesson, totalLesson, topic });
-          }
-
-          this.parsedExcelCurriculum = parsed;
-          const previewBox = document.getElementById('curriculum-excel-preview-box');
-          const previewBody = document.getElementById('curriculum-excel-preview-body');
-          const countBadge = document.getElementById('curriculum-excel-parsed-count');
-
-          if (parsed.length === 0) {
-            alert('유효한 진도표 데이터를 엑셀에서 찾지 못했습니다.');
-            return;
-          }
-
-          if (previewBox) previewBox.classList.remove('hidden');
-          if (countBadge) countBadge.innerText = parsed.length;
-          if (previewBody) {
-            previewBody.innerHTML = '';
-            parsed.slice(0, 20).forEach(item => {
-              const tr = document.createElement('tr');
-              tr.innerHTML = `
-                <td class="py-1.5 px-3 font-bold text-slate-800">${item.subject}</td>
-                <td class="py-1.5 px-3 text-slate-600">${item.pages}</td>
-                <td class="py-1.5 px-3 text-center font-mono font-bold">${item.lesson}</td>
-                <td class="py-1.5 px-3 text-center">${item.totalLesson}</td>
-                <td class="py-1.5 px-3 text-slate-600 truncate max-w-xs">${item.topic}</td>
-              `;
-              previewBody.appendChild(tr);
-            });
-          }
-
-        } catch (err) {
-          console.error(err);
-          alert('엑셀 파일을 읽는 중 오류가 발생했습니다: ' + err.message);
-        }
-      },
-
-      importExcelParsedCurriculum() {
-        if (!this.parsedExcelCurriculum || this.parsedExcelCurriculum.length === 0) {
-          alert('먼저 학교 진도표 엑셀 파일을 업로드해주세요.');
-          return;
-        }
-
-        this.parsedExcelCurriculum.forEach(item => {
-          this.curriculum.push({
-            id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
-            subject: item.subject,
-            pages: item.pages,
-            lesson: item.lesson,
-            totalLesson: item.totalLesson,
-            topic: item.topic,
-            isDemo: false,
-            designatedTeacher: ''
-          });
-        });
-
-        const count = this.parsedExcelCurriculum.length;
-        this.renderCurriculumTable();
-        this.closeCurriculumDbModal();
-        alert(`엑셀 파일에서 ${count}개 차시가 교과 진도표(Step 2)에 성공적으로 추가되었습니다!`);
-        this.parsedExcelCurriculum = [];
       },
 
       // -----------------------------------------------------------------------
