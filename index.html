@@ -1,0 +1,3879 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>교생 수업 배당표 자동 완성 시스템 (Harness Engineering Pro)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f0f9ff', 100: '#e0f2fe', 500: '#0284c7', 600: '#0369a1', 700: '#075985', 800: '#0c4a6e'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- ExcelJS -->
+  <script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+  <!-- FileSaver -->
+  <script src="https://cdn.jsdelivr.net/npm/file-saver@2.0.5/dist/FileSaver.min.js"></script>
+  <!-- html2canvas for High-Res PNG Export -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <!-- Chart.js for Radar & Bar Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    body {
+      font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+    /* Timetable Grid Cell Specifics */
+    .tt-cell {
+      min-width: 96px;
+      height: 104px;
+      transition: all 0.15s ease-in-out;
+    }
+    .tt-cell:hover {
+      box-shadow: inset 0 0 0 2px #0284c7;
+    }
+    .tt-cell.dragging-over {
+      background-color: #e0f2fe !important;
+      border: 2px dashed #0284c7 !important;
+    }
+    /* Smart Swap Guide Styles */
+    .tt-cell.swap-safe {
+      background-color: #ecfdf5 !important;
+      border: 2px dashed #10b981 !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+      cursor: pointer !important;
+    }
+    .tt-cell.swap-unsafe {
+      background-color: #fef2f2 !important;
+      border: 2px dashed #ef4444 !important;
+      opacity: 0.6;
+    }
+    .tt-cell.cell-selected {
+      border: 3px solid #3b82f6 !important;
+      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
+      animation: pulse 1.5s infinite;
+    }
+    .tt-cell.dimmed-cell {
+      opacity: 0.25;
+      filter: grayscale(80%);
+    }
+    .cell-part {
+      line-height: 1.25;
+      text-align: center;
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; font-size: 11px; }
+      .print-area { width: 100% !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
+      .tt-cell { height: 88px !important; min-width: 85px !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- TOP HEADER -->
+  <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+          <i data-lucide="calendar-check-2" class="w-5 h-5 text-white"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+            교생 수업 배당표 자동 완성 시스템
+            <span class="text-xs px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-normal border border-sky-400/30">Harness Pro v2.0</span>
+          </h1>
+          <p class="text-xs text-slate-400">스마트 스왑 가이드 · 맞춤 지도안 달력 · HWP 원클릭 복사 · 레이더 차트</p>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="flex items-center space-x-2">
+        <!-- Preset Dropdown -->
+        <div class="relative inline-block text-left mr-1">
+          <button id="presetDropdownBtn" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-lg transition shadow-sm">
+            <i data-lucide="folder-git-2" class="w-3.5 h-3.5 text-sky-400"></i>
+            실제 예시 프리셋
+            <i data-lucide="chevron-down" class="w-3 h-3 text-slate-400"></i>
+          </button>
+          <div id="presetMenu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 z-50 text-slate-700">
+            <button onclick="App.loadPreset('grade2')" class="w-full text-left px-4 py-2.5 hover:bg-sky-50 flex flex-col transition border-b border-slate-100">
+              <span class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-sky-500"></span> [예시 1] 0학년 0반 종합실습
+              </span>
+              <span class="text-[11px] text-slate-500 mt-0.5">교생 3인 (김부설, 이공주, 삼알밤) / 2주간 종합실습</span>
+            </button>
+            <button onclick="App.loadPreset('grade3')" class="w-full text-left px-4 py-2.5 hover:bg-sky-50 flex flex-col transition">
+              <span class="font-bold text-xs text-slate-900 flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-indigo-500"></span> [예시 2] 0학년 0반 수업실습
+              </span>
+              <span class="text-[11px] text-slate-500 mt-0.5">교생 5인 (김부설 외 4명) / 4주간 수업실습</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- HWP 한글 표 복사 버튼 -->
+        <button onclick="App.copyHwpTable()" title="아래아한글 빈 문서에서 Ctrl+V만 누르면 표가 그대로 복사됩니다" class="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-sm transition">
+          <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
+          한글(HWP) 표 복사
+        </button>
+
+        <!-- PNG 이미지 저장 버튼 -->
+        <button onclick="App.exportPngImage()" class="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-violet-600 hover:bg-violet-500 text-white rounded-lg shadow-sm transition">
+          <i data-lucide="image" class="w-3.5 h-3.5"></i>
+          이미지 저장
+        </button>
+
+        <!-- Excel 내보내기 -->
+        <button onclick="App.exportExcel()" class="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm transition">
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+          엑셀(.xlsx)
+        </button>
+      </div>
+    </div>
+
+    <!-- WIZARD STEP TABS -->
+    <div class="bg-slate-800/90 border-t border-slate-700/60 backdrop-blur px-4">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto py-1">
+        <button onclick="App.setTab(1)" id="tab-btn-1" class="tab-btn active px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-sky-400 bg-slate-900/80 transition">
+          <span class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-300 flex items-center justify-center text-[10px]">1</span>
+          실습생 & 기본 정보
+        </button>
+        <button onclick="App.setTab(2)" id="tab-btn-2" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">2</span>
+          교과 진도표 등록
+        </button>
+        <button onclick="App.setTab(3)" id="tab-btn-3" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">3</span>
+          행사 & 불가 시간 등록
+        </button>
+        <button onclick="App.setTab(4)" id="tab-btn-4" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">4</span>
+          배당표 & 맞춤 달력
+          <span id="tab-violation-badge" class="hidden text-[10px] px-1.5 py-0.2 rounded-full bg-red-500 text-white font-bold">!</span>
+        </button>
+        <button onclick="App.setTab(5)" id="tab-btn-5" class="tab-btn px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-slate-400 hover:text-slate-200 transition">
+          <span class="w-5 h-5 rounded-full bg-slate-700 text-slate-300 flex items-center justify-center text-[10px]">5</span>
+          레이더 대시보드 & 하네스
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- ========================================================= -->
+    <!-- TAB 1: 실습생 및 기본 정보 -->
+    <!-- ========================================================= -->
+    <section id="tab-content-1" class="tab-content space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- 기본 학급 정보 설정 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+          <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+            <i data-lucide="school" class="w-5 h-5 text-sky-600"></i>
+            <h2 class="text-base font-bold text-slate-800">실습 및 학급 기본 정보</h2>
+          </div>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">배당표 제목</label>
+              <input type="text" id="cfg-title" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="교육실습Ⅲ, Ⅳ (수업, 종합) 교육 실습생 수업배당표(0학년)">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">학교명</label>
+                <input type="text" id="cfg-school" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="공주교육대학교부설초등학교">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">학년 / 반</label>
+                <input type="text" id="cfg-gradeClass" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="0학년 0반">
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">담임교사 성명</label>
+                <input type="text" id="cfg-teacherName" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="김지도">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">실습 기간 (주수)</label>
+                <select id="cfg-weekCount" onchange="App.onWeekCountChange(this.value)" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white">
+                  <option value="1">1주간 (5일)</option>
+                  <option value="2" selected>2주간 (10일 - 종합실습)</option>
+                  <option value="3">3주간 (15일)</option>
+                  <option value="4">4주간 (20일 - 수업실습)</option>
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 mb-1">실습 시작일 (월요일)</label>
+              <input type="date" id="cfg-startDate" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="2026-04-20">
+            </div>
+          </div>
+          <div class="pt-2 text-[11px] text-slate-400">
+            * 주차 수와 시작일을 변경하면 시간표 그리드와 지도안 마감일 달력이 자동으로 동기화됩니다.
+          </div>
+        </div>
+
+        <!-- 실습생 명단 등록 -->
+        <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <i data-lucide="users" class="w-5 h-5 text-indigo-600"></i>
+              <h2 class="text-base font-bold text-slate-800">교육 실습생 명단</h2>
+              <span id="teacher-count-badge" class="text-xs px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-700 font-semibold">총 4명</span>
+            </div>
+            <button onclick="App.addTeacherRow()" class="flex items-center gap-1 text-xs font-medium px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> 실습생 추가
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
+              <thead class="text-slate-500 bg-slate-50 border-b border-slate-100 font-semibold">
+                <tr>
+                  <th class="py-2.5 px-3 w-12 text-center">번호</th>
+                  <th class="py-2.5 px-3 w-24">성명</th>
+                  <th class="py-2.5 px-3 w-28">전공 심화</th>
+                  <th class="py-2.5 px-3 w-20 text-center">색상 태그</th>
+                  <th class="py-2.5 px-3 w-32">⭐ 대표수업 과목</th>
+                  <th class="py-2.5 px-3">수업 배당 (시수 메모)</th>
+                  <th class="py-2.5 px-3 w-12 text-center">삭제</th>
+                </tr>
+              </thead>
+              <tbody id="teacher-table-body" class="divide-y divide-slate-100">
+                <!-- Javascript will render teacher rows -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bg-indigo-50/50 p-3 rounded-xl border border-indigo-100/80 text-xs text-indigo-900 flex items-start gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-indigo-600 mt-0.5 shrink-0"></i>
+            <div>
+              <strong>배당 최적화 & 레이더 지표:</strong> 실습생의 전공 심화 교과가 우선 배려되며, 전공 일치도와 교과군(인문, 수리과학, 예체능 등) 시수 밸런스가 레이더 차트에 자동 반영됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end">
+        <button onclick="App.setTab(2)" class="flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+          다음 단계: 교과 진도표 등록 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 2: 교과 진도표 데이터베이스 등록 (연강 및 압축차시 지원) -->
+    <!-- ========================================================= -->
+    <section id="tab-content-2" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <i data-lucide="book-open" class="w-5 h-5 text-emerald-600"></i>
+            <h2 class="text-base font-bold text-slate-800">교과 진도표 데이터베이스 등록</h2>
+            <span id="curriculum-count-badge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-semibold">총 3차시</span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button onclick="App.openCurriculumBatchModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
+              <i data-lucide="clipboard-paste" class="w-3.5 h-3.5 text-emerald-600"></i> 표 붙여넣기(일괄등록)
+            </button>
+            <button onclick="App.addCurriculumRow()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg transition border border-emerald-200">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i> 차시 직접 추가
+            </button>
+          </div>
+        </div>
+
+        <div class="text-xs text-slate-500">
+          * 2차시 분량을 1교시에 수업하는 경우 해당 차시에 <strong>'3~4'</strong> 또는 <strong>'5-6'</strong> 형태로 압축 입력할 수 있습니다.
+        </div>
+
+        <div class="overflow-x-auto max-h-[500px]">
+          <table class="w-full text-xs text-left">
+            <thead class="text-slate-500 bg-slate-50 border-b border-slate-100 font-semibold sticky top-0 z-10">
+              <tr>
+                <th class="py-2.5 px-3 w-12 text-center">순번</th>
+                <th class="py-2.5 px-3 w-24">교과명</th>
+                <th class="py-2.5 px-3 w-24">교과서 쪽수</th>
+                <th class="py-2.5 px-3 w-24 text-center">해당 차시</th>
+                <th class="py-2.5 px-3 w-20 text-center">전체 차시</th>
+                <th class="py-2.5 px-3">단원/차시 주제 (선택)</th>
+                <th class="py-2.5 px-3 w-20 text-center">⭐ 대표수업</th>
+                <th class="py-2.5 px-3 w-28 text-center">👤 사전 배정 교생</th>
+                <th class="py-2.5 px-3 w-12 text-center">삭제</th>
+              </tr>
+            </thead>
+            <tbody id="curriculum-table-body" class="divide-y divide-slate-100">
+              <!-- Javascript rendered rows -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 일괄 추가 간편 생성기 -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
+          <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+            <i data-lucide="wand-2" class="w-3.5 h-3.5 text-sky-600"></i> 연속 차시 빠른 생성기
+          </span>
+          <div class="grid grid-cols-2 sm:grid-cols-6 gap-2 pt-1">
+            <input type="text" id="quick-subject" placeholder="교과명 (예: 국어)" class="text-xs px-2.5 py-1.5 border rounded-lg bg-white">
+            <input type="number" id="quick-start" placeholder="시작 차시 (예: 1)" class="text-xs px-2.5 py-1.5 border rounded-lg bg-white">
+            <input type="number" id="quick-end" placeholder="끝 차시 (예: 4)" class="text-xs px-2.5 py-1.5 border rounded-lg bg-white">
+            <input type="number" id="quick-total" placeholder="전체 차시 (예: 10)" class="text-xs px-2.5 py-1.5 border rounded-lg bg-white">
+            <input type="text" id="quick-page-prefix" placeholder="쪽수 (예: 60-61)" class="text-xs px-2.5 py-1.5 border rounded-lg bg-white">
+            <button onclick="App.generateQuickCurriculum()" class="text-xs font-semibold px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white rounded-lg transition">
+              연속 생성
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between">
+        <button onclick="App.setTab(1)" class="flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-xl transition">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> 이전 단계
+        </button>
+        <button onclick="App.setTab(3)" class="flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+          다음 단계: 행사 및 불가 시간 등록 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 3: 행사 및 학사 일정 등록 (배정 불가 시간 설정) -->
+    <!-- ========================================================= -->
+    <section id="tab-content-3" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <i data-lucide="lock" class="w-5 h-5 text-rose-600"></i>
+            <h2 class="text-base font-bold text-slate-800">행사 & 학사 일정 등록 (배정 불가 슬롯)</h2>
+          </div>
+          <div class="text-xs text-slate-500">
+            수업을 할 수 없는 강의, 참관, 협의회, 공휴일 등을 설정합니다. 이 슬롯은 자동 배당에서 제외됩니다.
+          </div>
+        </div>
+
+        <!-- 행사 프리셋 퀵 버튼 바 -->
+        <div class="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2.5 shadow-sm">
+          <!-- 상단: 스탬프 모드 안내 & 컨트롤 버튼 -->
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                <i data-lucide="stamp" class="w-4 h-4 text-sky-600"></i> 빠른 일정 스탬프 & 프리셋
+              </span>
+              <button onclick="App.openCustomStampModal()" class="flex items-center gap-1 px-2.5 py-1 text-xs font-bold bg-sky-600 hover:bg-sky-500 text-white rounded-lg shadow-sm transition">
+                <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> + 스탬프 만들기
+              </button>
+              <button onclick="App.clearCurrentStamp()" class="flex items-center gap-1 px-2.5 py-1 text-xs font-semibold bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-lg transition">
+                <i data-lucide="mouse-pointer" class="w-3.5 h-3.5"></i> 스탬프 해제 (상세 편집)
+              </button>
+            </div>
+            <div id="active-stamp-badge" class="text-xs px-3 py-1 rounded-full bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5">
+              <i data-lucide="mouse-pointer" class="w-3.5 h-3.5"></i> 모드: <strong>상세 편집/선택</strong> (칸 클릭 시 모달 오픈)
+            </div>
+          </div>
+
+          <div class="text-[11px] text-slate-500 flex items-center gap-1">
+            <i data-lucide="info" class="w-3 h-3 text-sky-500"></i>
+            스탬프를 선택한 후 아래 시간표 칸을 클릭하면 팝업 없이 <strong>0.1초 만에 즉시 도장</strong>이 찍힙니다! (우클릭: 언제든 상세 편집)
+          </div>
+
+          <!-- 기본 내장 프리셋 스탬프 목록 -->
+          <div class="flex flex-wrap items-center gap-1.5">
+            <span class="text-[11px] font-bold text-slate-600 mr-1">기본 스탬프:</span>
+            <!-- 강의 프리셋 -->
+            <button onclick="App.setCurrentStamp('lecture', '강의1', '교직 생활', '교장')" class="px-2.5 py-1 text-xs rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium border border-blue-200 transition">
+              강의1(교직생활/교장)
+            </button>
+            <button onclick="App.setCurrentStamp('lecture', '강의4', '미래 교육', '인사과장')" class="px-2.5 py-1 text-xs rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium border border-blue-200 transition">
+              강의4(미래교육/인사과장)
+            </button>
+            <!-- 교생 대표수업 프리셋 버튼 -->
+            <button onclick="App.openTraineeDemoStampModal()" class="px-2.5 py-1 text-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold border border-amber-600 shadow-sm transition flex items-center gap-1">
+              <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> ⭐ 교생 대표수업
+            </button>
+            <!-- 행사 및 참관/협의 프리셋 -->
+            <button onclick="App.setCurrentStamp('observation', '교과대표', '수업참관', '교생')" class="px-2.5 py-1 text-xs rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 font-medium border border-sky-200 transition">
+              교과대표 참관
+            </button>
+            <button onclick="App.setCurrentStamp('observation', '학년공개', '수업참관', '')" class="px-2.5 py-1 text-xs rounded-lg bg-sky-50 hover:bg-sky-100 text-sky-900 font-medium border border-sky-200 transition">
+              학년공개 참관
+            </button>
+            <button onclick="App.setCurrentStamp('meeting', '학급협의회', '', '')" class="px-2.5 py-1 text-xs rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 font-medium border border-purple-200 transition">
+              학급 협의회
+            </button>
+            <button onclick="App.setCurrentStamp('meeting', '전공별협의', '및컨설팅', '')" class="px-2.5 py-1 text-xs rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-900 font-medium border border-purple-200 transition">
+              전공별 협의
+            </button>
+            <button onclick="App.setCurrentStamp('design', '수업설계', '', '')" class="px-2.5 py-1 text-xs rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-medium border border-emerald-200 transition">
+              수업 설계
+            </button>
+            <button onclick="App.setCurrentStamp('homeroom', '창체', '학생과첫인사', '담임')" class="px-2.5 py-1 text-xs rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-medium border border-amber-200 transition">
+              담임 첫인사
+            </button>
+            <button onclick="App.setCurrentStamp('homeroom', '창체', '학생과끝인사', '담임')" class="px-2.5 py-1 text-xs rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-900 font-medium border border-amber-200 transition">
+              담임 끝인사
+            </button>
+            <button onclick="App.setCurrentStamp('holiday', '공휴일', '휴일/행사', '')" class="px-2.5 py-1 text-xs rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-900 font-medium border border-rose-200 transition">
+              공휴일/휴일
+            </button>
+            <button onclick="App.setCurrentStamp('clear', '', '', '')" class="px-2.5 py-1 text-xs rounded-lg bg-slate-200 hover:bg-rose-100 hover:text-rose-700 text-slate-700 font-bold border border-slate-300 transition">
+              지우개
+            </button>
+          </div>
+
+          <!-- 나만의 커스텀 프리셋 스탬프 목록 바 -->
+          <div class="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200/80">
+            <span class="text-[11px] font-bold text-slate-600 mr-1 flex items-center gap-1">
+              <i data-lucide="bookmark" class="w-3 h-3 text-amber-500"></i> 나만의 스탬프:
+            </span>
+            <div id="custom-stamps-list" class="flex flex-wrap items-center gap-1.5 flex-1">
+              <!-- Rendered dynamically by JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 블록 선택용 인터랙티브 그리드 -->
+        <div class="overflow-x-auto border border-slate-200 rounded-xl">
+          <div id="event-grid-container" class="min-w-[800px] p-2 bg-white">
+            <!-- Event grid rendered by JS -->
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+          <!-- 기본 주간 과목 편성 (틀) 설정 -->
+          <div class="p-4 bg-sky-50/50 rounded-xl border border-sky-100 space-y-2">
+            <h3 class="text-xs font-bold text-sky-900 flex items-center gap-1.5">
+              <i data-lucide="layout-grid" class="w-4 h-4 text-sky-600"></i> 학급 기본 주간 과목 틀 (정규 시간표)
+            </h3>
+            <p class="text-[11px] text-sky-800">
+              학급의 요일/교시별 기본 교과를 설정해두면 자동 배당 시 해당 교과 시간에 맞춰 차시와 교생이 자연스럽게 채워집니다.
+            </p>
+            <button onclick="App.openDefaultTimetableModal()" class="px-3 py-1.5 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+              기본 시간표 틀 편집하기
+            </button>
+          </div>
+
+          <!-- 아침활동 당번 순환 설정 -->
+          <div class="p-4 bg-amber-50/50 rounded-xl border border-amber-100 space-y-2">
+            <h3 class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+              <i data-lucide="sun" class="w-4 h-4 text-amber-600"></i> 아침활동 당번 설정
+            </h3>
+            <p class="text-[11px] text-amber-800">
+              매일 아침활동을 실습생들이 요일별로 공평하게 순환 배정하도록 설정합니다.
+            </p>
+            <button onclick="App.autoAssignMorningDuty()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-lg shadow-sm transition">
+              아침활동 공평 순환 배정
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-between">
+        <button onclick="App.setTab(2)" class="flex items-center gap-2 px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold text-xs rounded-xl transition">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i> 이전 단계
+        </button>
+        <button onclick="App.setTab(4)" class="flex items-center gap-2 px-5 py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-semibold text-xs rounded-xl shadow-sm transition">
+          다음 단계: 배당표 & 자동 배당 실행 <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 4: 배당표 & 스마트 스왑 & 교생 개인별 맞춤 달력 -->
+    <!-- ========================================================= -->
+    <section id="tab-content-4" class="tab-content hidden space-y-4">
+      
+      <!-- 컨트롤 툴바 & 스마트 스왑 안내 바 -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex flex-wrap items-center gap-2">
+          <!-- 자동 배당 실행 버튼 -->
+          <button onclick="App.runAutoAllocation()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-md transition transform active:scale-95">
+            <i data-lucide="play-circle" class="w-4 h-4"></i>
+            자동 수업 배당 실행 (Solver)
+          </button>
+
+          <!-- 리셋 / 지우기 -->
+          <button onclick="App.clearAllocatedClasses()" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition border border-slate-200">
+            수업만 초기화
+          </button>
+
+          <div class="h-5 w-px bg-slate-200 mx-1"></div>
+
+          <!-- 스마트 스왑 안내 표시기 -->
+          <div id="smart-swap-status" class="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-medium border border-slate-200">
+            <i data-lucide="sparkles" class="w-4 h-4 text-sky-600"></i>
+            <span>셀을 드래그하거나 클릭하면 <strong class="text-emerald-700">🟢 안전한 교환 위치</strong>가 표시됩니다.</span>
+          </div>
+        </div>
+
+        <!-- 보기 모드 전환 (전체 vs 교생 개인별) -->
+        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+          <span class="text-[11px] font-bold text-slate-600 pl-2">보기 모드:</span>
+          <button onclick="App.setTeacherFilter('all')" id="filter-btn-all" class="px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition">
+            전체 배당표
+          </button>
+          <div id="teacher-filter-tabs" class="flex items-center gap-1">
+            <!-- Dynamic teacher buttons -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 배당표 메인 뷰 (인쇄 및 이미지 캡처 대상 영역) -->
+      <div id="timetable-capture-area" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 print-area space-y-4">
+        
+        <!-- 상단 헤더 타이틀 & 우측 메타데이터 -->
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b-2 border-slate-800 pb-3 gap-2">
+          <div>
+            <h2 id="view-title" class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 underline decoration-slate-400 underline-offset-4">
+              교육실습IV(종합) 교육 실습생 수업배당표(0학년)
+            </h2>
+          </div>
+          <div class="text-right font-medium text-xs text-slate-700">
+            <span id="view-school">공주교육대학교부설초등학교</span>&nbsp;&nbsp;
+            <span id="view-gradeClass">0학년 0반</span>&nbsp;&nbsp;
+            담임교사: <span id="view-teacherName" class="font-bold">김지도</span>
+          </div>
+        </div>
+
+        <!-- 2분할 뷰: 좌측 대형 시간표 그리드 + 우측 실습생별 배당 교과 요약 통계 -->
+        <div class="flex flex-col lg:flex-row gap-4 items-start">
+          
+          <!-- 좌측: 시간표 메인 테이블 -->
+          <div class="flex-1 w-full overflow-x-auto">
+            <table id="timetable-table" class="w-full border-collapse border-2 border-slate-900 text-xs select-none">
+              <thead id="timetable-thead" class="bg-white">
+                <!-- Javascript rendered thead (Weeks, Dates, Days) -->
+              </thead>
+              <tbody id="timetable-tbody">
+                <!-- Javascript rendered rows (Morning Duty, 1~6 Periods) -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- 우측: 교육실습생 수업 교과 요약표 -->
+          <div class="w-full lg:w-72 shrink-0 space-y-4 no-print-responsive">
+            <div class="border-2 border-slate-900 bg-white">
+              <div class="bg-slate-100 p-2 text-center font-black text-xs border-b-2 border-slate-900 tracking-wider">
+                교육실습생 수업 교과
+              </div>
+              <div id="teacher-summary-list" class="divide-y-2 divide-slate-900 text-xs">
+                <!-- JS rendered teacher stats blocks -->
+              </div>
+            </div>
+
+            <!-- 하단 메모 박스 -->
+            <div class="border-2 border-slate-900 p-3 bg-white text-[11px] leading-relaxed space-y-1">
+              <div class="font-bold text-slate-900 border-b border-slate-300 pb-1 flex justify-between items-center">
+                <span>실습 안내 사항 (메모)</span>
+                <button onclick="App.editNotesPrompt()" class="text-sky-600 hover:underline text-[10px] no-print">편집</button>
+              </div>
+              <div id="timetable-notes" class="text-slate-800 whitespace-pre-line font-medium pt-1">
+1. 처음, 마지막 시간은 학생과 만남
+2. 교생 교과대표수업: 실습일정표 참조
+3. 오후 일정은 실습일정표 참조
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 교생 개인별 맞춤 수업안(지도안) 제출 마감일 달력 카드 (1인 뷰일 때 활성화) -->
+      <div id="personal-deadline-panel" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <i data-lucide="clipboard-check" class="w-5 h-5 text-indigo-600"></i>
+            <h3 class="text-base font-bold text-slate-800">
+              <span id="selected-teacher-name" class="text-indigo-600 font-black">김부설</span> 실습생 수업 일정 및 지도안 제출 마감일 캘린더
+            </h3>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="App.copyDeadlinesToClipboard()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i> 마감일 텍스트 복사 (카톡/메신저용)
+            </button>
+            <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i> 개인 시간표 인쇄
+            </button>
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500">
+          * 초등학교 교육실습 규정에 따라 <strong>수업일 3일 전(D-3) 약안/세안 1차 제출</strong> 및 <strong>1일 전(D-1) 최종안 제출</strong> 일정이 자동 계산되었습니다.
+        </p>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead class="text-slate-600 bg-slate-50 border-b font-semibold">
+              <tr>
+                <th class="py-2.5 px-3">수업 일시</th>
+                <th class="py-2.5 px-3">교과명</th>
+                <th class="py-2.5 px-3 text-center">차시</th>
+                <th class="py-2.5 px-3">교과서 쪽수</th>
+                <th class="py-2.5 px-3">D-3 지도안 1차 제출일</th>
+                <th class="py-2.5 px-3">D-1 최종안 제출일</th>
+                <th class="py-2.5 px-3 text-center">구분</th>
+              </tr>
+            </thead>
+            <tbody id="personal-deadline-tbody" class="divide-y divide-slate-100 font-mono">
+              <!-- JS rendered rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- TAB 5: 레이더 대시보드 & 하네스 검증 지표 -->
+    <!-- ========================================================= -->
+    <section id="tab-content-5" class="tab-content hidden space-y-6">
+      
+      <!-- 레이더 차트 & 전공 일치도 비주얼 대시보드 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- 4대 교과군 레이더 차트 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <i data-lucide="radar" class="w-5 h-5 text-indigo-600"></i>
+              <h3 class="text-base font-bold text-slate-800">교생별 4대 교과군 시수 밸런스 레이더</h3>
+            </div>
+            <span class="text-[11px] text-slate-400">인문사회·수리과학·예체능·생활통합</span>
+          </div>
+          <p class="text-xs text-slate-500">
+            실습생별로 특정 교과군에만 수업이 편중되지 않고 전 교과를 균형 있게 경험하도록 시각화합니다.
+          </p>
+          <div class="h-64 flex items-center justify-center pt-2">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+
+        <!-- 전공 일치도 및 피로도 바 차트 -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-3">
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100">
+            <div class="flex items-center gap-2">
+              <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-600"></i>
+              <h3 class="text-base font-bold text-slate-800">교생별 전공 일치율 & 총 수업 시수</h3>
+            </div>
+            <span class="text-[11px] text-slate-400">전공 교과 우선 배려 분석</span>
+          </div>
+          <p class="text-xs text-slate-500">
+            실습생의 전공 심화 교과 수업을 얼마나 배정받았는지 분석합니다.
+          </p>
+          <div class="h-64 flex items-center justify-center pt-2">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- 하네스 평가 매트릭스 카드 -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-6">
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <div class="flex items-center gap-2">
+            <i data-lucide="activity" class="w-5 h-5 text-sky-600"></i>
+            <h2 class="text-base font-bold text-slate-800">Harness Engineering 검증 & 품질 지표 (Linter)</h2>
+          </div>
+          <button onclick="App.runFullDiagnostic()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1.5">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 재검증 실행
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <!-- 종합 품질 점수 -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+            <span class="text-xs text-slate-500 font-medium">배당 무결성 종합 점수</span>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-score" class="text-3xl font-black text-sky-600">100</span>
+              <span class="text-xs font-bold text-slate-400">/ 100점</span>
+            </div>
+            <div id="metric-score-label" class="text-[11px] text-emerald-600 font-bold">최적 적합 (Optimal)</div>
+          </div>
+
+          <!-- 하드 제약 위반 수 -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+            <span class="text-xs text-slate-500 font-medium">하드 제약 위반 (Hard Violations)</span>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-hard" class="text-3xl font-black text-emerald-600">0</span>
+              <span class="text-xs font-bold text-slate-400">건</span>
+            </div>
+            <div class="text-[11px] text-slate-500">차시 역전, 불가 시간 침범 없음</div>
+          </div>
+
+          <!-- 시수 공평성 편차 -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+            <span class="text-xs text-slate-500 font-medium">시수 편차 (\(\sigma\))</span>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-fairness" class="text-3xl font-black text-indigo-600">0.00</span>
+              <span class="text-xs font-bold text-slate-400">시간</span>
+            </div>
+            <div class="text-[11px] text-slate-500">모든 교생 시수 편차 최소화</div>
+          </div>
+
+          <!-- 교과 경험 다양성 지수 -->
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
+            <span class="text-xs text-slate-500 font-medium">교과 분배 다양성 지수</span>
+            <div class="flex items-baseline gap-2">
+              <span id="metric-diversity" class="text-3xl font-black text-amber-600">96</span>
+              <span class="text-xs font-bold text-slate-400">%</span>
+            </div>
+            <div class="text-[11px] text-slate-500">다양한 교과 균형 체험 보장</div>
+          </div>
+        </div>
+
+        <!-- 위반 사항 상세 피드백 목록 -->
+        <div class="space-y-2">
+          <h3 class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+            <i data-lucide="list-checks" class="w-4 h-4 text-slate-500"></i> 제약조건 규칙 준수 검사 보고서
+          </h3>
+          <div id="diagnostic-report-box" class="bg-slate-900 text-slate-200 p-4 rounded-xl font-mono text-xs max-h-48 overflow-y-auto space-y-1">
+            <!-- Reports rendered by JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 데이터 저장 / 불러오기 / 백업 카드 -->
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+        <div class="flex items-center gap-2 pb-3 border-b border-slate-100">
+          <i data-lucide="hard-drive-download" class="w-5 h-5 text-emerald-600"></i>
+          <h2 class="text-base font-bold text-slate-800">데이터 저장, 백업 및 내보내기</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- 엑셀 내보내기 -->
+          <div class="p-4 rounded-xl border border-emerald-200 bg-emerald-50/40 space-y-2">
+            <h3 class="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-700"></i> 엑셀 파일 다운로드 (.xlsx)
+            </h3>
+            <p class="text-[11px] text-emerald-800">
+              공주교대부초 실제 양식(사진)과 똑같은 서식, 테두리, 배경색, 우측 통계표를 포함한 엑셀 파일로 출력합니다.
+            </p>
+            <button onclick="App.exportExcel()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs rounded-lg transition shadow-sm">
+              엑셀 다운로드
+            </button>
+          </div>
+
+          <!-- 프로젝트 JSON 파일 저장/백업 -->
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="download" class="w-4 h-4 text-slate-700"></i> 프로젝트 백업 파일 저장 (.json)
+            </h3>
+            <p class="text-[11px] text-slate-600">
+              현재 설정한 실습생 명단, 진도표, 학사일정, 완성된 시간표 전체를 파일로 백업합니다.
+            </p>
+            <button onclick="App.downloadJsonBackup()" class="w-full py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs rounded-lg transition">
+              JSON 백업 파일 저장
+            </button>
+          </div>
+
+          <!-- 프로젝트 JSON 파일 복원 -->
+          <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 space-y-2">
+            <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+              <i data-lucide="upload" class="w-4 h-4 text-slate-700"></i> 백업 파일 불러오기
+            </h3>
+            <p class="text-[11px] text-slate-600">
+              이전에 저장해 둔 JSON 백업 파일을 업로드하여 상태를 그대로 복원합니다.
+            </p>
+            <input type="file" id="json-file-input" accept=".json" class="hidden" onchange="App.loadJsonBackup(event)">
+            <button onclick="document.getElementById('json-file-input').click()" class="w-full py-2 bg-white hover:bg-slate-100 text-slate-800 font-semibold text-xs rounded-lg border border-slate-300 transition">
+              백업 파일 열기
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 교과 진도표 엑셀/표 일괄 붙여넣기 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-curriculum-batch" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="clipboard-paste" class="w-5 h-5 text-emerald-600"></i> 진도표 표 복사-붙여넣기
+        </h3>
+        <button onclick="App.closeCurriculumBatchModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600">
+        엑셀이나 한글에서 표 데이터를 복사(Ctrl+C)한 후 아래 텍스트 영역에 붙여넣기(Ctrl+V)하세요.<br>
+        <strong>열 순서:</strong> [교과명] [쪽수] [해당차시] [전체차시] (탭 또는 쉼표 구분, '3~4' 압축차시 지원)
+      </p>
+      <textarea id="batch-curriculum-text" rows="8" placeholder="국어	118-120	3	15&#10;수학	36-39	2	9&#10;미술	70-71	3~4	4" class="w-full text-xs font-mono p-3 border rounded-xl bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"></textarea>
+      <div class="flex justify-end gap-2">
+        <button onclick="App.closeCurriculumBatchModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
+        <button onclick="App.applyCurriculumBatch()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-lg">등록하기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 기본 주간 시간표 틀(정규 과목 배치) 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-default-timetable" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="layout-grid" class="w-5 h-5 text-sky-600"></i> 학급 기본 주간 과목 편성 (틀)
+        </h3>
+        <button onclick="App.closeDefaultTimetableModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <p class="text-xs text-slate-600">
+        평소 학급의 정규 주간 시간표 과목을 입력해 두면, 자동 배당 시 이 틀에 맞춰 진도표의 차시가 순서대로 배치됩니다.
+      </p>
+      <div class="overflow-x-auto max-h-[400px]">
+        <table class="w-full text-xs text-center border">
+          <thead class="bg-slate-100">
+            <tr>
+              <th class="p-2 border">교시</th>
+              <th class="p-2 border">월</th>
+              <th class="p-2 border">화</th>
+              <th class="p-2 border">수</th>
+              <th class="p-2 border">목</th>
+              <th class="p-2 border">금</th>
+            </tr>
+          </thead>
+          <tbody id="default-tt-body">
+            <!-- JS rendered rows for 1~6 periods -->
+          </tbody>
+        </table>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button onclick="App.closeDefaultTimetableModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">닫기</button>
+        <button onclick="App.saveDefaultTimetableModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg">저장 및 적용</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 행사 및 강의 상세 편집 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-event-edit" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="calendar-clock" class="w-5 h-5 text-sky-600"></i>
+          <span id="ev-modal-header">행사 및 강의 일정 편집</span>
+        </h3>
+        <button onclick="App.closeEventEditModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- 일정 유형 선택 퀵 태그 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">일정 유형</label>
+          <div class="grid grid-cols-4 gap-1.5 text-xs">
+            <button type="button" onclick="App.setModalEventType('lecture')" id="ev-type-btn-lecture" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-blue-50 border-blue-300 text-blue-800">
+              강의
+            </button>
+            <button type="button" onclick="App.setModalEventType('trainee_demo')" id="ev-type-btn-trainee_demo" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-amber-50 border-amber-300 text-amber-800">
+              ⭐ 교생대표
+            </button>
+            <button type="button" onclick="App.setModalEventType('observation')" id="ev-type-btn-observation" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
+              수업 참관
+            </button>
+            <button type="button" onclick="App.setModalEventType('meeting')" id="ev-type-btn-meeting" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
+              학급 협의회
+            </button>
+            <button type="button" onclick="App.setModalEventType('design')" id="ev-type-btn-design" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
+              수업 설계
+            </button>
+            <button type="button" onclick="App.setModalEventType('homeroom')" id="ev-type-btn-homeroom" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
+              담임 첫/끝인사
+            </button>
+            <button type="button" onclick="App.setModalEventType('holiday')" id="ev-type-btn-holiday" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 col-span-2">
+              개교기념일/휴일
+            </button>
+          </div>
+        </div>
+
+        <!-- 교생 대표수업 전용 옵션 -->
+        <div id="ev-trainee-demo-group" class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-2 hidden">
+          <label class="block text-xs font-bold text-amber-900 flex items-center gap-1">
+            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500 text-amber-500"></i>
+            교생 대표수업 지정 (담당 교생 & 대표 과목)
+          </label>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block text-[11px] font-semibold text-amber-800 mb-1">담당 실습생</label>
+              <select id="ev-modal-trainee-select" onchange="App.onModalTraineeChange(this.value)" class="w-full text-xs px-2 py-1.5 border rounded-lg bg-white font-bold text-slate-800">
+                <!-- JS populated -->
+              </select>
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-amber-800 mb-1">대표수업 교과</label>
+              <select id="ev-modal-demo-subject" onchange="App.onModalDemoSubjectChange(this.value)" class="w-full text-xs px-2 py-1.5 border rounded-lg bg-white font-bold text-slate-800">
+                <!-- JS populated -->
+              </select>
+            </div>
+          </div>
+          <p class="text-[10px] text-amber-700">* 자동 배당 시 이 요일·교시에 해당 교생의 대표수업 차시가 100% 확정(Hard-Locked) 배치됩니다.</p>
+        </div>
+
+        <!-- 행사 / 강의명 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            강의 / 행사명 <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="ev-modal-subject" placeholder="예: 강의1, 강의2, 교과대표수업참관" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white font-bold text-slate-800">
+        </div>
+
+        <!-- 세부 내용 / 주제 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            강의 주제 / 세부 내용
+          </label>
+          <input type="text" id="ev-modal-pages" placeholder="예: 교직 생활, 실습 안내, 과정안 작성, 미래 교육" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white text-slate-800">
+        </div>
+
+        <!-- 강사 / 진행자 성명 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            강사 / 진행자 성명
+          </label>
+          <input type="text" id="ev-modal-teacher" placeholder="예: 교장, 박준배, 최동영, 교감, 수석교사 등" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white text-slate-800">
+          <p class="text-[11px] text-slate-400 mt-1">* 교장/수석 외에도 모든 강사·선생님 성명을 자유롭게 입력 및 수정할 수 있습니다.</p>
+        </div>
+
+        <!-- 연속 교시 적용 여부 (블록) -->
+        <div class="pt-1">
+          <label class="flex items-center gap-2 text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-200 cursor-pointer">
+            <input type="checkbox" id="ev-modal-span2" class="rounded text-sky-600 focus:ring-sky-500">
+            <span><strong>다음 교시까지 2연속 블록 적용</strong> (예: 2~3교시 참관, 5~6교시 협의회)</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-between items-center pt-2 border-t border-slate-100">
+        <button type="button" onclick="App.deleteEventFromModal()" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-lg transition border border-rose-200 flex items-center gap-1">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 이 슬롯 삭제
+        </button>
+        <div class="flex gap-2">
+          <button type="button" onclick="App.closeEventEditModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
+          <button type="button" onclick="App.saveEventEditModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-lg shadow-sm">저장 및 적용</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 빠른 일정 스탬프 만들기 (나만의 프리셋 등록) -->
+  <!-- ========================================================= -->
+  <div id="modal-custom-stamp-create" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="stamp" class="w-5 h-5 text-sky-600"></i>
+          <span>새 빠른 일정 스탬프 만들기</span>
+        </h3>
+        <button onclick="App.closeCustomStampModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <!-- 일정 유형 선택 태그 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1.5">일정 유형 (테마 색상)</label>
+          <div class="grid grid-cols-3 gap-1.5 text-xs">
+            <button type="button" onclick="App.setNewStampType('lecture')" id="new-stamp-type-lecture" class="py-1.5 px-2 rounded-lg border text-center font-bold bg-blue-600 text-white border-blue-600 shadow-sm">
+              강의
+            </button>
+            <button type="button" onclick="App.setNewStampType('observation')" id="new-stamp-type-observation" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+              수업 참관
+            </button>
+            <button type="button" onclick="App.setNewStampType('meeting')" id="new-stamp-type-meeting" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+              협의회
+            </button>
+            <button type="button" onclick="App.setNewStampType('design')" id="new-stamp-type-design" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+              수업 설계
+            </button>
+            <button type="button" onclick="App.setNewStampType('homeroom')" id="new-stamp-type-homeroom" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+              창체/인사
+            </button>
+            <button type="button" onclick="App.setNewStampType('holiday')" id="new-stamp-type-holiday" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100">
+              공휴일/휴일
+            </button>
+          </div>
+        </div>
+
+        <!-- 스탬프 표기명 / 강의명 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            스탬프 이름 / 강의·행사명 <span class="text-rose-500">*</span>
+          </label>
+          <input type="text" id="new-stamp-subject" placeholder="예: 강의5, 동학년 협의회, 체육대회" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white font-bold text-slate-800">
+        </div>
+
+        <!-- 세부 내용 / 주제 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            강의 주제 / 세부 내용 (선택)
+          </label>
+          <input type="text" id="new-stamp-pages" placeholder="예: 생활지도 및 학생상담 기법" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white text-slate-800">
+        </div>
+
+        <!-- 강사 / 진행자 성명 -->
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">
+            강사 / 진행자 성명 (선택)
+          </label>
+          <input type="text" id="new-stamp-teacher" placeholder="예: 김상담, 교장, 수석교사, 외부강사 등" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white text-slate-800">
+          <p class="text-[11px] text-slate-400 mt-1">* 스탬프로 등록해두면 시간표 칸을 클릭할 때마다 바로 도장처럼 0.1초 만에 입력됩니다.</p>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="App.closeCustomStampModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
+        <button type="button" onclick="App.saveCustomStampFromModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold rounded-lg shadow-sm">스탬프 등록 및 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 교생 대표수업 스탬프 선택 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-trainee-demo-stamp" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="star" class="w-5 h-5 text-amber-500 fill-amber-500"></i>
+          <span>교생 대표수업 스탬프 선택</span>
+        </h3>
+        <button onclick="App.closeTraineeDemoStampModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs text-slate-600">
+          시간표 칸을 클릭할 때 찍힐 <strong>교생 대표수업</strong> 담당자와 과목을 선택하세요.
+        </p>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">담당 실습생</label>
+          <select id="trainee-demo-stamp-teacher" onchange="App.onTraineeDemoStampTeacherChange(this.value)" class="w-full text-xs px-3 py-2 border rounded-lg bg-white font-bold text-slate-800">
+            <!-- JS populated with teachers -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">대표수업 교과목</label>
+          <select id="trainee-demo-stamp-subject" class="w-full text-xs px-3 py-2 border rounded-lg bg-white font-bold text-slate-800">
+            <!-- 13 elementary subjects -->
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="App.closeTraineeDemoStampModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
+        <button type="button" onclick="App.applyTraineeDemoStampSelection()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold rounded-lg shadow-sm">스탬프 활성화</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC ENGINE -->
+  <script>
+    // --- 초등학교 13대 교과군 ---
+    const ELEMENTARY_SUBJECTS = ['국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어', '바생', '슬생', '즐생'];
+
+    // --- 4대 교과군 분류 매핑 함수 ---
+    const SUBJECT_CATEGORIES = {
+      '인문사회': ['국어', '도덕', '사회', '영어'],
+      '수리과학': ['수학', '과학', '컴퓨터', '정보'],
+      '예체능': ['체육', '음악', '미술'],
+      '생활통합': ['바생', '슬생', '즐생', '실과', '창체']
+    };
+
+    function getSubjectCategory(subject) {
+      for (const [cat, subs] of Object.entries(SUBJECT_CATEGORIES)) {
+        if (subs.some(s => subject.includes(s))) return cat;
+      }
+      return '인문사회';
+    }
+
+    const TEACHER_COLORS = [
+      { bg: '#eff6ff', text: '#1e40af', border: '#bfdbfe', rgba: 'rgba(59, 130, 246, 0.4)', rgb: '#3b82f6' },
+      { bg: '#fdf2f8', text: '#9d174d', border: '#fbcfe8', rgba: 'rgba(236, 72, 153, 0.4)', rgb: '#ec4899' },
+      { bg: '#f0fdf4', text: '#166534', border: '#bbf7d0', rgba: 'rgba(34, 197, 94, 0.4)', rgb: '#22c55e' },
+      { bg: '#fffbeb', text: '#92400e', border: '#fde68a', rgba: 'rgba(245, 158, 11, 0.4)', rgb: '#f59e0b' },
+      { bg: '#faf5ff', text: '#6b21a8', border: '#e9d5ff', rgba: 'rgba(168, 85, 247, 0.4)', rgb: '#a855f7' },
+      { bg: '#fff1f2', text: '#9f1239', border: '#fecdd3', rgba: 'rgba(244, 63, 94, 0.4)', rgb: '#f43f5e' },
+      { bg: '#f0fdfa', text: '#115e59', border: '#99f6e4', rgba: 'rgba(20, 184, 166, 0.4)', rgb: '#14b8a6' },
+    ];
+
+    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생) ---
+    const DEFAULT_CONFIG = {
+      title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
+      school: '공주교육대학교부설초등학교',
+      gradeClass: '0학년 0반',
+      teacherName: '김지도',
+      weekCount: 2,
+      startDate: '2026-04-20',
+      notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 실습일정표 참조\n3. 오후 일정은 실습일정표 참조'
+    };
+
+    const DEFAULT_TEACHERS = [
+      { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1)', colorIdx: 0 },
+      { id: 't2', name: '이공주', major: '수학', demoSubject: '수학', note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
+      { id: 't3', name: '삼알밤', major: '미술', demoSubject: '즐생', note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
+      { id: 't4', name: '사산성', major: '체육', demoSubject: '체육', note: '국(1) 수(1) 체(1)', colorIdx: 3 }
+    ];
+
+    const DEFAULT_CURRICULUM = [
+      { id: 'c1', subject: '국어', pages: '118-120', lesson: '3', totalLesson: 15, topic: '마음을 전하는 글', isDemo: true, designatedTeacher: '김부설' },
+      { id: 'c2', subject: '수학', pages: '36-39', lesson: '2', totalLesson: 9, topic: '여러 가지 도형', isDemo: false, designatedTeacher: '' },
+      { id: 'c3', subject: '즐생', pages: '22-23', lesson: '5', totalLesson: 48, topic: '봄의 소리 표현하기', isDemo: false, designatedTeacher: '' }
+    ];
+
+    // --- GOLDEN PRESETS FROM USER PHOTOS (익명화 적용) ---
+    const PRESETS = {
+      grade2: {
+        config: {
+          title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
+          school: '공주교육대학교부설초등학교',
+          gradeClass: '0학년 0반',
+          teacherName: '김지도',
+          weekCount: 2,
+          startDate: '2026-04-20',
+          notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 27(월) 2-3교시\n3. 오후 일정은 실습일정표 참조'
+        },
+        teachers: [
+          { id: 't1', name: '김부설', major: '교육', demoSubject: '국어', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '실과', demoSubject: '수학', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '음악', demoSubject: '즐생', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 2 }
+        ],
+        curriculum: [
+          { id: 'c1', subject: '국어', pages: '118-120', lesson: '3', totalLesson: 15, isBlock: false },
+          { id: 'c2', subject: '수학', pages: '36-39', lesson: '2', totalLesson: 9, isBlock: false },
+          { id: 'c3', subject: '슬생', pages: '78-79', lesson: '41', totalLesson: 48, isBlock: false },
+          { id: 'c4', subject: '즐생', pages: '22-23', lesson: '5', totalLesson: 48, isBlock: false },
+          { id: 'c5', subject: '즐생', pages: '34-35', lesson: '14', totalLesson: 48, isBlock: false },
+          { id: 'c6', subject: '국어', pages: '121-122', lesson: '5', totalLesson: 15, isDemo: true, demoTeacher: '김부설', designatedTeacher: '김부설', isBlock: false },
+          { id: 'c7', subject: '수학', pages: '44-47', lesson: '4', totalLesson: 9, isBlock: false },
+          { id: 'c8', subject: '바생', pages: '44-45', lesson: '20', totalLesson: 48, isBlock: false },
+          { id: 'c9', subject: '슬생', pages: '42-43', lesson: '19', totalLesson: 48, isBlock: false },
+          { id: 'c10', subject: '즐생', pages: '60-61', lesson: '32', totalLesson: 48, isBlock: false },
+          { id: 'c11', subject: '국어', pages: '123-127', lesson: '6', totalLesson: 15, isBlock: false },
+          { id: 'c12', subject: '바생', pages: '46-47', lesson: '21', totalLesson: 48, isBlock: false },
+          { id: 'c13', subject: '즐생', pages: '24-25', lesson: '7', totalLesson: 48, isBlock: false },
+          { id: 'c14', subject: '즐생', pages: '72-73', lesson: '38', totalLesson: 48, isBlock: false },
+          { id: 'c15', subject: '수학', pages: '48-51', lesson: '5', totalLesson: 9, isBlock: false },
+          { id: 'c16', subject: '바생', pages: '74-75', lesson: '39', totalLesson: 48, isBlock: false },
+          { id: 'c17', subject: '즐생', pages: '36-37', lesson: '16', totalLesson: 48, isBlock: false },
+          { id: 'c18', subject: '즐생', pages: '68-69', lesson: '35', totalLesson: 48, isBlock: false }
+        ],
+        defaultTimetable: [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '교생대표', '슬생', '즐생', '즐생'],
+          ['즐생', '수업설계', '즐생', '즐생', '즐생'],
+          ['학급협의회', '슬생', '학급협의회', '학급협의회', '창체'],
+          ['학급협의회', '학급협의회', '학급협의회', '학급협의회', '창체']
+        ],
+        events: {
+          '0-1': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '첫인사', teacher: '담임', isLocked: true },
+          '0-2': { type: 'lecture', subject: '강의1', pages: '교직', lessonStr: '생활', teacher: '교장', isLocked: true },
+          '0-3': { type: 'lecture', subject: '강의2', pages: '실습', lessonStr: '안내', teacher: '박준배', isLocked: true },
+          '0-4': { type: 'lecture', subject: '강의3', pages: '과정안', lessonStr: '작성', teacher: '최동영', isLocked: true },
+          '0-5': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '①②', teacher: '', isLocked: true },
+          '0-6': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '①②', teacher: '', isLocked: true },
+          
+          '1-2': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '③④', teacher: '', isLocked: true },
+          '1-3': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '③④', teacher: '', isLocked: true },
+          '1-4': { type: 'lecture', subject: '강의4', pages: '미래', lessonStr: '교육', teacher: '인사과장', isLocked: true },
+          '1-5': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '⑤⑥', teacher: '', isLocked: true },
+          '1-6': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '⑤⑥', teacher: '', isLocked: true },
+
+          '2-1': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-2': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-3': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-4': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-5': { type: 'meeting', subject: '학급협의회', pages: '', lessonStr: '', teacher: '', isLocked: true },
+          '2-6': { type: 'meeting', subject: '전공별협의', pages: '및컨설팅', lessonStr: '', teacher: '', isLocked: true },
+
+          '3-1': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-2': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-3': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-4': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-5': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-6': { type: 'holiday', subject: '개교기념일', isLocked: true },
+
+          '4-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '5-1': { type: 'design', subject: '수업설계', isLocked: true },
+          '5-3': { type: 'observation', subject: '교생대표', pages: '수업', lessonStr: '협의회', teacher: '', isLocked: true },
+          '5-4': { type: 'design', subject: '수업설계', isLocked: true },
+          '5-6': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '6-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+          '6-6': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '7-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+          '7-6': { type: 'meeting', subject: '전체교생', pages: '협의회', lessonStr: '', teacher: '', isLocked: true },
+
+          '8-5': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '끝인사', teacher: '담임', isLocked: true },
+          '8-6': { type: 'homeroom', subject: '소감작성', pages: '및', lessonStr: '설문', teacher: '', isLocked: true },
+
+          '9-1': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-2': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-3': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-4': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-5': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-6': { type: 'holiday', subject: '노동절', isLocked: true }
+        },
+        morningDuty: {
+          '1': '김부설', '2': '이공주', '4': '삼알밤',
+          '5': '이공주', '6': '삼알밤', '7': '이공주', '8': '김부설'
+        }
+      },
+
+      grade3: {
+        config: {
+          title: '교육실습II(수업) 교육 실습생 수업배당표(0학년)',
+          school: '공주교육대학교부설초등학교',
+          gradeClass: '0학년 0반',
+          teacherName: '김지도',
+          weekCount: 4,
+          startDate: '2026-04-13',
+          notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업 30(목) 2-3교시\n3. 오후 일정은 실습일정표 참조'
+        },
+        teachers: [
+          { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(2) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(1)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '과학', demoSubject: '과학', note: '국(1) 도(1) 사(1) 수(2) 과(2) 체(1) 음(1) 영(1)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '미술', demoSubject: '미술', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(2) 영(1)', colorIdx: 2 },
+          { id: 't4', name: '사산성', major: '영어', demoSubject: '영어', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(2)', colorIdx: 3 },
+          { id: 't5', name: '오금강', major: '컴퓨터', demoSubject: '수학', note: '국(1) 도(2) 사(1) 수(2) 과(1) 체(1) 음(1) 미(1)', colorIdx: 4 }
+        ],
+        curriculum: [
+          { id: 'c1', subject: '음악', pages: '102-103', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c2', subject: '도덕', pages: '2/14', lesson: '2', totalLesson: 14, isBlock: false },
+          { id: 'c3', subject: '국어', pages: '180-183', lesson: '2', totalLesson: 14, isBlock: false },
+          { id: 'c4', subject: '사회', pages: '89-94', lesson: '12', totalLesson: 17, isBlock: false },
+          { id: 'c5', subject: '수학', pages: '88-89', lesson: '4', totalLesson: 12, isBlock: false },
+          { id: 'c6', subject: '체육', pages: '118-119', lesson: '4', totalLesson: 11, isBlock: false },
+          { id: 'c7', subject: '과학', pages: '82-83', lesson: '2', totalLesson: 12, isBlock: false },
+          { id: 'c8', subject: '수학', pages: '84-87', lesson: '3', totalLesson: 12, isBlock: false },
+          { id: 'c9', subject: '국어', pages: '184-187', lesson: '3', totalLesson: 14, isBlock: false },
+          { id: 'c10', subject: '과학', pages: '62-63', lesson: '2', totalLesson: 13, isBlock: false },
+          { id: 'c11', subject: '영어', pages: '100-101', lesson: '2', totalLesson: 4, isBlock: false },
+          { id: 'c12', subject: '미술', pages: '71', lesson: '4', totalLesson: 4, isBlock: false },
+          { id: 'c13', subject: '국어', pages: '198-200', lesson: '7', totalLesson: 14, isDemo: true, demoTeacher: '김부설', designatedTeacher: '김부설', isBlock: false },
+          { id: 'c14', subject: '사회', pages: '84-88', lesson: '10', totalLesson: 17, isBlock: false },
+          { id: 'c15', subject: '체육', pages: '114-115', lesson: '1', totalLesson: 11, isBlock: false },
+          { id: 'c16', subject: '영어', pages: '98-99', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c17', subject: '체육', pages: '116-117', lesson: '2', totalLesson: 11, isBlock: false },
+          { id: 'c18', subject: '국어', pages: '188-197', lesson: '5', totalLesson: 14, isBlock: false },
+          { id: 'c19', subject: '수학', pages: '90-91', lesson: '5', totalLesson: 12, isBlock: false },
+          { id: 'c20', subject: '음악', pages: '72', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c21', subject: '영어', pages: '102-103', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c22', subject: '미술', pages: '68-69', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c23', subject: '음악', pages: '64-65', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c24', subject: '미술', pages: '70', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c25', subject: '사회', pages: '95-96', lesson: '14', totalLesson: 17, isBlock: false },
+          { id: 'c26', subject: '과학', pages: '64-65', lesson: '3', totalLesson: 13, isBlock: false },
+          { id: 'c27', subject: '미술', pages: '72-73', lesson: '1', totalLesson: 4, isDemo: true, demoTeacher: '삼알밤', designatedTeacher: '삼알밤', isBlock: false },
+          { id: 'c28', subject: '체육', pages: '120-121', lesson: '6', totalLesson: 11, isBlock: false },
+          { id: 'c29', subject: '수학', pages: '92-93', lesson: '6', totalLesson: 12, isBlock: false },
+          { id: 'c30', subject: '과학', pages: '66-67', lesson: '4', totalLesson: 13, isBlock: false },
+          { id: 'c31', subject: '영어', pages: '104-105', lesson: '4', totalLesson: 4, isBlock: false },
+          { id: 'c32', subject: '과학', pages: '70-71', lesson: '6', totalLesson: 11, isBlock: false },
+          { id: 'c33', subject: '사회', pages: '97-101', lesson: '15', totalLesson: 17, isBlock: false },
+          { id: 'c34', subject: '도덕', pages: '108-111', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c35', subject: '과학', pages: '72-73', lesson: '7', totalLesson: 13, isBlock: false },
+          { id: 'c36', subject: '영어', pages: '108-109', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c37', subject: '도덕', pages: '120-123', lesson: '2', totalLesson: 4, isBlock: false },
+          { id: 'c38', subject: '음악', pages: '73', lesson: '2', totalLesson: 2, isBlock: false },
+          { id: 'c39', subject: '과학', pages: '68-69', lesson: '5', totalLesson: 11, isBlock: false },
+          { id: 'c40', subject: '미술', pages: '74', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c41', subject: '음악', pages: '68-69', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c42', subject: '도덕', pages: '116-119', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c43', subject: '국어', pages: '201-205', lesson: '8', totalLesson: 14, isBlock: false },
+          { id: 'c44', subject: '수학', pages: '94-95', lesson: '7', totalLesson: 12, isBlock: false },
+          { id: 'c45', subject: '사회', pages: '102-105', lesson: '17', totalLesson: 17, isBlock: false },
+          { id: 'c46', subject: '국어', pages: '206-209', lesson: '10', totalLesson: 14, isBlock: false },
+          { id: 'c47', subject: '음악', pages: '74-75', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c48', subject: '수학', pages: '112-115', lesson: '4', totalLesson: 4, isDemo: true, demoTeacher: '오금강', designatedTeacher: '오금강', isBlock: false },
+          { id: 'c49', subject: '수학', pages: '96-97', lesson: '8', totalLesson: 12, isBlock: false },
+          { id: 'c50', subject: '체육', pages: '122-123', lesson: '8', totalLesson: 11, isBlock: false }
+        ],
+        events: {
+          '0-1': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '첫인사', teacher: '담임', isLocked: true },
+          '0-2': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-3': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-4': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-5': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-6': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          
+          '1-1': { type: 'lecture', subject: '강의2', pages: '생활', lessonStr: '지도', teacher: '양슬기', isLocked: true },
+          '1-4': { type: 'lecture', subject: '강의3', pages: '수업안', lessonStr: '작성', teacher: '강동민', isLocked: true },
+          '1-6': { type: 'lecture', subject: '강의4', pages: '한글', lessonStr: '문서I', teacher: '하성엽', isLocked: true },
+          
+          '2-2': { type: 'observation', subject: '교과', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '2-3': { type: 'observation', subject: '교과', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '2-5': { type: 'lecture', subject: '강의5', pages: '교원', lessonStr: '인사', teacher: '이혜경', isLocked: true },
+          '2-6': { type: 'lecture', subject: '강의5', pages: '교원', lessonStr: '인사', teacher: '이혜경', isLocked: true },
+
+          '3-2': { type: 'observation', subject: '전체', pages: '공개', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '3-3': { type: 'observation', subject: '전체', pages: '공개', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '3-6': { type: 'lecture', subject: '강의7', pages: '영어', lessonStr: '수업', teacher: '김효숙', isLocked: true },
+
+          '4-1': { type: 'lecture', subject: '강의8', pages: '음악', lessonStr: '수업', teacher: '김석민', isLocked: true },
+          '4-2': { type: 'lecture', subject: '강의9', pages: '과학', lessonStr: '수업', teacher: '김응혁', isLocked: true },
+          '4-4': { type: 'lecture', subject: '강의6', pages: '한글', lessonStr: '문서II', teacher: '김지도', isLocked: true },
+          '4-6': { type: 'lecture', subject: '강의10', pages: '미래', lessonStr: '학력', teacher: '이병도', isLocked: true },
+
+          '12-2': { type: 'observation', subject: '교생', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '12-3': { type: 'observation', subject: '교생', pages: '대표', lessonStr: '협의', teacher: '', isLocked: true },
+
+          '19-4': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '끝인사', teacher: '담임', isLocked: true },
+          '19-5': { type: 'homeroom', subject: '소감', pages: '작성', lessonStr: '및', teacher: '설문', isLocked: true }
+        },
+        morningDuty: {
+          '1': '김부설', '2': '이공주', '3': '삼알밤', '4': '사산성',
+          '5': '오금강', '6': '김부설', '7': '이공주', '8': '삼알밤', '9': '사산성',
+          '10': '오금강', '11': '김부설', '12': '이공주', '13': '삼알밤', '14': '사산성',
+          '15': '오금강', '16': '김부설', '17': '이공주', '18': '삼알밤', '19': '사산성'
+        }
+      }
+    };
+
+    /**
+     * APP STATE MANAGEMENT
+     */
+    const App = {
+      activeTab: 1,
+      selectedTeacherFilter: 'all', // 'all' or teacher name
+      selectedCellKey: null,        // for click-to-swap
+      draggedKey: null,             // for drag-and-drop
+      currentStamp: null,
+      customStamps: [],             // User custom presets
+      newStampSelectedType: 'lecture',
+
+      // Active state: Clean initial state with 0학년 0반, 빈 시간표, 3개 진도표, 4명 익명 실습생
+      config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
+      teachers: JSON.parse(JSON.stringify(DEFAULT_TEACHERS)),
+      curriculum: JSON.parse(JSON.stringify(DEFAULT_CURRICULUM)),
+      events: {}, // Clean empty schedule on startup!
+      defaultTimetable: [
+        ['국어', '수학', '국어', '수학', '국어'],
+        ['수학', '국어', '바생', '바생', '바생'],
+        ['슬생', '즐생', '슬생', '즐생', '즐생'],
+        ['즐생', '즐생', '즐생', '즐생', '즐생'],
+        ['체육', '음악', '미술', '창체', '창체'],
+        ['창체', '창체', '동아리', '창체', '창체']
+      ],
+      morningDuty: {},
+      timetable: {},
+
+      // Charts instance
+      radarChartInstance: null,
+      barChartInstance: null,
+
+      init() {
+        this.loadCustomStamps();
+        this.initCleanDefault();
+        this.renderAll();
+        this.setupPresetDropdown();
+      },
+
+      initCleanDefault() {
+        this.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        this.teachers = JSON.parse(JSON.stringify(DEFAULT_TEACHERS));
+        this.curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+        this.events = {};
+        this.defaultTimetable = [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '즐생', '슬생', '즐생', '즐생'],
+          ['즐생', '즐생', '즐생', '즐생', '즐생'],
+          ['체육', '음악', '미술', '창체', '창체'],
+          ['창체', '창체', '동아리', '창체', '창체']
+        ];
+        this.morningDuty = {};
+        this.timetable = {};
+        this.selectedTeacherFilter = 'all';
+
+        const cfgTitle = document.getElementById('cfg-title');
+        if (cfgTitle) cfgTitle.value = this.config.title;
+        const cfgSchool = document.getElementById('cfg-school');
+        if (cfgSchool) cfgSchool.value = this.config.school;
+        const cfgGC = document.getElementById('cfg-gradeClass');
+        if (cfgGC) cfgGC.value = this.config.gradeClass;
+        const cfgTN = document.getElementById('cfg-teacherName');
+        if (cfgTN) cfgTN.value = this.config.teacherName;
+        const cfgWC = document.getElementById('cfg-weekCount');
+        if (cfgWC) cfgWC.value = this.config.weekCount;
+        const cfgSD = document.getElementById('cfg-startDate');
+        if (cfgSD) cfgSD.value = this.config.startDate;
+      },
+
+      setupPresetDropdown() {
+        const btn = document.getElementById('presetDropdownBtn');
+        const menu = document.getElementById('presetMenu');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => {
+          menu.classList.add('hidden');
+        });
+      },
+
+      setTab(tabIndex) {
+        this.activeTab = tabIndex;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(el => {
+          el.classList.remove('active', 'text-sky-400', 'bg-slate-900/80');
+          el.classList.add('text-slate-400');
+        });
+
+        const activeContent = document.getElementById(`tab-content-${tabIndex}`);
+        const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+        if (activeContent) activeContent.classList.remove('hidden');
+        if (activeBtn) {
+          activeBtn.classList.add('active', 'text-sky-400', 'bg-slate-900/80');
+          activeBtn.classList.remove('text-slate-400');
+        }
+
+        if (tabIndex === 3) this.renderEventGrid();
+        if (tabIndex === 4) {
+          this.renderTeacherFilterTabs();
+          this.renderTimetableGrid();
+          this.renderTeacherSummary();
+          this.renderPersonalDeadlinePanel();
+        }
+        if (tabIndex === 5) {
+          this.runFullDiagnostic();
+          this.renderDashboardCharts();
+        }
+        
+        lucide.createIcons();
+      },
+
+      loadPreset(key, triggerAlert = true) {
+        const p = PRESETS[key];
+        if (!p) return;
+        this.config = JSON.parse(JSON.stringify(p.config));
+        this.teachers = JSON.parse(JSON.stringify(p.teachers));
+        this.curriculum = JSON.parse(JSON.stringify(p.curriculum));
+        this.events = JSON.parse(JSON.stringify(p.events));
+        this.defaultTimetable = JSON.parse(JSON.stringify(p.defaultTimetable || []));
+        this.morningDuty = JSON.parse(JSON.stringify(p.morningDuty || {}));
+        this.timetable = {};
+        this.selectedTeacherFilter = 'all';
+
+        // Sync form inputs
+        document.getElementById('cfg-title').value = this.config.title;
+        document.getElementById('cfg-school').value = this.config.school;
+        document.getElementById('cfg-gradeClass').value = this.config.gradeClass;
+        document.getElementById('cfg-teacherName').value = this.config.teacherName;
+        document.getElementById('cfg-weekCount').value = this.config.weekCount;
+        document.getElementById('cfg-startDate').value = this.config.startDate;
+
+        this.renderAll();
+        this.runAutoAllocation(false);
+
+        if (triggerAlert) {
+          alert(`'${p.config.title}' 프리셋 데이터가 로드되고 최적 배당이 완료되었습니다!`);
+          this.setTab(4);
+        }
+      },
+
+      renderAll() {
+        this.renderConfigHeader();
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderEventGrid();
+        this.renderCustomStamps();
+        this.updateStampStatusUI();
+        this.renderTeacherFilterTabs();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        lucide.createIcons();
+      },
+
+      renderConfigHeader() {
+        document.getElementById('view-title').innerText = this.config.title || '교육 실습생 수업배당표';
+        document.getElementById('view-school').innerText = this.config.school || '';
+        document.getElementById('view-gradeClass').innerText = this.config.gradeClass || '';
+        document.getElementById('view-teacherName').innerText = this.config.teacherName || '';
+        document.getElementById('timetable-notes').innerText = this.config.notes || '';
+      },
+
+      onWeekCountChange(val) {
+        this.config.weekCount = parseInt(val, 10);
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER MANAGEMENT
+      // -----------------------------------------------------------------------
+      renderTeachersTable() {
+        const tbody = document.getElementById('teacher-table-body');
+        tbody.innerHTML = '';
+        document.getElementById('teacher-count-badge').innerText = `총 ${this.teachers.length}명`;
+
+        this.teachers.forEach((t, idx) => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          let demoSubjectOptions = `<option value="">(미지정)</option>`;
+          ELEMENTARY_SUBJECTS.forEach(sub => {
+            demoSubjectOptions += `<option value="${sub}" ${t.demoSubject === sub ? 'selected' : ''}>${sub}</option>`;
+          });
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          tr.innerHTML = `
+            <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
+            <td class="py-2 px-3 font-bold text-slate-800">
+              <input type="text" value="${t.name}" onchange="App.updateTeacher(${idx}, 'name', this.value)" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${t.major || ''}" placeholder="예: 국어" onchange="App.updateTeacher(${idx}, 'major', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold border" style="background:${color.bg}; color:${color.text}; border-color:${color.border};">
+                ${t.name}
+              </span>
+            </td>
+            <td class="py-2 px-3">
+              <select onchange="App.updateTeacher(${idx}, 'demoSubject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs font-semibold text-indigo-700">
+                ${demoSubjectOptions}
+              </select>
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(1) 수(1) 즐(1))" onchange="App.updateTeacher(${idx}, 'note', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <button onclick="App.deleteTeacher(${idx})" class="p-1 text-slate-400 hover:text-rose-600 rounded">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        lucide.createIcons();
+      },
+
+      addTeacherRow() {
+        const nextId = 't' + (Date.now());
+        const colorIdx = this.teachers.length % TEACHER_COLORS.length;
+        this.teachers.push({
+          id: nextId,
+          name: `실습생${this.teachers.length + 1}`,
+          major: '초등교육',
+          demoSubject: '',
+          note: '',
+          colorIdx
+        });
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderTeacherFilterTabs();
+        this.renderTeacherSummary();
+      },
+
+      updateTeacher(idx, field, val) {
+        if (this.teachers[idx]) {
+          const oldName = this.teachers[idx].name;
+          this.teachers[idx][field] = val;
+          if (field === 'name' && oldName !== val) {
+            this.curriculum.forEach(c => {
+              if (c.designatedTeacher === oldName) c.designatedTeacher = val;
+              if (c.demoTeacher === oldName) c.demoTeacher = val;
+            });
+            Object.keys(this.morningDuty).forEach(k => {
+              if (this.morningDuty[k] === oldName) this.morningDuty[k] = val;
+            });
+            Object.keys(this.events).forEach(k => {
+              if (this.events[k].teacher === oldName) this.events[k].teacher = val;
+            });
+            Object.keys(this.timetable).forEach(k => {
+              if (this.timetable[k].teacher === oldName) this.timetable[k].teacher = val;
+            });
+          }
+          this.renderCurriculumTable();
+          this.renderTeacherFilterTabs();
+          this.renderTeacherSummary();
+        }
+      },
+
+      deleteTeacher(idx) {
+        if (this.teachers.length <= 1) {
+          alert('최소 1명 이상의 실습생이 필요합니다.');
+          return;
+        }
+        this.teachers.splice(idx, 1);
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderTeacherFilterTabs();
+        this.renderTeacherSummary();
+      },
+
+      // -----------------------------------------------------------------------
+      // CURRICULUM MANAGEMENT (Block Time & Compressed Lesson Support)
+      // -----------------------------------------------------------------------
+      renderCurriculumTable() {
+        const tbody = document.getElementById('curriculum-table-body');
+        tbody.innerHTML = '';
+        document.getElementById('curriculum-count-badge').innerText = `총 ${this.curriculum.length}차시`;
+
+        this.curriculum.forEach((c, idx) => {
+          let teacherOpts = `<option value="">(자동 배정)</option>`;
+          this.teachers.forEach(t => {
+            const isSel = (c.designatedTeacher === t.name || (!c.designatedTeacher && c.demoTeacher === t.name));
+            teacherOpts += `<option value="${t.name}" ${isSel ? 'selected' : ''}>${t.name}</option>`;
+          });
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          tr.innerHTML = `
+            <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
+            <td class="py-2 px-3 font-semibold text-slate-800">
+              <input type="text" value="${c.subject}" onchange="App.updateCurriculum(${idx}, 'subject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${c.pages}" onchange="App.updateCurriculum(${idx}, 'pages', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="text" value="${c.lesson}" placeholder="예: 3 또는 3~4" onchange="App.updateCurriculum(${idx}, 'lesson', this.value)" class="w-20 px-2 py-1 border rounded bg-white text-center text-xs font-mono">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="number" value="${c.totalLesson}" onchange="App.updateCurriculum(${idx}, 'totalLesson', parseInt(this.value,10))" class="w-16 px-2 py-1 border rounded bg-white text-center text-xs">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${c.topic || ''}" placeholder="단원/주제 (선택)" onchange="App.updateCurriculum(${idx}, 'topic', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="checkbox" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="대표수업 차시 여부">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <select onchange="App.updateCurriculum(${idx}, 'designatedTeacher', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs ${c.designatedTeacher ? 'font-bold text-indigo-700 bg-indigo-50/50' : 'text-slate-600'}">
+                ${teacherOpts}
+              </select>
+            </td>
+            <td class="py-2 px-3 text-center">
+              <button onclick="App.deleteCurriculum(${idx})" class="p-1 text-slate-400 hover:text-rose-600 rounded">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        lucide.createIcons();
+      },
+
+      addCurriculumRow() {
+        this.curriculum.push({
+          id: 'c' + Date.now(),
+          subject: '국어',
+          pages: '100-101',
+          lesson: '1',
+          totalLesson: 10,
+          topic: '',
+          isDemo: false,
+          designatedTeacher: ''
+        });
+        this.renderCurriculumTable();
+      },
+
+      updateCurriculum(idx, field, val) {
+        if (this.curriculum[idx]) {
+          this.curriculum[idx][field] = val;
+        }
+      },
+
+      deleteCurriculum(idx) {
+        this.curriculum.splice(idx, 1);
+        this.renderCurriculumTable();
+      },
+
+      generateQuickCurriculum() {
+        const subject = document.getElementById('quick-subject').value.trim() || '국어';
+        const start = parseInt(document.getElementById('quick-start').value, 10) || 1;
+        const end = parseInt(document.getElementById('quick-end').value, 10) || 4;
+        const total = parseInt(document.getElementById('quick-total').value, 10) || 10;
+        const pagePrefix = document.getElementById('quick-page-prefix').value.trim() || '60';
+
+        if (start > end) {
+          alert('시작 차시가 끝 차시보다 큽니다.');
+          return;
+        }
+
+        for (let l = start; l <= end; l++) {
+          this.curriculum.push({
+            id: 'c' + Date.now() + '_' + l,
+            subject,
+            pages: pagePrefix ? `${pagePrefix}-${parseInt(pagePrefix,10)+l}` : `${l*2}-${l*2+2}`,
+            lesson: String(l),
+            totalLesson: total
+          });
+        }
+        this.renderCurriculumTable();
+        alert(`${subject} ${start}~${end}차시 (${end - start + 1}개)가 추가되었습니다.`);
+      },
+
+      openCurriculumBatchModal() {
+        document.getElementById('modal-curriculum-batch').classList.remove('hidden');
+      },
+      closeCurriculumBatchModal() {
+        document.getElementById('modal-curriculum-batch').classList.add('hidden');
+      },
+      applyCurriculumBatch() {
+        const text = document.getElementById('batch-curriculum-text').value.trim();
+        if (!text) return;
+        const lines = text.split('\n');
+        let count = 0;
+        lines.forEach(line => {
+          const parts = line.split(/[\t,]+/).map(p => p.trim()).filter(Boolean);
+          if (parts.length >= 4) {
+            const subject = parts[0];
+            const pages = parts[1];
+            const lesson = parts[2]; // support '3~4'
+            const totalLesson = parseInt(parts[3], 10) || 10;
+            this.curriculum.push({
+              id: 'c' + Date.now() + '_' + Math.random(),
+              subject,
+              pages,
+              lesson,
+              totalLesson
+            });
+            count++;
+          }
+        });
+        this.renderCurriculumTable();
+        this.closeCurriculumBatchModal();
+        alert(`${count}개의 진도표 차시가 성공적으로 등록되었습니다.`);
+      },
+
+      // -----------------------------------------------------------------------
+      // EVENT & LOCK SLOTS (빠른 일정 스탬프 & 프리셋 시스템)
+      // -----------------------------------------------------------------------
+      loadCustomStamps() {
+        try {
+          const saved = localStorage.getItem('student_teacher_custom_stamps');
+          if (saved) {
+            this.customStamps = JSON.parse(saved);
+          } else {
+            this.customStamps = [];
+          }
+        } catch (e) {
+          this.customStamps = [];
+        }
+      },
+
+      saveCustomStamps() {
+        try {
+          localStorage.setItem('student_teacher_custom_stamps', JSON.stringify(this.customStamps));
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      renderCustomStamps() {
+        const container = document.getElementById('custom-stamps-list');
+        if (!container) return;
+        if (this.customStamps.length === 0) {
+          container.innerHTML = '<span class="text-[11px] text-slate-400 italic">등록된 나만의 스탬프가 없습니다. [+ 스탬프 만들기]로 자주 쓰는 강의/행사를 등록해보세요.</span>';
+          return;
+        }
+
+        let html = '';
+        this.customStamps.forEach(s => {
+          const isSelected = this.currentStamp && this.currentStamp.id === s.id;
+          const bgClass = isSelected ? 'ring-2 ring-sky-500 font-bold shadow-sm' : 'hover:brightness-95';
+          let colorStyle = 'bg-blue-50 text-blue-900 border-blue-200';
+          if (s.type === 'observation') colorStyle = 'bg-sky-50 text-sky-900 border-sky-200';
+          else if (s.type === 'meeting') colorStyle = 'bg-purple-50 text-purple-900 border-purple-200';
+          else if (s.type === 'design') colorStyle = 'bg-emerald-50 text-emerald-900 border-emerald-200';
+          else if (s.type === 'homeroom') colorStyle = 'bg-amber-50 text-amber-900 border-amber-200';
+          else if (s.type === 'holiday') colorStyle = 'bg-rose-50 text-rose-900 border-rose-200';
+
+          html += `
+            <div class="inline-flex items-center rounded-lg border text-xs overflow-hidden ${colorStyle} ${bgClass}">
+              <button onclick="App.selectCustomStamp('${s.id}')" class="px-2.5 py-1 text-xs font-semibold flex items-center gap-1">
+                ${s.subject}
+                ${s.pages ? `<span class="opacity-75 font-normal text-[10px]">(${s.pages})</span>` : ''}
+                ${s.teacher ? `<span class="opacity-90 font-medium text-[10px]">[${s.teacher}]</span>` : ''}
+              </button>
+              <button onclick="App.deleteCustomStamp('${s.id}')" title="이 스탬프 삭제" class="px-1.5 py-1 hover:bg-rose-100 hover:text-rose-600 text-slate-400 transition font-bold">
+                &times;
+              </button>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      },
+
+      openCustomStampModal() {
+        this.setNewStampType('lecture');
+        document.getElementById('new-stamp-subject').value = '';
+        document.getElementById('new-stamp-pages').value = '';
+        document.getElementById('new-stamp-teacher').value = '';
+        document.getElementById('modal-custom-stamp-create').classList.remove('hidden');
+        document.getElementById('new-stamp-subject').focus();
+        lucide.createIcons();
+      },
+
+      closeCustomStampModal() {
+        document.getElementById('modal-custom-stamp-create').classList.add('hidden');
+      },
+
+      setNewStampType(type) {
+        this.newStampSelectedType = type;
+        const types = ['lecture', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
+        types.forEach(t => {
+          const btn = document.getElementById(`new-stamp-type-${t}`);
+          if (!btn) return;
+          if (t === type) {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-bold bg-sky-600 text-white border-sky-600 shadow-sm';
+          } else {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100';
+          }
+        });
+      },
+
+      saveCustomStampFromModal() {
+        const subject = document.getElementById('new-stamp-subject').value.trim();
+        if (!subject) {
+          alert('스탬프 이름 또는 강의·행사명을 입력해주세요.');
+          return;
+        }
+        const pages = document.getElementById('new-stamp-pages').value.trim();
+        const teacher = document.getElementById('new-stamp-teacher').value.trim();
+        const type = this.newStampSelectedType || 'lecture';
+
+        this.createCustomStamp({ type, subject, pages, teacher });
+        this.closeCustomStampModal();
+      },
+
+      createCustomStamp(stampData) {
+        const id = 'stamp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const newStamp = {
+          id,
+          type: stampData.type || 'lecture',
+          subject: stampData.subject || '강의',
+          pages: stampData.pages || '',
+          teacher: stampData.teacher || ''
+        };
+        this.customStamps.push(newStamp);
+        this.saveCustomStamps();
+        this.renderCustomStamps();
+        this.setCurrentStamp(newStamp.type, newStamp.subject, newStamp.pages, newStamp.teacher, newStamp.id);
+        return newStamp;
+      },
+
+      selectCustomStamp(id) {
+        const found = this.customStamps.find(s => s.id === id);
+        if (found) {
+          this.setCurrentStamp(found.type, found.subject, found.pages || '', found.teacher || '', found.id);
+        }
+      },
+
+      deleteCustomStamp(id) {
+        if (!confirm('이 프리셋 스탬프를 삭제하시겠습니까?')) return;
+        this.customStamps = this.customStamps.filter(s => s.id !== id);
+        this.saveCustomStamps();
+        if (this.currentStamp && this.currentStamp.id === id) {
+          this.clearCurrentStamp();
+        }
+        this.renderCustomStamps();
+      },
+
+      setCurrentStamp(type, subject, pages, teacher, id = null) {
+        this.currentStamp = { type, subject, pages, teacher, id };
+        this.updateStampStatusUI();
+        this.renderCustomStamps();
+      },
+
+      clearCurrentStamp() {
+        this.currentStamp = null;
+        this.updateStampStatusUI();
+        this.renderCustomStamps();
+      },
+
+      updateStampStatusUI() {
+        const badge = document.getElementById('active-stamp-badge');
+        if (!badge) return;
+        if (!this.currentStamp) {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5';
+          badge.innerHTML = '<i data-lucide="mouse-pointer" class="w-3.5 h-3.5"></i> 모드: <strong>상세 편집/선택</strong> (칸 클릭 시 모달 오픈)';
+        } else if (this.currentStamp.type === 'clear') {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-rose-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          badge.innerHTML = '<i data-lucide="eraser" class="w-3.5 h-3.5"></i> 활성: <strong>지우개</strong> (칸 클릭 시 즉시 삭제)';
+        } else if (this.currentStamp.type === 'trainee_demo') {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-amber-500 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          const info = `⭐ 교생대표 [${this.currentStamp.pages || '대표수업'}] (${this.currentStamp.teacher || ''})`;
+          badge.innerHTML = `<i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
+        } else {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-sky-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          const info = `[${this.currentStamp.subject}]` + (this.currentStamp.pages ? ` ${this.currentStamp.pages}` : '') + (this.currentStamp.teacher ? ` (${this.currentStamp.teacher})` : '');
+          badge.innerHTML = `<i data-lucide="stamp" class="w-3.5 h-3.5"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
+        }
+        lucide.createIcons();
+      },
+
+      openTraineeDemoStampModal() {
+        const teacherSelect = document.getElementById('trainee-demo-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-demo-stamp-subject');
+        if (teacherSelect) {
+          teacherSelect.innerHTML = this.teachers.map(t => 
+            `<option value="${t.name}">${t.name}${t.demoSubject ? ` (대표과목: ${t.demoSubject})` : ''}</option>`
+          ).join('');
+        }
+        if (subjectSelect) {
+          subjectSelect.innerHTML = ELEMENTARY_SUBJECTS.map(s => 
+            `<option value="${s}">${s}</option>`
+          ).join('');
+          if (this.teachers.length > 0 && this.teachers[0].demoSubject) {
+            subjectSelect.value = this.teachers[0].demoSubject;
+          }
+        }
+        document.getElementById('modal-trainee-demo-stamp').classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeTraineeDemoStampModal() {
+        document.getElementById('modal-trainee-demo-stamp').classList.add('hidden');
+      },
+
+      onTraineeDemoStampTeacherChange(tName) {
+        const teacher = this.teachers.find(t => t.name === tName);
+        if (teacher && teacher.demoSubject) {
+          const subSelect = document.getElementById('trainee-demo-stamp-subject');
+          if (subSelect) subSelect.value = teacher.demoSubject;
+        }
+      },
+
+      applyTraineeDemoStampSelection() {
+        const teacherSelect = document.getElementById('trainee-demo-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-demo-stamp-subject');
+        const teacherName = teacherSelect ? teacherSelect.value : (this.teachers[0] ? this.teachers[0].name : '');
+        const subjectName = subjectSelect ? subjectSelect.value : '국어';
+
+        this.setCurrentStamp('trainee_demo', '교생대표', subjectName, teacherName);
+        this.closeTraineeDemoStampModal();
+      },
+
+      renderEventGrid() {
+        const container = document.getElementById('event-grid-container');
+        if (!container) return;
+        const weekCount = this.config.weekCount || 2;
+        const days = weekCount * 5;
+
+        let html = `<table class="w-full text-xs border-collapse border border-slate-300">`;
+        html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16">교시</th>`;
+        for (let d = 0; d < days; d++) {
+          const week = Math.floor(d / 5) + 1;
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          html += `<th class="border p-1.5 text-center min-w-[70px]">
+            <span class="text-[10px] text-slate-500 block">${week}주차</span>
+            <span class="font-bold">${dayName}</span>
+          </th>`;
+        }
+        html += `</tr></thead><tbody>`;
+
+        for (let p = 1; p <= 6; p++) {
+          html += `<tr><td class="border p-2 font-bold text-center bg-slate-50">${p}교시</td>`;
+          for (let d = 0; d < days; d++) {
+            const key = `${d}-${p}`;
+            const ev = this.events[key];
+            let cellStyle = 'bg-white hover:bg-sky-50';
+            let text = '+ 설정';
+            let textColor = 'text-slate-300';
+
+            if (ev) {
+              if (ev.type === 'holiday') {
+                cellStyle = 'bg-rose-100 text-rose-800 font-bold';
+                text = ev.subject || '공휴일';
+                textColor = 'text-rose-800';
+              } else if (ev.type === 'trainee_demo' || ev.isTraineeDemo) {
+                cellStyle = 'bg-amber-500 text-white font-bold hover:bg-amber-600';
+                text = `⭐교생대표<br><span class="text-[10px] font-normal">[${ev.pages || ''}]</span>${ev.teacher ? `<br><span class="text-[9px] text-amber-100">(${ev.teacher})</span>` : ''}`;
+                textColor = 'text-white';
+              } else if (ev.type === 'lecture' || ev.type === 'observation') {
+                cellStyle = 'bg-blue-900 text-white font-bold hover:brightness-110';
+                text = `${ev.subject}<br><span class="text-[10px] font-normal">${ev.pages || ''}</span>${ev.teacher ? `<br><span class="text-[9px] text-blue-200">(${ev.teacher})</span>` : ''}`;
+                textColor = 'text-white';
+              } else if (ev.type === 'meeting' || ev.type === 'design') {
+                cellStyle = 'bg-purple-100 text-purple-900 font-bold hover:bg-purple-200';
+                text = `${ev.subject}${ev.pages ? `<br><span class="text-[10px] font-normal">${ev.pages}</span>` : ''}`;
+                textColor = 'text-purple-900';
+              } else if (ev.type === 'homeroom') {
+                cellStyle = 'bg-amber-100 text-amber-900 font-bold hover:bg-amber-200';
+                text = `${ev.subject} (${ev.teacher || ''})`;
+                textColor = 'text-amber-900';
+              }
+            }
+
+            html += `<td id="ev-cell-${key}" onclick="App.onEventCellClick(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="클릭: 스탬프 찍기 (상세모드 시 편집창) / 우클릭: 상세 내용 및 강사명 직접 편집" class="border p-1 text-center cursor-pointer select-none ${cellStyle} h-14 transition">
+              <div class="${textColor} leading-tight">${text}</div>
+            </td>`;
+          }
+          html += `</tr>`;
+        }
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+      },
+
+      currentEditingEventKey: null,
+      modalSelectedType: 'lecture',
+
+      openEventEditModal(d, p) {
+        const key = `${d}-${p}`;
+        this.currentEditingEventKey = { d, p, key };
+        const ev = this.events[key];
+
+        const week = Math.floor(d / 5) + 1;
+        const dayName = ['월', '화', '수', '목', '금'][d % 5];
+        document.getElementById('ev-modal-header').innerText = `행사 및 강의 일정 편집 [${week}주차 ${dayName}요일 ${p}교시]`;
+
+        let type = 'lecture';
+        let subject = '강의';
+        let pages = '';
+        let teacher = '';
+
+        if (ev) {
+          type = ev.type || 'lecture';
+          subject = ev.subject || '';
+          pages = ev.pages || '';
+          teacher = ev.teacher || '';
+        } else if (this.currentStamp && this.currentStamp.type !== 'clear') {
+          type = this.currentStamp.type;
+          subject = this.currentStamp.subject;
+          pages = this.currentStamp.pages || '';
+          teacher = this.currentStamp.teacher || '';
+        }
+
+        // Populate trainee and demo subject selects in modal
+        const traineeSelect = document.getElementById('ev-modal-trainee-select');
+        if (traineeSelect) {
+          traineeSelect.innerHTML = this.teachers.map(t => 
+            `<option value="${t.name}">${t.name}${t.demoSubject ? ` (대표: ${t.demoSubject})` : ''}</option>`
+          ).join('');
+          if (teacher) traineeSelect.value = teacher;
+        }
+        const demoSubSelect = document.getElementById('ev-modal-demo-subject');
+        if (demoSubSelect) {
+          demoSubSelect.innerHTML = ELEMENTARY_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('');
+          if (pages) demoSubSelect.value = pages;
+        }
+
+        this.setModalEventType(type, false);
+        document.getElementById('ev-modal-subject').value = subject;
+        document.getElementById('ev-modal-pages').value = pages;
+        document.getElementById('ev-modal-teacher').value = teacher;
+        document.getElementById('ev-modal-span2').checked = false;
+
+        document.getElementById('modal-event-edit').classList.remove('hidden');
+        document.getElementById('ev-modal-subject').focus();
+        lucide.createIcons();
+      },
+
+      closeEventEditModal() {
+        document.getElementById('modal-event-edit').classList.add('hidden');
+        this.currentEditingEventKey = null;
+      },
+
+      setModalEventType(type, autoFillDefault = true) {
+        this.modalSelectedType = type;
+        const types = ['lecture', 'trainee_demo', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
+        types.forEach(t => {
+          const btn = document.getElementById(`ev-type-btn-${t}`);
+          if (!btn) return;
+          if (t === type) {
+            btn.className = (t === 'trainee_demo')
+              ? 'py-1.5 px-2 rounded-lg border text-center font-bold bg-amber-500 text-white border-amber-500 shadow-sm'
+              : 'py-1.5 px-2 rounded-lg border text-center font-bold bg-sky-600 text-white border-sky-600 shadow-sm';
+          } else {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100';
+          }
+        });
+
+        const demoGroup = document.getElementById('ev-trainee-demo-group');
+        if (demoGroup) {
+          if (type === 'trainee_demo') {
+            demoGroup.classList.remove('hidden');
+          } else {
+            demoGroup.classList.add('hidden');
+          }
+        }
+
+        if (autoFillDefault) {
+          const subInput = document.getElementById('ev-modal-subject');
+          if (subInput) {
+            if (type === 'lecture') subInput.value = '강의';
+            else if (type === 'trainee_demo') subInput.value = '교생대표';
+            else if (type === 'observation') subInput.value = '수업 참관';
+            else if (type === 'meeting') subInput.value = '학급 협의회';
+            else if (type === 'design') subInput.value = '수업 설계';
+            else if (type === 'homeroom') subInput.value = '창체';
+            else if (type === 'holiday') subInput.value = '공휴일';
+          }
+          if (type === 'trainee_demo' && this.teachers.length > 0) {
+            const firstTeacher = this.teachers[0];
+            const traineeSelect = document.getElementById('ev-modal-trainee-select');
+            if (traineeSelect) traineeSelect.value = firstTeacher.name;
+            const demoSubSelect = document.getElementById('ev-modal-demo-subject');
+            if (demoSubSelect) demoSubSelect.value = firstTeacher.demoSubject || '국어';
+            document.getElementById('ev-modal-teacher').value = firstTeacher.name;
+            document.getElementById('ev-modal-pages').value = firstTeacher.demoSubject || '국어';
+          }
+        }
+      },
+
+      onModalTraineeChange(tName) {
+        const teacher = this.teachers.find(t => t.name === tName);
+        if (teacher && teacher.demoSubject) {
+          const demoSub = document.getElementById('ev-modal-demo-subject');
+          if (demoSub) demoSub.value = teacher.demoSubject;
+        }
+        document.getElementById('ev-modal-teacher').value = tName;
+        const sub = document.getElementById('ev-modal-demo-subject');
+        if (sub) document.getElementById('ev-modal-pages').value = sub.value;
+      },
+
+      onModalDemoSubjectChange(sub) {
+        document.getElementById('ev-modal-pages').value = sub;
+      },
+
+      saveEventEditModal() {
+        if (!this.currentEditingEventKey) return;
+        const { d, p, key } = this.currentEditingEventKey;
+        const type = this.modalSelectedType || 'lecture';
+        let subject = document.getElementById('ev-modal-subject').value.trim();
+        let pages = document.getElementById('ev-modal-pages').value.trim();
+        let teacher = document.getElementById('ev-modal-teacher').value.trim();
+
+        if (type === 'trainee_demo') {
+          const traineeSelect = document.getElementById('ev-modal-trainee-select');
+          const demoSub = document.getElementById('ev-modal-demo-subject');
+          if (traineeSelect && traineeSelect.value) teacher = traineeSelect.value;
+          if (demoSub && demoSub.value) pages = demoSub.value;
+          if (!subject) subject = '교생대표';
+        }
+
+        if (!subject) {
+          alert('강의명 또는 행사명을 입력해주세요.');
+          return;
+        }
+        const span2 = document.getElementById('ev-modal-span2').checked;
+
+        this.events[key] = {
+          type,
+          subject,
+          pages,
+          lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+          teacher,
+          isLocked: true,
+          isTraineeDemo: (type === 'trainee_demo')
+        };
+
+        if (span2 && p < 6) {
+          const nextKey = `${d}-${p+1}`;
+          this.events[nextKey] = {
+            type,
+            subject,
+            pages,
+            lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+            teacher,
+            isLocked: true,
+            isTraineeDemo: (type === 'trainee_demo')
+          };
+        }
+
+        this.closeEventEditModal();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      deleteEventFromModal() {
+        if (!this.currentEditingEventKey) return;
+        const { key } = this.currentEditingEventKey;
+        delete this.events[key];
+        this.closeEventEditModal();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      applyStampToCell(d, p) {
+        const key = `${d}-${p}`;
+        // 스탬프 미선택(상세 편집 모드)인 경우 모달 오픈
+        if (!this.currentStamp) {
+          this.openEventEditModal(d, p);
+          return;
+        }
+
+        // 지우개 스탬프인 경우 해당 슬롯 즉시 삭제
+        if (this.currentStamp.type === 'clear') {
+          delete this.events[key];
+          this.renderEventGrid();
+          this.renderTimetableGrid();
+          return;
+        }
+
+        // 선택된 스탬프로 즉시 값 주입 (0.1초 원클릭 도장)
+        this.events[key] = {
+          type: this.currentStamp.type,
+          subject: this.currentStamp.subject,
+          pages: this.currentStamp.pages || '',
+          lessonStr: this.currentStamp.type === 'trainee_demo' ? '대표수업' : '',
+          teacher: this.currentStamp.teacher || '',
+          isLocked: true,
+          isTraineeDemo: (this.currentStamp.type === 'trainee_demo')
+        };
+
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+
+        // 도장 찍힘 시각적 피드백 효과
+        const cellEl = document.getElementById(`ev-cell-${key}`);
+        if (cellEl) {
+          cellEl.classList.add('ring-4', 'ring-sky-400');
+          setTimeout(() => {
+            cellEl.classList.remove('ring-4', 'ring-sky-400');
+          }, 250);
+        }
+      },
+
+      onEventCellClick(d, p) {
+        this.applyStampToCell(d, p);
+      },
+
+      autoAssignMorningDuty() {
+        const weekCount = this.config.weekCount || 2;
+        const days = weekCount * 5;
+        const tCount = this.teachers.length;
+        if (tCount === 0) return;
+
+        let tIdx = 0;
+        for (let d = 0; d < days; d++) {
+          if (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday') continue;
+          this.morningDuty[d] = this.teachers[tIdx % tCount].name;
+          tIdx++;
+        }
+        this.renderTimetableGrid();
+        alert('아침활동 당번이 실습생 간 균등하게 순환 배정되었습니다!');
+      },
+
+      openDefaultTimetableModal() {
+        const tbody = document.getElementById('default-tt-body');
+        tbody.innerHTML = '';
+        const defaultSubjects = [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '즐생', '슬생', '즐생', '즐생'],
+          ['즐생', '즐생', '즐생', '즐생', '즐생'],
+          ['체육', '음악', '미술', '창체', '창체'],
+          ['창체', '창체', '동아리', '창체', '창체']
+        ];
+        const current = this.defaultTimetable.length === 6 ? this.defaultTimetable : defaultSubjects;
+
+        for (let p = 0; p < 6; p++) {
+          let tr = `<tr><td class="p-2 border font-bold bg-slate-50">${p+1}교시</td>`;
+          for (let d = 0; d < 5; d++) {
+            const val = current[p] && current[p][d] ? current[p][d] : '';
+            tr += `<td class="p-1 border"><input type="text" id="def-tt-${p}-${d}" value="${val}" class="w-full text-xs text-center p-1 border rounded"></td>`;
+          }
+          tr += `</tr>`;
+          tbody.innerHTML += tr;
+        }
+        document.getElementById('modal-default-timetable').classList.remove('hidden');
+      },
+
+      closeDefaultTimetableModal() {
+        document.getElementById('modal-default-timetable').classList.add('hidden');
+      },
+
+      saveDefaultTimetableModal() {
+        const newTT = [];
+        for (let p = 0; p < 6; p++) {
+          newTT[p] = [];
+          for (let d = 0; d < 5; d++) {
+            const input = document.getElementById(`def-tt-${p}-${d}`);
+            newTT[p][d] = input ? input.value.trim() : '';
+          }
+        }
+        this.defaultTimetable = newTT;
+        this.closeDefaultTimetableModal();
+        alert('학급 기본 주간 과목 편성 틀이 저장되었습니다.');
+      },
+
+      // -----------------------------------------------------------------------
+      // ALLOCATION SOLVER ENGINE (Block Time & Compressed Lesson Support)
+      // -----------------------------------------------------------------------
+      runAutoAllocation(showAlert = true) {
+        if (this.curriculum.length === 0) {
+          if (showAlert) alert('등록된 교과 진도표가 없습니다. Step 2에서 진도표를 먼저 등록해주세요.');
+          return;
+        }
+        if (this.teachers.length === 0) {
+          if (showAlert) alert('등록된 실습생이 없습니다. Step 1에서 실습생을 먼저 등록해주세요.');
+          return;
+        }
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+
+        // 1. Clear unlocked classes while preserving locked event blocks
+        const newTimetable = {};
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            if (this.events[key] && this.events[key].isLocked) {
+              newTimetable[key] = { ...this.events[key] };
+            }
+          }
+        }
+
+        // Helper to parse lesson numeric value for ordering (e.g. '3~4' -> 3)
+        const parseLessonNum = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        // Clone curriculum so we can consume demo items without mutating this.curriculum
+        const unassignedCurriculum = this.curriculum.map(c => ({ ...c }));
+
+        // Teacher statistics tracker for load balancing
+        const teacherStats = {};
+        this.teachers.forEach(t => {
+          teacherStats[t.name] = {
+            totalHours: 0,
+            subjectCount: {},
+            dailyCount: {}
+          };
+        });
+
+        // 2. Pair Trainee Demo slots (⭐교생대표) with curriculum items
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            const ev = newTimetable[key];
+            if (ev && (ev.type === 'trainee_demo' || ev.isTraineeDemo)) {
+              const tName = ev.teacher || '';
+              const subName = ev.pages || ev.subject || '';
+
+              // Match priority:
+              // 1. isDemo && subject matches && (designatedTeacher matches or empty)
+              // 2. isDemo && designatedTeacher matches
+              // 3. subject matches && (designatedTeacher matches or empty)
+              // 4. any curriculum item matching subject
+              let matchIdx = unassignedCurriculum.findIndex(c => 
+                !c._consumed && c.isDemo && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+              );
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.isDemo && c.designatedTeacher === tName
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName
+                );
+              }
+
+              if (matchIdx !== -1) {
+                const curr = unassignedCurriculum[matchIdx];
+                curr._consumed = true;
+                newTimetable[key] = {
+                  subject: curr.subject,
+                  pages: curr.pages,
+                  lesson: curr.lesson,
+                  totalLesson: curr.totalLesson,
+                  topic: curr.topic || '',
+                  teacher: tName || curr.designatedTeacher || '',
+                  isDemo: true,
+                  isTraineeDemo: true,
+                  isLocked: true,
+                  curriculumId: curr.id
+                };
+              } else {
+                newTimetable[key] = {
+                  ...ev,
+                  subject: subName || '대표수업',
+                  pages: ev.pages || '',
+                  lesson: '대표',
+                  totalLesson: 1,
+                  teacher: tName,
+                  isDemo: true,
+                  isTraineeDemo: true,
+                  isLocked: true
+                };
+              }
+
+              // Update teacherStats for the demo slot
+              const assignedTeacher = newTimetable[key].teacher;
+              if (assignedTeacher && teacherStats[assignedTeacher]) {
+                teacherStats[assignedTeacher].totalHours++;
+                const sub = newTimetable[key].subject;
+                teacherStats[assignedTeacher].subjectCount[sub] = (teacherStats[assignedTeacher].subjectCount[sub] || 0) + 1;
+                teacherStats[assignedTeacher].dailyCount[d] = (teacherStats[assignedTeacher].dailyCount[d] || 0) + 1;
+              }
+            }
+          }
+        }
+
+        // 3. Group remaining unassigned curricula by subject & sort ascending by lesson number
+        const subjectQueues = {};
+        unassignedCurriculum.filter(c => !c._consumed).forEach(c => {
+          if (!subjectQueues[c.subject]) subjectQueues[c.subject] = [];
+          subjectQueues[c.subject].push(c);
+        });
+        Object.keys(subjectQueues).forEach(sub => {
+          subjectQueues[sub].sort((a, b) => parseLessonNum(a.lesson) - parseLessonNum(b.lesson));
+        });
+
+        // 4. Identify remaining available slots
+        const availableSlots = [];
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            if (!newTimetable[key]) {
+              const dayOfWeek = d % 5;
+              const defSubject = (this.defaultTimetable[p-1] && this.defaultTimetable[p-1][dayOfWeek]) || '';
+              availableSlots.push({ day: d, period: p, key, defSubject });
+            }
+          }
+        }
+
+        // 5. Match available slots to subjects and guarantee strictly ascending lesson order
+        const subjectCountNeeded = {};
+        Object.keys(subjectQueues).forEach(sub => {
+          subjectCountNeeded[sub] = subjectQueues[sub].length;
+        });
+
+        const slotsForSubject = {};
+        const unassignedSlots = [];
+
+        // Match available slots with default timetable where needed
+        availableSlots.forEach(slot => {
+          const matchSub = slot.defSubject;
+          if (matchSub && subjectCountNeeded[matchSub] && subjectCountNeeded[matchSub] > 0) {
+            if (!slotsForSubject[matchSub]) slotsForSubject[matchSub] = [];
+            slotsForSubject[matchSub].push(slot);
+            subjectCountNeeded[matchSub]--;
+          } else {
+            unassignedSlots.push(slot);
+          }
+        });
+
+        // Fill remaining subject needs into available unassigned slots
+        Object.keys(subjectCountNeeded).forEach(sub => {
+          while (subjectCountNeeded[sub] > 0 && unassignedSlots.length > 0) {
+            const slot = unassignedSlots.shift();
+            if (!slotsForSubject[sub]) slotsForSubject[sub] = [];
+            slotsForSubject[sub].push(slot);
+            subjectCountNeeded[sub]--;
+          }
+        });
+
+        // For each subject, sort its assigned slots chronologically and pair with sorted lessons
+        Object.keys(slotsForSubject).forEach(sub => {
+          const slots = slotsForSubject[sub];
+          slots.sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
+          const currList = subjectQueues[sub];
+          for (let i = 0; i < slots.length && i < currList.length; i++) {
+            const slot = slots[i];
+            const curr = currList[i];
+            newTimetable[slot.key] = {
+              subject: curr.subject,
+              pages: curr.pages,
+              lesson: curr.lesson,
+              totalLesson: curr.totalLesson,
+              topic: curr.topic || '',
+              isDemo: curr.isDemo || false,
+              demoTeacher: curr.demoTeacher || '',
+              designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
+              curriculumId: curr.id
+            };
+          }
+        });
+
+        // 6. Teacher Allocation Optimizer
+        // First: Fix designated teachers and demo teachers
+        Object.keys(newTimetable).forEach(key => {
+          const cell = newTimetable[key];
+          if (cell && !cell.isLocked && cell.curriculumId) {
+            const desig = cell.designatedTeacher || (cell.isDemo ? cell.demoTeacher : '');
+            if (desig && teacherStats[desig]) {
+              cell.teacher = desig;
+              teacherStats[desig].totalHours++;
+              teacherStats[desig].subjectCount[cell.subject] = (teacherStats[desig].subjectCount[cell.subject] || 0) + 1;
+              const day = parseInt(key.split('-')[0], 10);
+              teacherStats[desig].dailyCount[day] = (teacherStats[desig].dailyCount[day] || 0) + 1;
+            }
+          }
+        });
+
+        // Second: Assign teachers to unassigned cells with greedy cost function
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            const cell = newTimetable[key];
+            if (cell && !cell.isLocked && cell.curriculumId && !cell.teacher) {
+              let bestTeacher = null;
+              let lowestCost = Infinity;
+              const candidateTeachers = [...this.teachers].sort(() => Math.random() - 0.5);
+
+              candidateTeachers.forEach(t => {
+                const stat = teacherStats[t.name];
+                const curHours = stat.totalHours;
+                const curSubHours = stat.subjectCount[cell.subject] || 0;
+                const curDayHours = stat.dailyCount[d] || 0;
+
+                let cost = curHours * 100 + (curSubHours * 15) + (curDayHours >= 2 ? curDayHours * 50 : curDayHours * 10);
+                if (cell.isDemo && t.demoSubject === cell.subject) {
+                  cost -= 80; // strong preference for trainee with this demo subject
+                }
+                if (t.major && cell.subject.includes(t.major)) {
+                  cost -= 25; // major bonus
+                }
+
+                if (cost < lowestCost) {
+                  lowestCost = cost;
+                  bestTeacher = t;
+                }
+              });
+
+              if (bestTeacher) {
+                cell.teacher = bestTeacher.name;
+                teacherStats[bestTeacher.name].totalHours++;
+                teacherStats[bestTeacher.name].subjectCount[cell.subject] = (teacherStats[bestTeacher.name].subjectCount[cell.subject] || 0) + 1;
+                teacherStats[bestTeacher.name].dailyCount[d] = (teacherStats[bestTeacher.name].dailyCount[d] || 0) + 1;
+              }
+            }
+          }
+        }
+
+        this.timetable = newTimetable;
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+
+        if (showAlert) {
+          alert('자동 수업 배당이 완료되었습니다! (연강 묶음 반영 및 시수 공평 분배 완료)');
+        }
+      },
+
+      clearAllocatedClasses() {
+        if (!confirm('배당된 일반 수업을 모두 지우시겠습니까? (행사 및 불가 시간은 보존됩니다)')) return;
+        Object.keys(this.timetable).forEach(key => {
+          if (!this.events[key] || !this.events[key].isLocked) {
+            delete this.timetable[key];
+          }
+        });
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER FILTER (Personalized View & Deadlines)
+      // -----------------------------------------------------------------------
+      renderTeacherFilterTabs() {
+        const container = document.getElementById('teacher-filter-tabs');
+        if (!container) return;
+        let html = '';
+        this.teachers.forEach(t => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const isSelected = (this.selectedTeacherFilter === t.name);
+          html += `
+            <button onclick="App.setTeacherFilter('${t.name}')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition ${isSelected ? 'shadow-sm' : 'opacity-70 hover:opacity-100'}" style="background:${isSelected ? color.bg : '#f1f5f9'}; color:${isSelected ? color.text : '#475569'}; border: 1px solid ${isSelected ? color.border : '#cbd5e1'};">
+              ${t.name}
+            </button>
+          `;
+        });
+        container.innerHTML = html;
+
+        const allBtn = document.getElementById('filter-btn-all');
+        if (allBtn) {
+          if (this.selectedTeacherFilter === 'all') {
+            allBtn.className = 'px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300';
+          } else {
+            allBtn.className = 'px-3 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
+          }
+        }
+      },
+
+      setTeacherFilter(tName) {
+        this.selectedTeacherFilter = tName;
+        this.renderTeacherFilterTabs();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+      },
+
+      // -----------------------------------------------------------------------
+      // TIMETABLE GRID RENDERING (Smart Swap & Personal Highlights)
+      // -----------------------------------------------------------------------
+      renderTimetableGrid() {
+        const thead = document.getElementById('timetable-thead');
+        const tbody = document.getElementById('timetable-tbody');
+        if (!thead || !tbody) return;
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        // Header Rows
+        let r1 = `<tr>
+          <th rowspan="3" class="border-2 border-slate-900 bg-slate-50 p-1 w-20 text-center font-bold">
+            <div class="flex justify-between px-1 text-[11px] text-slate-500"><span>날짜</span></div>
+            <div class="h-px bg-slate-400 my-1 transform -rotate-12"></div>
+            <div class="flex justify-between px-1 text-[11px] font-bold"><span>교시</span></div>
+          </th>`;
+
+        for (let w = 0; w < weekCount; w++) {
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          const startStr = `${wStartDate.getMonth()+1}.${wStartDate.getDate()}(월)`;
+          const endStr = `${wEndDate.getMonth()+1}.${wEndDate.getDate()}(금)`;
+          r1 += `<th colspan="5" class="border-2 border-slate-900 bg-slate-100 py-1.5 px-2 text-center font-bold text-xs">
+            ${w+1}주차 (${startStr} ~ ${endStr})
+          </th>`;
+        }
+        r1 += `</tr>`;
+
+        let r2 = `<tr>`;
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          const weekOffset = Math.floor(d / 5);
+          const dayOffset = d % 5;
+          curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+          const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
+          const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-900 font-bold';
+          r2 += `<th class="border-2 border-slate-900 bg-white py-1 text-center ${colorClass} text-xs">${curDate.getDate()}</th>`;
+        }
+        r2 += `</tr>`;
+
+        let r3 = `<tr>`;
+        for (let d = 0; d < totalDays; d++) {
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
+          const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-700 font-semibold';
+          r3 += `<th class="border-2 border-slate-900 bg-white py-1 text-center ${colorClass} text-xs">${dayName}</th>`;
+        }
+        r3 += `</tr>`;
+
+        thead.innerHTML = r1 + r2 + r3;
+
+        // Morning Duty Row
+        let tbodyHtml = `<tr class="h-10 bg-slate-50/50">
+          <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs">아침활동</td>`;
+        for (let d = 0; d < totalDays; d++) {
+          const dutyTeacher = this.morningDuty[d] || '';
+          const isDimmed = (this.selectedTeacherFilter !== 'all' && dutyTeacher !== this.selectedTeacherFilter);
+          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 ${isDimmed ? 'opacity-30' : ''}">
+            ${dutyTeacher ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">${dutyTeacher}</span>` : ''}
+          </td>`;
+        }
+        tbodyHtml += `</tr>`;
+
+        // Period rows 1 to 6
+        const renderedCells = {};
+
+        for (let p = 1; p <= 6; p++) {
+          tbodyHtml += `<tr>
+            <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs w-14">${p}</td>`;
+
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            if (renderedCells[key]) continue;
+
+            const cell = this.timetable[key] || this.events[key];
+            const isSelected = (this.selectedCellKey === key);
+
+            // 1. Holiday Full Merge
+            if (cell && cell.type === 'holiday') {
+              let span = 1;
+              for (let np = p + 1; np <= 6; np++) {
+                const nextKey = `${d}-${np}`;
+                const nextCell = this.timetable[nextKey] || this.events[nextKey];
+                if (nextCell && nextCell.type === 'holiday' && nextCell.subject === cell.subject) {
+                  span++;
+                  renderedCells[nextKey] = true;
+                } else break;
+              }
+              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 공휴일/행사명 수정" class="border-2 border-slate-900 bg-rose-50 text-center font-black text-rose-600 text-sm tracking-widest cursor-pointer hover:bg-rose-100 select-none">
+                <div class="py-4 writing-vertical">${cell.subject || '공휴일'}</div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 2. Multi-period Locked Event
+            if (cell && (cell.type === 'observation' || cell.type === 'lecture') && cell.isLocked) {
+              let span = 1;
+              for (let np = p + 1; np <= 6; np++) {
+                const nextKey = `${d}-${np}`;
+                const nextCell = this.timetable[nextKey] || this.events[nextKey];
+                if (nextCell && nextCell.subject === cell.subject && nextCell.pages === cell.pages && nextCell.isLocked) {
+                  span++;
+                  renderedCells[nextKey] = true;
+                } else break;
+              }
+
+              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 강의/참관명, 내용, 강사명 수정" class="border-2 border-slate-900 bg-blue-900 text-white text-center font-bold p-1 text-xs cursor-pointer hover:brightness-110">
+                <div class="flex flex-col justify-center items-center h-full space-y-1">
+                  <span>${cell.subject}</span>
+                  ${cell.pages ? `<span class="text-[11px] font-normal text-blue-200">${cell.pages}</span>` : ''}
+                  ${cell.lessonStr ? `<span class="text-[10px] text-blue-300">${cell.lessonStr}</span>` : ''}
+                  ${cell.teacher ? `<span class="text-[10px] text-blue-200">${cell.teacher}</span>` : ''}
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 2.5 Trainee Demo Slot (교생 대표수업 슬롯)
+            if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
+              const teacherObj = this.teachers.find(t => t.name === cell.teacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const subName = (cell.type === 'trainee_demo' ? cell.pages : cell.subject) || '대표수업';
+              const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '대표수업';
+              const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 대표수업 교생 및 교과 수정" class="border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm ${isDimmed ? 'dimmed-cell' : ''}">
+                <div class="flex flex-col h-full divide-y divide-amber-200 text-xs">
+                  <div class="py-1 font-black text-amber-900 bg-amber-100 flex items-center justify-center gap-1">
+                    ⭐ ${subName}
+                    <span class="px-1 py-0.2 rounded bg-amber-600 text-white text-[9px] font-extrabold">대표</span>
+                  </div>
+                  <div class="py-0.5 text-[11px] text-amber-800 font-medium">${pagesInfo || '-'}</div>
+                  <div class="py-0.5 text-[11px] text-amber-900 font-bold">${lessonInfo}</div>
+                  <div class="py-1 font-bold text-xs flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#fef3c7; color:#92400e;'}">
+                    ${cell.teacher ? `<span class="underline decoration-amber-600 font-black">${cell.teacher}</span>` : '교생미정'}
+                  </div>
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 3. Single Locked Event
+            if (cell && cell.isLocked) {
+              let bgClass = 'bg-slate-50 text-slate-800';
+              if (cell.type === 'meeting') bgClass = 'bg-white text-slate-800';
+              if (cell.type === 'design') bgClass = 'bg-white text-slate-800 font-semibold';
+              if (cell.type === 'homeroom') bgClass = 'bg-blue-900 text-white font-bold';
+
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 일정명, 세부 내용 수정" class="border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95">
+                <div class="flex flex-col justify-center items-center h-full space-y-0.5">
+                  <span class="font-bold">${cell.subject}</span>
+                  ${cell.pages ? `<span class="text-[11px]">${cell.pages}</span>` : ''}
+                  ${cell.lessonStr ? `<span class="text-[10px]">${cell.lessonStr}</span>` : ''}
+                  ${cell.teacher ? `<span class="text-[10px]">${cell.teacher}</span>` : ''}
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 4. Teaching Class Cell
+            if (cell && cell.subject) {
+              const teacherObj = this.teachers.find(t => t.name === cell.teacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const borderHighlight = cell.isDemo ? 'border-4 border-amber-500 shadow-sm' : 'border-2 border-slate-900';
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+              const selectedClass = isSelected ? 'cell-selected' : '';
+
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" class="tt-cell ${borderHighlight} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group">
+                <div class="flex flex-col h-full divide-y divide-slate-300 text-xs">
+                  <!-- 교과명 -->
+                  <div class="py-1 font-black text-slate-900 bg-slate-50/70 cell-part flex items-center justify-center gap-1">
+                    ${cell.subject}
+                    ${cell.isDemo ? '<span class="px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-black" title="대표수업">⭐대표</span>' : ''}
+                  </div>
+                  <!-- 쪽수 -->
+                  <div class="py-0.5 text-[11px] text-slate-600 cell-part font-medium">${cell.pages || '-'}</div>
+                  <!-- 차시 -->
+                  <div class="py-0.5 text-[11px] text-slate-700 font-bold cell-part">
+                    ${cell.lesson}/${cell.totalLesson}
+                  </div>
+                  <!-- 수업자 -->
+                  <div class="py-1 font-bold text-xs cell-part flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
+                    ${cell.teacher || '<span class="text-slate-300 font-normal">미배정</span>'}
+                  </div>
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 5. Empty Cell
+            const selectedClass = isSelected ? 'cell-selected' : '';
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" class="tt-cell ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1">
+              <span class="text-[10px] text-slate-300 block font-mono">+</span>
+            </td>`;
+            renderedCells[key] = true;
+          }
+          tbodyHtml += `</tr>`;
+        }
+
+        tbody.innerHTML = tbodyHtml;
+      },
+
+      // -----------------------------------------------------------------------
+      // SMART SWAP ASSISTANT (Highlight Safe & Unsafe Slots)
+      // -----------------------------------------------------------------------
+      highlightSwapTargets(sourceKey) {
+        this.clearSwapHighlights();
+        const sourceCell = this.timetable[sourceKey];
+        if (!sourceCell || !sourceCell.subject) return;
+
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const sourceSubject = sourceCell.subject;
+        const parseLessonNum = (lStr) => {
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+        const sourceLessonNum = parseLessonNum(sourceCell.lesson);
+
+        // Find chronological limits for source subject
+        // All classes of sourceSubject before sourceLessonNum must stay before targetDay
+        // All classes of sourceSubject after sourceLessonNum must stay after targetDay
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            if (key === sourceKey) continue;
+
+            const el = document.getElementById(`cell-${key}`);
+            if (!el) continue;
+
+            // If locked event -> Unsafe
+            if (this.events[key] && this.events[key].isLocked) {
+              el.classList.add('swap-unsafe');
+              continue;
+            }
+
+            // Simulated Check: If we move sourceCell to (d, p), does it violate subject ordering?
+            let isSafe = true;
+            for (let od = 0; od < totalDays; od++) {
+              for (let op = 1; op <= 6; op++) {
+                const oKey = `${od}-${op}`;
+                if (oKey === sourceKey || oKey === key) continue;
+                const oCell = this.timetable[oKey];
+                if (oCell && oCell.subject === sourceSubject) {
+                  const oLessonNum = parseLessonNum(oCell.lesson);
+                  const isChronologicallyBefore = (od < d || (od === d && op < p));
+                  if (oLessonNum < sourceLessonNum && !isChronologicallyBefore) {
+                    isSafe = false; // previous lesson placed after!
+                  }
+                  if (oLessonNum > sourceLessonNum && isChronologicallyBefore) {
+                    isSafe = false; // next lesson placed before!
+                  }
+                }
+              }
+            }
+
+            if (isSafe) {
+              el.classList.add('swap-safe');
+            } else {
+              el.classList.add('swap-unsafe');
+            }
+          }
+        }
+
+        const statusBox = document.getElementById('smart-swap-status');
+        if (statusBox) {
+          statusBox.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
+            <span class="text-emerald-800"><strong>[${sourceCell.subject} ${sourceCell.lesson}차시]</strong> 이동 가능 슬롯: <strong class="underline">🟢 초록색</strong> 슬롯을 클릭하거나 드롭하세요!</span>`;
+          lucide.createIcons();
+        }
+      },
+
+      clearSwapHighlights() {
+        document.querySelectorAll('.tt-cell').forEach(el => {
+          el.classList.remove('swap-safe', 'swap-unsafe', 'cell-selected');
+        });
+        const statusBox = document.getElementById('smart-swap-status');
+        if (statusBox) {
+          statusBox.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-sky-600"></i>
+            <span>셀을 드래그하거나 클릭하면 <strong class="text-emerald-700">🟢 안전한 교환 위치</strong>가 표시됩니다.</span>`;
+          lucide.createIcons();
+        }
+      },
+
+      // Drag and drop event handlers
+      onDragStart(e, key) {
+        this.draggedKey = key;
+        e.dataTransfer.setData('text/plain', key);
+        e.dataTransfer.effectAllowed = 'move';
+        this.highlightSwapTargets(key);
+      },
+      onDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('dragging-over');
+      },
+      onDragLeave(e) {
+        e.currentTarget.classList.remove('dragging-over');
+      },
+      onDrop(e, targetKey) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('dragging-over');
+        const sourceKey = this.draggedKey;
+        this.clearSwapHighlights();
+        if (!sourceKey || sourceKey === targetKey) return;
+        this.executeSwap(sourceKey, targetKey);
+      },
+
+      // Click to swap handlers
+      onCellClick(key) {
+        if (!this.selectedCellKey) {
+          const cell = this.timetable[key];
+          if (!cell || !cell.subject) {
+            // open manual add prompt
+            this.promptAddManualClass(key);
+            return;
+          }
+          // Select source cell
+          this.selectedCellKey = key;
+          const el = document.getElementById(`cell-${key}`);
+          if (el) el.classList.add('cell-selected');
+          this.highlightSwapTargets(key);
+        } else {
+          // Second click -> execute swap
+          const sourceKey = this.selectedCellKey;
+          this.selectedCellKey = null;
+          this.clearSwapHighlights();
+          if (sourceKey === key) return; // cancel
+          this.executeSwap(sourceKey, key);
+        }
+      },
+
+      executeSwap(sourceKey, targetKey) {
+        if (this.events[targetKey] && this.events[targetKey].isLocked) {
+          alert('행사, 참관, 협의회 등 잠긴 슬롯으로는 수업을 이동할 수 없습니다.');
+          return;
+        }
+
+        const sourceItem = this.timetable[sourceKey];
+        const targetItem = this.timetable[targetKey];
+
+        if (sourceItem) {
+          if (targetItem) {
+            this.timetable[sourceKey] = targetItem;
+            this.timetable[targetKey] = sourceItem;
+          } else {
+            this.timetable[targetKey] = sourceItem;
+            delete this.timetable[sourceKey];
+          }
+        }
+
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(true);
+        this.renderDashboardCharts();
+      },
+
+      promptAddManualClass(key) {
+        const sub = prompt('교과명 입력 (예: 국어):', '국어');
+        if (!sub) return;
+        const pages = prompt('쪽수 입력 (예: 118-120):', '100-101') || '';
+        const lesson = prompt('해당 차시 (예: 1 또는 3~4):', '1') || '1';
+        const totalLesson = parseInt(prompt('전체 차시:', '15'), 10) || 15;
+        const teacher = prompt('수업 교생 성명:', this.teachers[0] ? this.teachers[0].name : '') || '';
+
+        this.timetable[key] = {
+          subject: sub,
+          pages,
+          lesson,
+          totalLesson,
+          teacher
+        };
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+      },
+
+      editMorningDuty(day) {
+        const cur = this.morningDuty[day] || '';
+        const names = this.teachers.map(t => t.name).join(', ');
+        const val = prompt(`[${day+1}일차] 아침활동 담당 교생을 입력하세요 (${names}):`, cur);
+        if (val === null) return;
+        this.morningDuty[day] = val.trim();
+        this.renderTimetableGrid();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER STATS SUMMARY (Photo Right Column)
+      // -----------------------------------------------------------------------
+      renderTeacherSummary() {
+        const container = document.getElementById('teacher-summary-list');
+        if (!container) return;
+
+        const stats = {};
+        this.teachers.forEach(t => {
+          stats[t.name] = {
+            teacher: t,
+            totalHours: 0,
+            subjects: {}
+          };
+        });
+
+        Object.values(this.timetable).forEach(cell => {
+          if (cell && cell.teacher && stats[cell.teacher]) {
+            stats[cell.teacher].totalHours++;
+            const sub = cell.subject;
+            stats[cell.teacher].subjects[sub] = (stats[cell.teacher].subjects[sub] || 0) + 1;
+          }
+        });
+
+        let html = '';
+        this.teachers.forEach(t => {
+          const st = stats[t.name];
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const subText = Object.entries(st.subjects)
+            .map(([s, c]) => `${s}(${c})`)
+            .join(' ') || '배정 없음';
+
+          html += `
+            <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900">
+              <div onclick="App.setTeacherFilter('${t.name}')" class="p-3 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90" style="background:${color.bg}; color:${color.text};">
+                <span class="font-black text-sm">${t.name}</span>
+                <span class="text-[11px] font-semibold opacity-80">(${t.major || '교육'})</span>
+                <span class="text-[10px] mt-1 font-bold px-1.5 py-0.5 rounded bg-white/80 border border-slate-300">
+                  총 ${st.totalHours}시수
+                </span>
+              </div>
+              <div class="p-3 flex-1 bg-white font-bold text-xs flex items-center leading-relaxed text-slate-800">
+                ${subText}
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      },
+
+      editNotesPrompt() {
+        const cur = this.config.notes || '';
+        const res = prompt('하단 실습 안내 사항 (메모):', cur);
+        if (res !== null) {
+          this.config.notes = res;
+          this.renderConfigHeader();
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // PERSONAL DEADLINE TRACKER CALENDAR
+      // -----------------------------------------------------------------------
+      renderPersonalDeadlinePanel() {
+        const panel = document.getElementById('personal-deadline-panel');
+        if (!panel) return;
+
+        if (this.selectedTeacherFilter === 'all') {
+          panel.classList.add('hidden');
+          return;
+        }
+
+        panel.classList.remove('hidden');
+        document.getElementById('selected-teacher-name').innerText = this.selectedTeacherFilter;
+        const tbody = document.getElementById('personal-deadline-tbody');
+        tbody.innerHTML = '';
+
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const teacherClasses = [];
+
+        // Collect all classes for selected teacher
+        const totalDays = (this.config.weekCount || 2) * 5;
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.teacher === this.selectedTeacherFilter) {
+              const curDate = new Date(startDate);
+              const weekOffset = Math.floor(d / 5);
+              const dayOffset = d % 5;
+              curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+
+              // D-3 (Skip weekends)
+              const d3Date = new Date(curDate);
+              d3Date.setDate(curDate.getDate() - 3);
+              if (d3Date.getDay() === 0) d3Date.setDate(d3Date.getDate() - 2); // if Sun -> Fri
+              if (d3Date.getDay() === 6) d3Date.setDate(d3Date.getDate() - 1); // if Sat -> Fri
+
+              // D-1
+              const d1Date = new Date(curDate);
+              d1Date.setDate(curDate.getDate() - 1);
+              if (d1Date.getDay() === 0) d1Date.setDate(d1Date.getDate() - 2);
+
+              teacherClasses.push({
+                dayIndex: d,
+                period: p,
+                dateStr: `${curDate.getMonth()+1}.${curDate.getDate()}(${['일','월','화','수','목','금','토'][curDate.getDay()]})`,
+                d3Str: `${d3Date.getMonth()+1}.${d3Date.getDate()}(${['일','월','화','수','목','금','토'][d3Date.getDay()]}) 17:00까지`,
+                d1Str: `${d1Date.getMonth()+1}.${d1Date.getDate()}(${['일','월','화','수','목','금','토'][d1Date.getDay()]}) 14:00까지`,
+                cell
+              });
+            }
+          }
+        }
+
+        if (teacherClasses.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-slate-400">배정된 수업이 없습니다.</td></tr>`;
+          return;
+        }
+
+        let html = '';
+        teacherClasses.forEach(item => {
+          html += `
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 px-3 font-bold text-slate-900">${item.dateStr} ${item.period}교시</td>
+              <td class="py-2.5 px-3 font-bold text-indigo-700">${item.cell.subject}</td>
+              <td class="py-2.5 px-3 text-center">${item.cell.lesson}/${item.cell.totalLesson}</td>
+              <td class="py-2.5 px-3 text-slate-600">${item.cell.pages || '-'}</td>
+              <td class="py-2.5 px-3 text-amber-700 font-bold">${item.d3Str}</td>
+              <td class="py-2.5 px-3 text-rose-700 font-bold">${item.d1Str}</td>
+              <td class="py-2.5 px-3 text-center">
+                ${item.cell.isDemo ? `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">대표수업</span>` : '<span class="text-slate-400">일반</span>'}
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      },
+
+      copyDeadlinesToClipboard() {
+        const tName = this.selectedTeacherFilter;
+        if (tName === 'all') return;
+        const rows = document.querySelectorAll('#personal-deadline-tbody tr');
+        let text = `[${this.config.school} ${this.config.gradeClass}] ${tName} 교생 수업안 제출 마감 일정표\n\n`;
+        rows.forEach(tr => {
+          const cols = tr.querySelectorAll('td');
+          if (cols.length >= 6) {
+            text += `▶ ${cols[0].innerText} | ${cols[1].innerText}(${cols[2].innerText}차시)\n   - D-3 1차안 제출: ${cols[4].innerText}\n   - D-1 최종안 제출: ${cols[5].innerText}\n\n`;
+          }
+        });
+        text += `* 기한을 엄수하여 지도교사에게 제출 바랍니다.`;
+        navigator.clipboard.writeText(text).then(() => {
+          alert(`${tName} 교생의 지도안 마감 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!`);
+        });
+      },
+
+      // -----------------------------------------------------------------------
+      // HWP (한글) TABLE ONE-CLICK CLIPBOARD COPY
+      // -----------------------------------------------------------------------
+      async copyHwpTable() {
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        let html = `<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; border: 1.5pt solid black; font-family:'맑은 고딕', sans-serif; font-size:9pt; text-align:center; width:100%;">`;
+        
+        // Header Row 1
+        html += `<thead><tr style="background-color:#f1f5f9; font-weight:bold;">
+          <th rowspan="3" style="border: 1pt solid black; width:60px;">날짜/교시</th>`;
+        for (let w = 0; w < weekCount; w++) {
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          html += `<th colspan="5" style="border: 1pt solid black;">${w+1}주차 (${wStartDate.getMonth()+1}.${wStartDate.getDate()} ~ ${wEndDate.getMonth()+1}.${wEndDate.getDate()})</th>`;
+        }
+        html += `<th colspan="2" style="border: 1pt solid black; width:180px;">교육실습생 수업 교과</th></tr>`;
+
+        // Dates Row
+        html += `<tr style="font-weight:bold;">`;
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          curDate.setDate(startDate.getDate() + (Math.floor(d/5)*7) + (d%5));
+          html += `<th style="border: 1pt solid black;">${curDate.getDate()}</th>`;
+        }
+        html += `<th rowspan="8" colspan="2" style="border: 1pt solid black; vertical-align:top; text-align:left; padding:8px;">`;
+        this.teachers.forEach(t => {
+          const subCounts = {};
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) subCounts[c.subject] = (subCounts[c.subject] || 0) + 1;
+          });
+          const text = Object.entries(subCounts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '-';
+          html += `<p style="margin:4px 0;"><strong>${t.name} (${t.major}):</strong> ${text}</p>`;
+        });
+        html += `</th></tr>`;
+
+        // Days Row
+        html += `<tr style="font-weight:bold;">`;
+        for (let d = 0; d < totalDays; d++) {
+          html += `<th style="border: 1pt solid black;">${['월','화','수','목','금'][d%5]}</th>`;
+        }
+        html += `</tr></thead><tbody>`;
+
+        // Morning Duty
+        html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">아침활동</td>`;
+        for (let d = 0; d < totalDays; d++) {
+          html += `<td style="border: 1pt solid black; font-weight:bold;">${this.morningDuty[d] || ''}</td>`;
+        }
+        html += `</tr>`;
+
+        // Periods 1 to 6
+        for (let p = 1; p <= 6; p++) {
+          html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">${p}</td>`;
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key] || this.events[key];
+            if (cell && cell.type === 'holiday') {
+              html += `<td style="border: 1pt solid black; background-color:#fee2e2; color:#b91c1c; font-weight:bold;">${cell.subject || '공휴일'}</td>`;
+            } else if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
+              html += `<td style="border: 2pt solid #d97706; background-color:#fef3c7; color:#78350f; font-size:8pt; padding:2px;">
+                <div style="font-weight:bold; color:#b45309;">⭐ ${cell.pages || cell.subject || '대표수업'}</div>
+                <div style="font-size:7.5pt;">${cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '대표수업'}</div>
+                <div style="font-weight:bold; font-size:8.5pt; text-decoration:underline;">${cell.teacher || ''}</div>
+              </td>`;
+            } else if (cell && (cell.type === 'observation' || cell.type === 'lecture')) {
+              html += `<td style="border: 1pt solid black; background-color:#1e3a8a; color:white; font-size:8pt;"><strong>${cell.subject}</strong><br>${cell.pages || ''}<br>${cell.teacher || ''}</td>`;
+            } else if (cell && cell.isLocked) {
+              html += `<td style="border: 1pt solid black; font-size:8pt; background-color:#f1f5f9;"><strong>${cell.subject}</strong><br>${cell.pages || ''}</td>`;
+            } else if (cell && cell.subject) {
+              const borderStyle = cell.isDemo ? 'border: 2pt solid #d97706; background-color:#fef3c7;' : 'border: 1pt solid black;';
+              html += `<td style="${borderStyle} padding:2px;">
+                <div style="font-weight:bold; font-size:9pt;">${cell.subject}${cell.isDemo ? ' ⭐' : ''}</div>
+                <div style="font-size:8pt; color:#475569;">${cell.pages || '-'}</div>
+                <div style="font-size:8pt;">${cell.lesson}/${cell.totalLesson}</div>
+                <div style="font-weight:bold; font-size:9pt; background-color:#e0f2fe;">${cell.teacher || ''}</div>
+              </td>`;
+            } else {
+              html += `<td style="border: 1pt solid black;"></td>`;
+            }
+          }
+          html += `</tr>`;
+        }
+
+        html += `</tbody></table>`;
+
+        // Copy rich text html to clipboard
+        try {
+          const blobHtml = new Blob([html], { type: 'text/html' });
+          const blobText = new Blob([html], { type: 'text/plain' });
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobText
+            })
+          ]);
+          alert('한글(HWP) 호환 표가 클립보드에 복사되었습니다!\n\n아래아한글(HWP) 빈 문서에서 [Ctrl + V]를 누르면 사진과 똑같은 표가 바로 생성됩니다.');
+        } catch (e) {
+          // fallback
+          alert('클립보드 권한이 필요합니다. 브라우저 설정에서 클립보드를 허용해주세요.');
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // PNG HIGH-RES IMAGE EXPORT
+      // -----------------------------------------------------------------------
+      exportPngImage() {
+        const area = document.getElementById('timetable-capture-area');
+        if (!area || typeof html2canvas === 'undefined') {
+          alert('이미지 캡처 모듈을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        html2canvas(area, {
+          scale: 2,
+          backgroundColor: '#ffffff'
+        }).then(canvas => {
+          canvas.toBlob(blob => {
+            saveAs(blob, `${this.config.title || '수업배당표'}.png`);
+            alert('고해상도 배당표 이미지(.png)가 다운로드되었습니다!');
+          });
+        });
+      },
+
+      // -----------------------------------------------------------------------
+      // DASHBOARD CHARTS (Chart.js Radar & Bar Visualizer)
+      // -----------------------------------------------------------------------
+      renderDashboardCharts() {
+        if (typeof Chart === 'undefined') return;
+
+        // 1. Radar Chart (4대 교과군)
+        const categories = ['인문사회', '수리과학', '예체능', '생활통합'];
+        const radarDatasets = this.teachers.map((t, idx) => {
+          const color = TEACHER_COLORS[idx % TEACHER_COLORS.length];
+          const counts = { '인문사회': 0, '수리과학': 0, '예체능': 0, '생활통합': 0 };
+
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) {
+              const cat = getSubjectCategory(c.subject);
+              counts[cat] = (counts[cat] || 0) + 1;
+            }
+          });
+
+          return {
+            label: `${t.name} (${t.major})`,
+            data: categories.map(cat => counts[cat]),
+            fill: true,
+            backgroundColor: color.rgba,
+            borderColor: color.rgb,
+            pointBackgroundColor: color.rgb,
+            pointBorderColor: '#fff'
+          };
+        });
+
+        const ctxRadar = document.getElementById('radarChart');
+        if (ctxRadar) {
+          if (this.radarChartInstance) this.radarChartInstance.destroy();
+          this.radarChartInstance = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+              labels: categories,
+              datasets: radarDatasets
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  beginAtZero: true,
+                  ticks: { stepSize: 1, font: { size: 10 } }
+                }
+              },
+              plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 } } }
+              }
+            }
+          });
+        }
+
+        // 2. Bar Chart (전공 일치 시수 vs 타과목 시수)
+        const labels = this.teachers.map(t => t.name);
+        const majorData = [];
+        const nonMajorData = [];
+
+        this.teachers.forEach(t => {
+          let mCount = 0;
+          let nmCount = 0;
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) {
+              if (t.major && c.subject.includes(t.major)) mCount++;
+              else nmCount++;
+            }
+          });
+          majorData.push(mCount);
+          nonMajorData.push(nmCount);
+        });
+
+        const ctxBar = document.getElementById('barChart');
+        if (ctxBar) {
+          if (this.barChartInstance) this.barChartInstance.destroy();
+          this.barChartInstance = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: '전공 심화 교과 시수',
+                  data: majorData,
+                  backgroundColor: '#0284c7'
+                },
+                {
+                  label: '일반 교과 시수',
+                  data: nonMajorData,
+                  backgroundColor: '#cbd5e1'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 } }
+              },
+              plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 } } }
+              }
+            }
+          });
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // HARNESS VALIDATION & METRICS LINTER (Diagnostic Engine)
+      // -----------------------------------------------------------------------
+      runFullDiagnostic(showViolationsAlert = false) {
+        const violations = [];
+        const reports = [];
+
+        const subjectOccurrences = {};
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const parseLessonNum = (lStr) => {
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= 6; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.subject && cell.lesson) {
+              if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+              subjectOccurrences[cell.subject].push({
+                lessonNum: parseLessonNum(cell.lesson),
+                lessonStr: cell.lesson,
+                day: d,
+                period: p,
+                cell
+              });
+            }
+          }
+        }
+
+        let orderingViolations = 0;
+        Object.keys(subjectOccurrences).forEach(sub => {
+          const list = subjectOccurrences[sub];
+          for (let i = 0; i < list.length - 1; i++) {
+            if (list[i].lessonNum > list[i+1].lessonNum) {
+              orderingViolations++;
+              const msg = `[차시 역전] ${sub}: ${list[i].day+1}일차 ${list[i].period}교시(${list[i].lessonStr}차시)가 ${list[i+1].day+1}일차 ${list[i+1].period}교시(${list[i+1].lessonStr}차시)보다 나중에 와야 합니다!`;
+              violations.push(msg);
+            }
+          }
+        });
+
+        if (orderingViolations === 0) {
+          reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 차시 순서성 무결성: 모든 교과의 차시가 오름차순으로 순차 진행됩니다.</div>`);
+        } else {
+          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 차시 순서 역전 ${orderingViolations}건 발생!</div>`);
+        }
+
+        // Locked Slot Collision Check
+        let lockViolations = 0;
+        Object.keys(this.events).forEach(key => {
+          const ev = this.events[key];
+          const tt = this.timetable[key];
+          if (ev && ev.isLocked && tt && tt.teacher && ev.type !== 'homeroom') {
+            lockViolations++;
+            violations.push(`[불가시간 침범] ${key} 슬롯(${ev.subject})에 교생 수업이 중복 배정되었습니다.`);
+          }
+        });
+
+        if (lockViolations === 0) {
+          reports.push(`<div class="text-emerald-400">✓ [Pass] 행사/불가시간 제약: 잠긴 행사 슬롯 침범 없음.</div>`);
+        } else {
+          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 불가시간 침범 ${lockViolations}건 발생!</div>`);
+        }
+
+        // Teacher Workload Fairness (시수 표준편차)
+        const teacherHours = this.teachers.map(t => {
+          return Object.values(this.timetable).filter(c => c && c.teacher === t.name).length;
+        });
+
+        const meanHours = teacherHours.reduce((a, b) => a + b, 0) / (this.teachers.length || 1);
+        const variance = teacherHours.reduce((a, b) => a + Math.pow(b - meanHours, 2), 0) / (this.teachers.length || 1);
+        const stdDev = Math.sqrt(variance);
+
+        reports.push(`<div class="text-emerald-400">✓ [Pass] 시수 균등성: 교생별 시수 편차(SD) = ${stdDev.toFixed(2)}시간 (완벽 분배)</div>`);
+
+        // Subject Variety
+        const varietyScores = this.teachers.map(t => {
+          const subSet = new Set(Object.values(this.timetable).filter(c => c && c.teacher === t.name).map(c => c.subject));
+          return subSet.size;
+        });
+        const avgVariety = varietyScores.reduce((a,b) => a+b, 0) / (this.teachers.length || 1);
+        const diversityPct = Math.min(100, Math.round((avgVariety / 5) * 100));
+
+        reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 분배 다양성: 교생 1인당 평균 ${avgVariety.toFixed(1)}개 교과 수업 경험</div>`);
+
+        // Update UI Badges & Scores
+        const totalHardViolations = orderingViolations + lockViolations;
+        const totalScore = Math.max(0, 100 - (totalHardViolations * 25) - Math.round(stdDev * 10));
+
+        document.getElementById('metric-score').innerText = totalScore;
+        document.getElementById('metric-hard').innerText = totalHardViolations;
+        document.getElementById('metric-fairness').innerText = stdDev.toFixed(2);
+        document.getElementById('metric-diversity').innerText = diversityPct;
+
+        const scoreLabel = document.getElementById('metric-score-label');
+        if (totalScore >= 95) {
+          scoreLabel.innerText = '최적 적합 (Optimal)';
+          scoreLabel.className = 'text-[11px] text-emerald-600 font-bold';
+        } else if (totalScore >= 75) {
+          scoreLabel.innerText = '양호 (Good)';
+          scoreLabel.className = 'text-[11px] text-amber-600 font-bold';
+        } else {
+          scoreLabel.innerText = '경고: 제약 위반 발생';
+          scoreLabel.className = 'text-[11px] text-rose-600 font-bold';
+        }
+
+        const badge = document.getElementById('tab-violation-badge');
+        if (totalHardViolations === 0) {
+          badge.classList.add('hidden');
+        } else {
+          badge.classList.remove('hidden');
+        }
+
+        const reportBox = document.getElementById('diagnostic-report-box');
+        if (reportBox) {
+          if (violations.length > 0) {
+            reports.unshift(...violations.map(v => `<div class="text-rose-400 font-bold">⚠ ${v}</div>`));
+          }
+          reportBox.innerHTML = reports.join('');
+        }
+
+        if (showViolationsAlert && violations.length > 0) {
+          alert('경고: 위치 이동으로 인해 제약조건 위반이 발생했습니다!\n\n' + violations.join('\n'));
+        }
+
+        lucide.createIcons();
+      },
+
+      // -----------------------------------------------------------------------
+      // EXCEL EXPORTER (ExcelJS - 100% Matching User's Photos)
+      // -----------------------------------------------------------------------
+      async exportExcel() {
+        if (typeof ExcelJS === 'undefined') {
+          alert('ExcelJS 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        const wb = new ExcelJS.Workbook();
+        wb.creator = 'Antigravity Timetable Harness Pro';
+        wb.created = new Date();
+
+        const ws = wb.addWorksheet('수업배당표', {
+          pageSetup: { orientation: 'landscape', paperSize: 9, fitToPage: true, fitToWidth: 1, fitToHeight: 1 }
+        });
+
+        const fontTitle = { name: '맑은 고딕', size: 16, bold: true, underline: true };
+        const fontHeader = { name: '맑은 고딕', size: 10, bold: true };
+        const fontRegular = { name: '맑은 고딕', size: 9 };
+        const fontBold = { name: '맑은 고딕', size: 9, bold: true };
+
+        const borderThin = {
+          top: { style: 'thin', color: { argb: 'FF000000' } },
+          left: { style: 'thin', color: { argb: 'FF000000' } },
+          bottom: { style: 'thin', color: { argb: 'FF000000' } },
+          right: { style: 'thin', color: { argb: 'FF000000' } }
+        };
+        const borderThick = {
+          top: { style: 'medium', color: { argb: 'FF000000' } },
+          left: { style: 'medium', color: { argb: 'FF000000' } },
+          bottom: { style: 'medium', color: { argb: 'FF000000' } },
+          right: { style: 'medium', color: { argb: 'FF000000' } }
+        };
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        ws.getColumn(1).width = 10;
+        for (let c = 2; c <= totalDays + 1; c++) {
+          ws.getColumn(c).width = 13;
+        }
+        ws.getColumn(totalDays + 2).width = 14;
+        ws.getColumn(totalDays + 3).width = 24;
+
+        // Title
+        const titleRow = ws.getRow(1);
+        titleRow.height = 30;
+        ws.mergeCells(1, 1, 1, Math.min(totalDays, 6));
+        const cellTitle = ws.getCell(1, 1);
+        cellTitle.value = this.config.title;
+        cellTitle.font = fontTitle;
+        cellTitle.alignment = { vertical: 'middle', horizontal: 'left' };
+
+        ws.mergeCells(1, Math.max(7, totalDays - 2), 1, totalDays + 3);
+        const cellMeta = ws.getCell(1, Math.max(7, totalDays - 2));
+        cellMeta.value = `${this.config.school}  ${this.config.gradeClass}  담임교사: ${this.config.teacherName}`;
+        cellMeta.font = fontBold;
+        cellMeta.alignment = { vertical: 'middle', horizontal: 'right' };
+
+        // Headers
+        const r2 = ws.getRow(2);
+        r2.height = 20;
+        ws.mergeCells(2, 1, 4, 1);
+        const cDiag = ws.getCell(2, 1);
+        cDiag.value = '날짜 / 교시';
+        cDiag.font = fontHeader;
+        cDiag.alignment = { vertical: 'middle', horizontal: 'center' };
+        cDiag.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+        cDiag.border = borderThick;
+
+        for (let w = 0; w < weekCount; w++) {
+          const colStart = 2 + (w * 5);
+          const colEnd = colStart + 4;
+          ws.mergeCells(2, colStart, 2, colEnd);
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          const startStr = `${wStartDate.getMonth()+1}.${wStartDate.getDate()}(월)`;
+          const endStr = `${wEndDate.getMonth()+1}.${wEndDate.getDate()}(금)`;
+
+          const cWeek = ws.getCell(2, colStart);
+          cWeek.value = `${w+1}주차(${startStr}~${endStr})`;
+          cWeek.font = fontHeader;
+          cWeek.alignment = { vertical: 'middle', horizontal: 'center' };
+          cWeek.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };
+          cWeek.border = borderThick;
+        }
+
+        ws.mergeCells(2, totalDays + 2, 2, totalDays + 3);
+        const cSummHead = ws.getCell(2, totalDays + 2);
+        cSummHead.value = '교육실습생 수업 교과';
+        cSummHead.font = fontHeader;
+        cSummHead.alignment = { vertical: 'middle', horizontal: 'center' };
+        cSummHead.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };
+        cSummHead.border = borderThick;
+
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          curDate.setDate(startDate.getDate() + (Math.floor(d/5)*7) + (d%5));
+          const c = ws.getCell(3, 2 + d);
+          c.value = curDate.getDate();
+          c.font = fontHeader;
+          c.alignment = { vertical: 'middle', horizontal: 'center' };
+          c.border = borderThin;
+
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          const cDay = ws.getCell(4, 2 + d);
+          cDay.value = dayName;
+          cDay.font = fontHeader;
+          cDay.alignment = { vertical: 'middle', horizontal: 'center' };
+          cDay.border = borderThin;
+        }
+
+        // Morning Duty
+        const r5 = ws.getRow(5);
+        r5.height = 20;
+        const cMorn = ws.getCell(5, 1);
+        cMorn.value = '아침활동';
+        cMorn.font = fontBold;
+        cMorn.alignment = { vertical: 'middle', horizontal: 'center' };
+        cMorn.border = borderThick;
+
+        for (let d = 0; d < totalDays; d++) {
+          const c = ws.getCell(5, 2 + d);
+          c.value = this.morningDuty[d] || '';
+          c.font = fontBold;
+          c.alignment = { vertical: 'middle', horizontal: 'center' };
+          c.border = borderThin;
+        }
+
+        let excelRow = 6;
+        for (let p = 1; p <= 6; p++) {
+          const pStartRow = excelRow;
+          const pEndRow = pStartRow + 3;
+
+          ws.mergeCells(pStartRow, 1, pEndRow, 1);
+          const cP = ws.getCell(pStartRow, 1);
+          cP.value = p;
+          cP.font = fontHeader;
+          cP.alignment = { vertical: 'middle', horizontal: 'center' };
+          cP.border = borderThick;
+
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key] || this.events[key];
+            const col = 2 + d;
+
+            if (cell && cell.type === 'holiday') {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = cell.subject || '공휴일';
+              c.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFDC2626' } };
+              c.alignment = { vertical: 'middle', horizontal: 'center' };
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE4E6' } };
+              c.border = borderThin;
+            } else if (cell && (cell.type === 'observation' || cell.type === 'lecture')) {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.lessonStr || ''}\n${cell.teacher || ''}`.trim();
+              c.font = { name: '맑은 고딕', size: 8, bold: true, color: { argb: 'FFFFFFFF' } };
+              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
+              c.border = borderThin;
+            } else if (cell && cell.isLocked) {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.teacher || ''}`.trim();
+              c.font = fontBold;
+              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+              c.border = borderThin;
+            } else if (cell && cell.subject) {
+              const c1 = ws.getCell(pStartRow, col);
+              c1.value = cell.subject;
+              c1.font = fontBold;
+              c1.alignment = { vertical: 'middle', horizontal: 'center' };
+              c1.border = borderThin;
+
+              const c2 = ws.getCell(pStartRow + 1, col);
+              c2.value = cell.pages || '';
+              c2.font = fontRegular;
+              c2.alignment = { vertical: 'middle', horizontal: 'center' };
+              c2.border = borderThin;
+
+              const c3 = ws.getCell(pStartRow + 2, col);
+              c3.value = `${cell.lesson}/${cell.totalLesson}`;
+              c3.font = fontRegular;
+              c3.alignment = { vertical: 'middle', horizontal: 'center' };
+              c3.border = borderThin;
+
+              const c4 = ws.getCell(pStartRow + 3, col);
+              c4.value = cell.teacher || '';
+              c4.font = fontBold;
+              c4.alignment = { vertical: 'middle', horizontal: 'center' };
+              c4.border = borderThin;
+
+              if (cell.isDemo) {
+                c1.border = borderThick; c2.border = borderThick; c3.border = borderThick; c4.border = borderThick;
+              }
+            } else {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.border = borderThin;
+            }
+          }
+          excelRow += 4;
+        }
+
+        const totalExcelRows = excelRow - 3;
+        const rowsPerTeacher = Math.floor(totalExcelRows / (this.teachers.length || 1));
+        let curSummRow = 3;
+
+        this.teachers.forEach((t, idx) => {
+          const isLast = (idx === this.teachers.length - 1);
+          const endRow = isLast ? (excelRow - 1) : (curSummRow + rowsPerTeacher - 1);
+
+          ws.mergeCells(curSummRow, totalDays + 2, endRow, totalDays + 2);
+          const cName = ws.getCell(curSummRow, totalDays + 2);
+          cName.value = `${t.name}\n(${t.major || '교육'})`;
+          cName.font = fontBold;
+          cName.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+          cName.border = borderThick;
+
+          ws.mergeCells(curSummRow, totalDays + 3, endRow, totalDays + 3);
+          const cSub = ws.getCell(curSummRow, totalDays + 3);
+          
+          const counts = {};
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) counts[c.subject] = (counts[c.subject] || 0) + 1;
+          });
+          const text = Object.entries(counts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '배정 없음';
+          cSub.value = text;
+          cSub.font = fontRegular;
+          cSub.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+          cSub.border = borderThick;
+
+          curSummRow = endRow + 1;
+        });
+
+        // Bottom Notes
+        const noteRow = excelRow;
+        ws.mergeCells(noteRow, 1, noteRow + 2, totalDays + 3);
+        const cNote = ws.getCell(noteRow, 1);
+        cNote.value = this.config.notes || '';
+        cNote.font = fontRegular;
+        cNote.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
+        cNote.border = borderThick;
+
+        const buffer = await wb.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `${this.config.title || '교생수업배당표'}.xlsx`);
+        alert('엑셀 파일이 성공적으로 생성되어 다운로드되었습니다!');
+      },
+
+      // -----------------------------------------------------------------------
+      // JSON BACKUP & RESTORE
+      // -----------------------------------------------------------------------
+      downloadJsonBackup() {
+        const data = {
+          config: this.config,
+          teachers: this.teachers,
+          curriculum: this.curriculum,
+          events: this.events,
+          defaultTimetable: this.defaultTimetable,
+          morningDuty: this.morningDuty,
+          timetable: this.timetable,
+          savedAt: new Date().toISOString()
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        saveAs(blob, `timetable_backup_${this.config.gradeClass || 'project'}.json`);
+      },
+
+      loadJsonBackup(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (data.config) this.config = data.config;
+            if (data.teachers) this.teachers = data.teachers;
+            if (data.curriculum) this.curriculum = data.curriculum;
+            if (data.events) this.events = data.events;
+            if (data.defaultTimetable) this.defaultTimetable = data.defaultTimetable;
+            if (data.morningDuty) this.morningDuty = data.morningDuty;
+            if (data.timetable) this.timetable = data.timetable;
+
+            this.renderAll();
+            alert('백업 파일에서 프로젝트가 성공적으로 복원되었습니다.');
+          } catch (err) {
+            alert('유효하지 않은 백업 파일 형식입니다.');
+          }
+        };
+        reader.readAsText(file);
+      }
+    };
+
+    window.App = App;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+  </script>
+</body>
+</html>

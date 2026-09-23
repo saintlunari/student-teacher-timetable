@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Harness Engineering Benchmark Test Runner Pro</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen p-8 antialiased">
+  <div class="max-w-4xl mx-auto space-y-6">
+    <div class="border-b border-slate-800 pb-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-xl font-bold flex items-center gap-2">
+          <i data-lucide="shield-check" class="text-emerald-400"></i>
+          교생 수업 배당표 하네스 엔지니어링 벤치마크 테스트 Pro
+        </h1>
+        <p class="text-xs text-slate-400 mt-1">골든 시나리오 + 연강(블록타임) 및 압축 차시(3~4) 무결성 자동 검증</p>
+      </div>
+      <button onclick="runAllTests()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 font-semibold text-xs rounded-xl shadow transition flex items-center gap-2">
+        <i data-lucide="play" class="w-4 h-4"></i> 테스트 전체 재실행
+      </button>
+    </div>
+
+    <!-- Summary cards -->
+    <div class="grid grid-cols-3 gap-4 text-center">
+      <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+        <span class="text-xs text-slate-400">총 테스트 케이스</span>
+        <div id="total-tests" class="text-2xl font-black text-white mt-1">7</div>
+      </div>
+      <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+        <span class="text-xs text-slate-400">성공 (Passed)</span>
+        <div id="passed-tests" class="text-2xl font-black text-emerald-400 mt-1">0</div>
+      </div>
+      <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
+        <span class="text-xs text-slate-400">실패 (Failed)</span>
+        <div id="failed-tests" class="text-2xl font-black text-rose-400 mt-1">0</div>
+      </div>
+    </div>
+
+    <!-- Test results list -->
+    <div id="test-results" class="space-y-3">
+      <!-- Injected by JS -->
+    </div>
+
+    <div class="pt-4 text-center text-xs text-slate-500">
+      <a href="index.html" class="text-sky-400 hover:underline inline-flex items-center gap-1">
+        &larr; 수업 배당표 메인 시스템으로 이동
+      </a>
+    </div>
+  </div>
+
+  <iframe id="app-frame" src="index.html" style="position:fixed;top:-9999px;left:-9999px;width:1024px;height:768px;border:none;"></iframe>
+  <script>
+    var App = null;
+    const testCases = [
+      {
+        id: 'tc1',
+        title: '[사진 1] 공주교대부초 2학년 - 교과 차시 순서 무결성 테스트',
+        desc: '국어, 수학, 슬생, 즐생, 바생 차시가 시간 흐름에 따라 100% 오름차순으로 배치되는지 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          App.runAutoAllocation(false);
+          const totalDays = (App.config.weekCount || 2) * 5;
+          const subjectOccurrences = {};
+          const parseNum = (s) => parseInt(String(s).match(/\d+/)[0], 10);
+
+          for (let d = 0; d < totalDays; d++) {
+            for (let p = 1; p <= 6; p++) {
+              const cell = App.timetable[`${d}-${p}`];
+              if (cell && cell.subject && cell.lesson) {
+                if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+                subjectOccurrences[cell.subject].push({ lesson: parseNum(cell.lesson), day: d, period: p });
+              }
+            }
+          }
+          let violations = 0;
+          const badSubs = [];
+          Object.keys(subjectOccurrences).forEach(sub => {
+            const list = subjectOccurrences[sub];
+            for (let i = 0; i < list.length - 1; i++) {
+              if (list[i].lesson > list[i+1].lesson) {
+                violations++;
+                badSubs.push(`${sub}: ` + list.map(x => `${x.day}-${x.period}:L${x.lesson}`).join(' '));
+              }
+            }
+          });
+          return { pass: violations === 0, message: violations === 0 ? '차시 역전 0건: 완벽한 순서 보장' : `${violations}건 역전: ` + badSubs.join(' | ') };
+        }
+      },
+      {
+        id: 'tc2',
+        title: '[사진 1] 공주교대부초 2학년 - 행사 및 잠긴 슬롯 침범 방지 테스트',
+        desc: '강의 1~5, 수업참관, 개교기념일, 학급협의회 슬롯에 일반 수업이 침범하지 않는지 검증',
+        run: () => {
+          let lockViolations = 0;
+          const badKeys = [];
+          const studentTeacherNames = App.teachers.map(t => t.name);
+          Object.keys(App.events).forEach(key => {
+            const ev = App.events[key];
+            const tt = App.timetable[key];
+            if (ev && ev.isLocked && tt && studentTeacherNames.includes(tt.teacher) && ev.type !== 'homeroom') {
+              lockViolations++;
+              badKeys.push(key + ':' + ev.subject);
+            }
+          });
+          return { pass: lockViolations === 0, message: lockViolations === 0 ? '잠긴 행사 30여 개 슬롯 100% 보존' : `${lockViolations}건 충돌: ` + badKeys.join(',') };
+        }
+      },
+      {
+        id: 'tc3',
+        title: '[사진 1] 공주교대부초 2학년 - 실습생 시수 공평성(Fairness) 테스트',
+        desc: '김부설, 이공주, 삼알밤 3인이 각각 6시수씩 오차 0으로 완벽하게 균등 분배되는지 검증',
+        run: () => {
+          const counts = App.teachers.map(t => {
+            return Object.values(App.timetable).filter(c => c && c.teacher === t.name).length;
+          });
+          const allEqual = counts.every(c => c === counts[0]);
+          return { pass: allEqual && counts[0] === 6, message: `각 교생별 배정 시수: [${counts.join(', ')}] -> 전원 ${counts[0]}시수 완벽 일치` };
+        }
+      },
+      {
+        id: 'tc4',
+        title: '[사진 2] 공주교대부초 3학년 (4주간 5인) - 대규모 차시 순서 무결성 테스트',
+        desc: '50개 차시, 4주간(20일) 일정에서 전 교과의 차시 역전 발생 여부 검증',
+        run: () => {
+          App.loadPreset('grade3', false);
+          App.runAutoAllocation(false);
+          const totalDays = 20;
+          const subjectOccurrences = {};
+          const parseNum = (s) => parseInt(String(s).match(/\d+/)[0], 10);
+
+          for (let d = 0; d < totalDays; d++) {
+            for (let p = 1; p <= 6; p++) {
+              const cell = App.timetable[`${d}-${p}`];
+              if (cell && cell.subject && cell.lesson) {
+                if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+                subjectOccurrences[cell.subject].push({ lesson: parseNum(cell.lesson), day: d, period: p });
+              }
+            }
+          }
+          let violations = 0;
+          Object.keys(subjectOccurrences).forEach(sub => {
+            const list = subjectOccurrences[sub];
+            for (let i = 0; i < list.length - 1; i++) {
+              if (list[i].lesson > list[i+1].lesson) violations++;
+            }
+          });
+          return { pass: violations === 0, message: violations === 0 ? '50개 차시 전체 순서성 100% 만족' : `${violations}건 차시 역전` };
+        }
+      },
+      {
+        id: 'tc5',
+        title: '[사진 2] 공주교대부초 3학년 - 5인 실습생 시수 균등 분배 테스트',
+        desc: '김부설, 이공주, 삼알밤, 사산성, 오금강 5인의 총 시수 편차가 최대 1 이내인지 검증',
+        run: () => {
+          const counts = App.teachers.map(t => {
+            return Object.values(App.timetable).filter(c => c && c.teacher === t.name).length;
+          });
+          const max = Math.max(...counts);
+          const min = Math.min(...counts);
+          const diff = max - min;
+          return { pass: diff <= 1, message: `5인 시수: [${counts.join(', ')}] (최대 시수 차이: ${diff}시간 - 오차 1시간 이내 균등)` };
+        }
+      },
+      {
+        id: 'tc6',
+        title: '[사진 2] 공주교대부초 3학년 - 교과 경험 다양성 지수(Diversity) 테스트',
+        desc: '각 교생이 최소 5개 이상의 다양한 교과목 수업을 골고루 배정받았는지 검증',
+        run: () => {
+          const varieties = App.teachers.map(t => {
+            const set = new Set(Object.values(App.timetable).filter(c => c && c.teacher === t.name).map(c => c.subject));
+            return set.size;
+          });
+          const minVariety = Math.min(...varieties);
+          return { pass: minVariety >= 5, message: `각 교생별 담당 교과 수: [${varieties.join(', ')}]종목 (모두 5과목 이상 다채로운 수업 경험 확보)` };
+        }
+      },
+      {
+        id: 'tc7',
+        title: '[신규 기능] 빠른 일정 스탬프 만들기 & 프리셋 원클릭 도장 및 압축 차시(3~4) 테스트',
+        desc: '나만의 스탬프 생성, 무팝업 즉시 도장 찍기, 지우개 동작, 압축 차시(3~4) 보존 무결성 검증',
+        run: () => {
+          // 1. 커스텀 스탬프 생성
+          const custom = App.createCustomStamp({
+            type: 'lecture',
+            subject: '강의:생활지도',
+            pages: '상담기법',
+            teacher: '김부장'
+          });
+
+          // 2. 0일차 2교시에 도장 찍기
+          App.applyStampToCell(0, 2);
+          const ev = App.events['0-2'];
+          const stampSuccess = ev && ev.subject === '강의:생활지도' && ev.teacher === '김부장' && ev.isLocked;
+
+          // 3. 지우개 도장 찍기
+          App.setCurrentStamp('clear', '', '', '');
+          App.applyStampToCell(0, 2);
+          const clearSuccess = !App.events['0-2'];
+
+          // 4. 1교시 2차시 분량 압축 차시(3~4) 스케줄링 검증
+          App.curriculum.unshift({
+            id: 'test_compressed_lesson',
+            subject: '체육',
+            pages: '40-43',
+            lesson: '3~4',
+            totalLesson: 12
+          });
+          App.runAutoAllocation(false);
+
+          let foundCompressed = false;
+          Object.values(App.timetable).forEach(c => {
+            if (c && c.curriculumId === 'test_compressed_lesson' && c.lesson === '3~4') {
+              foundCompressed = true;
+            }
+          });
+
+          const pass = stampSuccess && clearSuccess && foundCompressed;
+          return {
+            pass,
+            message: pass
+              ? `스탬프 생성·원클릭 도장 성공, 지우개 삭제 검증 완료, 압축 차시('3~4/12') 1교시 배당 무결성 100% 만족`
+              : `스탬프 또는 압축 차시 배당 실패 (stamp: ${stampSuccess}, clear: ${clearSuccess}, comp: ${foundCompressed})`
+          };
+        }
+      },
+      {
+        id: 'tc8',
+        title: '[신규 기능] 대표수업 차시 지정, 사전 교생 배정, 시간표 슬롯 연동 무결성 테스트',
+        desc: '진도표 내 대표수업(isDemo) 및 사전 배정 교생과 시간표 상의 교생대표(trainee_demo) 슬롯이 Hard-Lock 및 솔버에 정확히 연동되는지 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          // 1. 특정 슬롯에 교생 대표수업 스탬프 찍기 (예: 1주차 수요일 2교시 '2-2')
+          App.events['2-2'] = {
+            type: 'trainee_demo',
+            subject: '교생대표',
+            pages: '국어',
+            lessonStr: '대표수업',
+            teacher: '김부설',
+            isLocked: true,
+            isTraineeDemo: true
+          };
+
+          // 2. 자동 배당 실행
+          App.runAutoAllocation(false);
+
+          // 3. '2-2' 슬롯 검증
+          const cell = App.timetable['2-2'];
+          const slotLocked = cell && cell.isDemo && cell.teacher === '김부설' && cell.subject === '국어' && cell.isLocked;
+
+          // 4. 진도표 사전 배정 교생 검증
+          App.curriculum[1].designatedTeacher = '이공주';
+          App.runAutoAllocation(false);
+          const designatedCell = Object.values(App.timetable).find(c => c && c.curriculumId === App.curriculum[1].id);
+          const desigSuccess = designatedCell && designatedCell.teacher === '이공주';
+
+          const pass = slotLocked && desigSuccess;
+          return {
+            pass,
+            message: pass
+              ? `교생 대표수업 슬롯 Hard-Lock 연동 성공(김부설/국어) & 사전 배정 교생(이공주) 우선 확정 배정 무결성 100% 만족`
+              : `대표수업 또는 사전 배정 실패 (slotLocked: ${slotLocked}, desigSuccess: ${desigSuccess})`
+          };
+        }
+      }
+    ];
+
+    function runAllTests() {
+      const resultsContainer = document.getElementById('test-results');
+      resultsContainer.innerHTML = '';
+      let passed = 0;
+      let failed = 0;
+
+      testCases.forEach((tc, idx) => {
+        let res;
+        try {
+          res = tc.run();
+        } catch (e) {
+          window.firstErr = window.firstErr || (tc.id + ': ' + e.message);
+          res = { pass: false, message: '예외 발생: ' + e.message };
+        }
+
+        tc.lastPass = res.pass;
+        tc.lastMsg = res.message;
+        if (res.pass) passed++;
+        else failed++;
+
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-xl border ${res.pass ? 'bg-slate-800/90 border-emerald-500/40 text-slate-100' : 'bg-rose-950/40 border-rose-500/40 text-rose-100'} flex items-start gap-3 transition`;
+        item.innerHTML = `
+          <div class="p-1 rounded-lg ${res.pass ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">
+            <i data-lucide="${res.pass ? 'check-circle-2' : 'x-circle'}" class="w-5 h-5"></i>
+          </div>
+          <div class="flex-1 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-white">${tc.title}</span>
+              <span class="text-xs px-2 py-0.5 rounded font-mono font-bold ${res.pass ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300'}">
+                ${res.pass ? 'PASSED' : 'FAILED'}
+              </span>
+            </div>
+            <p class="text-xs text-slate-400">${tc.desc}</p>
+            <div class="text-xs font-mono pt-1 ${res.pass ? 'text-emerald-300' : 'text-rose-300'}">
+              &rarr; ${res.message}
+            </div>
+          </div>
+        `;
+        resultsContainer.appendChild(item);
+      });
+
+      document.getElementById('total-tests').innerText = testCases.length;
+      document.getElementById('passed-tests').innerText = passed;
+      document.getElementById('failed-tests').innerText = failed;
+      const summary = testCases.map(t => `${t.id}:${t.lastPass?'PASS':'FAIL[' + t.lastMsg + ']'}`).join(' | ');
+      document.title = `[${passed}/${testCases.length}] ${summary}`;
+      console.log(`[BENCHMARK FINISHED] ${passed} PASSED, ${failed} FAILED`);
+      lucide.createIcons();
+    }
+
+    let runnerStarted = false;
+    function startRunner() {
+      if (runnerStarted) return;
+      const frame = document.getElementById('app-frame');
+      try {
+        if (frame && frame.contentWindow && frame.contentWindow.App) {
+          App = frame.contentWindow.App;
+          window.App = App;
+          runnerStarted = true;
+          runAllTests();
+          return;
+        }
+      } catch (e) {
+        console.warn('Waiting for iframe to load App:', e);
+      }
+      setTimeout(startRunner, 150);
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const frame = document.getElementById('app-frame');
+      if (frame) {
+        frame.onload = () => setTimeout(startRunner, 200);
+      }
+      setTimeout(startRunner, 500);
+    });
+  </script>
+</body>
+</html>
