@@ -265,8 +265,8 @@
       },
       {
         id: 'tc9',
-        title: '[신규 기능] 2학년 국어·수학 표준 교과 DB(총 361차시) 탑재 및 일괄 추출 무결성 테스트',
-        desc: '2학년 1·2학기 국어/수학 전 단원 데이터베이스 탑재, 필터링 및 진도표 원클릭 임포트 동작 검증',
+        title: '[신규 기능] 2학년 국어·수학·통합교과(바·슬·즐) 표준 DB(총 745차시) 전수 탑재 및 통합교과 임포트 무결성 테스트',
+        desc: '2학년 1·2학기 국어/수학/통합교과(바생·슬생·즐생) 745차시 전수 탑재, 주제별 필터링 및 교과별 진도표 원클릭 임포트 동작 검증',
         run: () => {
           const db = App.getCurriculumDb ? App.getCurriculumDb() : window.CURRICULUM_DB_GRADE2 || (frame = document.getElementById('app-frame'), frame.contentWindow.CURRICULUM_DB_GRADE2);
           if (!db) {
@@ -277,14 +277,21 @@
           const k2Count = (db.grade2_korean_2 || []).length;
           const m1Count = (db.grade2_math_1 || []).length;
           const m2Count = (db.grade2_math_2 || []).length;
-          const totalCount = k1Count + k2Count + m1Count + m2Count;
+          const int1Count = (db.grade2_integrated_1 || []).length;
+          const int2Count = (db.grade2_integrated_2 || []).length;
+          const totalCount = k1Count + k2Count + m1Count + m2Count + int1Count + int2Count;
 
-          const countsValid = (k1Count === 118 && k2Count === 117 && m1Count === 64 && m2Count === 62 && totalCount === 361);
+          const countsValid = (
+            k1Count === 118 && k2Count === 117 &&
+            m1Count === 64 && m2Count === 62 &&
+            int1Count === 192 && int2Count === 192 &&
+            totalCount === 745
+          );
 
-          // 2. 모달 임포트 기능 검증
+          // 2. 통합교과 모달 임포트 기능 검증 (1학기 통합 '나' 단원 48차시 중 '바생' 필터링)
           App.setCurriculumDbSemester('1학기');
-          App.setCurriculumDbSubject('수학');
-          App.onCurriculumDbUnitChange('1. 세 자리 수');
+          App.setCurriculumDbSubject('바생');
+          App.onCurriculumDbUnitChange('나');
           App.toggleAllCurriculumDb(true);
           const selCount = App.curriculumDbState.selectedIndices.size;
 
@@ -293,14 +300,16 @@
           App.importSelectedCurriculumDb(false);
 
           const newLen = App.curriculum.length;
-          const importSuccess = (newLen === prevLen + selCount) && (selCount === 9);
+          const newlyAdded = App.curriculum.slice(prevLen);
+          const allBaSaeng = newlyAdded.every(c => c.subject === '바생');
+          const importSuccess = (newLen === prevLen + selCount) && (selCount === 9) && allBaSaeng;
 
           const pass = countsValid && importSuccess;
           return {
             pass,
             message: pass
-              ? `2학년 1·2학기 국어·수학 361차시 완벽 탑재(2-1국:118, 2-2국:117, 2-1수:64, 2-2수:62) 및 '1. 세 자리 수'(9차시) 진도표 임포트 100% 성공`
-              : `DB 검증 실패 (k1:${k1Count}, k2:${k2Count}, m1:${m1Count}, m2:${m2Count}, total:${totalCount}, import:${importSuccess})`
+              ? `2학년 국어·수학·통합 745차시 완벽 탑재(국:235, 수:126, 통합:384) 및 통합교과 '나' 바생(9차시) 진도표 임포트 100% 성공`
+              : `DB 검증 실패 (k1:${k1Count}, k2:${k2Count}, m1:${m1Count}, m2:${m2Count}, int1:${int1Count}, int2:${int2Count}, total:${totalCount}, import:${importSuccess})`
           };
         }
       }
