@@ -11,12 +11,12 @@ print(f"Starting Edge with user-data-dir: {USER_DATA}", flush=True)
 proc = subprocess.Popen([
     EDGE_PATH,
     "--headless=new",
-    "--remote-debugging-port=9338",
+    "--remote-debugging-port=9350",
     f"--user-data-dir={USER_DATA}",
     "--allow-file-access-from-files",
     "--disable-web-security",
     "--disable-gpu",
-    "--window-size=1400,1050",
+    "--window-size=1550,1050",
     "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/test_runner.html"
 ])
 
@@ -24,14 +24,14 @@ try:
     req = None
     for attempt in range(30):
         try:
-            req = urllib.request.urlopen("http://127.0.0.1:9338/json")
+            req = urllib.request.urlopen("http://127.0.0.1:9350/json")
             if req:
                 print(f"Connected to CDP on attempt {attempt+1}", flush=True)
                 break
         except Exception:
             time.sleep(0.5)
     if not req:
-        raise RuntimeError("Failed to connect to Edge CDP on port 9338 after 15s")
+        raise RuntimeError("Failed to connect to Edge CDP on port 9350 after 15s")
     pages = json.loads(req.read().decode('utf-8'))
     ws_url = None
     for p in pages:
@@ -90,74 +90,67 @@ try:
     cdp_call("Page.enable")
     cdp_call("Runtime.enable")
 
-    # 1. Wait for test runner to complete all 11 tests
+    # 1. Wait for test runner to complete all 12 tests
     print("Waiting 4s for test runner execution...", flush=True)
     time.sleep(4.0)
     title_eval = cdp_call("Runtime.evaluate", {"expression": "document.title"})
     title_val = title_eval.get("result", {}).get("value", "")
     print(f"Test Runner Result Title: {title_val}", flush=True)
 
-    # Capture 11/11 Benchmark Screenshot
+    # Capture 12/12 Benchmark Screenshot
     res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data1 = base64.b64decode(res1["result"]["data"])
-    out_path1 = os.path.join(BRAIN_DIR, "benchmark_11_pass.png")
+    out_path1 = os.path.join(BRAIN_DIR, "benchmark_12_pass.png")
     with open(out_path1, "wb") as f:
         f.write(img_data1)
     print(f"Saved Benchmark screenshot to {out_path1}", flush=True)
 
-    # 2. Navigate to index.html to test Step 3 (Single Lecture Stamp + 8 Periods Event Grid)
-    print("Navigating to index.html...", flush=True)
+    # 2. Navigate to index.html Step 2 to show Curriculum Table & [💾 백업] button
+    print("Navigating to index.html Step 2 (Curriculum Database)...", flush=True)
     cdp_call("Page.navigate", {"url": "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html"})
     time.sleep(2.0)
 
-    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade2', false); App.setTab(3);"})
+    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade2', false); App.setTab(2);"})
+    time.sleep(1.0)
+    res_cur = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_cur = base64.b64decode(res_cur["result"]["data"])
+    out_path_cur = os.path.join(BRAIN_DIR, "step2_curriculum_backup_view.png")
+    with open(out_path_cur, "wb") as f:
+        f.write(img_data_cur)
+    print(f"Saved Step 2 Curriculum view screenshot to {out_path_cur}", flush=True)
+
+    # 3. Step 1: Show Quick Actions [💾 백업 저장] / [📂 백업 열기] & wide layout
+    print("Navigating to index.html Step 1...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": "App.setTab(1);"})
     time.sleep(1.0)
     res2 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data2 = base64.b64decode(res2["result"]["data"])
-    out_path2 = os.path.join(BRAIN_DIR, "step3_8periods_and_lecture_stamp.png")
+    out_path2 = os.path.join(BRAIN_DIR, "step1_backup_buttons_and_wide.png")
     with open(out_path2, "wb") as f:
         f.write(img_data2)
-    print(f"Saved Step 3 (8 Periods & Lecture Stamp) screenshot to {out_path2}", flush=True)
+    print(f"Saved Step 1 screenshot to {out_path2}", flush=True)
 
-    # 3. Step 4: Show intentional error with red borders (.cell-error) and error banner
-    print("Navigating to Step 4 and inducing order inversion...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": """
-        App.setTab(4);
-        window._savedTimetable = JSON.stringify(App.timetable);
-        const subClasses = Object.keys(App.timetable).filter(k => App.timetable[k] && App.timetable[k].subject === '국어');
-        if (subClasses.length >= 2) {
-            const kEarly = subClasses[0];
-            const kLate = subClasses[subClasses.length - 1];
-            const itemEarly = { ...App.timetable[kEarly] };
-            const itemLate = { ...App.timetable[kLate] };
-            App.timetable[kEarly] = itemLate;
-            App.timetable[kLate] = itemEarly;
-            App.renderTimetableGrid();
-        }
-    """})
+    # 4. Step 4: Show full-width layout and sticky freeze column (4주간 대규모 5인 시간표)
+    print("Navigating to Step 4 (4 weeks wide table with sticky period column)...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade3', false); App.setTab(4);"})
     time.sleep(1.0)
     res3 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data3 = base64.b64decode(res3["result"]["data"])
-    out_path3 = os.path.join(BRAIN_DIR, "step4_error_red_border.png")
+    out_path3 = os.path.join(BRAIN_DIR, "step4_fullwidth_and_sticky.png")
     with open(out_path3, "wb") as f:
         f.write(img_data3)
-    print(f"Saved Step 4 Error Red Border screenshot to {out_path3}", flush=True)
+    print(f"Saved Step 4 Full-Width screenshot to {out_path3}", flush=True)
 
-    # 4. Step 4: Recover from error by restoring valid order -> red border automatically removed!
-    print("Recovering order inversion and verifying red borders are removed...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": """
-        if (window._savedTimetable) {
-            App.timetable = JSON.parse(window._savedTimetable);
-            App.renderTimetableGrid();
-        }
-    """})
+    # 5. Step 4: Toggle Wide Mode (100% wide timetable, summary stacked below)
+    print("Toggling Wide Mode on Step 4...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": "App.toggleTimetableLayout();"})
     time.sleep(1.0)
     res4 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data4 = base64.b64decode(res4["result"]["data"])
-    out_path4 = os.path.join(BRAIN_DIR, "step4_error_recovered.png")
+    out_path4 = os.path.join(BRAIN_DIR, "step4_wide_toggle_active.png")
     with open(out_path4, "wb") as f:
         f.write(img_data4)
-    print(f"Saved Step 4 Error Recovered screenshot to {out_path4}", flush=True)
+    print(f"Saved Step 4 Wide Toggle Active screenshot to {out_path4}", flush=True)
 
     s.close()
     print("All tasks completed successfully!", flush=True)

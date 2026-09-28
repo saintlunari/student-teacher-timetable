@@ -169,6 +169,7 @@
       body { background: white !important; font-size: 11px; }
       .print-area { width: 100% !important; overflow: visible !important; margin: 0 !important; padding: 0 !important; }
       .tt-cell { height: 88px !important; min-width: 85px !important; }
+      th.sticky, td.sticky { position: static !important; }
     }
   </style>
 </head>
@@ -176,7 +177,7 @@
 
   <!-- TOP HEADER -->
   <header class="bg-slate-900 text-white shadow-md border-b border-slate-800 sticky top-0 z-50 no-print">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+    <div class="w-full max-w-[99%] 2xl:max-w-[1920px] mx-auto px-3 sm:px-6 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
           <i data-lucide="calendar-check-2" class="w-5 h-5 text-white"></i>
@@ -215,6 +216,19 @@
           </div>
         </div>
 
+        <!-- JSON 프로젝트 백업 저장 / 불러오기 버튼 -->
+        <button onclick="App.downloadJsonBackup()" title="현재 기본정보, 실습생, 진도표, 학사일정, 완성된 시간표 전체를 파일(.json)로 즉시 백업 저장합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 rounded-lg shadow-sm transition">
+          <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>
+          <span>백업 저장</span>
+        </button>
+        <input type="file" id="header-json-file-input" accept=".json" class="hidden" onchange="App.loadJsonBackup(event)">
+        <button onclick="document.getElementById('header-json-file-input').click()" title="저장해둔 JSON 프로젝트 백업 파일을 열어 완벽 복원합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-700 rounded-lg shadow-sm transition">
+          <i data-lucide="upload" class="w-3.5 h-3.5 text-sky-400"></i>
+          <span>백업 열기</span>
+        </button>
+
+        <div class="h-4 w-px bg-slate-700 mx-1"></div>
+
         <!-- HWP 한글 표 복사 버튼 -->
         <button onclick="App.copyHwpTable()" title="아래아한글 빈 문서에서 Ctrl+V만 누르면 표가 그대로 복사됩니다" class="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-sm transition">
           <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
@@ -236,8 +250,8 @@
     </div>
 
     <!-- WIZARD STEP TABS -->
-    <div class="bg-slate-800/90 border-t border-slate-700/60 backdrop-blur px-4">
-      <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto py-1">
+    <div class="bg-slate-800/90 border-t border-slate-700/60 backdrop-blur px-3 sm:px-6">
+      <div class="w-full max-w-[99%] 2xl:max-w-[1920px] mx-auto flex items-center space-x-1 overflow-x-auto py-1">
         <button onclick="App.setTab(1)" id="tab-btn-1" class="tab-btn active px-4 py-2 text-xs font-semibold rounded-lg flex items-center gap-2 text-sky-400 bg-slate-900/80 transition">
           <span class="w-5 h-5 rounded-full bg-sky-500/20 text-sky-300 flex items-center justify-center text-[10px]">1</span>
           실습생 & 기본 정보
@@ -264,7 +278,7 @@
   </header>
 
   <!-- MAIN CONTAINER -->
-  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+  <main class="flex-1 w-full max-w-[99%] 2xl:max-w-[1920px] mx-auto p-2 sm:p-4 lg:p-5 space-y-6">
 
     <!-- ========================================================= -->
     <!-- TAB 1: 실습생 및 기본 정보 -->
@@ -328,6 +342,20 @@
           </div>
           <div class="pt-2 text-[11px] text-slate-400">
             * 기본 정보 변경 시 배당표 상단 제목, 지도교사 및 교생 개인별 마감일 달력에 실시간 동기화됩니다.
+          </div>
+          <!-- Step 1 빠른 백업/복원 도구 -->
+          <div class="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-500 font-medium flex items-center gap-1">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i> 백업 & 복원:
+            </span>
+            <div class="flex items-center gap-1.5">
+              <button onclick="App.downloadJsonBackup()" title="현재 기본정보와 실습생 명단을 포함한 프로젝트 전체 백업" class="px-2.5 py-1 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition flex items-center gap-1">
+                <i data-lucide="download" class="w-3 h-3"></i> 백업 저장
+              </button>
+              <button onclick="document.getElementById('header-json-file-input').click()" title="백업 파일 열기" class="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg transition flex items-center gap-1">
+                <i data-lucide="upload" class="w-3 h-3"></i> 백업 열기
+              </button>
+            </div>
           </div>
         </div>
 
@@ -401,6 +429,10 @@
             </button>
             <button onclick="App.addCurriculumRow()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg transition border border-emerald-200">
               <i data-lucide="plus" class="w-3.5 h-3.5"></i> 차시 직접 추가
+            </button>
+            <div class="h-4 w-px bg-slate-200 mx-0.5"></div>
+            <button onclick="App.downloadJsonBackup()" title="진도표 포함 프로젝트 전체 백업 저장" class="flex items-center gap-1 px-2.5 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-white rounded-lg transition shadow-sm">
+              <i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i> 백업
             </button>
           </div>
         </div>
@@ -634,10 +666,16 @@
             <!-- Dynamic teacher buttons -->
           </div>
         </div>
+
+        <!-- 레이아웃 전환: 시간표 전체폭 확대 토글 버튼 -->
+        <button onclick="App.toggleTimetableLayout()" id="btn-toggle-layout" class="flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl transition shadow-sm" title="사이드바를 하단으로 이동하여 시간표를 모니터 가로폭 전체로 시원하게 봅니다">
+          <i id="toggle-layout-icon" data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
+          <span id="toggle-layout-text">시간표 전체폭 확대</span>
+        </button>
       </div>
 
       <!-- 배당표 메인 뷰 (인쇄 및 이미지 캡처 대상 영역) -->
-      <div id="timetable-capture-area" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 print-area space-y-4">
+      <div id="timetable-capture-area" class="bg-white p-3 sm:p-5 rounded-2xl shadow-sm border border-slate-200 print-area space-y-4">
         
         <!-- 배당표 오류 감지 및 자동 검증 알림 배너 (자동 갱신) -->
         <div id="timetable-error-banner" class="no-print"></div>
@@ -657,10 +695,10 @@
         </div>
 
         <!-- 2분할 뷰: 좌측 대형 시간표 그리드 + 우측 실습생별 배당 교과 요약 통계 -->
-        <div class="flex flex-col lg:flex-row gap-4 items-start">
+        <div id="timetable-layout-container" class="flex flex-col lg:flex-row gap-4 items-start">
           
           <!-- 좌측: 시간표 메인 테이블 -->
-          <div class="flex-1 w-full overflow-x-auto">
+          <div class="flex-1 w-full overflow-x-auto rounded-xl border border-slate-300 shadow-sm bg-white">
             <table id="timetable-table" class="w-full border-collapse border-2 border-slate-900 text-xs select-none">
               <thead id="timetable-thead" class="bg-white">
                 <!-- Javascript rendered thead (Weeks, Dates, Days) -->
@@ -672,7 +710,7 @@
           </div>
 
           <!-- 우측: 교육실습생 수업 교과 요약표 -->
-          <div class="w-full lg:w-72 shrink-0 space-y-4 no-print-responsive">
+          <div id="timetable-summary-box" class="w-full lg:w-72 shrink-0 space-y-4 no-print-responsive">
             <div class="border-2 border-slate-900 bg-white">
               <div class="bg-slate-100 p-2 text-center font-black text-xs border-b-2 border-slate-900 tracking-wider">
                 교육실습생 수업 교과
@@ -1661,22 +1699,23 @@
         this.timetable = {};
         this.selectedTeacherFilter = 'all';
 
-        const cfgTitle = document.getElementById('cfg-title');
-        if (cfgTitle) cfgTitle.value = this.config.title;
-        const cfgSchool = document.getElementById('cfg-school');
-        if (cfgSchool) cfgSchool.value = this.config.school;
-        const cfgGC = document.getElementById('cfg-gradeClass');
-        if (cfgGC) cfgGC.value = this.config.gradeClass;
-        const cfgTN = document.getElementById('cfg-teacherName');
-        if (cfgTN) cfgTN.value = this.config.teacherName;
-        const cfgWC = document.getElementById('cfg-weekCount');
-        if (cfgWC) cfgWC.value = this.config.weekCount;
-        const cfgSD = document.getElementById('cfg-startDate');
-        if (cfgSD) cfgSD.value = this.config.startDate;
-        const cfgMH = document.getElementById('cfg-maxHours');
-        if (cfgMH) cfgMH.value = this.config.maxHours || 10;
-        const cfgPPD = document.getElementById('cfg-periodsPerDay');
-        if (cfgPPD) cfgPPD.value = this.periodsPerDay;
+        this.populateInputsFromConfig();
+      },
+
+      populateInputsFromConfig() {
+        if (!this.config) return;
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && val !== undefined && val !== null) el.value = val;
+        };
+        setVal('cfg-title', this.config.title || '');
+        setVal('cfg-school', this.config.school || '');
+        setVal('cfg-gradeClass', this.config.gradeClass || '');
+        setVal('cfg-teacherName', this.config.teacherName || '');
+        setVal('cfg-weekCount', this.config.weekCount || 2);
+        setVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        setVal('cfg-maxHours', this.config.maxHours || 10);
+        setVal('cfg-periodsPerDay', this.periodsPerDay || this.config.periodsPerDay || 8);
       },
 
       normalizeDefaultTimetable() {
@@ -1756,17 +1795,7 @@
         this.timetable = {};
         this.selectedTeacherFilter = 'all';
 
-        // Sync form inputs
-        document.getElementById('cfg-title').value = this.config.title;
-        document.getElementById('cfg-school').value = this.config.school;
-        document.getElementById('cfg-gradeClass').value = this.config.gradeClass;
-        document.getElementById('cfg-teacherName').value = this.config.teacherName;
-        document.getElementById('cfg-weekCount').value = this.config.weekCount;
-        document.getElementById('cfg-startDate').value = this.config.startDate;
-        const cfgMH = document.getElementById('cfg-maxHours');
-        if (cfgMH) cfgMH.value = this.config.maxHours || 10;
-        const cfgPPD = document.getElementById('cfg-periodsPerDay');
-        if (cfgPPD) cfgPPD.value = this.periodsPerDay;
+        this.populateInputsFromConfig();
 
         this.renderAll();
         this.runAutoAllocation(false);
@@ -1864,13 +1893,13 @@
           tr.innerHTML = `
             <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="py-2 px-3 font-bold text-slate-800">
-              <input type="text" value="${t.name}" onchange="App.updateTeacher(${idx}, 'name', this.value)" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
+              <input type="text" value="${t.name}" oninput="App.updateTeacherLive(${idx}, 'name', this.value)" onchange="App.updateTeacher(${idx}, 'name', this.value)" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
             </td>
             <td class="py-2 px-3">
-              <input type="text" value="${t.major || ''}" placeholder="예: 국어" onchange="App.updateTeacher(${idx}, 'major', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+              <input type="text" value="${t.major || ''}" placeholder="예: 국어" oninput="App.updateTeacherLive(${idx}, 'major', this.value)" onchange="App.updateTeacher(${idx}, 'major', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3 text-center">
-              <span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold border" style="background:${color.bg}; color:${color.text}; border-color:${color.border};">
+              <span id="teacher-badge-${idx}" class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold border" style="background:${color.bg}; color:${color.text}; border-color:${color.border};">
                 ${t.name}
               </span>
             </td>
@@ -1880,10 +1909,10 @@
               </select>
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
+              <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" oninput="App.updateTeacherLive(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
             </td>
             <td class="py-2 px-3">
-              <input type="text" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(1) 수(1) 즐(1))" onchange="App.updateTeacher(${idx}, 'note', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+              <input type="text" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(1) 수(1) 즐(1))" oninput="App.updateTeacherLive(${idx}, 'note', this.value)" onchange="App.updateTeacher(${idx}, 'note', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3 text-center">
               <button onclick="App.deleteTeacher(${idx})" class="p-1 text-slate-400 hover:text-rose-600 rounded">
@@ -1894,6 +1923,41 @@
           tbody.appendChild(tr);
         });
         lucide.createIcons();
+      },
+
+      updateTeacherLive(idx, field, val) {
+        if (!this.teachers[idx]) return;
+        this.teachers[idx][field] = val;
+        if (field === 'name') {
+          const badge = document.getElementById(`teacher-badge-${idx}`);
+          if (badge) badge.innerText = val;
+        }
+      },
+
+      syncTeachersFromDOM() {
+        const tbody = document.getElementById('teacher-table-body');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach((tr, idx) => {
+          if (!this.teachers[idx]) return;
+          const inputs = tr.querySelectorAll('input');
+          const select = tr.querySelector('select');
+          if (inputs[0] && inputs[0].value.trim()) {
+            this.teachers[idx].name = inputs[0].value.trim();
+          }
+          if (inputs[1]) {
+            this.teachers[idx].major = inputs[1].value.trim();
+          }
+          if (select) {
+            this.teachers[idx].demoSubject = select.value;
+          }
+          if (inputs[2]) {
+            this.teachers[idx].maxHours = inputs[2].value ? parseInt(inputs[2].value, 10) : '';
+          }
+          if (inputs[3]) {
+            this.teachers[idx].note = inputs[3].value.trim();
+          }
+        });
       },
 
       addTeacherRow() {
@@ -1971,25 +2035,25 @@
           tr.innerHTML = `
             <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="py-2 px-3 font-semibold text-slate-800">
-              <input type="text" value="${c.subject}" onchange="App.updateCurriculum(${idx}, 'subject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+              <input type="text" data-field="subject" value="${c.subject}" oninput="App.updateCurriculumLive(${idx}, 'subject', this.value)" onchange="App.updateCurriculum(${idx}, 'subject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3">
-              <input type="text" value="${c.pages}" onchange="App.updateCurriculum(${idx}, 'pages', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+              <input type="text" data-field="pages" value="${c.pages}" oninput="App.updateCurriculumLive(${idx}, 'pages', this.value)" onchange="App.updateCurriculum(${idx}, 'pages', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="text" value="${c.lesson}" placeholder="예: 3 또는 3~4" onchange="App.updateCurriculum(${idx}, 'lesson', this.value)" class="w-20 px-2 py-1 border rounded bg-white text-center text-xs font-mono">
+              <input type="text" data-field="lesson" value="${c.lesson}" placeholder="예: 3 또는 3~4" oninput="App.updateCurriculumLive(${idx}, 'lesson', this.value)" onchange="App.updateCurriculum(${idx}, 'lesson', this.value)" class="w-20 px-2 py-1 border rounded bg-white text-center text-xs font-mono">
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="number" value="${c.totalLesson}" onchange="App.updateCurriculum(${idx}, 'totalLesson', parseInt(this.value,10))" class="w-16 px-2 py-1 border rounded bg-white text-center text-xs">
+              <input type="number" data-field="totalLesson" value="${c.totalLesson}" oninput="App.updateCurriculumLive(${idx}, 'totalLesson', parseInt(this.value,10))" onchange="App.updateCurriculum(${idx}, 'totalLesson', parseInt(this.value,10))" class="w-16 px-2 py-1 border rounded bg-white text-center text-xs">
             </td>
             <td class="py-2 px-3">
-              <input type="text" value="${c.topic || ''}" placeholder="단원/주제 (선택)" onchange="App.updateCurriculum(${idx}, 'topic', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+              <input type="text" data-field="topic" value="${c.topic || ''}" placeholder="단원/주제 (선택)" oninput="App.updateCurriculumLive(${idx}, 'topic', this.value)" onchange="App.updateCurriculum(${idx}, 'topic', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="checkbox" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="대표수업 차시 여부">
+              <input type="checkbox" data-field="isDemo" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="대표수업 차시 여부">
             </td>
             <td class="py-2 px-3 text-center">
-              <select onchange="App.updateCurriculum(${idx}, 'designatedTeacher', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs ${c.designatedTeacher ? 'font-bold text-indigo-700 bg-indigo-50/50' : 'text-slate-600'}">
+              <select data-field="designatedTeacher" onchange="App.updateCurriculum(${idx}, 'designatedTeacher', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs ${c.designatedTeacher ? 'font-bold text-indigo-700 bg-indigo-50/50' : 'text-slate-600'}">
                 ${teacherOpts}
               </select>
             </td>
@@ -2016,6 +2080,38 @@
           designatedTeacher: ''
         });
         this.renderCurriculumTable();
+      },
+
+      updateCurriculumLive(idx, field, val) {
+        if (this.curriculum[idx]) {
+          this.curriculum[idx][field] = val;
+        }
+      },
+
+      syncCurriculumFromDOM() {
+        const rows = document.querySelectorAll('#curriculum-table-body tr');
+        if (!rows || rows.length === 0) return;
+        rows.forEach((row, idx) => {
+          if (!this.curriculum[idx]) return;
+          const subInput = row.querySelector('input[data-field="subject"]');
+          const pageInput = row.querySelector('input[data-field="pages"]');
+          const lessonInput = row.querySelector('input[data-field="lesson"]');
+          const totalInput = row.querySelector('input[data-field="totalLesson"]');
+          const topicInput = row.querySelector('input[data-field="topic"]');
+          const demoInput = row.querySelector('input[data-field="isDemo"]');
+          const teacherSelect = row.querySelector('select[data-field="designatedTeacher"]');
+
+          if (subInput) this.curriculum[idx].subject = subInput.value.trim();
+          if (pageInput) this.curriculum[idx].pages = pageInput.value.trim();
+          if (lessonInput) this.curriculum[idx].lesson = lessonInput.value.trim();
+          if (totalInput) {
+            const v = parseInt(totalInput.value, 10);
+            if (!isNaN(v)) this.curriculum[idx].totalLesson = v;
+          }
+          if (topicInput) this.curriculum[idx].topic = topicInput.value.trim();
+          if (demoInput) this.curriculum[idx].isDemo = demoInput.checked;
+          if (teacherSelect) this.curriculum[idx].designatedTeacher = teacherSelect.value;
+        });
       },
 
       updateCurriculum(idx, field, val) {
@@ -2581,7 +2677,7 @@
         const days = weekCount * 5;
 
         let html = `<table class="w-full text-xs border-collapse border border-slate-300">`;
-        html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16">교시</th>`;
+        html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16 sticky left-0 bg-slate-100 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">교시</th>`;
         for (let d = 0; d < days; d++) {
           const week = Math.floor(d / 5) + 1;
           const dayName = ['월', '화', '수', '목', '금'][d % 5];
@@ -2594,7 +2690,7 @@
 
         const maxP = this.periodsPerDay || 8;
         for (let p = 1; p <= maxP; p++) {
-          html += `<tr><td class="border p-2 font-bold text-center bg-slate-50">${p}교시</td>`;
+          html += `<tr><td class="border p-2 font-bold text-center bg-slate-50 sticky left-0 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">${p}교시</td>`;
           for (let d = 0; d < days; d++) {
             const key = `${d}-${p}`;
             const ev = this.events[key];
@@ -3395,7 +3491,7 @@
 
         // Header Rows
         let r1 = `<tr>
-          <th rowspan="3" class="border-2 border-slate-900 bg-slate-50 p-1 w-20 text-center font-bold">
+          <th rowspan="3" class="border-2 border-slate-900 bg-slate-100 p-1 w-20 text-center font-bold sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">
             <div class="flex justify-between px-1 text-[11px] text-slate-500"><span>날짜</span></div>
             <div class="h-px bg-slate-400 my-1 transform -rotate-12"></div>
             <div class="flex justify-between px-1 text-[11px] font-bold"><span>교시</span></div>
@@ -3422,7 +3518,7 @@
           curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
           const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
           const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-900 font-bold';
-          r2 += `<th class="border-2 border-slate-900 bg-white py-1 text-center ${colorClass} text-xs">${curDate.getDate()}</th>`;
+          r2 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[68px] sm:min-w-[74px]">${curDate.getDate()}</th>`;
         }
         r2 += `</tr>`;
 
@@ -3431,7 +3527,7 @@
           const dayName = ['월', '화', '수', '목', '금'][d % 5];
           const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
           const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-700 font-semibold';
-          r3 += `<th class="border-2 border-slate-900 bg-white py-1 text-center ${colorClass} text-xs">${dayName}</th>`;
+          r3 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[68px] sm:min-w-[74px]">${dayName}</th>`;
         }
         r3 += `</tr>`;
 
@@ -3439,11 +3535,11 @@
 
         // Morning Duty Row
         let tbodyHtml = `<tr class="h-10 bg-slate-50/50">
-          <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs">아침활동</td>`;
+          <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
           const dutyTeacher = this.morningDuty[d] || '';
           const isDimmed = (this.selectedTeacherFilter !== 'all' && dutyTeacher !== this.selectedTeacherFilter);
-          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 ${isDimmed ? 'opacity-30' : ''}">
+          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
             ${dutyTeacher ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">${dutyTeacher}</span>` : ''}
           </td>`;
         }
@@ -3459,7 +3555,7 @@
 
         for (let p = 1; p <= maxP; p++) {
           tbodyHtml += `<tr>
-            <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs w-14">${p}</td>`;
+            <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs w-14 sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">${p}</td>`;
 
           for (let d = 0; d < totalDays; d++) {
             const key = `${d}-${p}`;
@@ -3522,7 +3618,7 @@
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
-              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="flex flex-col h-full divide-y divide-amber-200 text-xs">
                   <div class="py-1 font-black text-amber-900 bg-amber-100 flex items-center justify-center gap-1">
                     ⭐ ${subName}
@@ -3546,7 +3642,7 @@
               if (cell.type === 'design') bgClass = 'bg-white text-slate-800 font-semibold';
               if (cell.type === 'homeroom') bgClass = 'bg-blue-900 text-white font-bold';
 
-              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 일정명, 세부 내용 수정'}" class="tt-cell ${errorClass} border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 일정명, 세부 내용 수정'}" class="tt-cell ${errorClass} border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95 min-w-[68px] sm:min-w-[74px]">
                 <div class="flex flex-col justify-center items-center h-full space-y-0.5">
                   <span class="font-bold">${cell.subject}</span>
                   ${cell.pages ? `<span class="text-[11px]">${cell.pages}</span>` : ''}
@@ -3566,7 +3662,7 @@
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
-              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group">
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[68px] sm:min-w-[74px]">
                 <!-- 원클릭 배당 삭제 버튼 (호버 시 표시) -->
                 <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
                   ✕
@@ -3595,7 +3691,7 @@
 
             // 5. Empty Cell
             const selectedClass = isSelected ? 'cell-selected' : '';
-            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1">
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[68px] sm:min-w-[74px]">
               <span class="text-[10px] text-slate-300 block font-mono">+</span>
             </td>`;
             renderedCells[key] = true;
@@ -4650,45 +4746,133 @@
       },
 
       // -----------------------------------------------------------------------
+      // TIMETABLE WIDE LAYOUT TOGGLE
+      // -----------------------------------------------------------------------
+      timetableWideMode: false,
+      toggleTimetableLayout() {
+        this.timetableWideMode = !this.timetableWideMode;
+        const container = document.getElementById('timetable-layout-container');
+        const summaryBox = document.getElementById('timetable-summary-box');
+        const btnText = document.getElementById('toggle-layout-text');
+        const btnIcon = document.getElementById('toggle-layout-icon');
+        if (this.timetableWideMode) {
+          if (container) {
+            container.classList.remove('lg:flex-row');
+            container.classList.add('flex-col');
+          }
+          if (summaryBox) {
+            summaryBox.classList.remove('lg:w-72', 'shrink-0');
+            summaryBox.classList.add('w-full', 'pt-3');
+          }
+          if (btnText) btnText.innerText = '표준 분할 보기 (사이드바 복원)';
+          if (btnIcon) btnIcon.setAttribute('data-lucide', 'minimize-2');
+        } else {
+          if (container) {
+            container.classList.add('lg:flex-row');
+            container.classList.remove('flex-col');
+          }
+          if (summaryBox) {
+            summaryBox.classList.add('lg:w-72', 'shrink-0');
+            summaryBox.classList.remove('w-full', 'pt-3');
+          }
+          if (btnText) btnText.innerText = '시간표 전체폭 확대';
+          if (btnIcon) btnIcon.setAttribute('data-lucide', 'maximize-2');
+        }
+        lucide.createIcons();
+      },
+
+      // -----------------------------------------------------------------------
       // JSON BACKUP & RESTORE
       // -----------------------------------------------------------------------
       downloadJsonBackup() {
+        // 1. Force sync all current input data from DOM into this.config, this.teachers & this.curriculum
+        this.syncConfigFromInputs();
+        this.syncTeachersFromDOM();
+        this.syncCurriculumFromDOM();
+        this.config.periodsPerDay = this.periodsPerDay || 8;
+
         const data = {
-          config: this.config,
-          teachers: this.teachers,
-          curriculum: this.curriculum,
-          events: this.events,
-          defaultTimetable: this.defaultTimetable,
-          morningDuty: this.morningDuty,
-          timetable: this.timetable,
-          savedAt: new Date().toISOString()
+          version: '2.1',
+          savedAt: new Date().toISOString(),
+          config: JSON.parse(JSON.stringify(this.config)),
+          teachers: JSON.parse(JSON.stringify(this.teachers)),
+          curriculum: JSON.parse(JSON.stringify(this.curriculum)),
+          events: JSON.parse(JSON.stringify(this.events)),
+          defaultTimetable: JSON.parse(JSON.stringify(this.defaultTimetable)),
+          morningDuty: JSON.parse(JSON.stringify(this.morningDuty)),
+          timetable: JSON.parse(JSON.stringify(this.timetable)),
+          customStamps: JSON.parse(JSON.stringify(this.customStamps || []))
         };
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-        saveAs(blob, `timetable_backup_${this.config.gradeClass || 'project'}.json`);
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+        const safeGC = (this.config.gradeClass || 'project').replace(/[\\/:*?"<>|\s]/g, '_');
+        const safeSchool = (this.config.school || '').replace(/[\\/:*?"<>|\s]/g, '_');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        let fileName = `timetable_backup_${safeSchool}_${safeGC}_${dateStr}.json`.replace(/_+/g, '_');
+        if (fileName.startsWith('timetable_backup__.json')) fileName = `timetable_backup_${dateStr}.json`;
+        saveAs(blob, fileName);
       },
 
       loadJsonBackup(event) {
-        const file = event.target.files[0];
+        const file = event && event.target && event.target.files && event.target.files[0];
         if (!file) return;
         const reader = new FileReader();
         reader.onload = (e) => {
           try {
             const data = JSON.parse(e.target.result);
-            if (data.config) this.config = data.config;
-            if (data.teachers) this.teachers = data.teachers;
-            if (data.curriculum) this.curriculum = data.curriculum;
-            if (data.events) this.events = data.events;
-            if (data.defaultTimetable) this.defaultTimetable = data.defaultTimetable;
-            if (data.morningDuty) this.morningDuty = data.morningDuty;
-            if (data.timetable) this.timetable = data.timetable;
+            if (!data || (!data.config && !data.teachers && !data.timetable)) {
+              alert('유효한 프로젝트 백업 파일(.json)이 아닙니다.');
+              return;
+            }
+            if (data.config) {
+              this.config = Object.assign({}, DEFAULT_CONFIG, data.config);
+              this.periodsPerDay = this.config.periodsPerDay || 8;
+            }
+            if (Array.isArray(data.teachers)) {
+              this.teachers = JSON.parse(JSON.stringify(data.teachers));
+            }
+            if (Array.isArray(data.curriculum)) {
+              this.curriculum = JSON.parse(JSON.stringify(data.curriculum));
+            }
+            if (data.events) {
+              this.events = JSON.parse(JSON.stringify(data.events));
+            }
+            if (data.defaultTimetable) {
+              this.defaultTimetable = JSON.parse(JSON.stringify(data.defaultTimetable));
+              this.normalizeDefaultTimetable();
+            }
+            if (data.morningDuty) {
+              this.morningDuty = JSON.parse(JSON.stringify(data.morningDuty));
+            }
+            if (data.timetable) {
+              this.timetable = JSON.parse(JSON.stringify(data.timetable));
+            }
+            if (data.customStamps) {
+              this.customStamps = JSON.parse(JSON.stringify(data.customStamps));
+              this.saveCustomStamps();
+            }
 
+            // CRITICAL: Immediately update ALL Step 1 input fields in the DOM!
+            this.populateInputsFromConfig();
+
+            // Re-render everything
             this.renderAll();
-            alert('백업 파일에서 프로젝트가 성공적으로 복원되었습니다.');
+
+            // Switch to Step 4 so user immediately sees their restored timetable
+            this.setTab(4);
+
+            alert(`'${this.config.title || '프로젝트'}' 백업 파일이 성공적으로 복원되었습니다!\n• 기본 정보: ${this.config.school || ''} ${this.config.gradeClass || ''} (담임: ${this.config.teacherName || ''})\n• 실습생 명단: 총 ${this.teachers.length}명\n• 교과 진도표: 총 ${this.curriculum.length}차시\n• 학사일정 및 시간표 100% 복원 완료`);
           } catch (err) {
-            alert('유효하지 않은 백업 파일 형식입니다.');
+            console.error('Backup load error:', err);
+            alert('백업 파일을 불러오는 중 오류가 발생했습니다: ' + err.message);
+          } finally {
+            if (event.target) event.target.value = '';
+            const hInput = document.getElementById('header-json-file-input');
+            if (hInput) hInput.value = '';
+            const cInput = document.getElementById('json-file-input');
+            if (cInput) cInput.value = '';
           }
         };
-        reader.readAsText(file);
+        reader.readAsText(file, 'utf-8');
       }
     };
 

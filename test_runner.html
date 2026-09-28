@@ -464,6 +464,159 @@
               : `검증 실패 (stamp:${stampPass}, 8periods:${periodsPass}, zeroErr:${zeroErrorPass}, errDetected:${errorDetectedPass}, recovery:${recoveryPass})`
           };
         }
+      },
+      {
+        id: 'tc12',
+        title: '[신규 기능] 기본 정보·실습생·교과진도표 완벽 백업 & 복원, 전체폭 확대 레이아웃 및 교시 틀고정(Sticky) 검증',
+        desc: 'Step 1 기본정보/실습생 및 Step 2 교과진도표 등록/수정 사항의 JSON 백업 직렬화, 데이터 오염 후 복원 시 DOM 테이블/입력창 100% 원복, 시간표 sticky left-0 및 전체폭 토글 동작 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const doc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 기본정보 및 실습생 명단 수정
+          const titleInput = doc.getElementById('cfg-title');
+          const schoolInput = doc.getElementById('cfg-school');
+          const gcInput = doc.getElementById('cfg-gradeClass');
+          const teacherInput = doc.getElementById('cfg-teacherName');
+          
+          if (titleInput) titleInput.value = '2026학년도 부설초 실습 배당표';
+          if (schoolInput) schoolInput.value = '국립한국초등학교';
+          if (gcInput) gcInput.value = '3학년 5반';
+          if (teacherInput) teacherInput.value = '최선생';
+          App.onConfigChange();
+
+          // 실습생 1의 이름과 전공 DOM input 직접 수정
+          const teacherRows = doc.querySelectorAll('#teacher-table-body tr');
+          if (teacherRows[0]) {
+            const inputs = teacherRows[0].querySelectorAll('input');
+            if (inputs[0]) inputs[0].value = '원더교생';
+            if (inputs[1]) inputs[1].value = '수학교육';
+          }
+          App.syncTeachersFromDOM();
+          App.renderCurriculumTable();
+
+          // 2. Step 2 교과진도표 수정 및 추가
+          App.setTab(2);
+          const curRows = doc.querySelectorAll('#curriculum-table-body tr');
+          if (curRows[0]) {
+            const subIn = curRows[0].querySelector('input[data-field="subject"]');
+            const lesIn = curRows[0].querySelector('input[data-field="lesson"]');
+            const demoIn = curRows[0].querySelector('input[data-field="isDemo"]');
+            const teaSel = curRows[0].querySelector('select[data-field="designatedTeacher"]');
+            if (subIn) subIn.value = '통합미술';
+            if (lesIn) lesIn.value = '3~4';
+            if (demoIn) demoIn.checked = true;
+            if (teaSel) teaSel.value = '원더교생';
+          }
+          // 차시 직접 추가
+          App.curriculum.push({
+            id: 'c_test_custom_sci',
+            subject: '창의과학',
+            pages: '88-89',
+            lesson: '1',
+            totalLesson: 10,
+            topic: '자석의 성질',
+            isDemo: false,
+            designatedTeacher: ''
+          });
+          App.syncCurriculumFromDOM();
+          App.renderCurriculumTable();
+
+          const curCountBefore = App.curriculum.length;
+
+          // 3. 백업 데이터 객체 생성 검증
+          App.syncConfigFromInputs();
+          App.syncTeachersFromDOM();
+          App.syncCurriculumFromDOM();
+          const backupPayload = {
+            version: '2.1',
+            config: JSON.parse(JSON.stringify(App.config)),
+            teachers: JSON.parse(JSON.stringify(App.teachers)),
+            curriculum: JSON.parse(JSON.stringify(App.curriculum)),
+            events: JSON.parse(JSON.stringify(App.events)),
+            defaultTimetable: JSON.parse(JSON.stringify(App.defaultTimetable)),
+            morningDuty: JSON.parse(JSON.stringify(App.morningDuty)),
+            timetable: JSON.parse(JSON.stringify(App.timetable)),
+            customStamps: JSON.parse(JSON.stringify(App.customStamps || []))
+          };
+
+          const firstCur = backupPayload.curriculum[0];
+          const lastCur = backupPayload.curriculum[backupPayload.curriculum.length - 1];
+          const backupValid = (
+            backupPayload.config.school === '국립한국초등학교' &&
+            backupPayload.config.gradeClass === '3학년 5반' &&
+            backupPayload.config.teacherName === '최선생' &&
+            backupPayload.teachers[0].name === '원더교생' &&
+            backupPayload.teachers[0].major === '수학교육' &&
+            firstCur.subject === '통합미술' &&
+            firstCur.lesson === '3~4' &&
+            firstCur.isDemo === true &&
+            firstCur.designatedTeacher === '원더교생' &&
+            lastCur.subject === '창의과학'
+          );
+
+          // 4. 데이터를 다른 값으로 오염시킨 후 복원 시뮬레이션
+          App.config.school = '오염된학교';
+          App.config.gradeClass = '0학년 0반';
+          App.teachers[0].name = '오염된교생';
+          App.curriculum = []; // 진도표 완전 삭제
+          App.populateInputsFromConfig();
+          App.renderAll();
+
+          // 복원
+          App.config = Object.assign({}, App.config, backupPayload.config);
+          App.teachers = JSON.parse(JSON.stringify(backupPayload.teachers));
+          App.curriculum = JSON.parse(JSON.stringify(backupPayload.curriculum));
+          App.populateInputsFromConfig();
+          App.renderAll();
+
+          const restoredSchoolInput = doc.getElementById('cfg-school') ? doc.getElementById('cfg-school').value : '';
+          const restoredGCInput = doc.getElementById('cfg-gradeClass') ? doc.getElementById('cfg-gradeClass').value : '';
+          const restoredTNInput = doc.getElementById('cfg-teacherName') ? doc.getElementById('cfg-teacherName').value : '';
+          const teacherRowsAfter = doc.querySelectorAll('#teacher-table-body tr');
+          const restoredTeacherInput = teacherRowsAfter[0]?.querySelectorAll('input')[0]?.value;
+
+          const restoredCurRows = doc.querySelectorAll('#curriculum-table-body tr');
+          const restoredCurSub = restoredCurRows[0]?.querySelector('input[data-field="subject"]')?.value;
+          const restoredCurLes = restoredCurRows[0]?.querySelector('input[data-field="lesson"]')?.value;
+          const restoredCurDemo = restoredCurRows[0]?.querySelector('input[data-field="isDemo"]')?.checked;
+          const restoredCurTea = restoredCurRows[0]?.querySelector('select[data-field="designatedTeacher"]')?.value;
+          const restoredBadgeText = doc.getElementById('curriculum-count-badge')?.innerText;
+
+          const restorePass = (
+            restoredSchoolInput === '국립한국초등학교' &&
+            restoredGCInput === '3학년 5반' &&
+            restoredTNInput === '최선생' &&
+            restoredTeacherInput === '원더교생' &&
+            restoredCurSub === '통합미술' &&
+            restoredCurLes === '3~4' &&
+            restoredCurDemo === true &&
+            restoredCurTea === '원더교생' &&
+            restoredBadgeText === `총 ${curCountBefore}차시` &&
+            App.curriculum.length === curCountBefore
+          );
+
+          // 5. 시간표 틀고정(Sticky left-0) 및 전체폭 토글 동작 검증
+          App.setTab(4);
+          const thSticky = doc.querySelector('#timetable-thead th.sticky');
+          const tdDutySticky = doc.querySelector('#timetable-tbody tr td.sticky');
+          const stickyPass = !!(thSticky && tdDutySticky);
+
+          // 전체폭 토글
+          const initWide = App.timetableWideMode;
+          App.toggleTimetableLayout();
+          const toggledWide = App.timetableWideMode;
+          App.toggleTimetableLayout(); // 원복
+          const togglePass = (initWide === false && toggledWide === true);
+
+          const pass = backupValid && restorePass && stickyPass && togglePass;
+          return {
+            pass,
+            message: pass
+              ? `기본정보·실습생명단·교과진도표(${curCountBefore}차시) 완벽 JSON 백업 직렬화 성공, 복원 후 Step 1 DOM 입력창 및 Step 2 진도표 테이블·배지 100% 연동 복구, 시간표 교시 sticky 틀고정 및 전체폭 레이아웃 토글 정상 확인`
+              : `검증 실패 (backup:${backupValid}, restore:${restorePass}, sticky:${stickyPass}, toggle:${togglePass})`
+          };
+        }
       }
     ];
 
@@ -515,7 +668,7 @@
       const summary = testCases.map(t => `${t.id}:${t.lastPass?'PASS':'FAIL[' + t.lastMsg + ']'}`).join(' | ');
       document.title = `[${passed}/${testCases.length}] ${summary}`;
       console.log(`[BENCHMARK FINISHED] ${passed} PASSED, ${failed} FAILED`);
-      fetch('http://127.0.0.1:8089/report', {
+      fetch('/report', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({ passed, failed, total: testCases.length, details: testCases.map(t => ({id: t.id, pass: t.lastPass, msg: t.lastMsg})) })
