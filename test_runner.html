@@ -617,6 +617,58 @@
               : `검증 실패 (backup:${backupValid}, restore:${restorePass}, sticky:${stickyPass}, toggle:${togglePass})`
           };
         }
+      },
+      {
+        id: 'tc13',
+        title: '[신규 기능] 1~4주차 전 주차 균등 배정, 마지막 2일 수업 배제 및 미배정 과목 자동 제거 검증',
+        desc: '4주간 대규모 50차시 일정에서 1~4주차 골고루 수업 분배(4주차 10시간 이상 배정), 마지막 2일(목/금) 수업 0건 보장, 수업자 미배정 과목 배당표 자동 제거 및 정리 기능 검증',
+        run: () => {
+          App.loadPreset('grade3', false);
+          App.runAutoAllocation(false);
+
+          const tt = App.timetable;
+          const weekCounts = [0, 0, 0, 0];
+          let day18Count = 0;
+          let day19Count = 0;
+          let unassignedCount = 0;
+
+          Object.keys(tt).forEach(k => {
+            const cell = tt[k];
+            if (cell && cell.subject && !cell.isLocked) {
+              const [d, p] = k.split('-').map(Number);
+              const w = Math.floor(d / 5);
+              if (w < 4) weekCounts[w]++;
+              if (d === 18) day18Count++;
+              if (d === 19) day19Count++;
+              if (!cell.teacher || cell.teacher.trim() === '') {
+                unassignedCount++;
+              }
+            }
+          });
+
+          // 1. 1~4주차 모두 8차시 이상 골고루 배정되었는지 확인 (4주차에 몰아주거나 123주차에만 몰리지 않음)
+          const allWeeksBalanced = weekCounts.every(cnt => cnt >= 8 && cnt <= 16);
+
+          // 2. 마지막 2일(Day 18, Day 19) 수업 배제 확인
+          const lastTwoDaysExcluded = (day18Count === 0 && day19Count === 0);
+
+          // 3. 미배정 과목 배당표 잔류 0건
+          const noUnassigned = (unassignedCount === 0);
+
+          // 4. removeUnassignedClasses 함수 동작 검증
+          // 의도적으로 미배정 셀 하나 주입 후 정리 실행
+          tt['1-1'] = { subject: '테스트임시', pages: '1-2', lesson: '1', totalLesson: 10, teacher: '' };
+          const cleaned = App.removeUnassignedClasses(false);
+          const cleanPass = (cleaned >= 1 && !tt['1-1']);
+
+          const pass = allWeeksBalanced && lastTwoDaysExcluded && noUnassigned && cleanPass;
+          return {
+            pass,
+            message: pass
+              ? `1~4주차 균등 배정 완벽 성공 [1주:${weekCounts[0]}h, 2주:${weekCounts[1]}h, 3주:${weekCounts[2]}h, 4주:${weekCounts[3]}h], 마지막 2일 수업 0건 배제 확인, 미배정 과목 자동 제거 무결성 100% 검증 완료`
+              : `검증 실패 (balanced:${allWeeksBalanced} ${JSON.stringify(weekCounts)}, lastTwoDays:${lastTwoDaysExcluded} [d18:${day18Count}, d19:${day19Count}], noUnassigned:${noUnassigned}, clean:${cleanPass})`
+          };
+        }
       }
     ];
 

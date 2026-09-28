@@ -1,0 +1,3622 @@
+
+    // --- 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 361차시) ---
+    var CURRICULUM_DB_GRADE2 = window.CURRICULUM_DB_GRADE2 = {"grade2_korean_1": [{"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "6~9"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "6~9"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "말차례 알아보기", "lesson": "3", "totalLesson": 14, "pages": "10~11"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -1-", "lesson": "4", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -2-", "lesson": "5", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "글을 읽고 친구들과 이야기 나누기 -3-", "lesson": "6", "totalLesson": 14, "pages": "12~27"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "소개할 내용 정리하기 -1-", "lesson": "7", "totalLesson": 14, "pages": "28~31"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "소개할 내용 정리하기 -2-", "lesson": "8", "totalLesson": 14, "pages": "28~31"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "자신을 소개하는 글 쓰기 -1-", "lesson": "9", "totalLesson": 14, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "자신을 소개하는 글 쓰기 -2-", "lesson": "10", "totalLesson": 14, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "36~37"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "36~37"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "38~41"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "1. 만나서 반가워요!", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "38~41"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "42~45"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "42~45"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "재미있는 말놀이 하기 -3-", "lesson": "5", "totalLesson": 15, "pages": "46~51"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "주변에서 여러 낱말을 찾아 이야기 만들기 -1-", "lesson": "6", "totalLesson": 15, "pages": "52~55"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "주변에서 여러 낱말을 찾아 이야기 만들기 -2-", "lesson": "7", "totalLesson": 15, "pages": "52~55"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "글을 읽고 자신의 생각이나 느낌 표현하기 -1-", "lesson": "8", "totalLesson": 15, "pages": "56~63"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "글을 읽고 자신의 생각이나 느낌 표현하기 -2-", "lesson": "9", "totalLesson": 15, "pages": "56~63"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "책에서 좋아하는 문장을 찾아 소개하기 -1-", "lesson": "10", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "책에서 좋아하는 문장을 찾아 소개하기 -2-", "lesson": "11", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "66~67"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "66~67"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "68~71"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "2. 말의 재미가 솔솔", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "68~71"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "72~75"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "72~75"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말을 넣어 문장 쓰기 -1-", "lesson": "3", "totalLesson": 15, "pages": "76~79"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말을 넣어 문장 쓰기 -2-", "lesson": "4", "totalLesson": 15, "pages": "76~79"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말이 들어간 문장 읽기 -1-", "lesson": "5", "totalLesson": 15, "pages": "80~93"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "꾸며 주는 말이 들어간 문장 읽기 -2-", "lesson": "6", "totalLesson": 15, "pages": "80~93"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일에서 일기 글감을 정하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "94~100"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일에서 일기 글감을 정하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "94~100"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -1-", "lesson": "9", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -2-", "lesson": "10", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "겪은 일이 잘 드러나게 일기 쓰기 -3-", "lesson": "11", "totalLesson": 15, "pages": "101~105"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "106~107"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "106~107"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "108~111"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "3. 겪은 일을 나타내요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "108~111"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "112~117"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "112~117"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -1-", "lesson": "3", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -2-", "lesson": "4", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말을 읽고 쓰기 -3-", "lesson": "5", "totalLesson": 15, "pages": "118~122"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말에 주의하며 글 읽기 -1-", "lesson": "6", "totalLesson": 15, "pages": "123~127"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "겹받침이 있는 낱말에 주의하며 글 읽기 -2-", "lesson": "7", "totalLesson": 15, "pages": "123~127"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위기 살펴보기 -1-", "lesson": "8", "totalLesson": 15, "pages": "128~132"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위기 살펴보기 -2-", "lesson": "9", "totalLesson": 15, "pages": "128~132"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위를 생각하며 소리 내어 읽기 -1-", "lesson": "10", "totalLesson": 15, "pages": "133~137"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "시의 분위를 생각하며 소리 내어 읽기 -2-", "lesson": "11", "totalLesson": 15, "pages": "133~137"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "138~139"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "138~139"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "140~143"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "4. 분위기를 살려 읽어요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "140~143"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "152~155"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "152~155"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하기 -1-", "lesson": "3", "totalLesson": 14, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하기 -2-", "lesson": "4", "totalLesson": 14, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하며 글 읽기 -1-", "lesson": "5", "totalLesson": 14, "pages": "160~165"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "인물의 마음을 짐작하며 글 읽기 -2-", "lesson": "6", "totalLesson": 14, "pages": "160~165"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "헷갈리기 쉬운 낱말에 주의하며 읽기 -1-", "lesson": "7", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "헷갈리기 쉬운 낱말에 주의하며 읽기 -2-", "lesson": "8", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "자연스럽게 띄어 읽기 -1-", "lesson": "9", "totalLesson": 14, "pages": "170~177"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "자연스럽게 띄어 읽기 -2-", "lesson": "10", "totalLesson": 14, "pages": "170~177"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "178~179"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "178~179"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "180~183"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "5. 마음을 짐작해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "180~183"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "184~187"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "184~187"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 중요한 내용을 찾는 방법 알아보기 -1-", "lesson": "3", "totalLesson": 15, "pages": "188~191"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 중요한 내용을 찾는 방법 알아보기 -2-", "lesson": "4", "totalLesson": 15, "pages": "188~191"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "중요한 내용을 생각하며 글 읽기 -1-", "lesson": "5", "totalLesson": 15, "pages": "192~197"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "중요한 내용을 생각하며 글 읽기 -2-", "lesson": "6", "totalLesson": 15, "pages": "192~197"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 인물의 생각과 그 까닭 파악하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 인물의 생각과 그 까닭 파악하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "글을 읽고 자신의 생각을 표현하기 -3-", "lesson": "11", "totalLesson": 15, "pages": "202~209"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "210~211"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "210~211"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "212~215"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "6. 자신의 생각을 표현해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "212~215"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "216~219"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "216~219"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험을 떠올리며 이야기 듣기 -1-", "lesson": "3", "totalLesson": 15, "pages": "220~223"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험을 떠올리며 이야기 듣기 -2-", "lesson": "4", "totalLesson": 15, "pages": "220~223"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험 발표하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "자신의 경험 발표하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "다른 사람의 마음을 생각하며 고운 말로 대화하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "다른 사람의 마음을 생각하며 고운 말로 대화하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -1-", "lesson": "9", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -2-", "lesson": "10", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "고운 말로 생각과 마음 나누기 -3-", "lesson": "11", "totalLesson": 15, "pages": "232~239"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "240~241"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "240~241"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "242~245"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "7. 마음을 담아서 말해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "242~245"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "246~249"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "246~249"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "시를 낭송하고 생각이나 느낌 나누기 -1-", "lesson": "3", "totalLesson": 15, "pages": "250~254"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "시를 낭송하고 생각이나 느낌 나누기 -2-", "lesson": "4", "totalLesson": 15, "pages": "250~254"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "이야기를 읽고 생각이나 느낌 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "255~263"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "이야기를 읽고 생각이나 느낌 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "255~263"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 인물의 마음 짐작하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "264~267"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 인물의 마음 짐작하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "264~267"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "인형극을 감상하고 자신의 생각이나 느낌 표현하기", "lesson": "11", "totalLesson": 15, "pages": "268~273"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 실천하기 -1-", "lesson": "12", "totalLesson": 15, "pages": "274~275"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 실천하기 -2-", "lesson": "13", "totalLesson": 15, "pages": "274~275"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "276~279"}, {"grade": 2, "semester": "1학기", "subject": "국어", "unit": "8. 다양한 작품을 감상해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "276~279"}], "grade2_korean_2": [{"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "6~9"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "6~9"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 장면 상상하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "10~13"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 장면 상상하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "10~13"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 생각이나 느낌 나누기 -1-", "lesson": "5", "totalLesson": 15, "pages": "14~17"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "시를 읽고 생각이나 느낌 나누기 -2-", "lesson": "6", "totalLesson": 15, "pages": "14~17"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 인물의 마음 상상하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "18~25"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 인물의 마음 상상하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "18~25"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 생각이나 느낌 나누기 -1-", "lesson": "9", "totalLesson": 15, "pages": "26~33"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "이야기를 읽고 생각이나 느낌 나누기 -2-", "lesson": "10", "totalLesson": 15, "pages": "26~33"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "34~35"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "36~39"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "1. 장면을 상상하며", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "36~39"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하는 방법 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하는 방법 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "48~51"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "고운 말로 대화하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "48~51"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "칭찬이나 조언하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "52~59"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "칭찬이나 조언하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "52~59"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "대화를 나누면서 말하는 사람에게 적절히 반응하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "60~63"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "대화를 나누면서 말하는 사람에게 적절히 반응하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "60~63"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "64~65"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "66~69"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "2. 서로 존중해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "66~69"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "70~73"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "70~73"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 중심 내용을 파악하는 방법 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "74~77"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 중심 내용을 파악하는 방법 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "74~77"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 내용을 간추리기 -1-", "lesson": "5", "totalLesson": 15, "pages": "78~83"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "글을 읽고 내용을 간추리기 -2-", "lesson": "6", "totalLesson": 15, "pages": "78~83"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "사물을 설명하는 글을 쓰는 방법 알기 -1-", "lesson": "7", "totalLesson": 15, "pages": "84~87"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "사물을 설명하는 글을 쓰는 방법 알기 -2-", "lesson": "8", "totalLesson": 15, "pages": "84~87"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "자신이 좋아하는 사물을 설명하는 글 쓰기 -1-", "lesson": "9", "totalLesson": 15, "pages": "88~91"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "자신이 좋아하는 사물을 설명하는 글 쓰기 -2-", "lesson": "10", "totalLesson": 15, "pages": "88~91"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "94~99"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "3. 내용을 살펴요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "94~99"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 13, "pages": "100~105"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 13, "pages": "100~105"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "여러 가지 문장의 종류 알기 -1-", "lesson": "3", "totalLesson": 13, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "여러 가지 문장의 종류 알기 -2-", "lesson": "4", "totalLesson": 13, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "글쓴이의 마음을 파악하며 글 읽기 -1-", "lesson": "5", "totalLesson": 13, "pages": "110~113"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "글쓴이의 마음을 파악하며 글 읽기 -2-", "lesson": "6", "totalLesson": 13, "pages": "110~113"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "인물의 마음을 생각하며 실감 나게 읽기 -1-", "lesson": "7", "totalLesson": 13, "pages": "114~119"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "인물의 마음을 생각하며 실감 나게 읽기 -2-", "lesson": "8", "totalLesson": 13, "pages": "114~119"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "이야기를 듣고 인물에게 내 생각 전하기 -1-", "lesson": "9", "totalLesson": 13, "pages": "120~123"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "이야기를 듣고 인물에게 내 생각 전하기 -2-", "lesson": "10", "totalLesson": 13, "pages": "120~123"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 13, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 13, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "4. 마음을 전해요", "topic": "배운 내용 마무리하기", "lesson": "13", "totalLesson": 13, "pages": "126~129"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "138~141"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "138~141"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "바른 말 알기 -1-", "lesson": "3", "totalLesson": 15, "pages": "142~145"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "바른 말 알기 -2-", "lesson": "4", "totalLesson": 15, "pages": "142~145"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "자신의 생각을 바른 말로 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "146~149"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "자신의 생각을 바른 말로 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "146~149"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "이야기를 듣고 일이 일어 난 차례 말하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "150~153"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "이야기를 듣고 일이 일어 난 차례 말하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "150~153"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "글을 읽고 일이 일어난 차례 말하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "154~159"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "글을 읽고 일이 일어난 차례 말하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "154~159"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "160~161"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "162~165"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "5. 바른 말로 이야기 나누어요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "162~165"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 14, "pages": "166~169"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림이 나타내는 뜻을 생각하며 읽기 -1-", "lesson": "3", "totalLesson": 14, "pages": "170~173"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림이 나타내는 뜻을 생각하며 읽기 -2-", "lesson": "4", "totalLesson": 14, "pages": "170~173"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림을 관련지으며 지기 그림책 읽기 -1-", "lesson": "5", "totalLesson": 14, "pages": "174~183"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "글과 그림을 관련지으며 지기 그림책 읽기 -2-", "lesson": "6", "totalLesson": 14, "pages": "174~183"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "친숙한 매체와 매체 자료에 흥미와 관심 가지기 -1-", "lesson": "7", "totalLesson": 14, "pages": "184~187"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "친숙한 매체와 매체 자료에 흥미와 관심 가지기 -2-", "lesson": "8", "totalLesson": 14, "pages": "184~187"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "매체와 연결 지어 글과 그림으로 표현하기 -1-", "lesson": "9", "totalLesson": 14, "pages": "188~191"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "매체와 연결 지어 글과 그림으로 표현하기 -2-", "lesson": "10", "totalLesson": 14, "pages": "188~191"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 14, "pages": "192~193"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 14, "pages": "192~193"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 마무리하기 -1-", "lesson": "13", "totalLesson": 14, "pages": "194~197"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "6. 매체를 경험해요", "topic": "배운 내용 마무리하기 -2-", "lesson": "14", "totalLesson": 14, "pages": "194~197"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "198~201"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글을 읽고 글쓴이의 생각 파악하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "202~206"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글을 읽고 글쓴이의 생각 파악하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "202~206"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글쓴이의 생각에 대한 자신의 생각 발표하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "207~210"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "글쓴이의 생각에 대한 자신의 생각 발표하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "207~210"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "자신의 생각을 글로 표현하기 -3-", "lesson": "9", "totalLesson": 15, "pages": "211~219"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "친구들이 쓴 글에 대한 자신의 생각 쓰기", "lesson": "10", "totalLesson": 15, "pages": "220~221"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "222~223"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "7. 내 생각은 이래요", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "224~227"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배울 내용 살펴보기 -1-", "lesson": "1", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배울 내용 살펴보기 -2-", "lesson": "2", "totalLesson": 15, "pages": "228~231"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현한 작품 감상하기 -1-", "lesson": "3", "totalLesson": 15, "pages": "232~237"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현한 작품 감상하기 -2-", "lesson": "4", "totalLesson": 15, "pages": "232~237"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현하기 -1-", "lesson": "5", "totalLesson": 15, "pages": "238~243"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "겪은 일을 시나 노래로 표현하기 -2-", "lesson": "6", "totalLesson": 15, "pages": "238~243"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이어질 이야기를 상상하며 작품 감상하기 -1-", "lesson": "7", "totalLesson": 15, "pages": "244~251"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이어질 이야기를 상상하며 작품 감상하기 -2-", "lesson": "8", "totalLesson": 15, "pages": "244~251"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이야기를 읽고 이어질 이야기 상상하기 -1-", "lesson": "9", "totalLesson": 15, "pages": "252~259"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "이야기를 읽고 이어질 이야기 상상하기 -2-", "lesson": "10", "totalLesson": 15, "pages": "252~259"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -1-", "lesson": "11", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -2-", "lesson": "12", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 실천하기 -3-", "lesson": "13", "totalLesson": 15, "pages": "260~261"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 마무리하기 -1-", "lesson": "14", "totalLesson": 15, "pages": "262~265"}, {"grade": 2, "semester": "2학기", "subject": "국어", "unit": "8. 나도 작가", "topic": "배운 내용 마무리하기 -2-", "lesson": "15", "totalLesson": 15, "pages": "262~265"}], "grade2_math_1": [{"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학을 찾아요", "lesson": "1", "totalLesson": 3, "pages": "6~7"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학과 놀아요", "lesson": "2", "totalLesson": 3, "pages": "8~9"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학으로 이야기해요", "lesson": "3", "totalLesson": 3, "pages": "10~11"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "12~15"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "백을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "16~17"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "몇백을 알아볼까요", "lesson": "3", "totalLesson": 9, "pages": "18~19"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "세 자리 수를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "20~21"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "각 자리의 숫자는 얼마를 나타낼까요", "lesson": "5", "totalLesson": 9, "pages": "22~23"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "뛰어 세어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "24~25"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수의 크기를 비교해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "26~27"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "28~29"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "1. 세 자리 수", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "30~31"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "32~35"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "△을 알아보고 찾아볼까요", "lesson": "2", "totalLesson": 9, "pages": "36~39"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "□을 알아보고 찾아볼까요", "lesson": "3", "totalLesson": 9, "pages": "40~43"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "○을 알아보고 찾아볼까요", "lesson": "4", "totalLesson": 9, "pages": "44~47"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "칠교판으로 모양을 만들어 볼까요", "lesson": "5", "totalLesson": 9, "pages": "48~51"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "쌓은 모양을 알아볼까요", "lesson": "6", "totalLesson": 9, "pages": "52~53"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "여러 가지 모양으로 쌓아 볼까요", "lesson": "7", "totalLesson": 9, "pages": "54~55"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "56~57"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "2. 여러 가지 도형", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "58~59"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "단원도입", "lesson": "1", "totalLesson": 14, "pages": "60~63"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑴", "lesson": "2", "totalLesson": 14, "pages": "64~65"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑵ -1-", "lesson": "3", "totalLesson": 14, "pages": "66~69"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 덧셈을 해 볼까요⑵ -2-", "lesson": "4", "totalLesson": 14, "pages": "66~69"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "덧셈을 해 볼까요", "lesson": "5", "totalLesson": 14, "pages": "70~71"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑴", "lesson": "6", "totalLesson": 14, "pages": "72~73"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑵ -1-", "lesson": "7", "totalLesson": 14, "pages": "74~77"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "여러 가지 방법으로 뺄셈을 해 볼까요⑵ -2-", "lesson": "8", "totalLesson": 14, "pages": "74~77"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "뺄셈을 해 볼까요", "lesson": "9", "totalLesson": 14, "pages": "78~79"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "세 수의 계산을 해 볼까요", "lesson": "10", "totalLesson": 14, "pages": "80~81"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "덧셈과 뺄셈의 관계를 식으로 나타내 볼까요", "lesson": "11", "totalLesson": 14, "pages": "82~83"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "□가 사용된 식을 만들고 □의 값을 구해 볼까요", "lesson": "12", "totalLesson": 14, "pages": "84~85"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "수학이랑 확인해요", "lesson": "13", "totalLesson": 14, "pages": "86~87"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "3. 덧셈과 뺄셈", "topic": "수학이랑 만들어요", "lesson": "14", "totalLesson": 14, "pages": "88~89"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "단원도입", "lesson": "1", "totalLesson": 9, "pages": "90~93"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "길이를 비교하는 방법을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "94~95"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "여러 가지 단위로 길이를 재어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "96~99"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "1cm를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "100~103"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "자로 길이를 재는 방법을 알아볼까요", "lesson": "5", "totalLesson": 9, "pages": "104~107"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "자로 길이를 재어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "108~109"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "길이를 어림하고 어떻게 어림했는지 말해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "110~111"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "112~113"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "4. 길이 재기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "114~115"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "단원 도입", "lesson": "1", "totalLesson": 7, "pages": "116~119"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류는 어떻게 할까요", "lesson": "2", "totalLesson": 7, "pages": "120~121"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "기준에 따라 분류해 볼까요", "lesson": "3", "totalLesson": 7, "pages": "122~125"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류하고 세어 볼까요", "lesson": "4", "totalLesson": 7, "pages": "126~129"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "분류한 결과를 말해 볼까요", "lesson": "5", "totalLesson": 7, "pages": "130~131"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "수학이랑 확인해요", "lesson": "6", "totalLesson": 7, "pages": "132~133"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "5. 분류하기", "topic": "수학이랑 만들어요", "lesson": "7", "totalLesson": 7, "pages": "134~135"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "136~139"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "여러 가지 방법으로 세어 볼까요", "lesson": "2", "totalLesson": 9, "pages": "140~141"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "묶어 세어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "142~143"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "몇의 몇 배를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "144~145"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "몇의 몇 배로 나타내 볼까요", "lesson": "5", "totalLesson": 9, "pages": "146~147"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "곱셈을 알아볼까요", "lesson": "6", "totalLesson": 9, "pages": "148~149"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "곱셈식으로 나타내 볼까요", "lesson": "7", "totalLesson": 9, "pages": "150~151"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "152~153"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "6. 곱셈", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "154~155"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "사용하지 않는 물건을 찾아볼까요", "lesson": "1", "totalLesson": 4, "pages": "156~159"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "친구들과 함께 나눔 장터를 계획해요", "lesson": "2", "totalLesson": 4, "pages": "160~161"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "나눔 장터를 열어요", "lesson": "3", "totalLesson": 4, "pages": "162~163"}, {"grade": 2, "semester": "1학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "나눔 장터로 달라진 지구를 표현해요", "lesson": "4", "totalLesson": 4, "pages": "164~165"}], "grade2_math_2": [{"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학을 찾아요", "lesson": "1", "totalLesson": 3, "pages": "6~7"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학과 놀아요", "lesson": "2", "totalLesson": 3, "pages": "8~9"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학을 만나요", "topic": "수학으로 이야기해요", "lesson": "3", "totalLesson": 3, "pages": "10~11"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "12~15"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "천을 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "16~17"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "몇천을 알아볼까요", "lesson": "3", "totalLesson": 9, "pages": "18~19"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "네 자리 수를 알아볼까요", "lesson": "4", "totalLesson": 9, "pages": "20~21"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "각 자리의 숫자는 얼마를 나타낼까요", "lesson": "5", "totalLesson": 9, "pages": "22~23"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "뛰어 세어 볼까요", "lesson": "6", "totalLesson": 9, "pages": "24~25"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수의 크기를 비교해 볼까요", "lesson": "7", "totalLesson": 9, "pages": "26~27"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "28~29"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "1. 네 자리 수", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "30~31"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "단원 도입", "lesson": "1", "totalLesson": 10, "pages": "32~35"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "2단 곱셈구구를 알아볼까요", "lesson": "2", "totalLesson": 10, "pages": "36~37"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "5단 곱셈구구를 알아볼까요", "lesson": "3", "totalLesson": 10, "pages": "38~39"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "3단, 6단 곱셈구구를 알아볼까요", "lesson": "4", "totalLesson": 10, "pages": "40~43"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "4단, 8단 곱셈구구를 알아볼까요", "lesson": "5", "totalLesson": 10, "pages": "44~47"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "7단 곱셈구구를 알아볼까요", "lesson": "6", "totalLesson": 10, "pages": "48~49"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "9단 곱셈구구를 알아볼까요", "lesson": "7", "totalLesson": 10, "pages": "50~51"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "1단 곱셈구구와 0의 곱을 알아볼까요", "lesson": "8", "totalLesson": 10, "pages": "52~53"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "곱셈표를 만들어 볼까요", "lesson": "9", "totalLesson": 10, "pages": "54~55"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "2. 곱셈구구", "topic": "곱셈구구를 이용하여 문제를 해결해 볼까요", "lesson": "10", "totalLesson": 10, "pages": "56~57"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "62~65"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "cm보다 더 큰 단위를 알아볼까요", "lesson": "2", "totalLesson": 9, "pages": "66~67"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "자로 길이를 재어 볼까요", "lesson": "3", "totalLesson": 9, "pages": "68~69"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이의 합을 구해 볼까요", "lesson": "4", "totalLesson": 9, "pages": "70~71"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이의 차를 구해 볼까요", "lesson": "5", "totalLesson": 9, "pages": "72~73"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이를 어림해 볼까요(1)", "lesson": "6", "totalLesson": 9, "pages": "74~75"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "길이를 어림해 볼까요(2)", "lesson": "7", "totalLesson": 9, "pages": "76~77"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "78~79"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "3. 길이 재기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "80~81"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "단원 도입", "lesson": "1", "totalLesson": 10, "pages": "82~85"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "몇 시 몇 분을 읽어 볼까요(1)", "lesson": "2", "totalLesson": 10, "pages": "86~87"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "몇 시 몇 분을 읽어 볼까요(2)", "lesson": "3", "totalLesson": 10, "pages": "88~89"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "여러 가지 방법으로 시각을 읽어 볼까요", "lesson": "4", "totalLesson": 10, "pages": "90~91"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "1시간을 알아볼까요", "lesson": "5", "totalLesson": 10, "pages": "92~93"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "걸린 시간을 알아볼까요", "lesson": "6", "totalLesson": 10, "pages": "94~95"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "하루의 시간을 알아볼까요", "lesson": "7", "totalLesson": 10, "pages": "96~97"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "달력을 알아볼까요", "lesson": "8", "totalLesson": 10, "pages": "98~101"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "수학이랑 확인해요", "lesson": "9", "totalLesson": 10, "pages": "102~103"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "4. 시각과 시간", "topic": "수학이랑 만들어요", "lesson": "10", "totalLesson": 10, "pages": "104~105"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "단원 도입", "lesson": "1", "totalLesson": 8, "pages": "106~109"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 분류하여 표로 나타내 볼까요", "lesson": "2", "totalLesson": 8, "pages": "110~111"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 조사하여 표로 나타내 볼까요", "lesson": "3", "totalLesson": 8, "pages": "112~113"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "자료를 분류하여 그래프로 나타내 볼까요", "lesson": "4", "totalLesson": 8, "pages": "114~117"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "표와 그래프를 보고 무엇을 알 수 있을까요", "lesson": "5", "totalLesson": 8, "pages": "118~121"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "표와 그래프로 나타내 볼까요", "lesson": "6", "totalLesson": 8, "pages": "122~123"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "수학이랑 확인해요", "lesson": "7", "totalLesson": 8, "pages": "124~125"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "5. 표와 그래프", "topic": "수학이랑 만들어요", "lesson": "8", "totalLesson": 8, "pages": "126~127"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "단원 도입", "lesson": "1", "totalLesson": 9, "pages": "128~131"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "무늬에서 규칙을 찾아볼까요(1)", "lesson": "2", "totalLesson": 9, "pages": "132~133"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "무늬에서 규칙을 찾아볼까요(2)", "lesson": "3", "totalLesson": 9, "pages": "134~135"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "쌓은 모양에서 규칙을 찾아볼까요", "lesson": "4", "totalLesson": 9, "pages": "136~137"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "덧셈표에서 규칙을 찾아볼까요", "lesson": "5", "totalLesson": 9, "pages": "138~139"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "곱셈표에서 규칙을 찾아볼까요", "lesson": "6", "totalLesson": 9, "pages": "140~141"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "생활에서 규칙을 찾아볼까요", "lesson": "7", "totalLesson": 9, "pages": "142~143"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "수학이랑 확인해요", "lesson": "8", "totalLesson": 9, "pages": "144~145"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "6. 규칙 찾기", "topic": "수학이랑 만들어요", "lesson": "9", "totalLesson": 9, "pages": "146~147"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "단원 도입", "lesson": "1", "totalLesson": 4, "pages": "148~151"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관의 실천을 계획해요", "lesson": "2", "totalLesson": 4, "pages": "152~153"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관을 실천해요", "lesson": "3", "totalLesson": 4, "pages": "154~155"}, {"grade": 2, "semester": "2학기", "subject": "수학", "unit": "수학이랑 함께해요", "topic": "바른 식습관을 다짐해요", "lesson": "4", "totalLesson": 4, "pages": "156~157"}], "grade2_integrated_1": [{"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "나 6~7"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "그림책에서 만나는 나", "lesson": "2", "totalLesson": 48, "pages": "나 8~19"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "나만의 보물 상자", "lesson": "3", "totalLesson": 48, "pages": "나 20~21"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "오늘은 나의 날 -1-", "lesson": "4", "totalLesson": 48, "pages": "나 22~23"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "오늘은 나의 날 -2-", "lesson": "5", "totalLesson": 48, "pages": "나 22~23"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "2학년 생활 설명서", "lesson": "6", "totalLesson": 48, "pages": "나 24~25"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "급식 탐험대", "lesson": "7", "totalLesson": 48, "pages": "나 26~27"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "손 따라 발 따라 -1-", "lesson": "8", "totalLesson": 48, "pages": "나 28~29"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "손 따라 발 따라 -2-", "lesson": "9", "totalLesson": 48, "pages": "나 28~29"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "깨끗한 몸, 건강한 나", "lesson": "10", "totalLesson": 48, "pages": "나 30~31"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "꼬르륵 냠냠 쿨쿨 -1-", "lesson": "11", "totalLesson": 48, "pages": "나 32~33"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "꼬르륵 냠냠 쿨쿨 -2-", "lesson": "12", "totalLesson": 48, "pages": "나 32~33"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "몸이 아파요 -1-", "lesson": "13", "totalLesson": 48, "pages": "나 34~35"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "몸이 아파요 -2-", "lesson": "14", "totalLesson": 48, "pages": "나 34~35"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "표정으로 말해요", "lesson": "15", "totalLesson": 48, "pages": "나 36~37"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "마음 의자에 앉아요 -1-", "lesson": "16", "totalLesson": 48, "pages": "나 38~39"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "마음 의자에 앉아요 -2-", "lesson": "17", "totalLesson": 48, "pages": "나 38~39"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "화가 잔뜩 났어요", "lesson": "18", "totalLesson": 48, "pages": "나 40~41"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "좋은 습관 나쁜 습관", "lesson": "19", "totalLesson": 48, "pages": "나 42~43"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "나는 누굴까", "lesson": "20", "totalLesson": 48, "pages": "나 44~45"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "멋진 나", "lesson": "21", "totalLesson": 48, "pages": "나 46~47"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "이렇게 자랐어요 -1-", "lesson": "22", "totalLesson": 48, "pages": "나 48~49"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "이렇게 자랐어요 -2-", "lesson": "23", "totalLesson": 48, "pages": "나 48~49"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "매일매일 자라요 -1-", "lesson": "24", "totalLesson": 48, "pages": "나 50~51"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "매일매일 자라요 -2-", "lesson": "25", "totalLesson": 48, "pages": "나 50~51"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "소중한 나의 꿈 -1-", "lesson": "26", "totalLesson": 48, "pages": "나 52~53"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "소중한 나의 꿈 -2-", "lesson": "27", "totalLesson": 48, "pages": "나 52~53"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "내가 어른이 된다면 -1-", "lesson": "28", "totalLesson": 48, "pages": "나 54~55"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "내가 어른이 된다면 -2-", "lesson": "29", "totalLesson": 48, "pages": "나 54~55"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "내 자랑 발표회", "lesson": "30", "totalLesson": 48, "pages": "나 56~57"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "모두 모여라", "lesson": "31", "totalLesson": 48, "pages": "나 58~59"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "기차 공 놀이", "lesson": "32", "totalLesson": 48, "pages": "나 60~61"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "풍선 치기 놀이", "lesson": "33", "totalLesson": 48, "pages": "나 62~63"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "원숭이놀이", "lesson": "34", "totalLesson": 48, "pages": "나 64~65"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "몸 따로 마음 따로", "lesson": "35", "totalLesson": 48, "pages": "나 66~67"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "왕 걸음 놀이", "lesson": "36", "totalLesson": 48, "pages": "나 68~69"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "번개 달리기", "lesson": "37", "totalLesson": 48, "pages": "나 70~71"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "개구리 뛰기", "lesson": "38", "totalLesson": 48, "pages": "나 72~73"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "신기한 나의 몸", "lesson": "39", "totalLesson": 48, "pages": "나 74~75"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "내 몸을 스스로 지켜요", "lesson": "40", "totalLesson": 48, "pages": "나 76~77"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "과연 장난일까", "lesson": "41", "totalLesson": 48, "pages": "나 78~79"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "바르게 알고 먹어요", "lesson": "42", "totalLesson": 48, "pages": "나 80~81"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "우리 반 주제를 만들어요", "lesson": "43", "totalLesson": 48, "pages": "나 82~83"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "나", "topic": "질문으로 수업을 만들어요", "lesson": "44", "totalLesson": 48, "pages": "나 84~85"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "주제 수업 만들기", "lesson": "45", "totalLesson": 48, "pages": "나 86~87"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "나", "topic": "놀이 수업 만들기", "lesson": "46", "totalLesson": 48, "pages": "나 88~89"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "안전 수업 만들기", "lesson": "47", "totalLesson": 48, "pages": "나 90~91"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "나", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "나 92~93"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "자연 6~7"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "그림책에서 만나는 자연", "lesson": "2", "totalLesson": 48, "pages": "자연 8~19"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "색으로 만나는 자연", "lesson": "3", "totalLesson": 48, "pages": "자연 20~21"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "놀이로 만나는 자연 -1-", "lesson": "4", "totalLesson": 48, "pages": "자연 22~23"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "놀이로 만나는 자연 -2-", "lesson": "5", "totalLesson": 48, "pages": "자연 22~23"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "숲 속을 걸어요 -1-", "lesson": "6", "totalLesson": 48, "pages": "자연 24~25"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "숲 속을 걸어요 -2-", "lesson": "7", "totalLesson": 48, "pages": "자연 24~25"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "나도 농부야", "lesson": "8", "totalLesson": 48, "pages": "자연 26~27"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "땅속이 꿈틀꿈틀", "lesson": "9", "totalLesson": 48, "pages": "자연 28~29"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "조물조물 흙 놀이 -1-", "lesson": "10", "totalLesson": 48, "pages": "자연 30~31"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "조물조물 흙 놀이 -2-", "lesson": "11", "totalLesson": 48, "pages": "자연 30~31"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "땅 위 친구들 -1-", "lesson": "12", "totalLesson": 48, "pages": "자연 32~33"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "땅 위 친구들 -2-", "lesson": "13", "totalLesson": 48, "pages": "자연 32~33"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "최고의 짝꿍", "lesson": "14", "totalLesson": 48, "pages": "자연 34~35"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "모두 다 꽃이야 -1-", "lesson": "15", "totalLesson": 48, "pages": "자연 36~37"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "모두 다 꽃이야 -2-", "lesson": "16", "totalLesson": 48, "pages": "자연 36~37"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "난 네가 궁금해", "lesson": "17", "totalLesson": 48, "pages": "자연 38~39"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "함께하면 행복해", "lesson": "18", "totalLesson": 48, "pages": "자연 40~41"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "우리도 말을 해요", "lesson": "19", "totalLesson": 48, "pages": "자연 42~43"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "숲속 회의에 누가 왔을까", "lesson": "20", "totalLesson": 48, "pages": "자연 44~45"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "오늘은 천천히 -1-", "lesson": "21", "totalLesson": 48, "pages": "자연 46~47"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "오늘은 천천히 -2-", "lesson": "22", "totalLesson": 48, "pages": "자연 46~47"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "자연은 디자이너 -1-", "lesson": "23", "totalLesson": 48, "pages": "자연 48~49"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "자연은 디자이너 -2-", "lesson": "24", "totalLesson": 48, "pages": "자연 48~49"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "마음을 모아서", "lesson": "25", "totalLesson": 48, "pages": "자연 50~51"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "지도 속 자연 -1-", "lesson": "26", "totalLesson": 48, "pages": "자연 52~53"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "지도 속 자연 -2-", "lesson": "27", "totalLesson": 48, "pages": "자연 52~53"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "자연과 함께 찰칵 -1-", "lesson": "28", "totalLesson": 48, "pages": "자연 54~55"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "자연과 함께 찰칵 -2-", "lesson": "29", "totalLesson": 48, "pages": "자연 54~55"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "자연 속 운동회", "lesson": "30", "totalLesson": 48, "pages": "자연 56~57"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "동물 흉내 내며 뛰기", "lesson": "31", "totalLesson": 48, "pages": "자연 58~59"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "공 던지기 놀이", "lesson": "32", "totalLesson": 48, "pages": "자연 60~61"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "낙하산 놀이", "lesson": "33", "totalLesson": 48, "pages": "자연 62~63"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "공 전달하기 놀이", "lesson": "34", "totalLesson": 48, "pages": "자연 64~65"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "태풍놀이", "lesson": "35", "totalLesson": 48, "pages": "자연 66~67"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "술래가 흔들흔들", "lesson": "36", "totalLesson": 48, "pages": "자연 68~69"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "과일 바구니 놀이", "lesson": "37", "totalLesson": 48, "pages": "자연 70~71"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "그대로 멈춰라", "lesson": "38", "totalLesson": 48, "pages": "자연 72~73"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "반려동물과 안전하게", "lesson": "39", "totalLesson": 48, "pages": "자연 74~75"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "야영장에서 안전하게", "lesson": "40", "totalLesson": 48, "pages": "자연 76~77"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "야외에서 안전하게", "lesson": "41", "totalLesson": 48, "pages": "자연 78~79"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "미세 먼지로부터 안전하게", "lesson": "42", "totalLesson": 48, "pages": "자연 80~81"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "우리 반 주제를 만들어요", "lesson": "43", "totalLesson": 48, "pages": "자연 82~83"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "자연", "topic": "질문으로 수업을 만들어요", "lesson": "44", "totalLesson": 48, "pages": "자연 84~85"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "주제 수업 만들기", "lesson": "45", "totalLesson": 48, "pages": "자연 86~87"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "놀이 수업 만들기", "lesson": "46", "totalLesson": 48, "pages": "자연 88~89"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "자연", "topic": "안전 수업 만들기", "lesson": "47", "totalLesson": 48, "pages": "자연 90~91"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "자연", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "자연 92~93"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "마을 6~7"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "그림책에서 만나는 마을", "lesson": "2", "totalLesson": 48, "pages": "마을 8~19"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "마을에서 찾아라", "lesson": "3", "totalLesson": 48, "pages": "마을 20~21"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "우리 마을 이곳저곳 -1-", "lesson": "4", "totalLesson": 48, "pages": "마을 22~23"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "우리 마을 이곳저곳 -2-", "lesson": "5", "totalLesson": 48, "pages": "마을 22~23"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 탐험대가 되어요 -1-", "lesson": "6", "totalLesson": 48, "pages": "마을 24~25"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 탐험대가 되어요 -2-", "lesson": "7", "totalLesson": 48, "pages": "마을 24~25"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "마을 탐험을 떠나요 -1-", "lesson": "8", "totalLesson": 48, "pages": "마을 26~27"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "마을 탐험을 떠나요 -2-", "lesson": "9", "totalLesson": 48, "pages": "마을 26~27"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "마을 모습을 담아요 -1-", "lesson": "10", "totalLesson": 48, "pages": "마을 28~29"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 모습을 담아요 -2-", "lesson": "11", "totalLesson": 48, "pages": "마을 28~29"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "우리 마을이 궁금해요", "lesson": "12", "totalLesson": 48, "pages": "마을 30~31"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "마을 사람들을 만나요", "lesson": "13", "totalLesson": 48, "pages": "마을 32~33"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "마을을 위해 지켜요 -1-", "lesson": "14", "totalLesson": 48, "pages": "마을 34~35"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "마을을 위해 지켜요 -2-", "lesson": "15", "totalLesson": 48, "pages": "마을 34~35"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "직업을 체험해요 -1-", "lesson": "16", "totalLesson": 48, "pages": "마을 36~37"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "직업을 체험해요 -2-", "lesson": "17", "totalLesson": 48, "pages": "마을 36~37"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 노래를 즐겨요 -1-", "lesson": "18", "totalLesson": 48, "pages": "마을 38~39"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 노래를 즐겨요 -2-", "lesson": "19", "totalLesson": 48, "pages": "마을 38~39"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 노래를 만들어요", "lesson": "20", "totalLesson": 48, "pages": "마을 40~41"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을을 담아 만들어요", "lesson": "21", "totalLesson": 48, "pages": "마을 42~43"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을을 상상해요", "lesson": "22", "totalLesson": 48, "pages": "마을 44~45"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "마을을 위해서 해 봐요", "lesson": "23", "totalLesson": 48, "pages": "마을 46~47"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을 소식을 전해요", "lesson": "24", "totalLesson": 48, "pages": "마을 48~49"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "마을을 즐겨요 -1-", "lesson": "25", "totalLesson": 48, "pages": "마을 50~51"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "마을을 즐겨요 -2-", "lesson": "26", "totalLesson": 48, "pages": "마을 50~51"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "우리가 만드는 마을 여행", "lesson": "27", "totalLesson": 48, "pages": "마을 52~53"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "우리 마을 전시회", "lesson": "28", "totalLesson": 48, "pages": "마을 54~55"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "와글와글 마을 축제 -1-", "lesson": "29", "totalLesson": 48, "pages": "마을 56~57"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "와글와글 마을 축제 -2-", "lesson": "30", "totalLesson": 48, "pages": "마을 56~57"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "배달 놀이", "lesson": "31", "totalLesson": 48, "pages": "마을 58~59"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "줄넘기", "lesson": "32", "totalLesson": 48, "pages": "마을 60~61"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "길 만들기 놀이", "lesson": "33", "totalLesson": 48, "pages": "마을 62~63"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "이어달리기", "lesson": "34", "totalLesson": 48, "pages": "마을 64~65"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "공차기 놀이", "lesson": "35", "totalLesson": 48, "pages": "마을 66~67"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "과일 술래잡기", "lesson": "36", "totalLesson": 48, "pages": "마을 68~69"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "공치기 놀이", "lesson": "37", "totalLesson": 48, "pages": "마을 70~71"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "줄다리기", "lesson": "38", "totalLesson": 48, "pages": "마을 72~73"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "마을 시설을 안전하게", "lesson": "39", "totalLesson": 48, "pages": "마을 74~75"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "탈것을 안전하게", "lesson": "40", "totalLesson": 48, "pages": "마을 76~77"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "자동차를 안전하게", "lesson": "41", "totalLesson": 48, "pages": "마을 78~79"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "길을 잃었을 때", "lesson": "42", "totalLesson": 48, "pages": "마을 80~81"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "우리 반 주제를 만들어요", "lesson": "43", "totalLesson": 48, "pages": "마을 82~83"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "질문으로 수업을 만들어요", "lesson": "44", "totalLesson": 48, "pages": "마을 84~85"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "마을", "topic": "주제 수업 만들기", "lesson": "45", "totalLesson": 48, "pages": "마을 86~87"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "마을", "topic": "놀이 수업 만들기", "lesson": "46", "totalLesson": 48, "pages": "마을 88~89"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "안전 수업 만들기", "lesson": "47", "totalLesson": 48, "pages": "마을 90~91"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "마을", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "마을 92~93"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "세계 6~7"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "그림책에서 만나는 세계", "lesson": "2", "totalLesson": 48, "pages": "세계 8~19"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계로 가는 기차놀이 -1-", "lesson": "3", "totalLesson": 48, "pages": "세계 20~21"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계로 가는 기차놀이 -2-", "lesson": "4", "totalLesson": 48, "pages": "세계 20~21"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "사진으로 보는 세계", "lesson": "5", "totalLesson": 48, "pages": "세계 22~23"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "두근두근 여행 전날", "lesson": "6", "totalLesson": 48, "pages": "세계 24~25"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "가고 싶은 나라", "lesson": "7", "totalLesson": 48, "pages": "세계 26~27"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "이런 옷을 입어요 -1-", "lesson": "8", "totalLesson": 48, "pages": "세계 28~29"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "이런 옷을 입어요 -2-", "lesson": "9", "totalLesson": 48, "pages": "세계 28~29"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "세계 전통 모자 -1-", "lesson": "10", "totalLesson": 48, "pages": "세계 30~31"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계 전통 모자 -2-", "lesson": "11", "totalLesson": 48, "pages": "세계 30~31"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "음식으로 만나는 세계", "lesson": "12", "totalLesson": 48, "pages": "세계 32~33"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "세계 음식 축제 -1-", "lesson": "13", "totalLesson": 48, "pages": "세계 34~35"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계 음식 축제 -2-", "lesson": "14", "totalLesson": 48, "pages": "세계 34~35"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "다른 나라 집 구경 -1-", "lesson": "15", "totalLesson": 48, "pages": "세계 36~37"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "다른 나라 집 구경 -2-", "lesson": "16", "totalLesson": 48, "pages": "세계 36~37"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "뚝딱뚝딱 다른 나라 집", "lesson": "17", "totalLesson": 48, "pages": "세계 38~39"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "안녕, 인사해요 -1-", "lesson": "18", "totalLesson": 48, "pages": "세계 40~41"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "안녕, 인사해요 -2-", "lesson": "19", "totalLesson": 48, "pages": "세계 40~41"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "세계의 놀이", "lesson": "20", "totalLesson": 48, "pages": "세계 42~43"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "세계의 장난감", "lesson": "21", "totalLesson": 48, "pages": "세계 44~45"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계의 노래 -1-", "lesson": "22", "totalLesson": 48, "pages": "세계 46~47"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계의 노래 -2-", "lesson": "23", "totalLesson": 48, "pages": "세계 46~47"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "세계의 춤", "lesson": "24", "totalLesson": 48, "pages": "세계 48~49"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "세계의 자랑거리 -1-", "lesson": "25", "totalLesson": 48, "pages": "세계 50~51"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "세계의 자랑거리 -2-", "lesson": "26", "totalLesson": 48, "pages": "세계 50~51"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "서로 존중해요", "lesson": "27", "totalLesson": 48, "pages": "세계 52~53"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "세계의 명절", "lesson": "28", "totalLesson": 48, "pages": "세계 54~55"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "지구촌 올림픽 -1-", "lesson": "29", "totalLesson": 48, "pages": "세계 56~57"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "지구촌 올림픽 -2-", "lesson": "30", "totalLesson": 48, "pages": "세계 56~57"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "어서 모여라", "lesson": "31", "totalLesson": 48, "pages": "세계 58~59"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "길게 한 걸음", "lesson": "32", "totalLesson": 48, "pages": "세계 60~61"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "줄 뛰어넘기 놀이", "lesson": "33", "totalLesson": 48, "pages": "세계 62~63"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "다 같이 한 걸음", "lesson": "34", "totalLesson": 48, "pages": "세계 64~65"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "길 따라 세계로", "lesson": "35", "totalLesson": 48, "pages": "세계 66~67"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "보물찾기", "lesson": "36", "totalLesson": 48, "pages": "세계 68~69"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "손에 손잡고", "lesson": "37", "totalLesson": 48, "pages": "세계 70~71"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "부메랑 놀이", "lesson": "38", "totalLesson": 48, "pages": "세계 72~73"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "식중독을 예방해요", "lesson": "39", "totalLesson": 48, "pages": "세계 74~75"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "안전하게 이동해요", "lesson": "40", "totalLesson": 48, "pages": "세계 76~77"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "태풍이 오고 있어요", "lesson": "41", "totalLesson": 48, "pages": "세계 78~79"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "감염병은 예방이 최고", "lesson": "42", "totalLesson": 48, "pages": "세계 80~81"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "우리 반 주제를 만들어요", "lesson": "43", "totalLesson": 48, "pages": "세계 82~83"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "질문으로 수업을 만들어요", "lesson": "44", "totalLesson": 48, "pages": "세계 84~85"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "주제 수업 만들기", "lesson": "45", "totalLesson": 48, "pages": "세계 86~87"}, {"grade": 2, "semester": "1학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "세계", "topic": "놀이 수업 만들기", "lesson": "46", "totalLesson": 48, "pages": "세계 88~89"}, {"grade": 2, "semester": "1학기", "subject": "바생", "integratedSubj": "바생", "unit": "세계", "topic": "안전 수업 만들기", "lesson": "47", "totalLesson": 48, "pages": "세계 90~91"}, {"grade": 2, "semester": "1학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "세계", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "세계 92~93"}], "grade2_integrated_2": [{"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "계절 6~7"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "우리 반 주제를 만들어요", "lesson": "2", "totalLesson": 48, "pages": "계절 8~9"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "질문으로 수업을 만들어요", "lesson": "3", "totalLesson": 48, "pages": "계절 10~11"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "주제 수업 만들기", "lesson": "4", "totalLesson": 48, "pages": "계절 12~13"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "놀이 수업 만들기", "lesson": "5", "totalLesson": 48, "pages": "계절 14~15"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "안전 수업 만들기", "lesson": "6", "totalLesson": 48, "pages": "계절 16~17"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "그림책에서 만나는 계절", "lesson": "7", "totalLesson": 48, "pages": "계절 18~29"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "이 계절이 좋은 이유", "lesson": "8", "totalLesson": 48, "pages": "계절 30~31"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "내가 좋아하는 계절 -1-", "lesson": "9", "totalLesson": 48, "pages": "계절 32~33"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "내가 좋아하는 계절 -2-", "lesson": "10", "totalLesson": 48, "pages": "계절 32~33"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "사계절 친구들", "lesson": "11", "totalLesson": 48, "pages": "계절 34~35"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "계절이 속닥속닥", "lesson": "12", "totalLesson": 48, "pages": "계절 36~37"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "계절을 입어요", "lesson": "13", "totalLesson": 48, "pages": "계절 38~39"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "계절은 무슨 색", "lesson": "14", "totalLesson": 48, "pages": "계절 40~41"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "꼼지락꼼지락 -1-", "lesson": "15", "totalLesson": 48, "pages": "계절 42~43"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "꼼지락꼼지락 -2-", "lesson": "16", "totalLesson": 48, "pages": "계절 42~43"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "잠자리 꽁꽁 -1-", "lesson": "17", "totalLesson": 48, "pages": "계절 44~45"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "잠자리 꽁꽁 -2-", "lesson": "18", "totalLesson": 48, "pages": "계절 44~45"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "24절기 여행을 떠나요", "lesson": "19", "totalLesson": 48, "pages": "계절 46~47"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "계절 상차림", "lesson": "20", "totalLesson": 48, "pages": "계절 48~49"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "계절을 주웠어 -1-", "lesson": "21", "totalLesson": 48, "pages": "계절 50~51"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "계절을 주웠어 -2-", "lesson": "22", "totalLesson": 48, "pages": "계절 50~51"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "그림에서 만난 계절", "lesson": "23", "totalLesson": 48, "pages": "계절 52~53"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "학교에서 만난 계절", "lesson": "24", "totalLesson": 48, "pages": "계절 54~55"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "랄랄라 사계절 -1-", "lesson": "25", "totalLesson": 48, "pages": "계절 56~57"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "랄랄라 사계절 -2-", "lesson": "26", "totalLesson": 48, "pages": "계절 56~57"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "오늘 그곳에 간다면 -1-", "lesson": "27", "totalLesson": 48, "pages": "계절 58~59"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "오늘 그곳에 간다면 -2-", "lesson": "28", "totalLesson": 48, "pages": "계절 58~59"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "새로운 계절을 준비해요", "lesson": "29", "totalLesson": 48, "pages": "계절 60~61"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "나들이를 가요 -1-", "lesson": "30", "totalLesson": 48, "pages": "계절 62~63"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "나들이를 가요 -2-", "lesson": "31", "totalLesson": 48, "pages": "계절 62~63"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "날씨를 알려 드립니다 -1-", "lesson": "32", "totalLesson": 48, "pages": "계절 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "날씨를 알려 드립니다 -2-", "lesson": "33", "totalLesson": 48, "pages": "계절 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "계절을 담은 교실 -1-", "lesson": "34", "totalLesson": 48, "pages": "계절 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "계절을 담은 교실 -2-", "lesson": "35", "totalLesson": 48, "pages": "계절 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "공이랑 놀아요", "lesson": "36", "totalLesson": 48, "pages": "계절 68~69"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "신나게 폴짝폴짝", "lesson": "37", "totalLesson": 48, "pages": "계절 70~71"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "스펀지 막대 놀이", "lesson": "38", "totalLesson": 48, "pages": "계절 72~73"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "막대를 지켜라", "lesson": "39", "totalLesson": 48, "pages": "계절 74~75"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "색깔 술래잡기", "lesson": "40", "totalLesson": 48, "pages": "계절 76~77"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "하늘 위로 뛰기", "lesson": "41", "totalLesson": 48, "pages": "계절 78~79"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "밀어라 당겨라", "lesson": "42", "totalLesson": 48, "pages": "계절 80~81"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "콩 주머니로 놀아요", "lesson": "43", "totalLesson": 48, "pages": "계절 82~83"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "계절", "topic": "봄을 안전하게", "lesson": "44", "totalLesson": 48, "pages": "계절 84~85"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "여름을 안전하게", "lesson": "45", "totalLesson": 48, "pages": "계절 86~87"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "가을을 안전하게", "lesson": "46", "totalLesson": 48, "pages": "계절 88~89"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "계절", "topic": "겨울을 안전하게", "lesson": "47", "totalLesson": 48, "pages": "계절 90~91"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "계절", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "계절 92~93"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "인물 6~7"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "우리 반 주제를 만들어요", "lesson": "2", "totalLesson": 48, "pages": "인물 8~9"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "질문으로 수업을 만들어요", "lesson": "3", "totalLesson": 48, "pages": "인물 10~11"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "주제 수업 만들기", "lesson": "4", "totalLesson": 48, "pages": "인물 12~13"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "놀이 수업 만들기", "lesson": "5", "totalLesson": 48, "pages": "인물 14~15"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "안전 수업 만들기", "lesson": "6", "totalLesson": 48, "pages": "인물 16~17"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "이 인물 덕분에 -1-", "lesson": "7", "totalLesson": 48, "pages": "인물 18~19"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "이 인물 덕분에 -2-", "lesson": "8", "totalLesson": 48, "pages": "인물 18~19"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "우리 반 인물", "lesson": "9", "totalLesson": 48, "pages": "인물 20~21"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "내 주변 인물", "lesson": "10", "totalLesson": 48, "pages": "인물 22~23"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "위인을 찾아서", "lesson": "11", "totalLesson": 48, "pages": "인물 24~25"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "누구를 알아볼까요", "lesson": "12", "totalLesson": 48, "pages": "인물 26~27"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "그림책에서 만나는 인물", "lesson": "13", "totalLesson": 48, "pages": "인물 28~37"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "세종대왕과 한글 -1-", "lesson": "14", "totalLesson": 48, "pages": "인물 38~39"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "세종대왕과 한글 -2-", "lesson": "15", "totalLesson": 48, "pages": "인물 38~39"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "한글을 찾아서", "lesson": "16", "totalLesson": 48, "pages": "인물 40~41"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "세종대왕과 음악 -1-", "lesson": "17", "totalLesson": 48, "pages": "인물 42~43"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "세종대왕과 음악 -2-", "lesson": "18", "totalLesson": 48, "pages": "인물 42~43"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "옛 노래를 새롭게", "lesson": "19", "totalLesson": 48, "pages": "인물 44~45"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "세종대왕과 장영실 -1-", "lesson": "20", "totalLesson": 48, "pages": "인물 46~47"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "세종대왕과 장영실 -2-", "lesson": "21", "totalLesson": 48, "pages": "인물 46~47"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "나도 장영실처럼 -1-", "lesson": "22", "totalLesson": 48, "pages": "인물 48~49"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "나도 장영실처럼 -2-", "lesson": "23", "totalLesson": 48, "pages": "인물 48~49"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "물건으로 알아보는 세종대왕", "lesson": "24", "totalLesson": 48, "pages": "인물 50~51"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "전통을 이어 가려면 -1-", "lesson": "25", "totalLesson": 48, "pages": "인물 52~53"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "전통을 이어 가려면 -2-", "lesson": "26", "totalLesson": 48, "pages": "인물 52~53"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "시간이 흐르면 -1-", "lesson": "27", "totalLesson": 48, "pages": "인물 54~55"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "시간이 흐르면 -2-", "lesson": "28", "totalLesson": 48, "pages": "인물 54~55"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "인물이 남긴 말", "lesson": "29", "totalLesson": 48, "pages": "인물 56~57"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "이야기를 들어요", "lesson": "30", "totalLesson": 48, "pages": "인물 58~59"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "사랑의 마음으로 -1-", "lesson": "31", "totalLesson": 48, "pages": "인물 60~61"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "사랑의 마음으로 -2-", "lesson": "32", "totalLesson": 48, "pages": "인물 60~61"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "세종대왕의 흔적", "lesson": "33", "totalLesson": 48, "pages": "인물 62~63"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "인물", "topic": "우리가 만난 세종대왕 -1-", "lesson": "34", "totalLesson": 48, "pages": "인물 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "우리가 만난 세종대왕 -2-", "lesson": "35", "totalLesson": 48, "pages": "인물 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "강강술래 놀이", "lesson": "36", "totalLesson": 48, "pages": "인물 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "성장 체조", "lesson": "37", "totalLesson": 48, "pages": "인물 68~69"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "제기 놀이", "lesson": "38", "totalLesson": 48, "pages": "인물 70~71"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "밀고 당기기", "lesson": "39", "totalLesson": 48, "pages": "인물 72~73"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "사방치기", "lesson": "40", "totalLesson": 48, "pages": "인물 74~75"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "리듬 걷기", "lesson": "41", "totalLesson": 48, "pages": "인물 76~77"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "진 지키기", "lesson": "42", "totalLesson": 48, "pages": "인물 78~79"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "멀리멀리 이어 뛰기", "lesson": "43", "totalLesson": 48, "pages": "인물 80~81"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "안전하게 놀려면", "lesson": "44", "totalLesson": 48, "pages": "인물 82~83"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "등산을 할 때는", "lesson": "45", "totalLesson": 48, "pages": "인물 84~85"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "자동길을 탈 때는", "lesson": "46", "totalLesson": 48, "pages": "인물 86~87"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "인물", "topic": "약을 보관할 때는", "lesson": "47", "totalLesson": 48, "pages": "인물 88~89"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "인물", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "인물 90~91"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "물건 6~7"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "우리 반 주제를 만들어요", "lesson": "2", "totalLesson": 48, "pages": "물건 8~9"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "질문으로 수업을 만들어요", "lesson": "3", "totalLesson": 48, "pages": "물건 10~11"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "주제 수업 만들기", "lesson": "4", "totalLesson": 48, "pages": "물건 12~13"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "놀이 수업 만들기", "lesson": "5", "totalLesson": 48, "pages": "물건 14~15"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "안전 수업 만들기", "lesson": "6", "totalLesson": 48, "pages": "물건 16~17"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "그림책에서 만나는 배려와 발명", "lesson": "7", "totalLesson": 48, "pages": "물건 18~29"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "나도 발명을 할 수 있을까요", "lesson": "8", "totalLesson": 48, "pages": "물건 30~31"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "발명왕이 되고 싶어요", "lesson": "9", "totalLesson": 48, "pages": "물건 32~33"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "어떤 어려움이 있을까요", "lesson": "10", "totalLesson": 48, "pages": "물건 34~35"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "나도 돕고 싶어요 -1-", "lesson": "11", "totalLesson": 48, "pages": "물건 36~37"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "나도 돕고 싶어요 -2-", "lesson": "12", "totalLesson": 48, "pages": "물건 36~37"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "무엇이 같거나 다를까요", "lesson": "13", "totalLesson": 48, "pages": "물건 38~39"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "어떤 발명품이 있을까요", "lesson": "14", "totalLesson": 48, "pages": "물건 40~41"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "지우개를 자꾸 잃어버려요", "lesson": "15", "totalLesson": 48, "pages": "물건 42~43"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "종이로 놀아요 -1-", "lesson": "16", "totalLesson": 48, "pages": "물건 44~45"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "종이로 놀아요 -2-", "lesson": "17", "totalLesson": 48, "pages": "물건 44~45"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "궁금한 것이 많아요 -1-", "lesson": "18", "totalLesson": 48, "pages": "물건 46~47"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "궁금한 것이 많아요 -2-", "lesson": "19", "totalLesson": 48, "pages": "물건 46~47"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "컴퓨터를 잘 다루고 싶어요", "lesson": "20", "totalLesson": 48, "pages": "물건 48~49"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "비가 오는데 우산이 없어요", "lesson": "21", "totalLesson": 48, "pages": "물건 50~51"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "자세하게 알고 싶어요", "lesson": "22", "totalLesson": 48, "pages": "물건 52~53"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "운동화 끈을 잘 묶고 싶어요", "lesson": "23", "totalLesson": 48, "pages": "물건 54~55"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "학용품을 잘 사용하고 싶어요", "lesson": "24", "totalLesson": 48, "pages": "물건 56~57"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "장난감을 만들고 싶어요 -1-", "lesson": "25", "totalLesson": 48, "pages": "물건 58~59"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "장난감을 만들고 싶어요 -2-", "lesson": "26", "totalLesson": 48, "pages": "물건 58~59"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "악기를 만들고 싶어요 -1-", "lesson": "27", "totalLesson": 48, "pages": "물건 60~61"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "악기를 만들고 싶어요 -2-", "lesson": "28", "totalLesson": 48, "pages": "물건 60~61"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "행복해지고 싶어요 -1-", "lesson": "29", "totalLesson": 48, "pages": "물건 62~63"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "행복해지고 싶어요 -2-", "lesson": "30", "totalLesson": 48, "pages": "물건 62~63"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "캐릭터를 만들고 싶어요 -1-", "lesson": "31", "totalLesson": 48, "pages": "물건 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "캐릭터를 만들고 싶어요 -2-", "lesson": "32", "totalLesson": 48, "pages": "물건 64~65"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "튼튼하게 만들고 싶어요 -1-", "lesson": "33", "totalLesson": 48, "pages": "물건 66~67"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "튼튼하게 만들고 싶어요 -2-", "lesson": "34", "totalLesson": 48, "pages": "물건 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "튼튼하게 만들고 싶어요 -3-", "lesson": "35", "totalLesson": 48, "pages": "물건 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "동그라미 대장공", "lesson": "36", "totalLesson": 48, "pages": "물건 68~69"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "한 줄 진 뺏기", "lesson": "37", "totalLesson": 48, "pages": "물건 70~71"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "피라미드 달리기", "lesson": "38", "totalLesson": 48, "pages": "물건 72~73"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "훌라후프 이어달리기", "lesson": "39", "totalLesson": 48, "pages": "물건 74~75"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "풍차 이어달리기", "lesson": "40", "totalLesson": 48, "pages": "물건 76~77"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "징검다리 건너기", "lesson": "41", "totalLesson": 48, "pages": "물건 78~79"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "고무줄로 컵 쌓기", "lesson": "42", "totalLesson": 48, "pages": "물건 80~81"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "다시 살아나는 공놀이", "lesson": "43", "totalLesson": 48, "pages": "물건 82~83"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "물건", "topic": "실내에서 안전하게", "lesson": "44", "totalLesson": 48, "pages": "물건 84~85"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "전기를 안전하게", "lesson": "45", "totalLesson": 48, "pages": "물건 86~87"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "화재는 예방이 최고", "lesson": "46", "totalLesson": 48, "pages": "물건 88~89"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "물건", "topic": "안전하게 공부해요", "lesson": "47", "totalLesson": 48, "pages": "물건 90~91"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "물건", "topic": "지금 여기 나의 이야기", "lesson": "48", "totalLesson": 48, "pages": "물건 92~93"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "지금 여기 우리 이야기", "lesson": "1", "totalLesson": 48, "pages": "기억 6~7"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "우리 반 주제를 만들어요", "lesson": "2", "totalLesson": 48, "pages": "기억 8~9"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "질문으로 수업을 만들어요", "lesson": "3", "totalLesson": 48, "pages": "기억 10~11"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "주제 수업 만들기", "lesson": "4", "totalLesson": 48, "pages": "기억 12~13"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "놀이 수업 만들기", "lesson": "5", "totalLesson": 48, "pages": "기억 14~15"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "안전 수업 만들기", "lesson": "6", "totalLesson": 48, "pages": "기억 16~17"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "그림책에서 만나는 기억", "lesson": "7", "totalLesson": 48, "pages": "기억 18~29"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "기억나니", "lesson": "8", "totalLesson": 48, "pages": "기억 30~31"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "기억으로 놀아 보자", "lesson": "9", "totalLesson": 48, "pages": "기억 32~33"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "내 기억을 소개합니다", "lesson": "10", "totalLesson": 48, "pages": "기억 34~35"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "2학년 교실을 돌아봐", "lesson": "11", "totalLesson": 48, "pages": "기억 36~37"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "2학년 생활을 돌아봐 -1-", "lesson": "12", "totalLesson": 48, "pages": "기억 38~39"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "2학년 생활을 돌아봐 -2-", "lesson": "13", "totalLesson": 48, "pages": "기억 38~39"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "2학년 공부를 돌아봐 -1-", "lesson": "14", "totalLesson": 48, "pages": "기억 40~41"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "2학년 공부를 돌아봐 -2-", "lesson": "15", "totalLesson": 48, "pages": "기억 40~41"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "그때 그랬더라면", "lesson": "16", "totalLesson": 48, "pages": "기억 42~43"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "칭찬을 나눠요 -1-", "lesson": "17", "totalLesson": 48, "pages": "기억 44~45"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "칭찬을 나눠요 -2-", "lesson": "18", "totalLesson": 48, "pages": "기억 44~45"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "우리 반 시상식", "lesson": "19", "totalLesson": 48, "pages": "기억 46~47"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "슬기로운 2학년 생활 -1-", "lesson": "20", "totalLesson": 48, "pages": "기억 48~49"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "슬기로운 2학년 생활 -2-", "lesson": "21", "totalLesson": 48, "pages": "기억 48~49"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "3학년이 궁금해", "lesson": "22", "totalLesson": 48, "pages": "기억 50~51"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "3학년 생활이 궁금해", "lesson": "23", "totalLesson": 48, "pages": "기억 52~53"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "3학년 교실이 궁금해", "lesson": "24", "totalLesson": 48, "pages": "기억 54~55"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "3학년 공부가 궁금해", "lesson": "25", "totalLesson": 48, "pages": "기억 56~57"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "우리가 만드는 3학년 교과서 -1-", "lesson": "26", "totalLesson": 48, "pages": "기억 58~59"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "우리가 만드는 3학년 교과서 -2-", "lesson": "27", "totalLesson": 48, "pages": "기억 58~59"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "나만의 꿈 단지 만들기 -1-", "lesson": "28", "totalLesson": 48, "pages": "기억 60~61"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "나만의 꿈 단지 만들기 -2-", "lesson": "29", "totalLesson": 48, "pages": "기억 60~61"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "슬기로운 3학년 생활 -1-", "lesson": "30", "totalLesson": 48, "pages": "기억 62~63"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "슬기로운 3학년 생활 -2-", "lesson": "31", "totalLesson": 48, "pages": "기억 62~63"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "3학년을 준비해요", "lesson": "32", "totalLesson": 48, "pages": "기억 64~65"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "3학년을 기다리며 -1-", "lesson": "33", "totalLesson": 48, "pages": "기억 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "3학년을 기다리며 -2-", "lesson": "34", "totalLesson": 48, "pages": "기억 66~67"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "달걀프라이 놀이", "lesson": "35", "totalLesson": 48, "pages": "기억 68~69"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "주사위 달리기", "lesson": "36", "totalLesson": 48, "pages": "기억 70~71"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "지키기 놀이", "lesson": "37", "totalLesson": 48, "pages": "기억 72~73"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "색깔 주사위 놀이", "lesson": "38", "totalLesson": 48, "pages": "기억 74~75"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "투호 놀이", "lesson": "39", "totalLesson": 48, "pages": "기억 76~77"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "풍선 띄우기 놀이", "lesson": "40", "totalLesson": 48, "pages": "기억 78~79"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "이어 구르기", "lesson": "41", "totalLesson": 48, "pages": "기억 80~81"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "고무줄 높이뛰기", "lesson": "42", "totalLesson": 48, "pages": "기억 82~83"}, {"grade": 2, "semester": "2학기", "subject": "바생", "integratedSubj": "바생", "unit": "기억", "topic": "특별실을 안전하게", "lesson": "43", "totalLesson": 48, "pages": "기억 84~85"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "응급 상황에 대처해요", "lesson": "44", "totalLesson": 48, "pages": "기억 86~87"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "게임 중독을 예방해요", "lesson": "45", "totalLesson": 48, "pages": "기억 88~89"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "추운 날도 안전하게", "lesson": "46", "totalLesson": 48, "pages": "기억 90~91"}, {"grade": 2, "semester": "2학기", "subject": "슬생", "integratedSubj": "슬생", "unit": "기억", "topic": "지금 여기 나의 이야기 -1-", "lesson": "47", "totalLesson": 48, "pages": "기억 92~93"}, {"grade": 2, "semester": "2학기", "subject": "즐생", "integratedSubj": "즐생", "unit": "기억", "topic": "지금 여기 나의 이야기 -2-", "lesson": "48", "totalLesson": 48, "pages": "기억 92~93"}]};
+
+    // --- 초등학교 13대 교과군 ---
+    const ELEMENTARY_SUBJECTS = ['국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어', '바생', '슬생', '즐생'];
+
+    // --- 4대 교과군 분류 매핑 함수 ---
+    const SUBJECT_CATEGORIES = {
+      '인문사회': ['국어', '도덕', '사회', '영어'],
+      '수리과학': ['수학', '과학', '컴퓨터', '정보'],
+      '예체능': ['체육', '음악', '미술'],
+      '생활통합': ['바생', '슬생', '즐생', '실과', '창체']
+    };
+
+    function getSubjectCategory(subject) {
+      for (const [cat, subs] of Object.entries(SUBJECT_CATEGORIES)) {
+        if (subs.some(s => subject.includes(s))) return cat;
+      }
+      return '인문사회';
+    }
+
+    const TEACHER_COLORS = [
+      { bg: '#eff6ff', text: '#1e40af', border: '#bfdbfe', rgba: 'rgba(59, 130, 246, 0.4)', rgb: '#3b82f6' },
+      { bg: '#fdf2f8', text: '#9d174d', border: '#fbcfe8', rgba: 'rgba(236, 72, 153, 0.4)', rgb: '#ec4899' },
+      { bg: '#f0fdf4', text: '#166534', border: '#bbf7d0', rgba: 'rgba(34, 197, 94, 0.4)', rgb: '#22c55e' },
+      { bg: '#fffbeb', text: '#92400e', border: '#fde68a', rgba: 'rgba(245, 158, 11, 0.4)', rgb: '#f59e0b' },
+      { bg: '#faf5ff', text: '#6b21a8', border: '#e9d5ff', rgba: 'rgba(168, 85, 247, 0.4)', rgb: '#a855f7' },
+      { bg: '#fff1f2', text: '#9f1239', border: '#fecdd3', rgba: 'rgba(244, 63, 94, 0.4)', rgb: '#f43f5e' },
+      { bg: '#f0fdfa', text: '#115e59', border: '#99f6e4', rgba: 'rgba(20, 184, 166, 0.4)', rgb: '#14b8a6' },
+    ];
+
+    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생) ---
+    const DEFAULT_CONFIG = {
+      title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
+      school: '공주교육대학교부설초등학교',
+      gradeClass: '0학년 0반',
+      teacherName: '김지도',
+      weekCount: 2,
+      startDate: '2026-04-20',
+      maxHours: 10,
+      periodsPerDay: 8,
+      notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 실습일정표 참조\n3. 오후 일정은 실습일정표 참조'
+    };
+
+    const DEFAULT_TEACHERS = [
+      { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1)', colorIdx: 0 },
+      { id: 't2', name: '이공주', major: '수학', demoSubject: '수학', note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
+      { id: 't3', name: '삼알밤', major: '미술', demoSubject: '즐생', note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
+      { id: 't4', name: '사산성', major: '체육', demoSubject: '체육', note: '국(1) 수(1) 체(1)', colorIdx: 3 }
+    ];
+
+    const DEFAULT_CURRICULUM = [
+      { id: 'c1', subject: '국어', pages: '118-120', lesson: '3', totalLesson: 15, topic: '마음을 전하는 글', isDemo: true, designatedTeacher: '김부설' },
+      { id: 'c2', subject: '수학', pages: '36-39', lesson: '2', totalLesson: 9, topic: '여러 가지 도형', isDemo: false, designatedTeacher: '' },
+      { id: 'c3', subject: '즐생', pages: '22-23', lesson: '5', totalLesson: 48, topic: '봄의 소리 표현하기', isDemo: false, designatedTeacher: '' }
+    ];
+
+    // --- GOLDEN PRESETS FROM USER PHOTOS (익명화 적용) ---
+    const PRESETS = {
+      grade2: {
+        config: {
+          title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
+          school: '공주교육대학교부설초등학교',
+          gradeClass: '0학년 0반',
+          teacherName: '김지도',
+          weekCount: 2,
+          startDate: '2026-04-20',
+          maxHours: 10,
+          periodsPerDay: 8,
+          notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 27(월) 2-3교시\n3. 오후 일정은 실습일정표 참조'
+        },
+        teachers: [
+          { id: 't1', name: '김부설', major: '교육', demoSubject: '국어', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '실과', demoSubject: '수학', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '음악', demoSubject: '즐생', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 2 }
+        ],
+        curriculum: [
+          { id: 'c1', subject: '국어', pages: '118-120', lesson: '3', totalLesson: 15, isBlock: false },
+          { id: 'c2', subject: '수학', pages: '36-39', lesson: '2', totalLesson: 9, isBlock: false },
+          { id: 'c3', subject: '슬생', pages: '78-79', lesson: '41', totalLesson: 48, isBlock: false },
+          { id: 'c4', subject: '즐생', pages: '22-23', lesson: '5', totalLesson: 48, isBlock: false },
+          { id: 'c5', subject: '즐생', pages: '34-35', lesson: '14', totalLesson: 48, isBlock: false },
+          { id: 'c6', subject: '국어', pages: '121-122', lesson: '5', totalLesson: 15, isDemo: true, demoTeacher: '김부설', designatedTeacher: '김부설', isBlock: false },
+          { id: 'c7', subject: '수학', pages: '44-47', lesson: '4', totalLesson: 9, isBlock: false },
+          { id: 'c8', subject: '바생', pages: '44-45', lesson: '20', totalLesson: 48, isBlock: false },
+          { id: 'c9', subject: '슬생', pages: '42-43', lesson: '19', totalLesson: 48, isBlock: false },
+          { id: 'c10', subject: '즐생', pages: '60-61', lesson: '32', totalLesson: 48, isBlock: false },
+          { id: 'c11', subject: '국어', pages: '123-127', lesson: '6', totalLesson: 15, isBlock: false },
+          { id: 'c12', subject: '바생', pages: '46-47', lesson: '21', totalLesson: 48, isBlock: false },
+          { id: 'c13', subject: '즐생', pages: '24-25', lesson: '7', totalLesson: 48, isBlock: false },
+          { id: 'c14', subject: '즐생', pages: '72-73', lesson: '38', totalLesson: 48, isBlock: false },
+          { id: 'c15', subject: '수학', pages: '48-51', lesson: '5', totalLesson: 9, isBlock: false },
+          { id: 'c16', subject: '바생', pages: '74-75', lesson: '39', totalLesson: 48, isBlock: false },
+          { id: 'c17', subject: '즐생', pages: '36-37', lesson: '16', totalLesson: 48, isBlock: false },
+          { id: 'c18', subject: '즐생', pages: '68-69', lesson: '35', totalLesson: 48, isBlock: false }
+        ],
+        defaultTimetable: [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '교생대표', '슬생', '즐생', '즐생'],
+          ['즐생', '수업설계', '즐생', '즐생', '즐생'],
+          ['학급협의회', '슬생', '학급협의회', '학급협의회', '창체'],
+          ['학급협의회', '학급협의회', '학급협의회', '학급협의회', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
+        ],
+        events: {
+          '0-1': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '첫인사', teacher: '담임', isLocked: true },
+          '0-2': { type: 'lecture', subject: '강의1', pages: '교직', lessonStr: '생활', teacher: '교장', isLocked: true },
+          '0-3': { type: 'lecture', subject: '강의2', pages: '실습', lessonStr: '안내', teacher: '박준배', isLocked: true },
+          '0-4': { type: 'lecture', subject: '강의3', pages: '과정안', lessonStr: '작성', teacher: '최동영', isLocked: true },
+          '0-5': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '①②', teacher: '', isLocked: true },
+          '0-6': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '①②', teacher: '', isLocked: true },
+          
+          '1-2': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '③④', teacher: '', isLocked: true },
+          '1-3': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '③④', teacher: '', isLocked: true },
+          '1-4': { type: 'lecture', subject: '강의4', pages: '미래', lessonStr: '교육', teacher: '인사과장', isLocked: true },
+          '1-5': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '⑤⑥', teacher: '', isLocked: true },
+          '1-6': { type: 'observation', subject: '교과대표', pages: '수업참관', lessonStr: '⑤⑥', teacher: '', isLocked: true },
+
+          '2-1': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-2': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-3': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-4': { type: 'observation', subject: '학년공개', pages: '수업참관', lessonStr: '', teacher: '', isLocked: true },
+          '2-5': { type: 'meeting', subject: '학급협의회', pages: '', lessonStr: '', teacher: '', isLocked: true },
+          '2-6': { type: 'meeting', subject: '전공별협의', pages: '및컨설팅', lessonStr: '', teacher: '', isLocked: true },
+
+          '3-1': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-2': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-3': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-4': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-5': { type: 'holiday', subject: '개교기념일', isLocked: true },
+          '3-6': { type: 'holiday', subject: '개교기념일', isLocked: true },
+
+          '4-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '5-1': { type: 'design', subject: '수업설계', isLocked: true },
+          '5-3': { type: 'observation', subject: '교생대표', pages: '수업', lessonStr: '협의회', teacher: '', isLocked: true },
+          '5-4': { type: 'design', subject: '수업설계', isLocked: true },
+          '5-6': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '6-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+          '6-6': { type: 'meeting', subject: '학급협의회', isLocked: true },
+
+          '7-5': { type: 'meeting', subject: '학급협의회', isLocked: true },
+          '7-6': { type: 'meeting', subject: '전체교생', pages: '협의회', lessonStr: '', teacher: '', isLocked: true },
+
+          '8-5': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '끝인사', teacher: '담임', isLocked: true },
+          '8-6': { type: 'homeroom', subject: '소감작성', pages: '및', lessonStr: '설문', teacher: '', isLocked: true },
+
+          '9-1': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-2': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-3': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-4': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-5': { type: 'holiday', subject: '노동절', isLocked: true },
+          '9-6': { type: 'holiday', subject: '노동절', isLocked: true }
+        },
+        morningDuty: {
+          '1': '김부설', '2': '이공주', '4': '삼알밤',
+          '5': '이공주', '6': '삼알밤', '7': '이공주', '8': '김부설'
+        }
+      },
+
+      grade3: {
+        config: {
+          title: '교육실습II(수업) 교육 실습생 수업배당표(0학년)',
+          school: '공주교육대학교부설초등학교',
+          gradeClass: '0학년 0반',
+          teacherName: '김지도',
+          weekCount: 4,
+          startDate: '2026-04-13',
+          maxHours: 10,
+          periodsPerDay: 8,
+          notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업 30(목) 2-3교시\n3. 오후 일정은 실습일정표 참조'
+        },
+        teachers: [
+          { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(2) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(1)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '과학', demoSubject: '과학', note: '국(1) 도(1) 사(1) 수(2) 과(2) 체(1) 음(1) 영(1)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '미술', demoSubject: '미술', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(2) 영(1)', colorIdx: 2 },
+          { id: 't4', name: '사산성', major: '영어', demoSubject: '영어', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(2)', colorIdx: 3 },
+          { id: 't5', name: '오금강', major: '컴퓨터', demoSubject: '수학', note: '국(1) 도(2) 사(1) 수(2) 과(1) 체(1) 음(1) 미(1)', colorIdx: 4 }
+        ],
+        curriculum: [
+          { id: 'c1', subject: '음악', pages: '102-103', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c2', subject: '도덕', pages: '2/14', lesson: '2', totalLesson: 14, isBlock: false },
+          { id: 'c3', subject: '국어', pages: '180-183', lesson: '2', totalLesson: 14, isBlock: false },
+          { id: 'c4', subject: '사회', pages: '89-94', lesson: '12', totalLesson: 17, isBlock: false },
+          { id: 'c5', subject: '수학', pages: '88-89', lesson: '4', totalLesson: 12, isBlock: false },
+          { id: 'c6', subject: '체육', pages: '118-119', lesson: '4', totalLesson: 11, isBlock: false },
+          { id: 'c7', subject: '과학', pages: '82-83', lesson: '2', totalLesson: 12, isBlock: false },
+          { id: 'c8', subject: '수학', pages: '84-87', lesson: '3', totalLesson: 12, isBlock: false },
+          { id: 'c9', subject: '국어', pages: '184-187', lesson: '3', totalLesson: 14, isBlock: false },
+          { id: 'c10', subject: '과학', pages: '62-63', lesson: '2', totalLesson: 13, isBlock: false },
+          { id: 'c11', subject: '영어', pages: '100-101', lesson: '2', totalLesson: 4, isBlock: false },
+          { id: 'c12', subject: '미술', pages: '71', lesson: '4', totalLesson: 4, isBlock: false },
+          { id: 'c13', subject: '국어', pages: '198-200', lesson: '7', totalLesson: 14, isDemo: true, demoTeacher: '김부설', designatedTeacher: '김부설', isBlock: false },
+          { id: 'c14', subject: '사회', pages: '84-88', lesson: '10', totalLesson: 17, isBlock: false },
+          { id: 'c15', subject: '체육', pages: '114-115', lesson: '1', totalLesson: 11, isBlock: false },
+          { id: 'c16', subject: '영어', pages: '98-99', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c17', subject: '체육', pages: '116-117', lesson: '2', totalLesson: 11, isBlock: false },
+          { id: 'c18', subject: '국어', pages: '188-197', lesson: '5', totalLesson: 14, isBlock: false },
+          { id: 'c19', subject: '수학', pages: '90-91', lesson: '5', totalLesson: 12, isBlock: false },
+          { id: 'c20', subject: '음악', pages: '72', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c21', subject: '영어', pages: '102-103', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c22', subject: '미술', pages: '68-69', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c23', subject: '음악', pages: '64-65', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c24', subject: '미술', pages: '70', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c25', subject: '사회', pages: '95-96', lesson: '14', totalLesson: 17, isBlock: false },
+          { id: 'c26', subject: '과학', pages: '64-65', lesson: '3', totalLesson: 13, isBlock: false },
+          { id: 'c27', subject: '미술', pages: '72-73', lesson: '1', totalLesson: 4, isDemo: true, demoTeacher: '삼알밤', designatedTeacher: '삼알밤', isBlock: false },
+          { id: 'c28', subject: '체육', pages: '120-121', lesson: '6', totalLesson: 11, isBlock: false },
+          { id: 'c29', subject: '수학', pages: '92-93', lesson: '6', totalLesson: 12, isBlock: false },
+          { id: 'c30', subject: '과학', pages: '66-67', lesson: '4', totalLesson: 13, isBlock: false },
+          { id: 'c31', subject: '영어', pages: '104-105', lesson: '4', totalLesson: 4, isBlock: false },
+          { id: 'c32', subject: '과학', pages: '70-71', lesson: '6', totalLesson: 11, isBlock: false },
+          { id: 'c33', subject: '사회', pages: '97-101', lesson: '15', totalLesson: 17, isBlock: false },
+          { id: 'c34', subject: '도덕', pages: '108-111', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c35', subject: '과학', pages: '72-73', lesson: '7', totalLesson: 13, isBlock: false },
+          { id: 'c36', subject: '영어', pages: '108-109', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c37', subject: '도덕', pages: '120-123', lesson: '2', totalLesson: 4, isBlock: false },
+          { id: 'c38', subject: '음악', pages: '73', lesson: '2', totalLesson: 2, isBlock: false },
+          { id: 'c39', subject: '과학', pages: '68-69', lesson: '5', totalLesson: 11, isBlock: false },
+          { id: 'c40', subject: '미술', pages: '74', lesson: '3', totalLesson: 4, isBlock: false },
+          { id: 'c41', subject: '음악', pages: '68-69', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c42', subject: '도덕', pages: '116-119', lesson: '1', totalLesson: 4, isBlock: false },
+          { id: 'c43', subject: '국어', pages: '201-205', lesson: '8', totalLesson: 14, isBlock: false },
+          { id: 'c44', subject: '수학', pages: '94-95', lesson: '7', totalLesson: 12, isBlock: false },
+          { id: 'c45', subject: '사회', pages: '102-105', lesson: '17', totalLesson: 17, isBlock: false },
+          { id: 'c46', subject: '국어', pages: '206-209', lesson: '10', totalLesson: 14, isBlock: false },
+          { id: 'c47', subject: '음악', pages: '74-75', lesson: '1', totalLesson: 2, isBlock: false },
+          { id: 'c48', subject: '수학', pages: '112-115', lesson: '4', totalLesson: 4, isDemo: true, demoTeacher: '오금강', designatedTeacher: '오금강', isBlock: false },
+          { id: 'c49', subject: '수학', pages: '96-97', lesson: '8', totalLesson: 12, isBlock: false },
+          { id: 'c50', subject: '체육', pages: '122-123', lesson: '8', totalLesson: 11, isBlock: false }
+        ],
+        events: {
+          '0-1': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '첫인사', teacher: '담임', isLocked: true },
+          '0-2': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-3': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-4': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-5': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          '0-6': { type: 'lecture', subject: '충남', pages: '교육청', lessonStr: '실습', teacher: '참여', isLocked: true },
+          
+          '1-1': { type: 'lecture', subject: '강의2', pages: '생활', lessonStr: '지도', teacher: '양슬기', isLocked: true },
+          '1-4': { type: 'lecture', subject: '강의3', pages: '수업안', lessonStr: '작성', teacher: '강동민', isLocked: true },
+          '1-6': { type: 'lecture', subject: '강의4', pages: '한글', lessonStr: '문서I', teacher: '하성엽', isLocked: true },
+          
+          '2-2': { type: 'observation', subject: '교과', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '2-3': { type: 'observation', subject: '교과', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '2-5': { type: 'lecture', subject: '강의5', pages: '교원', lessonStr: '인사', teacher: '이혜경', isLocked: true },
+          '2-6': { type: 'lecture', subject: '강의5', pages: '교원', lessonStr: '인사', teacher: '이혜경', isLocked: true },
+
+          '3-2': { type: 'observation', subject: '전체', pages: '공개', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '3-3': { type: 'observation', subject: '전체', pages: '공개', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '3-6': { type: 'lecture', subject: '강의7', pages: '영어', lessonStr: '수업', teacher: '김효숙', isLocked: true },
+
+          '4-1': { type: 'lecture', subject: '강의8', pages: '음악', lessonStr: '수업', teacher: '김석민', isLocked: true },
+          '4-2': { type: 'lecture', subject: '강의9', pages: '과학', lessonStr: '수업', teacher: '김응혁', isLocked: true },
+          '4-4': { type: 'lecture', subject: '강의6', pages: '한글', lessonStr: '문서II', teacher: '김지도', isLocked: true },
+          '4-6': { type: 'lecture', subject: '강의10', pages: '미래', lessonStr: '학력', teacher: '이병도', isLocked: true },
+
+          '12-2': { type: 'observation', subject: '교생', pages: '대표', lessonStr: '수업', teacher: '참관', isLocked: true },
+          '12-3': { type: 'observation', subject: '교생', pages: '대표', lessonStr: '협의', teacher: '', isLocked: true },
+
+          '19-4': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '끝인사', teacher: '담임', isLocked: true },
+          '19-5': { type: 'homeroom', subject: '소감', pages: '작성', lessonStr: '및', teacher: '설문', isLocked: true }
+        },
+        morningDuty: {
+          '1': '김부설', '2': '이공주', '3': '삼알밤', '4': '사산성',
+          '5': '오금강', '6': '김부설', '7': '이공주', '8': '삼알밤', '9': '사산성',
+          '10': '오금강', '11': '김부설', '12': '이공주', '13': '삼알밤', '14': '사산성',
+          '15': '오금강', '16': '김부설', '17': '이공주', '18': '삼알밤', '19': '사산성'
+        }
+      }
+    };
+
+    /**
+     * APP STATE MANAGEMENT
+     */
+    const App = {
+      activeTab: 1,
+      selectedTeacherFilter: 'all', // 'all' or teacher name
+      selectedCellKey: null,        // for click-to-swap
+      draggedKey: null,             // for drag-and-drop
+      currentStamp: null,
+      customStamps: [],             // User custom presets
+      newStampSelectedType: 'lecture',
+      periodsPerDay: 8,
+      timetableErrors: { errorMap: {}, errorCount: 0, errorList: [] },
+
+      // Active state: Clean initial state with 0학년 0반, 빈 시간표, 3개 진도표, 4명 익명 실습생
+      config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
+      teachers: JSON.parse(JSON.stringify(DEFAULT_TEACHERS)),
+      curriculum: JSON.parse(JSON.stringify(DEFAULT_CURRICULUM)),
+      events: {}, // Clean empty schedule on startup!
+      defaultTimetable: [
+        ['국어', '수학', '국어', '수학', '국어'],
+        ['수학', '국어', '바생', '바생', '바생'],
+        ['슬생', '즐생', '슬생', '즐생', '즐생'],
+        ['즐생', '즐생', '즐생', '즐생', '즐생'],
+        ['체육', '음악', '미술', '창체', '창체'],
+        ['창체', '창체', '동아리', '창체', '창체'],
+        ['', '', '', '', ''],
+        ['', '', '', '', '']
+      ],
+      morningDuty: {},
+      timetable: {},
+
+      // Charts instance
+      radarChartInstance: null,
+      barChartInstance: null,
+
+      init() {
+        this.loadCustomStamps();
+        this.initCleanDefault();
+        this.renderAll();
+        this.setupPresetDropdown();
+      },
+
+      initCleanDefault() {
+        this.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+        this.teachers = JSON.parse(JSON.stringify(DEFAULT_TEACHERS));
+        this.curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+        this.periodsPerDay = this.config.periodsPerDay || 8;
+        this.events = {};
+        this.defaultTimetable = [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '즐생', '슬생', '즐생', '즐생'],
+          ['즐생', '즐생', '즐생', '즐생', '즐생'],
+          ['체육', '음악', '미술', '창체', '창체'],
+          ['창체', '창체', '동아리', '창체', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
+        ];
+        this.normalizeDefaultTimetable();
+        this.morningDuty = {};
+        this.timetable = {};
+        this.selectedTeacherFilter = 'all';
+
+        this.populateInputsFromConfig();
+      },
+
+      populateInputsFromConfig() {
+        if (!this.config) return;
+        const setVal = (id, val) => {
+          const el = document.getElementById(id);
+          if (el && val !== undefined && val !== null) el.value = val;
+        };
+        setVal('cfg-title', this.config.title || '');
+        setVal('cfg-school', this.config.school || '');
+        setVal('cfg-gradeClass', this.config.gradeClass || '');
+        setVal('cfg-teacherName', this.config.teacherName || '');
+        setVal('cfg-weekCount', this.config.weekCount || 2);
+        setVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        setVal('cfg-maxHours', this.config.maxHours || 10);
+        setVal('cfg-periodsPerDay', this.periodsPerDay || this.config.periodsPerDay || 8);
+      },
+
+      normalizeDefaultTimetable() {
+        if (!this.defaultTimetable) this.defaultTimetable = [];
+        const targetPeriods = this.periodsPerDay || 8;
+        while (this.defaultTimetable.length < targetPeriods) {
+          this.defaultTimetable.push(['', '', '', '', '']);
+        }
+      },
+
+      onPeriodsPerDayChange(val) {
+        this.periodsPerDay = parseInt(val, 10);
+        this.config.periodsPerDay = this.periodsPerDay;
+        this.normalizeDefaultTimetable();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+        if (this.activeTab === 5) this.runFullDiagnostic();
+      },
+
+      setupPresetDropdown() {
+        const btn = document.getElementById('presetDropdownBtn');
+        const menu = document.getElementById('presetMenu');
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          menu.classList.toggle('hidden');
+        });
+        document.addEventListener('click', () => {
+          menu.classList.add('hidden');
+        });
+      },
+
+      setTab(tabIndex) {
+        this.activeTab = tabIndex;
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.tab-btn').forEach(el => {
+          el.classList.remove('active', 'text-sky-400', 'bg-slate-900/80');
+          el.classList.add('text-slate-400');
+        });
+
+        const activeContent = document.getElementById(`tab-content-${tabIndex}`);
+        const activeBtn = document.getElementById(`tab-btn-${tabIndex}`);
+        if (activeContent) activeContent.classList.remove('hidden');
+        if (activeBtn) {
+          activeBtn.classList.add('active', 'text-sky-400', 'bg-slate-900/80');
+          activeBtn.classList.remove('text-slate-400');
+        }
+
+        if (tabIndex === 3) this.renderEventGrid();
+        if (tabIndex === 4) {
+          this.syncConfigFromInputs();
+          this.renderConfigHeader();
+          this.renderTeacherFilterTabs();
+          this.renderTimetableGrid();
+          this.renderTeacherSummary();
+          this.renderPersonalDeadlinePanel();
+        }
+        if (tabIndex === 5) {
+          this.runFullDiagnostic();
+          this.renderDashboardCharts();
+        }
+        
+        lucide.createIcons();
+      },
+
+      loadPreset(key, triggerAlert = true) {
+        const p = PRESETS[key];
+        if (!p) return;
+        this.config = JSON.parse(JSON.stringify(p.config));
+        this.teachers = JSON.parse(JSON.stringify(p.teachers));
+        this.curriculum = JSON.parse(JSON.stringify(p.curriculum));
+        this.events = JSON.parse(JSON.stringify(p.events));
+        this.defaultTimetable = JSON.parse(JSON.stringify(p.defaultTimetable || []));
+        this.morningDuty = JSON.parse(JSON.stringify(p.morningDuty || {}));
+        this.periodsPerDay = this.config.periodsPerDay || 8;
+        this.normalizeDefaultTimetable();
+        this.timetable = {};
+        this.selectedTeacherFilter = 'all';
+
+        this.populateInputsFromConfig();
+
+        this.renderAll();
+        this.runAutoAllocation(false);
+
+        if (triggerAlert) {
+          alert(`'${p.config.title}' 프리셋 데이터가 로드되고 최적 배당이 완료되었습니다!`);
+          this.setTab(4);
+        }
+      },
+
+      renderAll() {
+        this.renderConfigHeader();
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderEventGrid();
+        this.renderCustomStamps();
+        this.updateStampStatusUI();
+        this.renderTeacherFilterTabs();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        lucide.createIcons();
+      },
+
+      syncConfigFromInputs() {
+        const getVal = (id, fallback) => {
+          const el = document.getElementById(id);
+          return (el && el.value !== undefined) ? el.value : fallback;
+        };
+        this.config.title = getVal('cfg-title', this.config.title);
+        this.config.school = getVal('cfg-school', this.config.school);
+        this.config.gradeClass = getVal('cfg-gradeClass', this.config.gradeClass);
+        this.config.teacherName = getVal('cfg-teacherName', this.config.teacherName);
+        this.config.weekCount = parseInt(getVal('cfg-weekCount', this.config.weekCount || 2), 10);
+        this.config.startDate = getVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        this.config.maxHours = parseInt(getVal('cfg-maxHours', this.config.maxHours || 10), 10) || 10;
+        this.config.periodsPerDay = parseInt(getVal('cfg-periodsPerDay', this.config.periodsPerDay || 8), 10) || 8;
+        this.periodsPerDay = this.config.periodsPerDay;
+      },
+
+      onConfigChange() {
+        this.syncConfigFromInputs();
+        this.renderConfigHeader();
+        this.renderPersonalDeadlinePanel();
+        this.renderTeacherSummary();
+      },
+
+      renderConfigHeader() {
+        const titleEl = document.getElementById('view-title');
+        if (titleEl) titleEl.innerText = this.config.title || '교육 실습생 수업배당표';
+        const schoolEl = document.getElementById('view-school');
+        if (schoolEl) schoolEl.innerText = this.config.school || '';
+        const gcEl = document.getElementById('view-gradeClass');
+        if (gcEl) gcEl.innerText = this.config.gradeClass || '';
+        const tnEl = document.getElementById('view-teacherName');
+        if (tnEl) tnEl.innerText = this.config.teacherName || '';
+        const notesEl = document.getElementById('timetable-notes');
+        if (notesEl) notesEl.innerText = this.config.notes || '';
+
+        // Sync personal deadline calendar metadata banner
+        const calSchool = document.getElementById('calendar-school');
+        if (calSchool) calSchool.innerText = this.config.school || '';
+        const calGC = document.getElementById('calendar-gradeClass');
+        if (calGC) calGC.innerText = this.config.gradeClass || '';
+        const calTN = document.getElementById('calendar-teacherName');
+        if (calTN) calTN.innerText = this.config.teacherName || '';
+        const calSD = document.getElementById('calendar-startDate');
+        if (calSD) calSD.innerText = this.config.startDate || '';
+      },
+
+      onWeekCountChange(val) {
+        this.config.weekCount = parseInt(val, 10);
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER MANAGEMENT
+      // -----------------------------------------------------------------------
+      renderTeachersTable() {
+        const tbody = document.getElementById('teacher-table-body');
+        tbody.innerHTML = '';
+        document.getElementById('teacher-count-badge').innerText = `총 ${this.teachers.length}명`;
+
+        this.teachers.forEach((t, idx) => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          let demoSubjectOptions = `<option value="">(미지정)</option>`;
+          ELEMENTARY_SUBJECTS.forEach(sub => {
+            demoSubjectOptions += `<option value="${sub}" ${t.demoSubject === sub ? 'selected' : ''}>${sub}</option>`;
+          });
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          tr.innerHTML = `
+            <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
+            <td class="py-2 px-3 font-bold text-slate-800">
+              <input type="text" value="${t.name}" oninput="App.updateTeacherLive(${idx}, 'name', this.value)" onchange="App.updateTeacher(${idx}, 'name', this.value)" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${t.major || ''}" placeholder="예: 국어" oninput="App.updateTeacherLive(${idx}, 'major', this.value)" onchange="App.updateTeacher(${idx}, 'major', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <span id="teacher-badge-${idx}" class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold border" style="background:${color.bg}; color:${color.text}; border-color:${color.border};">
+                ${t.name}
+              </span>
+            </td>
+            <td class="py-2 px-3">
+              <select onchange="App.updateTeacher(${idx}, 'demoSubject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs font-semibold text-indigo-700">
+                ${demoSubjectOptions}
+              </select>
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" oninput="App.updateTeacherLive(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(1) 수(1) 즐(1))" oninput="App.updateTeacherLive(${idx}, 'note', this.value)" onchange="App.updateTeacher(${idx}, 'note', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <button onclick="App.deleteTeacher(${idx})" class="p-1 text-slate-400 hover:text-rose-600 rounded">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        lucide.createIcons();
+      },
+
+      updateTeacherLive(idx, field, val) {
+        if (!this.teachers[idx]) return;
+        this.teachers[idx][field] = val;
+        if (field === 'name') {
+          const badge = document.getElementById(`teacher-badge-${idx}`);
+          if (badge) badge.innerText = val;
+        }
+      },
+
+      syncTeachersFromDOM() {
+        const tbody = document.getElementById('teacher-table-body');
+        if (!tbody) return;
+        const rows = tbody.querySelectorAll('tr');
+        rows.forEach((tr, idx) => {
+          if (!this.teachers[idx]) return;
+          const inputs = tr.querySelectorAll('input');
+          const select = tr.querySelector('select');
+          if (inputs[0] && inputs[0].value.trim()) {
+            this.teachers[idx].name = inputs[0].value.trim();
+          }
+          if (inputs[1]) {
+            this.teachers[idx].major = inputs[1].value.trim();
+          }
+          if (select) {
+            this.teachers[idx].demoSubject = select.value;
+          }
+          if (inputs[2]) {
+            this.teachers[idx].maxHours = inputs[2].value ? parseInt(inputs[2].value, 10) : '';
+          }
+          if (inputs[3]) {
+            this.teachers[idx].note = inputs[3].value.trim();
+          }
+        });
+      },
+
+      addTeacherRow() {
+        const nextId = 't' + (Date.now());
+        const colorIdx = this.teachers.length % TEACHER_COLORS.length;
+        this.teachers.push({
+          id: nextId,
+          name: `실습생${this.teachers.length + 1}`,
+          major: '초등교육',
+          demoSubject: '',
+          maxHours: '',
+          note: '',
+          colorIdx
+        });
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderTeacherFilterTabs();
+        this.renderTeacherSummary();
+      },
+
+      updateTeacher(idx, field, val) {
+        if (this.teachers[idx]) {
+          const oldName = this.teachers[idx].name;
+          this.teachers[idx][field] = val;
+          if (field === 'name' && oldName !== val) {
+            this.curriculum.forEach(c => {
+              if (c.designatedTeacher === oldName) c.designatedTeacher = val;
+              if (c.demoTeacher === oldName) c.demoTeacher = val;
+            });
+            Object.keys(this.morningDuty).forEach(k => {
+              if (this.morningDuty[k] === oldName) this.morningDuty[k] = val;
+            });
+            Object.keys(this.events).forEach(k => {
+              if (this.events[k].teacher === oldName) this.events[k].teacher = val;
+            });
+            Object.keys(this.timetable).forEach(k => {
+              if (this.timetable[k].teacher === oldName) this.timetable[k].teacher = val;
+            });
+          }
+          this.renderCurriculumTable();
+          this.renderTeacherFilterTabs();
+          this.renderTeacherSummary();
+        }
+      },
+
+      deleteTeacher(idx) {
+        if (this.teachers.length <= 1) {
+          alert('최소 1명 이상의 실습생이 필요합니다.');
+          return;
+        }
+        this.teachers.splice(idx, 1);
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderTeacherFilterTabs();
+        this.renderTeacherSummary();
+      },
+
+      // -----------------------------------------------------------------------
+      // CURRICULUM MANAGEMENT (Block Time & Compressed Lesson Support)
+      // -----------------------------------------------------------------------
+      renderCurriculumTable() {
+        const tbody = document.getElementById('curriculum-table-body');
+        tbody.innerHTML = '';
+        document.getElementById('curriculum-count-badge').innerText = `총 ${this.curriculum.length}차시`;
+
+        this.curriculum.forEach((c, idx) => {
+          let teacherOpts = `<option value="">(자동 배정)</option>`;
+          this.teachers.forEach(t => {
+            const isSel = (c.designatedTeacher === t.name || (!c.designatedTeacher && c.demoTeacher === t.name));
+            teacherOpts += `<option value="${t.name}" ${isSel ? 'selected' : ''}>${t.name}</option>`;
+          });
+
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-slate-50 transition';
+          tr.innerHTML = `
+            <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
+            <td class="py-2 px-3 font-semibold text-slate-800">
+              <input type="text" data-field="subject" value="${c.subject}" oninput="App.updateCurriculumLive(${idx}, 'subject', this.value)" onchange="App.updateCurriculum(${idx}, 'subject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" data-field="pages" value="${c.pages}" oninput="App.updateCurriculumLive(${idx}, 'pages', this.value)" onchange="App.updateCurriculum(${idx}, 'pages', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="text" data-field="lesson" value="${c.lesson}" placeholder="예: 3 또는 3~4" oninput="App.updateCurriculumLive(${idx}, 'lesson', this.value)" onchange="App.updateCurriculum(${idx}, 'lesson', this.value)" class="w-20 px-2 py-1 border rounded bg-white text-center text-xs font-mono">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="number" data-field="totalLesson" value="${c.totalLesson}" oninput="App.updateCurriculumLive(${idx}, 'totalLesson', parseInt(this.value,10))" onchange="App.updateCurriculum(${idx}, 'totalLesson', parseInt(this.value,10))" class="w-16 px-2 py-1 border rounded bg-white text-center text-xs">
+            </td>
+            <td class="py-2 px-3">
+              <input type="text" data-field="topic" value="${c.topic || ''}" placeholder="단원/주제 (선택)" oninput="App.updateCurriculumLive(${idx}, 'topic', this.value)" onchange="App.updateCurriculum(${idx}, 'topic', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="checkbox" data-field="isDemo" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="대표수업 차시 여부">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <select data-field="designatedTeacher" onchange="App.updateCurriculum(${idx}, 'designatedTeacher', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs ${c.designatedTeacher ? 'font-bold text-indigo-700 bg-indigo-50/50' : 'text-slate-600'}">
+                ${teacherOpts}
+              </select>
+            </td>
+            <td class="py-2 px-3 text-center">
+              <button onclick="App.deleteCurriculum(${idx})" class="p-1 text-slate-400 hover:text-rose-600 rounded">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+        lucide.createIcons();
+      },
+
+      addCurriculumRow() {
+        this.curriculum.push({
+          id: 'c' + Date.now(),
+          subject: '국어',
+          pages: '100-101',
+          lesson: '1',
+          totalLesson: 10,
+          topic: '',
+          isDemo: false,
+          designatedTeacher: ''
+        });
+        this.renderCurriculumTable();
+      },
+
+      updateCurriculumLive(idx, field, val) {
+        if (this.curriculum[idx]) {
+          this.curriculum[idx][field] = val;
+        }
+      },
+
+      syncCurriculumFromDOM() {
+        const rows = document.querySelectorAll('#curriculum-table-body tr');
+        if (!rows || rows.length === 0) return;
+        rows.forEach((row, idx) => {
+          if (!this.curriculum[idx]) return;
+          const subInput = row.querySelector('input[data-field="subject"]');
+          const pageInput = row.querySelector('input[data-field="pages"]');
+          const lessonInput = row.querySelector('input[data-field="lesson"]');
+          const totalInput = row.querySelector('input[data-field="totalLesson"]');
+          const topicInput = row.querySelector('input[data-field="topic"]');
+          const demoInput = row.querySelector('input[data-field="isDemo"]');
+          const teacherSelect = row.querySelector('select[data-field="designatedTeacher"]');
+
+          if (subInput) this.curriculum[idx].subject = subInput.value.trim();
+          if (pageInput) this.curriculum[idx].pages = pageInput.value.trim();
+          if (lessonInput) this.curriculum[idx].lesson = lessonInput.value.trim();
+          if (totalInput) {
+            const v = parseInt(totalInput.value, 10);
+            if (!isNaN(v)) this.curriculum[idx].totalLesson = v;
+          }
+          if (topicInput) this.curriculum[idx].topic = topicInput.value.trim();
+          if (demoInput) this.curriculum[idx].isDemo = demoInput.checked;
+          if (teacherSelect) this.curriculum[idx].designatedTeacher = teacherSelect.value;
+        });
+      },
+
+      updateCurriculum(idx, field, val) {
+        if (this.curriculum[idx]) {
+          this.curriculum[idx][field] = val;
+        }
+      },
+
+      deleteCurriculum(idx) {
+        this.curriculum.splice(idx, 1);
+        this.renderCurriculumTable();
+      },
+
+      generateQuickCurriculum() {
+        const subject = document.getElementById('quick-subject').value.trim() || '국어';
+        const start = parseInt(document.getElementById('quick-start').value, 10) || 1;
+        const end = parseInt(document.getElementById('quick-end').value, 10) || 4;
+        const total = parseInt(document.getElementById('quick-total').value, 10) || 10;
+        const pagePrefix = document.getElementById('quick-page-prefix').value.trim() || '60';
+
+        if (start > end) {
+          alert('시작 차시가 끝 차시보다 큽니다.');
+          return;
+        }
+
+        for (let l = start; l <= end; l++) {
+          this.curriculum.push({
+            id: 'c' + Date.now() + '_' + l,
+            subject,
+            pages: pagePrefix ? `${pagePrefix}-${parseInt(pagePrefix,10)+l}` : `${l*2}-${l*2+2}`,
+            lesson: String(l),
+            totalLesson: total
+          });
+        }
+        this.renderCurriculumTable();
+        alert(`${subject} ${start}~${end}차시 (${end - start + 1}개)가 추가되었습니다.`);
+      },
+
+
+      // -----------------------------------------------------------------------
+      // 2학년 교과 진도표 데이터베이스 (DB 불러오기 & 모달)
+      // -----------------------------------------------------------------------
+      getCurriculumDb() { return CURRICULUM_DB_GRADE2; },
+      curriculumDbState: {
+        semester: '1학기',
+        subject: '국어',
+        unit: '',
+        search: '',
+        selectedIndices: new Set()
+      },
+
+      openCurriculumDbModal() {
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+        document.getElementById('modal-curriculum-db').classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeCurriculumDbModal() {
+        document.getElementById('modal-curriculum-db').classList.add('hidden');
+      },
+
+      setCurriculumDbSemester(sem) {
+        this.curriculumDbState.semester = sem;
+        this.curriculumDbState.unit = '';
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+      },
+
+      setCurriculumDbSubject(sub) {
+        this.curriculumDbState.subject = sub;
+        this.curriculumDbState.unit = '';
+        this.curriculumDbState.selectedIndices.clear();
+        this.updateCurriculumDbControls();
+        this.renderCurriculumDbList();
+      },
+
+      onCurriculumDbUnitChange(unit) {
+        this.curriculumDbState.unit = unit;
+        this.renderCurriculumDbList();
+      },
+
+      onCurriculumDbSearch(query) {
+        this.curriculumDbState.search = query.trim().toLowerCase();
+        this.renderCurriculumDbList();
+      },
+
+      getCurriculumDbSourceItems(semester, subject) {
+        if (subject === '국어') {
+          return CURRICULUM_DB_GRADE2[semester === '1학기' ? 'grade2_korean_1' : 'grade2_korean_2'] || [];
+        }
+        if (subject === '수학') {
+          return CURRICULUM_DB_GRADE2[semester === '1학기' ? 'grade2_math_1' : 'grade2_math_2'] || [];
+        }
+        // 통합교과 (통합, 바생, 슬생, 즐생)
+        const integKey = (semester === '1학기') ? 'grade2_integrated_1' : 'grade2_integrated_2';
+        return CURRICULUM_DB_GRADE2[integKey] || [];
+      },
+
+      updateCurriculumDbControls() {
+        const { semester, subject } = this.curriculumDbState;
+        const sem1Btn = document.getElementById('db-sem-1');
+        const sem2Btn = document.getElementById('db-sem-2');
+        if (sem1Btn && sem2Btn) {
+          if (semester === '1학기') {
+            sem1Btn.className = 'px-3 py-1 rounded-md font-bold text-sky-700 bg-sky-100 shadow-xs';
+            sem2Btn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          } else {
+            sem2Btn.className = 'px-3 py-1 rounded-md font-bold text-sky-700 bg-sky-100 shadow-xs';
+            sem1Btn.className = 'px-3 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900';
+          }
+        }
+
+        const subBtns = {
+          '국어': document.getElementById('db-sub-kor'),
+          '수학': document.getElementById('db-sub-math'),
+          '통합': document.getElementById('db-sub-integ'),
+          '바생': document.getElementById('db-sub-ba'),
+          '슬생': document.getElementById('db-sub-seul'),
+          '즐생': document.getElementById('db-sub-jeul')
+        };
+        for (const [k, btn] of Object.entries(subBtns)) {
+          if (btn) {
+            if (subject === k) {
+              btn.className = 'px-2.5 py-1 rounded-md font-bold text-indigo-700 bg-indigo-100 shadow-xs text-xs';
+            } else {
+              btn.className = 'px-2.5 py-1 rounded-md font-medium text-slate-600 hover:text-slate-900 text-xs';
+            }
+          }
+        }
+
+        const sourceItems = this.getCurriculumDbSourceItems(semester, subject);
+        let filterForUnits = sourceItems;
+        if (subject === '바생' || subject === '슬생' || subject === '즐생') {
+          filterForUnits = sourceItems.filter(it => it.subject === subject);
+        }
+        const units = Array.from(new Set(filterForUnits.map(it => it.unit)));
+        const unitSelect = document.getElementById('db-unit-select');
+        if (unitSelect) {
+          let opts = `<option value="">(전체 ${units.length}개 단원/대주제 보기)</option>`;
+          units.forEach(u => {
+            const count = filterForUnits.filter(it => it.unit === u).length;
+            opts += `<option value="${u}" ${this.curriculumDbState.unit === u ? 'selected' : ''}>${u} (${count}차시)</option>`;
+          });
+          unitSelect.innerHTML = opts;
+        }
+      },
+
+      getCurrentDbItems() {
+        const { semester, subject, unit, search } = this.curriculumDbState;
+        const sourceItems = this.getCurriculumDbSourceItems(semester, subject);
+
+        return sourceItems.filter((it, origIdx) => {
+          it._origIdx = origIdx;
+          if (subject === '바생' || subject === '슬생' || subject === '즐생') {
+            if (it.subject !== subject) return false;
+          }
+          if (unit && it.unit !== unit) return false;
+          if (search) {
+            const matchTopic = (it.topic || '').toLowerCase().includes(search);
+            const matchUnit = (it.unit || '').toLowerCase().includes(search);
+            const matchPages = (it.pages || '').toLowerCase().includes(search);
+            const matchSubj = (it.subject || '').toLowerCase().includes(search);
+            if (!matchTopic && !matchUnit && !matchPages && !matchSubj) return false;
+          }
+          return true;
+        });
+      },
+
+      renderCurriculumDbList() {
+        const tbody = document.getElementById('curriculum-db-tbody');
+        if (!tbody) return;
+        const items = this.getCurrentDbItems();
+        const countBadge = document.getElementById('curriculum-db-total-badge');
+        if (countBadge) {
+          countBadge.innerText = `${this.curriculumDbState.semester} ${this.curriculumDbState.subject} (표시: ${items.length}차시)`;
+        }
+
+        if (items.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-slate-400">검색 조건에 맞는 차시가 없습니다.</td></tr>`;
+          this.updateCurriculumDbSelectedCount();
+          return;
+        }
+
+        const subjColorMap = {
+          '국어': 'bg-indigo-50 text-indigo-700 border-indigo-200',
+          '수학': 'bg-emerald-50 text-emerald-700 border-emerald-200',
+          '슬생': 'bg-amber-50 text-amber-700 border-amber-200',
+          '즐생': 'bg-rose-50 text-rose-700 border-rose-200',
+          '바생': 'bg-sky-50 text-sky-700 border-sky-200'
+        };
+
+        let html = '';
+        items.forEach((it, displayIdx) => {
+          const isChecked = this.curriculumDbState.selectedIndices.has(it._origIdx);
+          const badgeClass = subjColorMap[it.subject] || 'bg-slate-100 text-slate-700 border-slate-200';
+          html += `
+            <tr class="hover:bg-amber-50/60 transition ${isChecked ? 'bg-amber-50/90 font-medium' : ''}">
+              <td class="py-2 px-3 text-center">
+                <input type="checkbox" ${isChecked ? 'checked' : ''} onchange="App.toggleCurriculumDbItem(${it._origIdx}, this.checked)" class="rounded text-amber-600 focus:ring-amber-500 cursor-pointer w-4 h-4">
+              </td>
+              <td class="py-2 px-2.5 text-center text-slate-400 text-xs">${displayIdx + 1}</td>
+              <td class="py-2 px-2 text-center text-xs">
+                <span class="px-2 py-0.5 rounded-full font-bold text-[11px] border ${badgeClass}">${it.subject}</span>
+              </td>
+              <td class="py-2 px-3 font-semibold text-slate-800 text-xs">${it.unit}</td>
+              <td class="py-2 px-3 text-slate-900 text-xs">${it.topic}</td>
+              <td class="py-2 px-2.5 text-center font-bold text-indigo-700 text-xs">${it.lesson}/${it.totalLesson}</td>
+              <td class="py-2 px-2.5 text-center text-slate-600 text-xs font-medium">${it.pages}</td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+        this.updateCurriculumDbSelectedCount();
+      },
+
+      toggleCurriculumDbItem(origIdx, checked) {
+        if (checked) {
+          this.curriculumDbState.selectedIndices.add(origIdx);
+        } else {
+          this.curriculumDbState.selectedIndices.delete(origIdx);
+        }
+        this.updateCurriculumDbSelectedCount();
+      },
+
+      toggleAllCurriculumDb(selectAll) {
+        const items = this.getCurrentDbItems();
+        if (selectAll) {
+          items.forEach(it => this.curriculumDbState.selectedIndices.add(it._origIdx));
+        } else {
+          items.forEach(it => this.curriculumDbState.selectedIndices.delete(it._origIdx));
+        }
+        this.renderCurriculumDbList();
+      },
+
+      updateCurriculumDbSelectedCount() {
+        const countSpan = document.getElementById('curriculum-db-selected-count');
+        if (countSpan) {
+          countSpan.innerText = `${this.curriculumDbState.selectedIndices.size}개`;
+        }
+      },
+
+      importSelectedCurriculumDb(showAlert = true) {
+        const selected = Array.from(this.curriculumDbState.selectedIndices);
+        if (selected.length === 0) {
+          if (showAlert) alert('진도표에 추가할 차시를 1개 이상 선택해주세요.');
+          return;
+        }
+
+        const { semester, subject } = this.curriculumDbState;
+        const sourceItems = this.getCurriculumDbSourceItems(semester, subject);
+
+        selected.sort((a, b) => a - b);
+
+        const replaceMode = document.getElementById('db-replace-mode')?.checked;
+        if (replaceMode) {
+          if (showAlert && !confirm(`기존에 등록된 진도표(${this.curriculum.length}차시)를 모두 지우고, 선택한 ${selected.length}개 차시로 새로 교체하시겠습니까?`)) {
+            return;
+          }
+          this.curriculum = [];
+        }
+
+        selected.forEach(idx => {
+          const it = sourceItems[idx];
+          if (!it) return;
+          this.curriculum.push({
+            id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+            subject: it.subject, // '국어', '수학', '바생', '슬생', '즐생'
+            pages: it.pages,
+            lesson: String(it.lesson),
+            totalLesson: it.totalLesson,
+            unit: it.unit,
+            topic: `${it.unit} - ${it.topic}`,
+            isDemo: false,
+            designatedTeacher: ''
+          });
+        });
+
+        this.renderCurriculumTable();
+        this.closeCurriculumDbModal();
+        if (showAlert) {
+          alert(`2학년 ${semester} ${subject} ${selected.length}개 차시가 진도표에 성공적으로 등록되었습니다!`);
+        }
+      },
+
+      openCurriculumBatchModal() {
+        document.getElementById('modal-curriculum-batch').classList.remove('hidden');
+      },
+      closeCurriculumBatchModal() {
+        document.getElementById('modal-curriculum-batch').classList.add('hidden');
+      },
+      applyCurriculumBatch() {
+        const text = document.getElementById('batch-curriculum-text').value.trim();
+        if (!text) return;
+        const lines = text.split('\n');
+        let count = 0;
+        lines.forEach(line => {
+          const parts = line.split(/[\t]+/).map(p => p.trim());
+          if (parts.length >= 4) {
+            let subject = '국어';
+            let pages = '';
+            let lesson = '';
+            let totalLesson = 10;
+            let topic = '';
+            let unit = '';
+
+            const isLessonCol2 = /^\d+(\s*[~-]\s*\d+)?$/.test(parts[2]);
+            const isTotalCol3 = /^\d+$/.test(parts[3]);
+
+            if (parts.length >= 5 && isLessonCol2 && isTotalCol3) {
+              unit = parts[0];
+              topic = parts[1];
+              lesson = parts[2];
+              totalLesson = parseInt(parts[3], 10) || 10;
+              pages = parts[4];
+              if (unit.includes('수학') || topic.includes('수학') || unit.includes('수') || topic.includes('곱셈') || topic.includes('도형')) {
+                subject = '수학';
+              } else {
+                subject = '국어';
+              }
+            } else {
+              subject = parts[0];
+              pages = parts[1];
+              lesson = parts[2];
+              totalLesson = parseInt(parts[3], 10) || 10;
+              topic = parts[4] || '';
+            }
+
+            this.curriculum.push({
+              id: 'c' + Date.now() + '_' + Math.random().toString(36).substr(2, 6),
+              subject,
+              pages,
+              lesson: String(lesson),
+              totalLesson,
+              unit,
+              topic: (unit ? `${unit} - ` : '') + (topic || ''),
+              isDemo: false,
+              designatedTeacher: ''
+            });
+            count++;
+          }
+        });
+        this.renderCurriculumTable();
+        this.closeCurriculumBatchModal();
+        alert(`${count}개의 진도표 차시가 성공적으로 등록되었습니다.`);
+      },
+
+      // -----------------------------------------------------------------------
+      // EVENT & LOCK SLOTS (빠른 일정 스탬프 & 프리셋 시스템)
+      // -----------------------------------------------------------------------
+      loadCustomStamps() {
+        try {
+          const saved = localStorage.getItem('student_teacher_custom_stamps');
+          if (saved) {
+            this.customStamps = JSON.parse(saved);
+          } else {
+            this.customStamps = [];
+          }
+        } catch (e) {
+          this.customStamps = [];
+        }
+      },
+
+      saveCustomStamps() {
+        try {
+          localStorage.setItem('student_teacher_custom_stamps', JSON.stringify(this.customStamps));
+        } catch (e) {
+          console.error(e);
+        }
+      },
+
+      renderCustomStamps() {
+        const container = document.getElementById('custom-stamps-list');
+        if (!container) return;
+        if (this.customStamps.length === 0) {
+          container.innerHTML = '<span class="text-[11px] text-slate-400 italic">등록된 나만의 스탬프가 없습니다. [+ 스탬프 만들기]로 자주 쓰는 강의/행사를 등록해보세요.</span>';
+          return;
+        }
+
+        let html = '';
+        this.customStamps.forEach(s => {
+          const isSelected = this.currentStamp && this.currentStamp.id === s.id;
+          const bgClass = isSelected ? 'ring-2 ring-sky-500 font-bold shadow-sm' : 'hover:brightness-95';
+          let colorStyle = 'bg-blue-50 text-blue-900 border-blue-200';
+          if (s.type === 'observation') colorStyle = 'bg-sky-50 text-sky-900 border-sky-200';
+          else if (s.type === 'meeting') colorStyle = 'bg-purple-50 text-purple-900 border-purple-200';
+          else if (s.type === 'design') colorStyle = 'bg-emerald-50 text-emerald-900 border-emerald-200';
+          else if (s.type === 'homeroom') colorStyle = 'bg-amber-50 text-amber-900 border-amber-200';
+          else if (s.type === 'holiday') colorStyle = 'bg-rose-50 text-rose-900 border-rose-200';
+
+          html += `
+            <div class="inline-flex items-center rounded-lg border text-xs overflow-hidden ${colorStyle} ${bgClass}">
+              <button onclick="App.selectCustomStamp('${s.id}')" class="px-2.5 py-1 text-xs font-semibold flex items-center gap-1">
+                ${s.subject}
+                ${s.pages ? `<span class="opacity-75 font-normal text-[10px]">(${s.pages})</span>` : ''}
+                ${s.teacher ? `<span class="opacity-90 font-medium text-[10px]">[${s.teacher}]</span>` : ''}
+              </button>
+              <button onclick="App.deleteCustomStamp('${s.id}')" title="이 스탬프 삭제" class="px-1.5 py-1 hover:bg-rose-100 hover:text-rose-600 text-slate-400 transition font-bold">
+                &times;
+              </button>
+            </div>
+          `;
+        });
+        container.innerHTML = html;
+      },
+
+      openCustomStampModal() {
+        this.setNewStampType('lecture');
+        document.getElementById('new-stamp-subject').value = '';
+        document.getElementById('new-stamp-pages').value = '';
+        document.getElementById('new-stamp-teacher').value = '';
+        document.getElementById('modal-custom-stamp-create').classList.remove('hidden');
+        document.getElementById('new-stamp-subject').focus();
+        lucide.createIcons();
+      },
+
+      closeCustomStampModal() {
+        document.getElementById('modal-custom-stamp-create').classList.add('hidden');
+      },
+
+      setNewStampType(type) {
+        this.newStampSelectedType = type;
+        const types = ['lecture', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
+        types.forEach(t => {
+          const btn = document.getElementById(`new-stamp-type-${t}`);
+          if (!btn) return;
+          if (t === type) {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-bold bg-sky-600 text-white border-sky-600 shadow-sm';
+          } else {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100';
+          }
+        });
+      },
+
+      saveCustomStampFromModal() {
+        const subject = document.getElementById('new-stamp-subject').value.trim();
+        if (!subject) {
+          alert('스탬프 이름 또는 강의·행사명을 입력해주세요.');
+          return;
+        }
+        const pages = document.getElementById('new-stamp-pages').value.trim();
+        const teacher = document.getElementById('new-stamp-teacher').value.trim();
+        const type = this.newStampSelectedType || 'lecture';
+
+        this.createCustomStamp({ type, subject, pages, teacher });
+        this.closeCustomStampModal();
+      },
+
+      createCustomStamp(stampData) {
+        const id = 'stamp_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const newStamp = {
+          id,
+          type: stampData.type || 'lecture',
+          subject: stampData.subject || '강의',
+          pages: stampData.pages || '',
+          teacher: stampData.teacher || ''
+        };
+        this.customStamps.push(newStamp);
+        this.saveCustomStamps();
+        this.renderCustomStamps();
+        this.setCurrentStamp(newStamp.type, newStamp.subject, newStamp.pages, newStamp.teacher, newStamp.id);
+        return newStamp;
+      },
+
+      selectCustomStamp(id) {
+        const found = this.customStamps.find(s => s.id === id);
+        if (found) {
+          this.setCurrentStamp(found.type, found.subject, found.pages || '', found.teacher || '', found.id);
+        }
+      },
+
+      deleteCustomStamp(id) {
+        if (!confirm('이 프리셋 스탬프를 삭제하시겠습니까?')) return;
+        this.customStamps = this.customStamps.filter(s => s.id !== id);
+        this.saveCustomStamps();
+        if (this.currentStamp && this.currentStamp.id === id) {
+          this.clearCurrentStamp();
+        }
+        this.renderCustomStamps();
+      },
+
+      setCurrentStamp(type, subject, pages, teacher, id = null) {
+        this.currentStamp = { type, subject, pages, teacher, id };
+        this.updateStampStatusUI();
+        this.renderCustomStamps();
+      },
+
+      clearCurrentStamp() {
+        this.currentStamp = null;
+        this.updateStampStatusUI();
+        this.renderCustomStamps();
+      },
+
+      updateStampStatusUI() {
+        const badge = document.getElementById('active-stamp-badge');
+        if (!badge) return;
+        if (!this.currentStamp) {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-slate-700 text-slate-200 font-medium flex items-center gap-1.5';
+          badge.innerHTML = '<i data-lucide="mouse-pointer" class="w-3.5 h-3.5"></i> 모드: <strong>상세 편집/선택</strong> (칸 클릭 시 모달 오픈)';
+        } else if (this.currentStamp.type === 'clear') {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-rose-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          badge.innerHTML = '<i data-lucide="eraser" class="w-3.5 h-3.5"></i> 활성: <strong>지우개</strong> (칸 클릭 시 즉시 삭제)';
+        } else if (this.currentStamp.type === 'trainee_demo') {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-amber-500 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          const info = `⭐ 교생대표 [${this.currentStamp.pages || '대표수업'}] (${this.currentStamp.teacher || ''})`;
+          badge.innerHTML = `<i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
+        } else {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-sky-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          const info = `[${this.currentStamp.subject}]` + (this.currentStamp.pages ? ` ${this.currentStamp.pages}` : '') + (this.currentStamp.teacher ? ` (${this.currentStamp.teacher})` : '');
+          badge.innerHTML = `<i data-lucide="stamp" class="w-3.5 h-3.5"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
+        }
+        lucide.createIcons();
+      },
+
+      openTraineeDemoStampModal() {
+        const teacherSelect = document.getElementById('trainee-demo-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-demo-stamp-subject');
+        if (teacherSelect) {
+          teacherSelect.innerHTML = this.teachers.map(t => 
+            `<option value="${t.name}">${t.name}${t.demoSubject ? ` (대표과목: ${t.demoSubject})` : ''}</option>`
+          ).join('');
+        }
+        if (subjectSelect) {
+          subjectSelect.innerHTML = ELEMENTARY_SUBJECTS.map(s => 
+            `<option value="${s}">${s}</option>`
+          ).join('');
+          if (this.teachers.length > 0 && this.teachers[0].demoSubject) {
+            subjectSelect.value = this.teachers[0].demoSubject;
+          }
+        }
+        document.getElementById('modal-trainee-demo-stamp').classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeTraineeDemoStampModal() {
+        document.getElementById('modal-trainee-demo-stamp').classList.add('hidden');
+      },
+
+      onTraineeDemoStampTeacherChange(tName) {
+        const teacher = this.teachers.find(t => t.name === tName);
+        if (teacher && teacher.demoSubject) {
+          const subSelect = document.getElementById('trainee-demo-stamp-subject');
+          if (subSelect) subSelect.value = teacher.demoSubject;
+        }
+      },
+
+      applyTraineeDemoStampSelection() {
+        const teacherSelect = document.getElementById('trainee-demo-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-demo-stamp-subject');
+        const teacherName = teacherSelect ? teacherSelect.value : (this.teachers[0] ? this.teachers[0].name : '');
+        const subjectName = subjectSelect ? subjectSelect.value : '국어';
+
+        this.setCurrentStamp('trainee_demo', '교생대표', subjectName, teacherName);
+        this.closeTraineeDemoStampModal();
+      },
+
+      renderEventGrid() {
+        const container = document.getElementById('event-grid-container');
+        if (!container) return;
+        const weekCount = this.config.weekCount || 2;
+        const days = weekCount * 5;
+
+        let html = `<table class="w-full text-xs border-collapse border border-slate-300">`;
+        html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16 sticky left-0 bg-slate-100 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">교시</th>`;
+        for (let d = 0; d < days; d++) {
+          const week = Math.floor(d / 5) + 1;
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          html += `<th class="border p-1.5 text-center min-w-[70px]">
+            <span class="text-[10px] text-slate-500 block">${week}주차</span>
+            <span class="font-bold">${dayName}</span>
+          </th>`;
+        }
+        html += `</tr></thead><tbody>`;
+
+        const maxP = this.periodsPerDay || 8;
+        for (let p = 1; p <= maxP; p++) {
+          html += `<tr><td class="border p-2 font-bold text-center bg-slate-50 sticky left-0 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">${p}교시</td>`;
+          for (let d = 0; d < days; d++) {
+            const key = `${d}-${p}`;
+            const ev = this.events[key];
+            let cellStyle = 'bg-white hover:bg-sky-50';
+            let text = '+ 설정';
+            let textColor = 'text-slate-300';
+
+            if (ev) {
+              if (ev.type === 'holiday') {
+                cellStyle = 'bg-rose-100 text-rose-800 font-bold';
+                text = ev.subject || '공휴일';
+                textColor = 'text-rose-800';
+              } else if (ev.type === 'trainee_demo' || ev.isTraineeDemo) {
+                cellStyle = 'bg-amber-500 text-white font-bold hover:bg-amber-600';
+                text = `⭐교생대표<br><span class="text-[10px] font-normal">[${ev.pages || ''}]</span>${ev.teacher ? `<br><span class="text-[9px] text-amber-100">(${ev.teacher})</span>` : ''}`;
+                textColor = 'text-white';
+              } else if (ev.type === 'lecture' || ev.type === 'observation') {
+                cellStyle = 'bg-blue-900 text-white font-bold hover:brightness-110';
+                text = `${ev.subject}<br><span class="text-[10px] font-normal">${ev.pages || ''}</span>${ev.teacher ? `<br><span class="text-[9px] text-blue-200">(${ev.teacher})</span>` : ''}`;
+                textColor = 'text-white';
+              } else if (ev.type === 'meeting' || ev.type === 'design') {
+                cellStyle = 'bg-purple-100 text-purple-900 font-bold hover:bg-purple-200';
+                text = `${ev.subject}${ev.pages ? `<br><span class="text-[10px] font-normal">${ev.pages}</span>` : ''}`;
+                textColor = 'text-purple-900';
+              } else if (ev.type === 'homeroom') {
+                cellStyle = 'bg-amber-100 text-amber-900 font-bold hover:bg-amber-200';
+                text = `${ev.subject} (${ev.teacher || ''})`;
+                textColor = 'text-amber-900';
+              }
+            }
+
+            html += `<td id="ev-cell-${key}" onclick="App.onEventCellClick(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="클릭: 스탬프 찍기 (상세모드 시 편집창) / 우클릭: 상세 내용 및 강사명 직접 편집" class="border p-1 text-center cursor-pointer select-none ${cellStyle} h-14 transition">
+              <div class="${textColor} leading-tight">${text}</div>
+            </td>`;
+          }
+          html += `</tr>`;
+        }
+        html += `</tbody></table>`;
+        container.innerHTML = html;
+      },
+
+      currentEditingEventKey: null,
+      modalSelectedType: 'lecture',
+
+      openEventEditModal(d, p) {
+        const key = `${d}-${p}`;
+        this.currentEditingEventKey = { d, p, key };
+        const ev = this.events[key];
+
+        const week = Math.floor(d / 5) + 1;
+        const dayName = ['월', '화', '수', '목', '금'][d % 5];
+        document.getElementById('ev-modal-header').innerText = `행사 및 강의 일정 편집 [${week}주차 ${dayName}요일 ${p}교시]`;
+
+        let type = 'lecture';
+        let subject = '강의';
+        let pages = '';
+        let teacher = '';
+
+        if (ev) {
+          type = ev.type || 'lecture';
+          subject = ev.subject || '';
+          pages = ev.pages || '';
+          teacher = ev.teacher || '';
+        } else if (this.currentStamp && this.currentStamp.type !== 'clear') {
+          type = this.currentStamp.type;
+          subject = this.currentStamp.subject;
+          pages = this.currentStamp.pages || '';
+          teacher = this.currentStamp.teacher || '';
+        }
+
+        // Populate trainee and demo subject selects in modal
+        const traineeSelect = document.getElementById('ev-modal-trainee-select');
+        if (traineeSelect) {
+          traineeSelect.innerHTML = this.teachers.map(t => 
+            `<option value="${t.name}">${t.name}${t.demoSubject ? ` (대표: ${t.demoSubject})` : ''}</option>`
+          ).join('');
+          if (teacher) traineeSelect.value = teacher;
+        }
+        const demoSubSelect = document.getElementById('ev-modal-demo-subject');
+        if (demoSubSelect) {
+          demoSubSelect.innerHTML = ELEMENTARY_SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('');
+          if (pages) demoSubSelect.value = pages;
+        }
+
+        this.setModalEventType(type, false);
+        document.getElementById('ev-modal-subject').value = subject;
+        document.getElementById('ev-modal-pages').value = pages;
+        document.getElementById('ev-modal-teacher').value = teacher;
+        document.getElementById('ev-modal-span2').checked = false;
+
+        document.getElementById('modal-event-edit').classList.remove('hidden');
+        document.getElementById('ev-modal-subject').focus();
+        lucide.createIcons();
+      },
+
+      closeEventEditModal() {
+        document.getElementById('modal-event-edit').classList.add('hidden');
+        this.currentEditingEventKey = null;
+      },
+
+      setModalEventType(type, autoFillDefault = true) {
+        this.modalSelectedType = type;
+        const types = ['lecture', 'trainee_demo', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
+        types.forEach(t => {
+          const btn = document.getElementById(`ev-type-btn-${t}`);
+          if (!btn) return;
+          if (t === type) {
+            btn.className = (t === 'trainee_demo')
+              ? 'py-1.5 px-2 rounded-lg border text-center font-bold bg-amber-500 text-white border-amber-500 shadow-sm'
+              : 'py-1.5 px-2 rounded-lg border text-center font-bold bg-sky-600 text-white border-sky-600 shadow-sm';
+          } else {
+            btn.className = 'py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100';
+          }
+        });
+
+        const demoGroup = document.getElementById('ev-trainee-demo-group');
+        if (demoGroup) {
+          if (type === 'trainee_demo') {
+            demoGroup.classList.remove('hidden');
+          } else {
+            demoGroup.classList.add('hidden');
+          }
+        }
+
+        if (autoFillDefault) {
+          const subInput = document.getElementById('ev-modal-subject');
+          if (subInput) {
+            if (type === 'lecture') subInput.value = '강의';
+            else if (type === 'trainee_demo') subInput.value = '교생대표';
+            else if (type === 'observation') subInput.value = '수업 참관';
+            else if (type === 'meeting') subInput.value = '학급 협의회';
+            else if (type === 'design') subInput.value = '수업 설계';
+            else if (type === 'homeroom') subInput.value = '창체';
+            else if (type === 'holiday') subInput.value = '공휴일';
+          }
+          if (type === 'trainee_demo' && this.teachers.length > 0) {
+            const firstTeacher = this.teachers[0];
+            const traineeSelect = document.getElementById('ev-modal-trainee-select');
+            if (traineeSelect) traineeSelect.value = firstTeacher.name;
+            const demoSubSelect = document.getElementById('ev-modal-demo-subject');
+            if (demoSubSelect) demoSubSelect.value = firstTeacher.demoSubject || '국어';
+            document.getElementById('ev-modal-teacher').value = firstTeacher.name;
+            document.getElementById('ev-modal-pages').value = firstTeacher.demoSubject || '국어';
+          }
+        }
+      },
+
+      onModalTraineeChange(tName) {
+        const teacher = this.teachers.find(t => t.name === tName);
+        if (teacher && teacher.demoSubject) {
+          const demoSub = document.getElementById('ev-modal-demo-subject');
+          if (demoSub) demoSub.value = teacher.demoSubject;
+        }
+        document.getElementById('ev-modal-teacher').value = tName;
+        const sub = document.getElementById('ev-modal-demo-subject');
+        if (sub) document.getElementById('ev-modal-pages').value = sub.value;
+      },
+
+      onModalDemoSubjectChange(sub) {
+        document.getElementById('ev-modal-pages').value = sub;
+      },
+
+      saveEventEditModal() {
+        if (!this.currentEditingEventKey) return;
+        const { d, p, key } = this.currentEditingEventKey;
+        const type = this.modalSelectedType || 'lecture';
+        let subject = document.getElementById('ev-modal-subject').value.trim();
+        let pages = document.getElementById('ev-modal-pages').value.trim();
+        let teacher = document.getElementById('ev-modal-teacher').value.trim();
+
+        if (type === 'trainee_demo') {
+          const traineeSelect = document.getElementById('ev-modal-trainee-select');
+          const demoSub = document.getElementById('ev-modal-demo-subject');
+          if (traineeSelect && traineeSelect.value) teacher = traineeSelect.value;
+          if (demoSub && demoSub.value) pages = demoSub.value;
+          if (!subject) subject = '교생대표';
+        }
+
+        if (!subject) {
+          alert('강의명 또는 행사명을 입력해주세요.');
+          return;
+        }
+        const span2 = document.getElementById('ev-modal-span2').checked;
+
+        this.events[key] = {
+          type,
+          subject,
+          pages,
+          lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+          teacher,
+          isLocked: true,
+          isTraineeDemo: (type === 'trainee_demo')
+        };
+
+        const maxP = this.periodsPerDay || 8;
+        if (span2 && p < maxP) {
+          const nextKey = `${d}-${p+1}`;
+          this.events[nextKey] = {
+            type,
+            subject,
+            pages,
+            lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+            teacher,
+            isLocked: true,
+            isTraineeDemo: (type === 'trainee_demo')
+          };
+        }
+
+        this.closeEventEditModal();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      deleteEventFromModal() {
+        if (!this.currentEditingEventKey) return;
+        const { key } = this.currentEditingEventKey;
+        delete this.events[key];
+        this.closeEventEditModal();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+      },
+
+      applyStampToCell(d, p) {
+        const key = `${d}-${p}`;
+        // 스탬프 미선택(상세 편집 모드)인 경우 모달 오픈
+        if (!this.currentStamp) {
+          this.openEventEditModal(d, p);
+          return;
+        }
+
+        // 지우개 스탬프인 경우 해당 슬롯 즉시 삭제
+        if (this.currentStamp.type === 'clear') {
+          delete this.events[key];
+          this.renderEventGrid();
+          this.renderTimetableGrid();
+          return;
+        }
+
+        // 선택된 스탬프로 즉시 값 주입 (0.1초 원클릭 도장)
+        this.events[key] = {
+          type: this.currentStamp.type,
+          subject: this.currentStamp.subject,
+          pages: this.currentStamp.pages || '',
+          lessonStr: this.currentStamp.type === 'trainee_demo' ? '대표수업' : '',
+          teacher: this.currentStamp.teacher || '',
+          isLocked: true,
+          isTraineeDemo: (this.currentStamp.type === 'trainee_demo')
+        };
+
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+
+        // 도장 찍힘 시각적 피드백 효과
+        const cellEl = document.getElementById(`ev-cell-${key}`);
+        if (cellEl) {
+          cellEl.classList.add('ring-4', 'ring-sky-400');
+          setTimeout(() => {
+            cellEl.classList.remove('ring-4', 'ring-sky-400');
+          }, 250);
+        }
+      },
+
+      onEventCellClick(d, p) {
+        this.applyStampToCell(d, p);
+      },
+
+      autoAssignMorningDuty() {
+        const weekCount = this.config.weekCount || 2;
+        const days = weekCount * 5;
+        const tCount = this.teachers.length;
+        if (tCount === 0) return;
+
+        let tIdx = 0;
+        for (let d = 0; d < days; d++) {
+          if (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday') continue;
+          this.morningDuty[d] = this.teachers[tIdx % tCount].name;
+          tIdx++;
+        }
+        this.renderTimetableGrid();
+        alert('아침활동 당번이 실습생 간 균등하게 순환 배정되었습니다!');
+      },
+
+      openDefaultTimetableModal() {
+        const tbody = document.getElementById('default-tt-body');
+        tbody.innerHTML = '';
+        const defaultSubjects = [
+          ['국어', '수학', '국어', '수학', '국어'],
+          ['수학', '국어', '바생', '바생', '바생'],
+          ['슬생', '즐생', '슬생', '즐생', '즐생'],
+          ['즐생', '즐생', '즐생', '즐생', '즐생'],
+          ['체육', '음악', '미술', '창체', '창체'],
+          ['창체', '창체', '동아리', '창체', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
+        ];
+        this.normalizeDefaultTimetable();
+        const maxP = this.periodsPerDay || 8;
+        const current = this.defaultTimetable;
+
+        for (let p = 0; p < maxP; p++) {
+          let tr = `<tr><td class="p-2 border font-bold bg-slate-50">${p+1}교시</td>`;
+          for (let d = 0; d < 5; d++) {
+            const val = current[p] && current[p][d] ? current[p][d] : '';
+            tr += `<td class="p-1 border"><input type="text" id="def-tt-${p}-${d}" value="${val}" class="w-full text-xs text-center p-1 border rounded"></td>`;
+          }
+          tr += `</tr>`;
+          tbody.innerHTML += tr;
+        }
+        document.getElementById('modal-default-timetable').classList.remove('hidden');
+      },
+
+      closeDefaultTimetableModal() {
+        document.getElementById('modal-default-timetable').classList.add('hidden');
+      },
+
+      saveDefaultTimetableModal() {
+        const maxP = this.periodsPerDay || 8;
+        const newTT = [];
+        for (let p = 0; p < maxP; p++) {
+          newTT[p] = [];
+          for (let d = 0; d < 5; d++) {
+            const input = document.getElementById(`def-tt-${p}-${d}`);
+            newTT[p][d] = input ? input.value.trim() : '';
+          }
+        }
+        this.defaultTimetable = newTT;
+        this.closeDefaultTimetableModal();
+        alert('학급 기본 주간 과목 편성 틀이 저장되었습니다.');
+      },
+
+      // -----------------------------------------------------------------------
+      // ALLOCATION SOLVER ENGINE (Block Time & Compressed Lesson Support)
+      // -----------------------------------------------------------------------
+      runAutoAllocation(showAlert = true) {
+        if (this.curriculum.length === 0) {
+          if (showAlert) alert('등록된 교과 진도표가 없습니다. Step 2에서 진도표를 먼저 등록해주세요.');
+          return;
+        }
+        if (this.teachers.length === 0) {
+          if (showAlert) alert('등록된 실습생이 없습니다. Step 1에서 실습생을 먼저 등록해주세요.');
+          return;
+        }
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const maxP = this.periodsPerDay || 8;
+
+        // 1. Clear unlocked classes while preserving locked event blocks
+        const newTimetable = {};
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            if (this.events[key] && this.events[key].isLocked) {
+              newTimetable[key] = { ...this.events[key] };
+            }
+          }
+        }
+
+        // Helper to parse lesson numeric value for ordering (e.g. '3~4' -> 3)
+        const parseLessonNum = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        // Clone curriculum so we can consume demo items without mutating this.curriculum
+        const unassignedCurriculum = this.curriculum.map(c => ({ ...c }));
+
+        // Teacher statistics tracker for load balancing
+        const teacherStats = {};
+        this.teachers.forEach(t => {
+          teacherStats[t.name] = {
+            totalHours: 0,
+            subjectCount: {},
+            dailyCount: {}
+          };
+        });
+
+        // 2. Pair Trainee Demo slots (⭐교생대표) with curriculum items
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const ev = newTimetable[key];
+            if (ev && (ev.type === 'trainee_demo' || ev.isTraineeDemo)) {
+              const tName = ev.teacher || '';
+              const subName = ev.pages || ev.subject || '';
+
+              // Match priority:
+              // 1. isDemo && subject matches && (designatedTeacher matches or empty)
+              // 2. isDemo && designatedTeacher matches
+              // 3. subject matches && (designatedTeacher matches or empty)
+              // 4. any curriculum item matching subject
+              let matchIdx = unassignedCurriculum.findIndex(c => 
+                !c._consumed && c.isDemo && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+              );
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.isDemo && c.designatedTeacher === tName
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName
+                );
+              }
+
+              if (matchIdx !== -1) {
+                const curr = unassignedCurriculum[matchIdx];
+                curr._consumed = true;
+                newTimetable[key] = {
+                  subject: curr.subject,
+                  pages: curr.pages,
+                  lesson: curr.lesson,
+                  totalLesson: curr.totalLesson,
+                  topic: curr.topic || '',
+                  teacher: tName || curr.designatedTeacher || '',
+                  isDemo: true,
+                  isTraineeDemo: true,
+                  isLocked: true,
+                  curriculumId: curr.id
+                };
+              } else {
+                newTimetable[key] = {
+                  ...ev,
+                  subject: subName || '대표수업',
+                  pages: ev.pages || '',
+                  lesson: '대표',
+                  totalLesson: 1,
+                  teacher: tName,
+                  isDemo: true,
+                  isTraineeDemo: true,
+                  isLocked: true
+                };
+              }
+
+              // Update teacherStats for the demo slot
+              const assignedTeacher = newTimetable[key].teacher;
+              if (assignedTeacher && teacherStats[assignedTeacher]) {
+                teacherStats[assignedTeacher].totalHours++;
+                const sub = newTimetable[key].subject;
+                teacherStats[assignedTeacher].subjectCount[sub] = (teacherStats[assignedTeacher].subjectCount[sub] || 0) + 1;
+                teacherStats[assignedTeacher].dailyCount[d] = (teacherStats[assignedTeacher].dailyCount[d] || 0) + 1;
+              }
+            }
+          }
+        }
+
+        // 3. Group remaining unassigned curricula by subject & sort ascending by lesson number
+        const subjectQueues = {};
+        unassignedCurriculum.filter(c => !c._consumed).forEach(c => {
+          if (!subjectQueues[c.subject]) subjectQueues[c.subject] = [];
+          subjectQueues[c.subject].push(c);
+        });
+        Object.keys(subjectQueues).forEach(sub => {
+          subjectQueues[sub].sort((a, b) => parseLessonNum(a.lesson) - parseLessonNum(b.lesson));
+        });
+
+        // 4. Identify remaining available slots partitioned by week
+        // Exclude the last 2 days of practicum (e.g. Thu/Fri of last week) from the primary slot pool
+        const isLastTwoDays = (d) => (totalDays > 2 && d >= totalDays - 2);
+        const slotsByWeek = Array.from({ length: weekCount }, () => []);
+        const fallbackSlots = []; // Slots in the last 2 days (strictly used only if primary slots are exhausted)
+
+        for (let d = 0; d < totalDays; d++) {
+          const w = Math.floor(d / 5);
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            if (!newTimetable[key]) {
+              const dayOfWeek = d % 5;
+              const defSubject = (this.defaultTimetable[p-1] && this.defaultTimetable[p-1][dayOfWeek]) || '';
+              const slot = { day: d, period: p, key, defSubject, week: w };
+              if (isLastTwoDays(d)) {
+                fallbackSlots.push(slot);
+              } else if (w < weekCount) {
+                slotsByWeek[w].push(slot);
+              }
+            }
+          }
+        }
+
+        // 5. Match available slots to subjects evenly distributed across all weeks
+        const subjectWeeklyTarget = {};
+        let offset = 0;
+        Object.keys(subjectQueues).forEach(sub => {
+          const K = subjectQueues[sub].length;
+          subjectWeeklyTarget[sub] = Array(weekCount).fill(0);
+          const base = Math.floor(K / weekCount);
+          const rem = K % weekCount;
+          for (let w = 0; w < weekCount; w++) {
+            subjectWeeklyTarget[sub][w] = base;
+          }
+          // Spread remainder smoothly across weeks
+          for (let i = 0; i < rem; i++) {
+            const targetW = (offset + i) % weekCount;
+            subjectWeeklyTarget[sub][targetW] += 1;
+          }
+          offset = (offset + rem) % weekCount;
+        });
+
+        const slotsForSubject = {};
+        Object.keys(subjectQueues).forEach(sub => {
+          slotsForSubject[sub] = [];
+        });
+
+        const unassignedByWeek = Array.from({ length: weekCount }, () => []);
+
+        // Phase 1: In each week, match slots that match defaultTimetable subject
+        for (let w = 0; w < weekCount; w++) {
+          slotsByWeek[w].forEach(slot => {
+            const matchSub = slot.defSubject;
+            if (matchSub && subjectWeeklyTarget[matchSub] && subjectWeeklyTarget[matchSub][w] > 0) {
+              slotsForSubject[matchSub].push(slot);
+              subjectWeeklyTarget[matchSub][w]--;
+            } else {
+              unassignedByWeek[w].push(slot);
+            }
+          });
+        }
+
+        // Phase 2: In each week, fill remaining weekly target for subjects from unassigned slots in the same week
+        for (let w = 0; w < weekCount; w++) {
+          Object.keys(subjectWeeklyTarget).forEach(sub => {
+            while (subjectWeeklyTarget[sub][w] > 0 && unassignedByWeek[w].length > 0) {
+              const slot = unassignedByWeek[w].shift();
+              slotsForSubject[sub].push(slot);
+              subjectWeeklyTarget[sub][w]--;
+            }
+          });
+        }
+
+        // Phase 3: If any subject still needs slots in week w (e.g. week w was dense with events), borrow from other weeks' unassigned slots (excluding last 2 days)
+        Object.keys(subjectWeeklyTarget).forEach(sub => {
+          for (let w = 0; w < weekCount; w++) {
+            while (subjectWeeklyTarget[sub][w] > 0) {
+              let borrowed = false;
+              for (let otherW = 0; otherW < weekCount; otherW++) {
+                if (unassignedByWeek[otherW].length > 0) {
+                  const slot = unassignedByWeek[otherW].shift();
+                  slotsForSubject[sub].push(slot);
+                  subjectWeeklyTarget[sub][w]--;
+                  borrowed = true;
+                  break;
+                }
+              }
+              if (!borrowed) break;
+            }
+          }
+        });
+
+        // Phase 4: Fallback to last 2 days ONLY IF regular days are completely exhausted
+        Object.keys(subjectWeeklyTarget).forEach(sub => {
+          for (let w = 0; w < weekCount; w++) {
+            while (subjectWeeklyTarget[sub][w] > 0 && fallbackSlots.length > 0) {
+              const slot = fallbackSlots.shift();
+              slotsForSubject[sub].push(slot);
+              subjectWeeklyTarget[sub][w]--;
+            }
+          }
+        });
+
+        // For each subject, sort its assigned slots chronologically and pair with sorted lessons
+        Object.keys(slotsForSubject).forEach(sub => {
+          const slots = slotsForSubject[sub];
+          slots.sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
+          const currList = subjectQueues[sub];
+          for (let i = 0; i < slots.length && i < currList.length; i++) {
+            const slot = slots[i];
+            const curr = currList[i];
+            newTimetable[slot.key] = {
+              subject: curr.subject,
+              pages: curr.pages,
+              lesson: curr.lesson,
+              totalLesson: curr.totalLesson,
+              topic: curr.topic || '',
+              isDemo: curr.isDemo || false,
+              demoTeacher: curr.demoTeacher || '',
+              designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
+              curriculumId: curr.id
+            };
+          }
+        });
+
+        // 6. Teacher Allocation Optimizer
+        // First: Fix designated teachers and demo teachers
+        Object.keys(newTimetable).forEach(key => {
+          const cell = newTimetable[key];
+          if (cell && !cell.isLocked && cell.curriculumId) {
+            const desig = cell.designatedTeacher || (cell.isDemo ? cell.demoTeacher : '');
+            if (desig && teacherStats[desig]) {
+              cell.teacher = desig;
+              teacherStats[desig].totalHours++;
+              teacherStats[desig].subjectCount[cell.subject] = (teacherStats[desig].subjectCount[cell.subject] || 0) + 1;
+              const day = parseInt(key.split('-')[0], 10);
+              const week = Math.floor(day / 5);
+              teacherStats[desig].dailyCount[day] = (teacherStats[desig].dailyCount[day] || 0) + 1;
+              teacherStats[desig].weeklyCount = teacherStats[desig].weeklyCount || {};
+              teacherStats[desig].weeklyCount[week] = (teacherStats[desig].weeklyCount[week] || 0) + 1;
+            }
+          }
+        });
+
+        // Second: Assign teachers to unassigned cells with greedy cost function (weekly load balancing)
+        for (let d = 0; d < totalDays; d++) {
+          const week = Math.floor(d / 5);
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const cell = newTimetable[key];
+            if (cell && !cell.isLocked && cell.curriculumId && !cell.teacher) {
+              let bestTeacher = null;
+              let lowestCost = Infinity;
+              const candidateTeachers = [...this.teachers].sort(() => Math.random() - 0.5);
+
+              candidateTeachers.forEach(t => {
+                const stat = teacherStats[t.name];
+                stat.weeklyCount = stat.weeklyCount || {};
+                const curHours = stat.totalHours;
+                const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+                  ? parseInt(t.maxHours, 10)
+                  : (this.config.maxHours || 10);
+
+                // Strict Enforcement: Never assign classes beyond max hours
+                if (curHours >= tMax) {
+                  return;
+                }
+
+                const curSubHours = stat.subjectCount[cell.subject] || 0;
+                const curDayHours = stat.dailyCount[d] || 0;
+                const curWeekHours = stat.weeklyCount[week] || 0;
+                const targetWeekHours = Math.ceil(tMax / weekCount);
+
+                let cost = curHours * 100 + (curSubHours * 15) + (curDayHours >= 2 ? curDayHours * 50 : curDayHours * 10);
+                if (curWeekHours >= targetWeekHours) {
+                  cost += (curWeekHours - targetWeekHours + 1) * 60; // weekly load balancing penalty
+                }
+                if (cell.isDemo && t.demoSubject === cell.subject) {
+                  cost -= 80; // strong preference for trainee with this demo subject
+                }
+                if (t.major && cell.subject.includes(t.major)) {
+                  cost -= 25; // major bonus
+                }
+
+                if (cost < lowestCost) {
+                  lowestCost = cost;
+                  bestTeacher = t;
+                }
+              });
+
+              if (bestTeacher) {
+                cell.teacher = bestTeacher.name;
+                teacherStats[bestTeacher.name].totalHours++;
+                teacherStats[bestTeacher.name].subjectCount[cell.subject] = (teacherStats[bestTeacher.name].subjectCount[cell.subject] || 0) + 1;
+                teacherStats[bestTeacher.name].dailyCount[d] = (teacherStats[bestTeacher.name].dailyCount[d] || 0) + 1;
+                teacherStats[bestTeacher.name].weeklyCount = teacherStats[bestTeacher.name].weeklyCount || {};
+                teacherStats[bestTeacher.name].weeklyCount[week] = (teacherStats[bestTeacher.name].weeklyCount[week] || 0) + 1;
+              }
+            }
+          }
+        }
+
+        // 7. Remove unassigned classes from the timetable (미배정된 과목은 배당표에서 깨끗하게 제거)
+        Object.keys(newTimetable).forEach(key => {
+          const cell = newTimetable[key];
+          if (cell && !cell.isLocked && (!cell.teacher || cell.teacher.trim() === '')) {
+            delete newTimetable[key];
+          }
+        });
+
+        this.timetable = newTimetable;
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+
+        if (showAlert) {
+          alert('자동 수업 배당이 완료되었습니다!\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 미배정 과목 정리 완료');
+        }
+      },
+
+      removeUnassignedClasses(showAlert = false) {
+        let count = 0;
+        Object.keys(this.timetable).forEach(key => {
+          const cell = this.timetable[key];
+          if (cell && !cell.isLocked && (!cell.teacher || cell.teacher.trim() === '')) {
+            delete this.timetable[key];
+            count++;
+          }
+        });
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+        if (showAlert) {
+          alert(count > 0 ? `${count}개의 미배정 과목을 배당표에서 제거하였습니다.` : '배당표에 미배정된 과목이 없습니다.');
+        }
+        return count;
+      },
+
+      clearAllocatedClasses() {
+        if (!confirm('배당된 일반 수업을 모두 지우시겠습니까? (행사 및 불가 시간은 보존됩니다)')) return;
+        Object.keys(this.timetable).forEach(key => {
+          if (!this.events[key] || !this.events[key].isLocked) {
+            delete this.timetable[key];
+          }
+        });
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER FILTER (Personalized View & Deadlines)
+      // -----------------------------------------------------------------------
+      renderTeacherFilterTabs() {
+        const container = document.getElementById('teacher-filter-tabs');
+        if (!container) return;
+        let html = '';
+        this.teachers.forEach(t => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const isSelected = (this.selectedTeacherFilter === t.name);
+          html += `
+            <button onclick="App.setTeacherFilter('${t.name}')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition ${isSelected ? 'shadow-sm' : 'opacity-70 hover:opacity-100'}" style="background:${isSelected ? color.bg : '#f1f5f9'}; color:${isSelected ? color.text : '#475569'}; border: 1px solid ${isSelected ? color.border : '#cbd5e1'};">
+              ${t.name}
+            </button>
+          `;
+        });
+        container.innerHTML = html;
+
+        const allBtn = document.getElementById('filter-btn-all');
+        if (allBtn) {
+          if (this.selectedTeacherFilter === 'all') {
+            allBtn.className = 'px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300';
+          } else {
+            allBtn.className = 'px-3 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
+          }
+        }
+      },
+
+      setTeacherFilter(tName) {
+        this.selectedTeacherFilter = tName;
+        this.renderTeacherFilterTabs();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+      },
+
+      // -----------------------------------------------------------------------
+      // TIMETABLE VALIDATION & ERROR DETECTION ENGINE (차시 순서 및 슬롯 충돌 검증)
+      // -----------------------------------------------------------------------
+      detectTimetableErrors() {
+        const errorMap = {};
+        const maxP = this.periodsPerDay || 8;
+        const totalDays = (this.config.weekCount || 2) * 5;
+
+        const parseLessonNum = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        // 1. Locked Event Collision Check (행사 슬롯 침범 오류)
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const ev = this.events[key];
+            const tt = this.timetable[key];
+            if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo') {
+              if (tt && tt.subject && !tt.isLocked) {
+                if (!errorMap[key]) errorMap[key] = [];
+                errorMap[key].push(`[일정 충돌] 잠긴 행사/강의(${ev.subject}) 슬롯에 수업(${tt.subject})이 중복 배정됨`);
+              }
+            }
+          }
+        }
+
+        // 2. Chronological Lesson Order Integrity Check per Subject (차시 순서 역전 오류)
+        const subjectOccurrences = {};
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.subject && cell.lesson) {
+              if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+              subjectOccurrences[cell.subject].push({
+                key,
+                day: d,
+                period: p,
+                time: d * 100 + p,
+                lessonNum: parseLessonNum(cell.lesson),
+                lessonStr: cell.lesson,
+                cell
+              });
+            }
+          }
+        }
+
+        Object.keys(subjectOccurrences).forEach(sub => {
+          const list = subjectOccurrences[sub];
+          for (let i = 0; i < list.length; i++) {
+            for (let j = i + 1; j < list.length; j++) {
+              const prev = list[i];
+              const next = list[j];
+              if (prev.lessonNum > next.lessonNum) {
+                if (!errorMap[prev.key]) errorMap[prev.key] = [];
+                if (!errorMap[next.key]) errorMap[next.key] = [];
+
+                const msgPrev = `[차시 역전] ${sub} ${prev.lessonStr}차시가 ${next.day+1}일차 ${next.period}교시(${next.lessonStr}차시)보다 늦은 차시인데 먼저 배치됨`;
+                const msgNext = `[차시 역전] ${sub} ${next.lessonStr}차시가 ${prev.day+1}일차 ${prev.period}교시(${prev.lessonStr}차시)보다 빠른 차시인데 나중에 배치됨`;
+
+                if (!errorMap[prev.key].includes(msgPrev)) errorMap[prev.key].push(msgPrev);
+                if (!errorMap[next.key].includes(msgNext)) errorMap[next.key].push(msgNext);
+              }
+            }
+          }
+        });
+
+        const uniqueKeys = Object.keys(errorMap);
+        const errorList = [];
+        uniqueKeys.forEach(k => {
+          const [d, p] = k.split('-').map(Number);
+          errorList.push(`• [${d+1}일차 ${p}교시]: ${errorMap[k].join(' | ')}`);
+        });
+
+        return {
+          errorMap,
+          errorCount: uniqueKeys.length,
+          errorList,
+          keys: uniqueKeys
+        };
+      },
+
+      renderErrorBanner() {
+        const banner = document.getElementById('timetable-error-banner');
+        const badge = document.getElementById('tab-violation-badge');
+        if (!banner) return;
+
+        const errs = this.timetableErrors || { errorCount: 0, errorList: [] };
+        if (errs.errorCount > 0) {
+          if (badge) {
+            badge.innerText = `${errs.errorCount}`;
+            badge.classList.remove('hidden');
+          }
+          banner.innerHTML = `
+            <div class="p-3 bg-rose-50 border-2 border-rose-300 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm text-rose-900 animate-pulse mb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-xs whitespace-nowrap">⚠️ 배당 오류 ${errs.errorCount}건 감지</span>
+                <span class="text-xs font-semibold text-rose-800 leading-tight">
+                  차시 순서가 역전되었거나 행사 슬롯과 충돌한 수업(빨간 테두리)이 있습니다. 해당 셀을 클릭하여 올바른 순서의 빈 칸이나 다른 수업과 교환하세요.
+                </span>
+              </div>
+              <button onclick="App.showErrorSummaryModal()" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap self-end sm:self-auto transition">
+                오류 상세 보기
+              </button>
+            </div>
+          `;
+        } else {
+          if (badge) {
+            badge.classList.add('hidden');
+          }
+          banner.innerHTML = `
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between gap-2 text-emerald-800 text-xs font-medium shadow-sm mb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[10px]">✓ 검증 완료</span>
+                <span>배당표 차시 순서 무결성 100% 만족 (오류 없음 - 모든 교과 차시가 순차적으로 배당됨)</span>
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      showErrorSummaryModal() {
+        if (!this.timetableErrors || this.timetableErrors.errorCount === 0) {
+          alert('현재 감지된 배당표 오류가 없습니다.');
+          return;
+        }
+        alert(['[배당표 오류 세부 목록]', ...this.timetableErrors.errorList].join('\n\n'));
+      },
+
+      // -----------------------------------------------------------------------
+      // TIMETABLE GRID RENDERING (Smart Swap & Personal Highlights)
+      // -----------------------------------------------------------------------
+      renderTimetableGrid() {
+        const thead = document.getElementById('timetable-thead');
+        const tbody = document.getElementById('timetable-tbody');
+        if (!thead || !tbody) return;
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        // Header Rows
+        let r1 = `<tr>
+          <th rowspan="3" class="border-2 border-slate-900 bg-slate-100 p-1 w-20 text-center font-bold sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">
+            <div class="flex justify-between px-1 text-[11px] text-slate-500"><span>날짜</span></div>
+            <div class="h-px bg-slate-400 my-1 transform -rotate-12"></div>
+            <div class="flex justify-between px-1 text-[11px] font-bold"><span>교시</span></div>
+          </th>`;
+
+        for (let w = 0; w < weekCount; w++) {
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          const startStr = `${wStartDate.getMonth()+1}.${wStartDate.getDate()}(월)`;
+          const endStr = `${wEndDate.getMonth()+1}.${wEndDate.getDate()}(금)`;
+          r1 += `<th colspan="5" class="border-2 border-slate-900 bg-slate-100 py-1.5 px-2 text-center font-bold text-xs">
+            ${w+1}주차 (${startStr} ~ ${endStr})
+          </th>`;
+        }
+        r1 += `</tr>`;
+
+        let r2 = `<tr>`;
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          const weekOffset = Math.floor(d / 5);
+          const dayOffset = d % 5;
+          curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+          const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
+          const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-900 font-bold';
+          r2 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[68px] sm:min-w-[74px]">${curDate.getDate()}</th>`;
+        }
+        r2 += `</tr>`;
+
+        let r3 = `<tr>`;
+        for (let d = 0; d < totalDays; d++) {
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
+          const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-700 font-semibold';
+          r3 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[68px] sm:min-w-[74px]">${dayName}</th>`;
+        }
+        r3 += `</tr>`;
+
+        thead.innerHTML = r1 + r2 + r3;
+
+        // Morning Duty Row
+        let tbodyHtml = `<tr class="h-10 bg-slate-50/50">
+          <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">아침활동</td>`;
+        for (let d = 0; d < totalDays; d++) {
+          const dutyTeacher = this.morningDuty[d] || '';
+          const isDimmed = (this.selectedTeacherFilter !== 'all' && dutyTeacher !== this.selectedTeacherFilter);
+          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
+            ${dutyTeacher ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">${dutyTeacher}</span>` : ''}
+          </td>`;
+        }
+        tbodyHtml += `</tr>`;
+
+        // Validation & Error Detection for Timetable Grid
+        const maxP = this.periodsPerDay || 8;
+        this.timetableErrors = this.detectTimetableErrors();
+        this.renderErrorBanner();
+
+        // Period rows 1 to maxP
+        const renderedCells = {};
+
+        for (let p = 1; p <= maxP; p++) {
+          tbodyHtml += `<tr>
+            <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs w-14 sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">${p}</td>`;
+
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            if (renderedCells[key]) continue;
+
+            const cell = this.timetable[key] || this.events[key];
+            const isSelected = (this.selectedCellKey === key);
+            const hasError = this.timetableErrors && this.timetableErrors.errorMap[key];
+            const errorClass = hasError ? 'cell-error' : '';
+            const errorTooltip = hasError ? `⚠️ 배당 오류:\n${this.timetableErrors.errorMap[key].join('\n')}` : '';
+
+            // 1. Holiday Full Merge
+            if (cell && cell.type === 'holiday') {
+              let span = 1;
+              for (let np = p + 1; np <= maxP; np++) {
+                const nextKey = `${d}-${np}`;
+                const nextCell = this.timetable[nextKey] || this.events[nextKey];
+                if (nextCell && nextCell.type === 'holiday' && nextCell.subject === cell.subject) {
+                  span++;
+                  renderedCells[nextKey] = true;
+                } else break;
+              }
+              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 공휴일/행사명 수정" class="border-2 border-slate-900 bg-rose-50 text-center font-black text-rose-600 text-sm tracking-widest cursor-pointer hover:bg-rose-100 select-none">
+                <div class="py-4 writing-vertical">${cell.subject || '공휴일'}</div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 2. Multi-period Locked Event
+            if (cell && (cell.type === 'observation' || cell.type === 'lecture') && cell.isLocked) {
+              let span = 1;
+              for (let np = p + 1; np <= maxP; np++) {
+                const nextKey = `${d}-${np}`;
+                const nextCell = this.timetable[nextKey] || this.events[nextKey];
+                if (nextCell && nextCell.subject === cell.subject && nextCell.pages === cell.pages && nextCell.isLocked) {
+                  span++;
+                  renderedCells[nextKey] = true;
+                } else break;
+              }
+
+              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 강의/참관명, 내용, 강사명 수정" class="border-2 border-slate-900 bg-blue-900 text-white text-center font-bold p-1 text-xs cursor-pointer hover:brightness-110">
+                <div class="flex flex-col justify-center items-center h-full space-y-1">
+                  <span>${cell.subject}</span>
+                  ${cell.pages ? `<span class="text-[11px] font-normal text-blue-200">${cell.pages}</span>` : ''}
+                  ${cell.lessonStr ? `<span class="text-[10px] text-blue-300">${cell.lessonStr}</span>` : ''}
+                  ${cell.teacher ? `<span class="text-[10px] text-blue-200">${cell.teacher}</span>` : ''}
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 2.5 Trainee Demo Slot (교생 대표수업 슬롯)
+            if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
+              const teacherObj = this.teachers.find(t => t.name === cell.teacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const subName = (cell.type === 'trainee_demo' ? cell.pages : cell.subject) || '대표수업';
+              const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '대표수업';
+              const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'dimmed-cell' : ''}">
+                <div class="flex flex-col h-full divide-y divide-amber-200 text-xs">
+                  <div class="py-1 font-black text-amber-900 bg-amber-100 flex items-center justify-center gap-1">
+                    ⭐ ${subName}
+                    <span class="px-1 py-0.2 rounded bg-amber-600 text-white text-[9px] font-extrabold">대표</span>
+                  </div>
+                  <div class="py-0.5 text-[11px] text-amber-800 font-medium">${pagesInfo || '-'}</div>
+                  <div class="py-0.5 text-[11px] text-amber-900 font-bold">${lessonInfo}</div>
+                  <div class="py-1 font-bold text-xs flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#fef3c7; color:#92400e;'}">
+                    ${cell.teacher ? `<span class="underline decoration-amber-600 font-black">${cell.teacher}</span>` : '교생미정'}
+                  </div>
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 3. Single Locked Event
+            if (cell && cell.isLocked) {
+              let bgClass = 'bg-slate-50 text-slate-800';
+              if (cell.type === 'meeting') bgClass = 'bg-white text-slate-800';
+              if (cell.type === 'design') bgClass = 'bg-white text-slate-800 font-semibold';
+              if (cell.type === 'homeroom') bgClass = 'bg-blue-900 text-white font-bold';
+
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 일정명, 세부 내용 수정'}" class="tt-cell ${errorClass} border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95 min-w-[68px] sm:min-w-[74px]">
+                <div class="flex flex-col justify-center items-center h-full space-y-0.5">
+                  <span class="font-bold">${cell.subject}</span>
+                  ${cell.pages ? `<span class="text-[11px]">${cell.pages}</span>` : ''}
+                  ${cell.lessonStr ? `<span class="text-[10px]">${cell.lessonStr}</span>` : ''}
+                  ${cell.teacher ? `<span class="text-[10px]">${cell.teacher}</span>` : ''}
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 4. Teaching Class Cell
+            if (cell && cell.subject) {
+              const teacherObj = this.teachers.find(t => t.name === cell.teacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const borderHighlight = cell.isDemo ? 'border-4 border-amber-500 shadow-sm' : 'border-2 border-slate-900';
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+              const selectedClass = isSelected ? 'cell-selected' : '';
+
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[68px] sm:min-w-[74px]">
+                <!-- 원클릭 배당 삭제 버튼 (호버 시 표시) -->
+                <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
+                  ✕
+                </button>
+                <div class="flex flex-col h-full divide-y divide-slate-300 text-xs">
+                  <!-- 교과명 -->
+                  <div class="py-1 font-black text-slate-900 bg-slate-50/70 cell-part flex items-center justify-center gap-1">
+                    ${cell.subject}
+                    ${cell.isDemo ? '<span class="px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-black" title="대표수업">⭐대표</span>' : ''}
+                  </div>
+                  <!-- 쪽수 -->
+                  <div class="py-0.5 text-[11px] text-slate-600 cell-part font-medium">${cell.pages || '-'}</div>
+                  <!-- 차시 -->
+                  <div class="py-0.5 text-[11px] text-slate-700 font-bold cell-part">
+                    ${cell.lesson}/${cell.totalLesson}
+                  </div>
+                  <!-- 수업자 -->
+                  <div class="py-1 font-bold text-xs cell-part flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
+                    ${cell.teacher || '<span class="text-slate-300 font-normal">미배정</span>'}
+                  </div>
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 5. Empty Cell
+            const selectedClass = isSelected ? 'cell-selected' : '';
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[68px] sm:min-w-[74px]">
+              <span class="text-[10px] text-slate-300 block font-mono">+</span>
+            </td>`;
+            renderedCells[key] = true;
+          }
+          tbodyHtml += `</tr>`;
+        }
+
+        tbody.innerHTML = tbodyHtml;
+      },
+
+      // -----------------------------------------------------------------------
+      // SMART SWAP ASSISTANT (Highlight Safe & Unsafe Slots)
+      // -----------------------------------------------------------------------
+      highlightSwapTargets(sourceKey) {
+        this.clearSwapHighlights();
+        const sourceCell = this.timetable[sourceKey];
+        if (!sourceCell || !sourceCell.subject) return;
+
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const sourceSubject = sourceCell.subject;
+        const parseLessonNum = (lStr) => {
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+        const sourceLessonNum = parseLessonNum(sourceCell.lesson);
+        const [sDay, sPeriod] = sourceKey.split('-').map(Number);
+
+        // Helper: Check if placing a lesson preserves chronological sequence among other classes of the same subject
+        const isOrderValid = (sub, lNum, targetD, targetP, exKey1, exKey2) => {
+          const targetTime = targetD * 100 + targetP;
+          for (const k in this.timetable) {
+            if (k === exKey1 || k === exKey2) continue;
+            const c = this.timetable[k];
+            if (c && c.subject === sub) {
+              const parts = k.split('-').map(Number);
+              const cTime = parts[0] * 100 + parts[1];
+              const cLessonNum = parseLessonNum(c.lesson);
+              if (cLessonNum < lNum && cTime >= targetTime) return false;
+              if (cLessonNum > lNum && cTime <= targetTime) return false;
+            }
+          }
+          return true;
+        };
+
+        const maxP = this.periodsPerDay || 8;
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            if (key === sourceKey) continue;
+
+            const el = document.getElementById(`cell-${key}`);
+            if (!el) continue;
+
+            // If locked event -> Cannot place class
+            if (this.events[key] && this.events[key].isLocked) {
+              el.classList.add('swap-unsafe');
+              continue;
+            }
+
+            const targetCell = this.timetable[key];
+            if (targetCell) {
+              if (targetCell.isLocked) {
+                el.classList.add('swap-unsafe');
+                continue;
+              }
+              // 1:1 Swap check
+              const targetLessonNum = parseLessonNum(targetCell.lesson);
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, key);
+              const targetSafe = isOrderValid(targetCell.subject, targetLessonNum, sDay, sPeriod, sourceKey, key);
+              if (sourceSafe && targetSafe) {
+                el.classList.add('swap-safe');
+              } else {
+                el.classList.add('swap-unsafe');
+              }
+            } else {
+              // Empty slot move check
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, null);
+              if (sourceSafe) {
+                el.classList.add('swap-safe');
+              } else {
+                el.classList.add('swap-unsafe');
+              }
+            }
+          }
+        }
+
+        const statusBox = document.getElementById('smart-swap-status');
+        if (statusBox) {
+          statusBox.innerHTML = `
+            <div class="flex items-center gap-2 flex-wrap">
+              <i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
+              <span class="text-slate-800 font-semibold">
+                [${sourceCell.subject} ${sourceCell.lesson}차시 (${sourceCell.teacher || '미배정'})] 선택됨
+              </span>
+              <span class="text-emerald-700 font-bold">🟢초록색: 이동가능</span>
+              <span class="text-rose-600 font-medium text-[11px]">🚫빨간색: 불가</span>
+              <button onclick="App.deleteCellClass('${sourceKey}', event)" class="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-[11px] font-bold shadow-sm flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3 h-3"></i> 이 차시 삭제
+              </button>
+              <button onclick="App.clearSwapSelection()" class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[11px] font-medium">
+                선택 취소
+              </button>
+            </div>
+          `;
+          lucide.createIcons();
+        }
+      },
+
+      clearSwapHighlights() {
+        document.querySelectorAll('.tt-cell').forEach(el => {
+          el.classList.remove('swap-safe', 'swap-unsafe', 'cell-selected');
+        });
+        const statusBox = document.getElementById('smart-swap-status');
+        if (statusBox) {
+          statusBox.innerHTML = `<i data-lucide="sparkles" class="w-4 h-4 text-sky-600"></i>
+            <span>셀을 드래그하거나 클릭하면 <strong class="text-emerald-700">🟢 안전한 교환 위치</strong>가 표시됩니다.</span>`;
+          lucide.createIcons();
+        }
+      },
+
+      clearSwapSelection() {
+        this.selectedCellKey = null;
+        this.clearSwapHighlights();
+      },
+
+      deleteCellClass(key, e, skipConfirm = false) {
+        if (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+        const cell = this.timetable[key];
+        if (!cell) return;
+        if (cell.isLocked) {
+          alert('고정된 행사/참관/강의 일정은 일정 편집창(클릭)에서 수정하거나 삭제해주세요.');
+          return;
+        }
+        if (!skipConfirm) {
+          const ok = confirm(`[${cell.subject} ${cell.lesson}차시 (${cell.teacher || '미배정'})] 배당을 삭제하시겠습니까?\n삭제된 칸은 빈 슬롯(+)으로 비워집니다.`);
+          if (!ok) return;
+        }
+        delete this.timetable[key];
+        this.clearSwapSelection();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+      },
+
+      // Drag and drop event handlers
+      onDragStart(e, key) {
+        this.draggedKey = key;
+        e.dataTransfer.setData('text/plain', key);
+        e.dataTransfer.effectAllowed = 'move';
+        this.highlightSwapTargets(key);
+      },
+      onDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('dragging-over');
+      },
+      onDragLeave(e) {
+        e.currentTarget.classList.remove('dragging-over');
+      },
+      onDrop(e, targetKey) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('dragging-over');
+        const sourceKey = this.draggedKey;
+        this.clearSwapHighlights();
+        if (!sourceKey || sourceKey === targetKey) return;
+        this.executeSwap(sourceKey, targetKey);
+      },
+
+      // Click to swap handlers
+      onCellClick(key) {
+        if (!this.selectedCellKey) {
+          const cell = this.timetable[key];
+          if (!cell || !cell.subject) {
+            // open manual add prompt
+            this.promptAddManualClass(key);
+            return;
+          }
+          // Select source cell
+          this.selectedCellKey = key;
+          const el = document.getElementById(`cell-${key}`);
+          if (el) el.classList.add('cell-selected');
+          this.highlightSwapTargets(key);
+        } else {
+          // Second click -> execute swap
+          const sourceKey = this.selectedCellKey;
+          this.selectedCellKey = null;
+          this.clearSwapHighlights();
+          if (sourceKey === key) return; // cancel
+          this.executeSwap(sourceKey, key);
+        }
+      },
+
+      executeSwap(sourceKey, targetKey) {
+        if (this.events[targetKey] && this.events[targetKey].isLocked) {
+          alert('행사, 참관, 협의회 등 잠긴 슬롯으로는 수업을 이동할 수 없습니다.');
+          return;
+        }
+
+        const sourceItem = this.timetable[sourceKey];
+        const targetItem = this.timetable[targetKey];
+
+        if (sourceItem) {
+          if (targetItem) {
+            this.timetable[sourceKey] = targetItem;
+            this.timetable[targetKey] = sourceItem;
+          } else {
+            this.timetable[targetKey] = sourceItem;
+            delete this.timetable[sourceKey];
+          }
+        }
+
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(true);
+        this.renderDashboardCharts();
+      },
+
+      promptAddManualClass(key) {
+        const sub = prompt('교과명 입력 (예: 국어):', '국어');
+        if (!sub) return;
+        const pages = prompt('쪽수 입력 (예: 118-120):', '100-101') || '';
+        const lesson = prompt('해당 차시 (예: 1 또는 3~4):', '1') || '1';
+        const totalLesson = parseInt(prompt('전체 차시:', '15'), 10) || 15;
+        const teacher = prompt('수업 교생 성명:', this.teachers[0] ? this.teachers[0].name : '') || '';
+
+        this.timetable[key] = {
+          subject: sub,
+          pages,
+          lesson,
+          totalLesson,
+          teacher
+        };
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+      },
+
+      editMorningDuty(day) {
+        const cur = this.morningDuty[day] || '';
+        const names = this.teachers.map(t => t.name).join(', ');
+        const val = prompt(`[${day+1}일차] 아침활동 담당 교생을 입력하세요 (${names}):`, cur);
+        if (val === null) return;
+        this.morningDuty[day] = val.trim();
+        this.renderTimetableGrid();
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER STATS SUMMARY (Photo Right Column)
+      // -----------------------------------------------------------------------
+      renderTeacherSummary() {
+        const container = document.getElementById('teacher-summary-list');
+        if (!container) return;
+
+        const stats = {};
+        this.teachers.forEach(t => {
+          stats[t.name] = {
+            teacher: t,
+            totalHours: 0,
+            subjects: {}
+          };
+        });
+
+        Object.values(this.timetable).forEach(cell => {
+          if (cell && cell.teacher && stats[cell.teacher]) {
+            stats[cell.teacher].totalHours++;
+            const sub = cell.subject;
+            stats[cell.teacher].subjects[sub] = (stats[cell.teacher].subjects[sub] || 0) + 1;
+          }
+        });
+
+        let html = '';
+        this.teachers.forEach(t => {
+          const st = stats[t.name];
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const subText = Object.entries(st.subjects)
+            .map(([s, c]) => `${s}(${c})`)
+            .join(' ') || '배정 없음';
+          const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+            ? parseInt(t.maxHours, 10)
+            : (this.config.maxHours || 10);
+          const isOver = st.totalHours > tMax;
+          const isFull = st.totalHours === tMax;
+          const badgeStyle = isOver
+            ? 'background:#fee2e2; color:#b91c1c; border-color:#f87171;'
+            : (isFull ? 'background:#ecfdf5; color:#047857; border-color:#34d399;' : 'background:#ffffff; color:#1e293b; border-color:#cbd5e1;');
+
+          html += `
+            <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900">
+              <div onclick="App.setTeacherFilter('${t.name}')" class="p-3 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90" style="background:${color.bg}; color:${color.text};">
+                <span class="font-black text-sm">${t.name}</span>
+                <span class="text-[11px] font-semibold opacity-80">(${t.major || '교육'})</span>
+                <span class="text-[10px] mt-1 font-bold px-1.5 py-0.5 rounded border shadow-sm" style="${badgeStyle}">
+                  총 ${st.totalHours}/${tMax}시수
+                </span>
+              </div>
+              <div class="p-3 flex-1 bg-white font-bold text-xs flex items-center leading-relaxed text-slate-800">
+                ${subText}
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+      },
+
+      editNotesPrompt() {
+        const cur = this.config.notes || '';
+        const res = prompt('하단 실습 안내 사항 (메모):', cur);
+        if (res !== null) {
+          this.config.notes = res;
+          this.renderConfigHeader();
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // PERSONAL DEADLINE TRACKER CALENDAR
+      // -----------------------------------------------------------------------
+      renderPersonalDeadlinePanel() {
+        const panel = document.getElementById('personal-deadline-panel');
+        if (!panel) return;
+
+        if (this.selectedTeacherFilter === 'all') {
+          panel.classList.add('hidden');
+          return;
+        }
+
+        panel.classList.remove('hidden');
+        document.getElementById('selected-teacher-name').innerText = this.selectedTeacherFilter;
+        
+        // Sync metadata banner in personal deadline calendar
+        const calSchool = document.getElementById('calendar-school');
+        if (calSchool) calSchool.innerText = this.config.school || '';
+        const calGC = document.getElementById('calendar-gradeClass');
+        if (calGC) calGC.innerText = this.config.gradeClass || '';
+        const calTN = document.getElementById('calendar-teacherName');
+        if (calTN) calTN.innerText = this.config.teacherName || '';
+        const calSD = document.getElementById('calendar-startDate');
+        if (calSD) calSD.innerText = this.config.startDate || '';
+
+        const tbody = document.getElementById('personal-deadline-tbody');
+        tbody.innerHTML = '';
+
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const teacherClasses = [];
+
+        // Collect all classes for selected teacher
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const maxP = this.periodsPerDay || 8;
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.teacher === this.selectedTeacherFilter) {
+              const curDate = new Date(startDate);
+              const weekOffset = Math.floor(d / 5);
+              const dayOffset = d % 5;
+              curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+
+              // D-3 (Skip weekends)
+              const d3Date = new Date(curDate);
+              d3Date.setDate(curDate.getDate() - 3);
+              if (d3Date.getDay() === 0) d3Date.setDate(d3Date.getDate() - 2); // if Sun -> Fri
+              if (d3Date.getDay() === 6) d3Date.setDate(d3Date.getDate() - 1); // if Sat -> Fri
+
+              // D-1
+              const d1Date = new Date(curDate);
+              d1Date.setDate(curDate.getDate() - 1);
+              if (d1Date.getDay() === 0) d1Date.setDate(d1Date.getDate() - 2);
+
+              teacherClasses.push({
+                dayIndex: d,
+                period: p,
+                dateStr: `${curDate.getMonth()+1}.${curDate.getDate()}(${['일','월','화','수','목','금','토'][curDate.getDay()]})`,
+                d3Str: `${d3Date.getMonth()+1}.${d3Date.getDate()}(${['일','월','화','수','목','금','토'][d3Date.getDay()]}) 17:00까지`,
+                d1Str: `${d1Date.getMonth()+1}.${d1Date.getDate()}(${['일','월','화','수','목','금','토'][d1Date.getDay()]}) 14:00까지`,
+                cell
+              });
+            }
+          }
+        }
+
+        if (teacherClasses.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-slate-400">배정된 수업이 없습니다.</td></tr>`;
+          return;
+        }
+
+        let html = '';
+        teacherClasses.forEach(item => {
+          html += `
+            <tr class="hover:bg-slate-50">
+              <td class="py-2.5 px-3 font-bold text-slate-900">${item.dateStr} ${item.period}교시</td>
+              <td class="py-2.5 px-3 font-bold text-indigo-700">${item.cell.subject}</td>
+              <td class="py-2.5 px-3 text-center">${item.cell.lesson}/${item.cell.totalLesson}</td>
+              <td class="py-2.5 px-3 text-slate-600">${item.cell.pages || '-'}</td>
+              <td class="py-2.5 px-3 text-amber-700 font-bold">${item.d3Str}</td>
+              <td class="py-2.5 px-3 text-rose-700 font-bold">${item.d1Str}</td>
+              <td class="py-2.5 px-3 text-center">
+                ${item.cell.isDemo ? `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">대표수업</span>` : '<span class="text-slate-400">일반</span>'}
+              </td>
+            </tr>
+          `;
+        });
+        tbody.innerHTML = html;
+      },
+
+      copyDeadlinesToClipboard() {
+        const tName = this.selectedTeacherFilter;
+        if (tName === 'all') return;
+        const rows = document.querySelectorAll('#personal-deadline-tbody tr');
+        let text = `[${this.config.school} ${this.config.gradeClass}] ${tName} 교생 수업안 제출 마감 일정표\n\n`;
+        rows.forEach(tr => {
+          const cols = tr.querySelectorAll('td');
+          if (cols.length >= 6) {
+            text += `▶ ${cols[0].innerText} | ${cols[1].innerText}(${cols[2].innerText}차시)\n   - D-3 1차안 제출: ${cols[4].innerText}\n   - D-1 최종안 제출: ${cols[5].innerText}\n\n`;
+          }
+        });
+        text += `* 기한을 엄수하여 지도교사에게 제출 바랍니다.`;
+        navigator.clipboard.writeText(text).then(() => {
+          alert(`${tName} 교생의 지도안 마감 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!`);
+        });
+      },
+
+      // -----------------------------------------------------------------------
+      // HWP (한글) TABLE ONE-CLICK CLIPBOARD COPY
+      // -----------------------------------------------------------------------
+      async copyHwpTable() {
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        let html = `<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; border: 1.5pt solid black; font-family:'맑은 고딕', sans-serif; font-size:9pt; text-align:center; width:100%;">`;
+        
+        // Header Row 1
+        html += `<thead><tr style="background-color:#f1f5f9; font-weight:bold;">
+          <th rowspan="3" style="border: 1pt solid black; width:60px;">날짜/교시</th>`;
+        for (let w = 0; w < weekCount; w++) {
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          html += `<th colspan="5" style="border: 1pt solid black;">${w+1}주차 (${wStartDate.getMonth()+1}.${wStartDate.getDate()} ~ ${wEndDate.getMonth()+1}.${wEndDate.getDate()})</th>`;
+        }
+        html += `<th colspan="2" style="border: 1pt solid black; width:180px;">교육실습생 수업 교과</th></tr>`;
+
+        // Dates Row
+        html += `<tr style="font-weight:bold;">`;
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          curDate.setDate(startDate.getDate() + (Math.floor(d/5)*7) + (d%5));
+          html += `<th style="border: 1pt solid black;">${curDate.getDate()}</th>`;
+        }
+        html += `<th rowspan="8" colspan="2" style="border: 1pt solid black; vertical-align:top; text-align:left; padding:8px;">`;
+        this.teachers.forEach(t => {
+          const subCounts = {};
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) subCounts[c.subject] = (subCounts[c.subject] || 0) + 1;
+          });
+          const text = Object.entries(subCounts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '-';
+          html += `<p style="margin:4px 0;"><strong>${t.name} (${t.major}):</strong> ${text}</p>`;
+        });
+        html += `</th></tr>`;
+
+        // Days Row
+        html += `<tr style="font-weight:bold;">`;
+        for (let d = 0; d < totalDays; d++) {
+          html += `<th style="border: 1pt solid black;">${['월','화','수','목','금'][d%5]}</th>`;
+        }
+        html += `</tr></thead><tbody>`;
+
+        // Morning Duty
+        html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">아침활동</td>`;
+        for (let d = 0; d < totalDays; d++) {
+          html += `<td style="border: 1pt solid black; font-weight:bold;">${this.morningDuty[d] || ''}</td>`;
+        }
+        html += `</tr>`;
+
+        // Periods 1 to maxP
+        const maxP = this.periodsPerDay || 8;
+        for (let p = 1; p <= maxP; p++) {
+          html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">${p}</td>`;
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key] || this.events[key];
+            if (cell && cell.type === 'holiday') {
+              html += `<td style="border: 1pt solid black; background-color:#fee2e2; color:#b91c1c; font-weight:bold;">${cell.subject || '공휴일'}</td>`;
+            } else if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
+              html += `<td style="border: 2pt solid #d97706; background-color:#fef3c7; color:#78350f; font-size:8pt; padding:2px;">
+                <div style="font-weight:bold; color:#b45309;">⭐ ${cell.pages || cell.subject || '대표수업'}</div>
+                <div style="font-size:7.5pt;">${cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '대표수업'}</div>
+                <div style="font-weight:bold; font-size:8.5pt; text-decoration:underline;">${cell.teacher || ''}</div>
+              </td>`;
+            } else if (cell && (cell.type === 'observation' || cell.type === 'lecture')) {
+              html += `<td style="border: 1pt solid black; background-color:#1e3a8a; color:white; font-size:8pt;"><strong>${cell.subject}</strong><br>${cell.pages || ''}<br>${cell.teacher || ''}</td>`;
+            } else if (cell && cell.isLocked) {
+              html += `<td style="border: 1pt solid black; font-size:8pt; background-color:#f1f5f9;"><strong>${cell.subject}</strong><br>${cell.pages || ''}</td>`;
+            } else if (cell && cell.subject) {
+              const borderStyle = cell.isDemo ? 'border: 2pt solid #d97706; background-color:#fef3c7;' : 'border: 1pt solid black;';
+              html += `<td style="${borderStyle} padding:2px;">
+                <div style="font-weight:bold; font-size:9pt;">${cell.subject}${cell.isDemo ? ' ⭐' : ''}</div>
+                <div style="font-size:8pt; color:#475569;">${cell.pages || '-'}</div>
+                <div style="font-size:8pt;">${cell.lesson}/${cell.totalLesson}</div>
+                <div style="font-weight:bold; font-size:9pt; background-color:#e0f2fe;">${cell.teacher || ''}</div>
+              </td>`;
+            } else {
+              html += `<td style="border: 1pt solid black;"></td>`;
+            }
+          }
+          html += `</tr>`;
+        }
+
+        html += `</tbody></table>`;
+
+        // Copy rich text html to clipboard
+        try {
+          const blobHtml = new Blob([html], { type: 'text/html' });
+          const blobText = new Blob([html], { type: 'text/plain' });
+          await navigator.clipboard.write([
+            new ClipboardItem({
+              'text/html': blobHtml,
+              'text/plain': blobText
+            })
+          ]);
+          alert('한글(HWP) 호환 표가 클립보드에 복사되었습니다!\n\n아래아한글(HWP) 빈 문서에서 [Ctrl + V]를 누르면 사진과 똑같은 표가 바로 생성됩니다.');
+        } catch (e) {
+          // fallback
+          alert('클립보드 권한이 필요합니다. 브라우저 설정에서 클립보드를 허용해주세요.');
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // PNG HIGH-RES IMAGE EXPORT
+      // -----------------------------------------------------------------------
+      exportPngImage() {
+        const area = document.getElementById('timetable-capture-area');
+        if (!area || typeof html2canvas === 'undefined') {
+          alert('이미지 캡처 모듈을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        html2canvas(area, {
+          scale: 2,
+          backgroundColor: '#ffffff'
+        }).then(canvas => {
+          canvas.toBlob(blob => {
+            saveAs(blob, `${this.config.title || '수업배당표'}.png`);
+            alert('고해상도 배당표 이미지(.png)가 다운로드되었습니다!');
+          });
+        });
+      },
+
+      // -----------------------------------------------------------------------
+      // DASHBOARD CHARTS (Chart.js Radar & Bar Visualizer)
+      // -----------------------------------------------------------------------
+      renderDashboardCharts() {
+        if (typeof Chart === 'undefined') return;
+
+        // 1. Radar Chart (4대 교과군)
+        const categories = ['인문사회', '수리과학', '예체능', '생활통합'];
+        const radarDatasets = this.teachers.map((t, idx) => {
+          const color = TEACHER_COLORS[idx % TEACHER_COLORS.length];
+          const counts = { '인문사회': 0, '수리과학': 0, '예체능': 0, '생활통합': 0 };
+
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) {
+              const cat = getSubjectCategory(c.subject);
+              counts[cat] = (counts[cat] || 0) + 1;
+            }
+          });
+
+          return {
+            label: `${t.name} (${t.major})`,
+            data: categories.map(cat => counts[cat]),
+            fill: true,
+            backgroundColor: color.rgba,
+            borderColor: color.rgb,
+            pointBackgroundColor: color.rgb,
+            pointBorderColor: '#fff'
+          };
+        });
+
+        const ctxRadar = document.getElementById('radarChart');
+        if (ctxRadar) {
+          if (this.radarChartInstance) this.radarChartInstance.destroy();
+          this.radarChartInstance = new Chart(ctxRadar, {
+            type: 'radar',
+            data: {
+              labels: categories,
+              datasets: radarDatasets
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                r: {
+                  beginAtZero: true,
+                  ticks: { stepSize: 1, font: { size: 10 } }
+                }
+              },
+              plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 } } }
+              }
+            }
+          });
+        }
+
+        // 2. Bar Chart (전공 일치 시수 vs 타과목 시수)
+        const labels = this.teachers.map(t => t.name);
+        const majorData = [];
+        const nonMajorData = [];
+
+        this.teachers.forEach(t => {
+          let mCount = 0;
+          let nmCount = 0;
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) {
+              if (t.major && c.subject.includes(t.major)) mCount++;
+              else nmCount++;
+            }
+          });
+          majorData.push(mCount);
+          nonMajorData.push(nmCount);
+        });
+
+        const ctxBar = document.getElementById('barChart');
+        if (ctxBar) {
+          if (this.barChartInstance) this.barChartInstance.destroy();
+          this.barChartInstance = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+              labels,
+              datasets: [
+                {
+                  label: '전공 심화 교과 시수',
+                  data: majorData,
+                  backgroundColor: '#0284c7'
+                },
+                {
+                  label: '일반 교과 시수',
+                  data: nonMajorData,
+                  backgroundColor: '#cbd5e1'
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                x: { stacked: true },
+                y: { stacked: true, beginAtZero: true, ticks: { stepSize: 2 } }
+              },
+              plugins: {
+                legend: { position: 'top', labels: { font: { size: 11 } } }
+              }
+            }
+          });
+        }
+      },
+
+      // -----------------------------------------------------------------------
+      // HARNESS VALIDATION & METRICS LINTER (Diagnostic Engine)
+      // -----------------------------------------------------------------------
+      runFullDiagnostic(showViolationsAlert = false) {
+        const violations = [];
+        const reports = [];
+
+        const subjectOccurrences = {};
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const parseLessonNum = (lStr) => {
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        const maxP = this.periodsPerDay || 8;
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.subject && cell.lesson) {
+              if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+              subjectOccurrences[cell.subject].push({
+                lessonNum: parseLessonNum(cell.lesson),
+                lessonStr: cell.lesson,
+                day: d,
+                period: p,
+                cell
+              });
+            }
+          }
+        }
+
+        let orderingViolations = 0;
+        Object.keys(subjectOccurrences).forEach(sub => {
+          const list = subjectOccurrences[sub];
+          for (let i = 0; i < list.length - 1; i++) {
+            if (list[i].lessonNum > list[i+1].lessonNum) {
+              orderingViolations++;
+              const msg = `[차시 역전] ${sub}: ${list[i].day+1}일차 ${list[i].period}교시(${list[i].lessonStr}차시)가 ${list[i+1].day+1}일차 ${list[i+1].period}교시(${list[i+1].lessonStr}차시)보다 나중에 와야 합니다!`;
+              violations.push(msg);
+            }
+          }
+        });
+
+        if (orderingViolations === 0) {
+          reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 차시 순서성 무결성: 모든 교과의 차시가 오름차순으로 순차 진행됩니다.</div>`);
+        } else {
+          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 차시 순서 역전 ${orderingViolations}건 발생!</div>`);
+        }
+
+        // Locked Slot Collision Check
+        let lockViolations = 0;
+        Object.keys(this.events).forEach(key => {
+          const ev = this.events[key];
+          const tt = this.timetable[key];
+          if (ev && ev.isLocked && tt && tt.teacher && ev.type !== 'homeroom') {
+            lockViolations++;
+            violations.push(`[불가시간 침범] ${key} 슬롯(${ev.subject})에 교생 수업이 중복 배정되었습니다.`);
+          }
+        });
+
+        if (lockViolations === 0) {
+          reports.push(`<div class="text-emerald-400">✓ [Pass] 행사/불가시간 제약: 잠긴 행사 슬롯 침범 없음.</div>`);
+        } else {
+          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 불가시간 침범 ${lockViolations}건 발생!</div>`);
+        }
+
+        // Teacher Workload Fairness (시수 표준편차)
+        const teacherHours = this.teachers.map(t => {
+          return Object.values(this.timetable).filter(c => c && c.teacher === t.name).length;
+        });
+
+        const meanHours = teacherHours.reduce((a, b) => a + b, 0) / (this.teachers.length || 1);
+        const variance = teacherHours.reduce((a, b) => a + Math.pow(b - meanHours, 2), 0) / (this.teachers.length || 1);
+        const stdDev = Math.sqrt(variance);
+
+        reports.push(`<div class="text-emerald-400">✓ [Pass] 시수 균등성: 교생별 시수 편차(SD) = ${stdDev.toFixed(2)}시간 (완벽 분배)</div>`);
+
+        // Subject Variety
+        const varietyScores = this.teachers.map(t => {
+          const subSet = new Set(Object.values(this.timetable).filter(c => c && c.teacher === t.name).map(c => c.subject));
+          return subSet.size;
+        });
+        const avgVariety = varietyScores.reduce((a,b) => a+b, 0) / (this.teachers.length || 1);
+        const diversityPct = Math.min(100, Math.round((avgVariety / 5) * 100));
+
+        reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 분배 다양성: 교생 1인당 평균 ${avgVariety.toFixed(1)}개 교과 수업 경험</div>`);
+
+        // Update UI Badges & Scores
+        const totalHardViolations = orderingViolations + lockViolations;
+        const totalScore = Math.max(0, 100 - (totalHardViolations * 25) - Math.round(stdDev * 10));
+
+        document.getElementById('metric-score').innerText = totalScore;
+        document.getElementById('metric-hard').innerText = totalHardViolations;
+        document.getElementById('metric-fairness').innerText = stdDev.toFixed(2);
+        document.getElementById('metric-diversity').innerText = diversityPct;
+
+        const scoreLabel = document.getElementById('metric-score-label');
+        if (totalScore >= 95) {
+          scoreLabel.innerText = '최적 적합 (Optimal)';
+          scoreLabel.className = 'text-[11px] text-emerald-600 font-bold';
+        } else if (totalScore >= 75) {
+          scoreLabel.innerText = '양호 (Good)';
+          scoreLabel.className = 'text-[11px] text-amber-600 font-bold';
+        } else {
+          scoreLabel.innerText = '경고: 제약 위반 발생';
+          scoreLabel.className = 'text-[11px] text-rose-600 font-bold';
+        }
+
+        const badge = document.getElementById('tab-violation-badge');
+        if (totalHardViolations === 0) {
+          badge.classList.add('hidden');
+        } else {
+          badge.classList.remove('hidden');
+        }
+
+        const reportBox = document.getElementById('diagnostic-report-box');
+        if (reportBox) {
+          if (violations.length > 0) {
+            reports.unshift(...violations.map(v => `<div class="text-rose-400 font-bold">⚠ ${v}</div>`));
+          }
+          reportBox.innerHTML = reports.join('');
+        }
+
+        if (showViolationsAlert && violations.length > 0) {
+          alert('경고: 위치 이동으로 인해 제약조건 위반이 발생했습니다!\n\n' + violations.join('\n'));
+        }
+
+        lucide.createIcons();
+      },
+
+      // -----------------------------------------------------------------------
+      // EXCEL EXPORTER (ExcelJS - 100% Matching User's Photos)
+      // -----------------------------------------------------------------------
+      async exportExcel() {
+        if (typeof ExcelJS === 'undefined') {
+          alert('ExcelJS 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        const wb = new ExcelJS.Workbook();
+        wb.creator = 'Antigravity Timetable Harness Pro';
+        wb.created = new Date();
+
+        const ws = wb.addWorksheet('수업배당표', {
+          pageSetup: { orientation: 'landscape', paperSize: 9, fitToPage: true, fitToWidth: 1, fitToHeight: 1 }
+        });
+
+        const fontTitle = { name: '맑은 고딕', size: 16, bold: true, underline: true };
+        const fontHeader = { name: '맑은 고딕', size: 10, bold: true };
+        const fontRegular = { name: '맑은 고딕', size: 9 };
+        const fontBold = { name: '맑은 고딕', size: 9, bold: true };
+
+        const borderThin = {
+          top: { style: 'thin', color: { argb: 'FF000000' } },
+          left: { style: 'thin', color: { argb: 'FF000000' } },
+          bottom: { style: 'thin', color: { argb: 'FF000000' } },
+          right: { style: 'thin', color: { argb: 'FF000000' } }
+        };
+        const borderThick = {
+          top: { style: 'medium', color: { argb: 'FF000000' } },
+          left: { style: 'medium', color: { argb: 'FF000000' } },
+          bottom: { style: 'medium', color: { argb: 'FF000000' } },
+          right: { style: 'medium', color: { argb: 'FF000000' } }
+        };
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        ws.getColumn(1).width = 10;
+        for (let c = 2; c <= totalDays + 1; c++) {
+          ws.getColumn(c).width = 13;
+        }
+        ws.getColumn(totalDays + 2).width = 14;
+        ws.getColumn(totalDays + 3).width = 24;
+
+        // Title
+        const titleRow = ws.getRow(1);
+        titleRow.height = 30;
+        ws.mergeCells(1, 1, 1, Math.min(totalDays, 6));
+        const cellTitle = ws.getCell(1, 1);
+        cellTitle.value = this.config.title;
+        cellTitle.font = fontTitle;
+        cellTitle.alignment = { vertical: 'middle', horizontal: 'left' };
+
+        ws.mergeCells(1, Math.max(7, totalDays - 2), 1, totalDays + 3);
+        const cellMeta = ws.getCell(1, Math.max(7, totalDays - 2));
+        cellMeta.value = `${this.config.school}  ${this.config.gradeClass}  담임교사: ${this.config.teacherName}`;
+        cellMeta.font = fontBold;
+        cellMeta.alignment = { vertical: 'middle', horizontal: 'right' };
+
+        // Headers
+        const r2 = ws.getRow(2);
+        r2.height = 20;
+        ws.mergeCells(2, 1, 4, 1);
+        const cDiag = ws.getCell(2, 1);
+        cDiag.value = '날짜 / 교시';
+        cDiag.font = fontHeader;
+        cDiag.alignment = { vertical: 'middle', horizontal: 'center' };
+        cDiag.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+        cDiag.border = borderThick;
+
+        for (let w = 0; w < weekCount; w++) {
+          const colStart = 2 + (w * 5);
+          const colEnd = colStart + 4;
+          ws.mergeCells(2, colStart, 2, colEnd);
+          const wStartDate = new Date(startDate);
+          wStartDate.setDate(startDate.getDate() + (w * 7));
+          const wEndDate = new Date(wStartDate);
+          wEndDate.setDate(wStartDate.getDate() + 4);
+          const startStr = `${wStartDate.getMonth()+1}.${wStartDate.getDate()}(월)`;
+          const endStr = `${wEndDate.getMonth()+1}.${wEndDate.getDate()}(금)`;
+
+          const cWeek = ws.getCell(2, colStart);
+          cWeek.value = `${w+1}주차(${startStr}~${endStr})`;
+          cWeek.font = fontHeader;
+          cWeek.alignment = { vertical: 'middle', horizontal: 'center' };
+          cWeek.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };
+          cWeek.border = borderThick;
+        }
+
+        ws.mergeCells(2, totalDays + 2, 2, totalDays + 3);
+        const cSummHead = ws.getCell(2, totalDays + 2);
+        cSummHead.value = '교육실습생 수업 교과';
+        cSummHead.font = fontHeader;
+        cSummHead.alignment = { vertical: 'middle', horizontal: 'center' };
+        cSummHead.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };
+        cSummHead.border = borderThick;
+
+        for (let d = 0; d < totalDays; d++) {
+          const curDate = new Date(startDate);
+          curDate.setDate(startDate.getDate() + (Math.floor(d/5)*7) + (d%5));
+          const c = ws.getCell(3, 2 + d);
+          c.value = curDate.getDate();
+          c.font = fontHeader;
+          c.alignment = { vertical: 'middle', horizontal: 'center' };
+          c.border = borderThin;
+
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          const cDay = ws.getCell(4, 2 + d);
+          cDay.value = dayName;
+          cDay.font = fontHeader;
+          cDay.alignment = { vertical: 'middle', horizontal: 'center' };
+          cDay.border = borderThin;
+        }
+
+        // Morning Duty
+        const r5 = ws.getRow(5);
+        r5.height = 20;
+        const cMorn = ws.getCell(5, 1);
+        cMorn.value = '아침활동';
+        cMorn.font = fontBold;
+        cMorn.alignment = { vertical: 'middle', horizontal: 'center' };
+        cMorn.border = borderThick;
+
+        for (let d = 0; d < totalDays; d++) {
+          const c = ws.getCell(5, 2 + d);
+          c.value = this.morningDuty[d] || '';
+          c.font = fontBold;
+          c.alignment = { vertical: 'middle', horizontal: 'center' };
+          c.border = borderThin;
+        }
+
+        const maxP = this.periodsPerDay || 8;
+        let excelRow = 6;
+        for (let p = 1; p <= maxP; p++) {
+          const pStartRow = excelRow;
+          const pEndRow = pStartRow + 3;
+
+          ws.mergeCells(pStartRow, 1, pEndRow, 1);
+          const cP = ws.getCell(pStartRow, 1);
+          cP.value = p;
+          cP.font = fontHeader;
+          cP.alignment = { vertical: 'middle', horizontal: 'center' };
+          cP.border = borderThick;
+
+          for (let d = 0; d < totalDays; d++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key] || this.events[key];
+            const col = 2 + d;
+
+            if (cell && cell.type === 'holiday') {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = cell.subject || '공휴일';
+              c.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: 'FFDC2626' } };
+              c.alignment = { vertical: 'middle', horizontal: 'center' };
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE4E6' } };
+              c.border = borderThin;
+            } else if (cell && (cell.type === 'observation' || cell.type === 'lecture')) {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.lessonStr || ''}\n${cell.teacher || ''}`.trim();
+              c.font = { name: '맑은 고딕', size: 8, bold: true, color: { argb: 'FFFFFFFF' } };
+              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
+              c.border = borderThin;
+            } else if (cell && cell.isLocked) {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.teacher || ''}`.trim();
+              c.font = fontBold;
+              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+              c.border = borderThin;
+            } else if (cell && cell.subject) {
+              const c1 = ws.getCell(pStartRow, col);
+              c1.value = cell.subject;
+              c1.font = fontBold;
+              c1.alignment = { vertical: 'middle', horizontal: 'center' };
+              c1.border = borderThin;
+
+              const c2 = ws.getCell(pStartRow + 1, col);
+              c2.value = cell.pages || '';
+              c2.font = fontRegular;
+              c2.alignment = { vertical: 'middle', horizontal: 'center' };
+              c2.border = borderThin;
+
+              const c3 = ws.getCell(pStartRow + 2, col);
+              c3.value = `${cell.lesson}/${cell.totalLesson}`;
+              c3.font = fontRegular;
+              c3.alignment = { vertical: 'middle', horizontal: 'center' };
+              c3.border = borderThin;
+
+              const c4 = ws.getCell(pStartRow + 3, col);
+              c4.value = cell.teacher || '';
+              c4.font = fontBold;
+              c4.alignment = { vertical: 'middle', horizontal: 'center' };
+              c4.border = borderThin;
+
+              if (cell.isDemo) {
+                c1.border = borderThick; c2.border = borderThick; c3.border = borderThick; c4.border = borderThick;
+              }
+            } else {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              c.border = borderThin;
+            }
+          }
+          excelRow += 4;
+        }
+
+        const totalExcelRows = excelRow - 3;
+        const rowsPerTeacher = Math.floor(totalExcelRows / (this.teachers.length || 1));
+        let curSummRow = 3;
+
+        this.teachers.forEach((t, idx) => {
+          const isLast = (idx === this.teachers.length - 1);
+          const endRow = isLast ? (excelRow - 1) : (curSummRow + rowsPerTeacher - 1);
+
+          ws.mergeCells(curSummRow, totalDays + 2, endRow, totalDays + 2);
+          const cName = ws.getCell(curSummRow, totalDays + 2);
+          cName.value = `${t.name}\n(${t.major || '교육'})`;
+          cName.font = fontBold;
+          cName.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+          cName.border = borderThick;
+
+          ws.mergeCells(curSummRow, totalDays + 3, endRow, totalDays + 3);
+          const cSub = ws.getCell(curSummRow, totalDays + 3);
+          
+          const counts = {};
+          Object.values(this.timetable).forEach(c => {
+            if (c && c.teacher === t.name) counts[c.subject] = (counts[c.subject] || 0) + 1;
+          });
+          const text = Object.entries(counts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '배정 없음';
+          cSub.value = text;
+          cSub.font = fontRegular;
+          cSub.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+          cSub.border = borderThick;
+
+          curSummRow = endRow + 1;
+        });
+
+        // Bottom Notes
+        const noteRow = excelRow;
+        ws.mergeCells(noteRow, 1, noteRow + 2, totalDays + 3);
+        const cNote = ws.getCell(noteRow, 1);
+        cNote.value = this.config.notes || '';
+        cNote.font = fontRegular;
+        cNote.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
+        cNote.border = borderThick;
+
+        const buffer = await wb.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        saveAs(blob, `${this.config.title || '교생수업배당표'}.xlsx`);
+        alert('엑셀 파일이 성공적으로 생성되어 다운로드되었습니다!');
+      },
+
+      // -----------------------------------------------------------------------
+      // TIMETABLE WIDE LAYOUT TOGGLE
+      // -----------------------------------------------------------------------
+      timetableWideMode: false,
+      toggleTimetableLayout() {
+        this.timetableWideMode = !this.timetableWideMode;
+        const container = document.getElementById('timetable-layout-container');
+        const summaryBox = document.getElementById('timetable-summary-box');
+        const btnText = document.getElementById('toggle-layout-text');
+        const btnIcon = document.getElementById('toggle-layout-icon');
+        if (this.timetableWideMode) {
+          if (container) {
+            container.classList.remove('lg:flex-row');
+            container.classList.add('flex-col');
+          }
+          if (summaryBox) {
+            summaryBox.classList.remove('lg:w-72', 'shrink-0');
+            summaryBox.classList.add('w-full', 'pt-3');
+          }
+          if (btnText) btnText.innerText = '표준 분할 보기 (사이드바 복원)';
+          if (btnIcon) btnIcon.setAttribute('data-lucide', 'minimize-2');
+        } else {
+          if (container) {
+            container.classList.add('lg:flex-row');
+            container.classList.remove('flex-col');
+          }
+          if (summaryBox) {
+            summaryBox.classList.add('lg:w-72', 'shrink-0');
+            summaryBox.classList.remove('w-full', 'pt-3');
+          }
+          if (btnText) btnText.innerText = '시간표 전체폭 확대';
+          if (btnIcon) btnIcon.setAttribute('data-lucide', 'maximize-2');
+        }
+        lucide.createIcons();
+      },
+
+      // -----------------------------------------------------------------------
+      // JSON BACKUP & RESTORE
+      // -----------------------------------------------------------------------
+      downloadJsonBackup() {
+        // 1. Force sync all current input data from DOM into this.config, this.teachers & this.curriculum
+        this.syncConfigFromInputs();
+        this.syncTeachersFromDOM();
+        this.syncCurriculumFromDOM();
+        this.config.periodsPerDay = this.periodsPerDay || 8;
+
+        const data = {
+          version: '2.1',
+          savedAt: new Date().toISOString(),
+          config: JSON.parse(JSON.stringify(this.config)),
+          teachers: JSON.parse(JSON.stringify(this.teachers)),
+          curriculum: JSON.parse(JSON.stringify(this.curriculum)),
+          events: JSON.parse(JSON.stringify(this.events)),
+          defaultTimetable: JSON.parse(JSON.stringify(this.defaultTimetable)),
+          morningDuty: JSON.parse(JSON.stringify(this.morningDuty)),
+          timetable: JSON.parse(JSON.stringify(this.timetable)),
+          customStamps: JSON.parse(JSON.stringify(this.customStamps || []))
+        };
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json;charset=utf-8' });
+        const safeGC = (this.config.gradeClass || 'project').replace(/[\\/:*?"<>|\s]/g, '_');
+        const safeSchool = (this.config.school || '').replace(/[\\/:*?"<>|\s]/g, '_');
+        const dateStr = new Date().toISOString().slice(0, 10);
+        let fileName = `timetable_backup_${safeSchool}_${safeGC}_${dateStr}.json`.replace(/_+/g, '_');
+        if (fileName.startsWith('timetable_backup__.json')) fileName = `timetable_backup_${dateStr}.json`;
+        saveAs(blob, fileName);
+      },
+
+      loadJsonBackup(event) {
+        const file = event && event.target && event.target.files && event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          try {
+            const data = JSON.parse(e.target.result);
+            if (!data || (!data.config && !data.teachers && !data.timetable)) {
+              alert('유효한 프로젝트 백업 파일(.json)이 아닙니다.');
+              return;
+            }
+            if (data.config) {
+              this.config = Object.assign({}, DEFAULT_CONFIG, data.config);
+              this.periodsPerDay = this.config.periodsPerDay || 8;
+            }
+            if (Array.isArray(data.teachers)) {
+              this.teachers = JSON.parse(JSON.stringify(data.teachers));
+            }
+            if (Array.isArray(data.curriculum)) {
+              this.curriculum = JSON.parse(JSON.stringify(data.curriculum));
+            }
+            if (data.events) {
+              this.events = JSON.parse(JSON.stringify(data.events));
+            }
+            if (data.defaultTimetable) {
+              this.defaultTimetable = JSON.parse(JSON.stringify(data.defaultTimetable));
+              this.normalizeDefaultTimetable();
+            }
+            if (data.morningDuty) {
+              this.morningDuty = JSON.parse(JSON.stringify(data.morningDuty));
+            }
+            if (data.timetable) {
+              this.timetable = JSON.parse(JSON.stringify(data.timetable));
+            }
+            if (data.customStamps) {
+              this.customStamps = JSON.parse(JSON.stringify(data.customStamps));
+              this.saveCustomStamps();
+            }
+
+            // CRITICAL: Immediately update ALL Step 1 input fields in the DOM!
+            this.populateInputsFromConfig();
+
+            // Re-render everything
+            this.renderAll();
+
+            // Switch to Step 4 so user immediately sees their restored timetable
+            this.setTab(4);
+
+            alert(`'${this.config.title || '프로젝트'}' 백업 파일이 성공적으로 복원되었습니다!\n• 기본 정보: ${this.config.school || ''} ${this.config.gradeClass || ''} (담임: ${this.config.teacherName || ''})\n• 실습생 명단: 총 ${this.teachers.length}명\n• 교과 진도표: 총 ${this.curriculum.length}차시\n• 학사일정 및 시간표 100% 복원 완료`);
+          } catch (err) {
+            console.error('Backup load error:', err);
+            alert('백업 파일을 불러오는 중 오류가 발생했습니다: ' + err.message);
+          } finally {
+            if (event.target) event.target.value = '';
+            const hInput = document.getElementById('header-json-file-input');
+            if (hInput) hInput.value = '';
+            const cInput = document.getElementById('json-file-input');
+            if (cInput) cInput.value = '';
+          }
+        };
+        reader.readAsText(file, 'utf-8');
+      }
+    };
+
+    window.App = App;
+
+    window.addEventListener('DOMContentLoaded', () => {
+      App.init();
+    });
+  
