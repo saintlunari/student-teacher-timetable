@@ -50,20 +50,92 @@
     }
     /* Smart Swap Guide Styles */
     .tt-cell.swap-safe {
+      position: relative !important;
       background-color: #ecfdf5 !important;
-      border: 2px dashed #10b981 !important;
-      box-shadow: 0 0 10px rgba(16, 185, 129, 0.4) !important;
+      border: 3px solid #10b981 !important;
+      box-shadow: 0 0 14px rgba(16, 185, 129, 0.45) !important;
       cursor: pointer !important;
     }
+    .tt-cell.swap-safe::after {
+      content: '🟢이동가능';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #10b981;
+      color: #ffffff;
+      padding: 1px 4px;
+      border-radius: 4px;
+      z-index: 25;
+      pointer-events: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
     .tt-cell.swap-unsafe {
-      background-color: #fef2f2 !important;
-      border: 2px dashed #ef4444 !important;
-      opacity: 0.6;
+      position: relative !important;
+      background-color: #fff1f2 !important;
+      border: 2px dashed #f43f5e !important;
+      cursor: not-allowed !important;
+    }
+    .tt-cell.swap-unsafe::after {
+      content: '🚫불가';
+      position: absolute;
+      top: 2px;
+      right: 2px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #f43f5e;
+      color: #ffffff;
+      padding: 1px 4px;
+      border-radius: 4px;
+      z-index: 25;
+      pointer-events: none;
+      opacity: 0.95;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     }
     .tt-cell.cell-selected {
-      border: 3px solid #3b82f6 !important;
-      box-shadow: 0 0 12px rgba(59, 130, 246, 0.5) !important;
-      animation: pulse 1.5s infinite;
+      position: relative !important;
+      border: 3px solid #2563eb !important;
+      background-color: #eff6ff !important;
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.5) !important;
+    }
+    .tt-cell.cell-selected::after {
+      content: '📌선택됨';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 1px 4px;
+      border-radius: 4px;
+      z-index: 25;
+      pointer-events: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+    }
+    /* Allocation Error Highlight Styles (오류 발생 항목 빨간 테두리 및 배지) */
+    .tt-cell.cell-error {
+      position: relative !important;
+      border: 3.5px solid #e11d48 !important;
+      background-color: #fff1f2 !important;
+      box-shadow: 0 0 14px rgba(225, 29, 72, 0.6) !important;
+    }
+    .tt-cell.cell-error::before {
+      content: '⚠️오류';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #e11d48;
+      color: #ffffff;
+      padding: 1px 4px;
+      border-radius: 4px;
+      z-index: 26;
+      pointer-events: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+      animation: pulse 1.8s infinite;
     }
     .tt-cell.dimmed-cell {
       opacity: 0.25;
@@ -208,22 +280,22 @@
           <div class="space-y-3">
             <div>
               <label class="block text-xs font-medium text-slate-600 mb-1">배당표 제목</label>
-              <input type="text" id="cfg-title" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="교육실습IV(종합) 교육 실습생 수업배당표(0학년)">
+              <input type="text" id="cfg-title" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="교육실습IV(종합) 교육 실습생 수업배당표(0학년)">
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">학교명</label>
-                <input type="text" id="cfg-school" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="공주교육대학교부설초등학교">
+                <input type="text" id="cfg-school" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="공주교육대학교부설초등학교">
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">학년 / 반</label>
-                <input type="text" id="cfg-gradeClass" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="0학년 0반">
+                <input type="text" id="cfg-gradeClass" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="0학년 0반">
               </div>
             </div>
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">담임교사 성명</label>
-                <input type="text" id="cfg-teacherName" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="김지도">
+                <input type="text" id="cfg-teacherName" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="김지도">
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">실습 기간 (주수)</label>
@@ -235,13 +307,27 @@
                 </select>
               </div>
             </div>
-            <div>
-              <label class="block text-xs font-medium text-slate-600 mb-1">실습 시작일 (월요일)</label>
-              <input type="date" id="cfg-startDate" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="2026-04-20">
+            <div class="grid grid-cols-3 gap-3">
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">실습 시작일 (월요일)</label>
+                <input type="date" id="cfg-startDate" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="2026-04-20">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">교생 기본 최대 시수</label>
+                <input type="number" id="cfg-maxHours" min="1" max="50" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-indigo-700" value="10">
+              </div>
+              <div>
+                <label class="block text-xs font-medium text-slate-600 mb-1">1일 수업 교시 수</label>
+                <select id="cfg-periodsPerDay" onchange="App.onPeriodsPerDayChange(this.value)" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none bg-white font-bold text-sky-700">
+                  <option value="6">6교시</option>
+                  <option value="7">7교시</option>
+                  <option value="8" selected>8교시 (확장)</option>
+                </select>
+              </div>
             </div>
           </div>
           <div class="pt-2 text-[11px] text-slate-400">
-            * 주차 수와 시작일을 변경하면 시간표 그리드와 지도안 마감일 달력이 자동으로 동기화됩니다.
+            * 기본 정보 변경 시 배당표 상단 제목, 지도교사 및 교생 개인별 마감일 달력에 실시간 동기화됩니다.
           </div>
         </div>
 
@@ -267,6 +353,7 @@
                   <th class="py-2.5 px-3 w-28">전공 심화</th>
                   <th class="py-2.5 px-3 w-20 text-center">색상 태그</th>
                   <th class="py-2.5 px-3 w-32">⭐ 대표수업 과목</th>
+                  <th class="py-2.5 px-3 w-20 text-center">최대 시수</th>
                   <th class="py-2.5 px-3">수업 배당 (시수 메모)</th>
                   <th class="py-2.5 px-3 w-12 text-center">삭제</th>
                 </tr>
@@ -415,11 +502,8 @@
           <div class="flex flex-wrap items-center gap-1.5">
             <span class="text-[11px] font-bold text-slate-600 mr-1">기본 스탬프:</span>
             <!-- 강의 프리셋 -->
-            <button onclick="App.setCurrentStamp('lecture', '강의1', '교직 생활', '교장')" class="px-2.5 py-1 text-xs rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium border border-blue-200 transition">
-              강의1(교직생활/교장)
-            </button>
-            <button onclick="App.setCurrentStamp('lecture', '강의4', '미래 교육', '인사과장')" class="px-2.5 py-1 text-xs rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium border border-blue-200 transition">
-              강의4(미래교육/인사과장)
+            <button onclick="App.setCurrentStamp('lecture', '강의', '', '')" class="px-2.5 py-1 text-xs rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-900 font-medium border border-blue-200 transition flex items-center gap-1">
+              <i data-lucide="book-open" class="w-3 h-3 text-blue-600"></i> 강의
             </button>
             <!-- 교생 대표수업 프리셋 버튼 -->
             <button onclick="App.openTraineeDemoStampModal()" class="px-2.5 py-1 text-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold border border-amber-600 shadow-sm transition flex items-center gap-1">
@@ -555,6 +639,9 @@
       <!-- 배당표 메인 뷰 (인쇄 및 이미지 캡처 대상 영역) -->
       <div id="timetable-capture-area" class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 print-area space-y-4">
         
+        <!-- 배당표 오류 감지 및 자동 검증 알림 배너 (자동 갱신) -->
+        <div id="timetable-error-banner" class="no-print"></div>
+
         <!-- 상단 헤더 타이틀 & 우측 메타데이터 -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b-2 border-slate-800 pb-3 gap-2">
           <div>
@@ -628,6 +715,14 @@
               <i data-lucide="printer" class="w-3.5 h-3.5"></i> 개인 시간표 인쇄
             </button>
           </div>
+        </div>
+
+        <!-- 실습 및 학급 기본 정보 동기화 배너 -->
+        <div class="text-xs text-slate-700 font-medium flex flex-wrap items-center gap-4 bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+          <span>🏫 <strong id="calendar-school" class="text-slate-900 font-bold">공주교육대학교부설초등학교</strong></span>
+          <span>🏷️ <strong id="calendar-gradeClass" class="text-slate-900 font-bold">0학년 0반</strong></span>
+          <span>👨‍🏫 지도교사: <strong id="calendar-teacherName" class="text-slate-900 font-bold">김지도</strong></span>
+          <span>📅 실습 시작일: <strong id="calendar-startDate" class="text-indigo-700 font-bold">2026-04-20</strong></span>
         </div>
 
         <p class="text-xs text-slate-500">
@@ -1266,6 +1361,8 @@
       teacherName: '김지도',
       weekCount: 2,
       startDate: '2026-04-20',
+      maxHours: 10,
+      periodsPerDay: 8,
       notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 실습일정표 참조\n3. 오후 일정은 실습일정표 참조'
     };
 
@@ -1292,6 +1389,8 @@
           teacherName: '김지도',
           weekCount: 2,
           startDate: '2026-04-20',
+          maxHours: 10,
+          periodsPerDay: 8,
           notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 27(월) 2-3교시\n3. 오후 일정은 실습일정표 참조'
         },
         teachers: [
@@ -1325,7 +1424,9 @@
           ['슬생', '교생대표', '슬생', '즐생', '즐생'],
           ['즐생', '수업설계', '즐생', '즐생', '즐생'],
           ['학급협의회', '슬생', '학급협의회', '학급협의회', '창체'],
-          ['학급협의회', '학급협의회', '학급협의회', '학급협의회', '창체']
+          ['학급협의회', '학급협의회', '학급협의회', '학급협의회', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
         ],
         events: {
           '0-1': { type: 'homeroom', subject: '창체', pages: '학생과', lessonStr: '첫인사', teacher: '담임', isLocked: true },
@@ -1392,6 +1493,8 @@
           teacherName: '김지도',
           weekCount: 4,
           startDate: '2026-04-13',
+          maxHours: 10,
+          periodsPerDay: 8,
           notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업 30(목) 2-3교시\n3. 오후 일정은 실습일정표 참조'
         },
         teachers: [
@@ -1505,6 +1608,8 @@
       currentStamp: null,
       customStamps: [],             // User custom presets
       newStampSelectedType: 'lecture',
+      periodsPerDay: 8,
+      timetableErrors: { errorMap: {}, errorCount: 0, errorList: [] },
 
       // Active state: Clean initial state with 0학년 0반, 빈 시간표, 3개 진도표, 4명 익명 실습생
       config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
@@ -1517,7 +1622,9 @@
         ['슬생', '즐생', '슬생', '즐생', '즐생'],
         ['즐생', '즐생', '즐생', '즐생', '즐생'],
         ['체육', '음악', '미술', '창체', '창체'],
-        ['창체', '창체', '동아리', '창체', '창체']
+        ['창체', '창체', '동아리', '창체', '창체'],
+        ['', '', '', '', ''],
+        ['', '', '', '', '']
       ],
       morningDuty: {},
       timetable: {},
@@ -1537,6 +1644,7 @@
         this.config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
         this.teachers = JSON.parse(JSON.stringify(DEFAULT_TEACHERS));
         this.curriculum = JSON.parse(JSON.stringify(DEFAULT_CURRICULUM));
+        this.periodsPerDay = this.config.periodsPerDay || 8;
         this.events = {};
         this.defaultTimetable = [
           ['국어', '수학', '국어', '수학', '국어'],
@@ -1544,8 +1652,11 @@
           ['슬생', '즐생', '슬생', '즐생', '즐생'],
           ['즐생', '즐생', '즐생', '즐생', '즐생'],
           ['체육', '음악', '미술', '창체', '창체'],
-          ['창체', '창체', '동아리', '창체', '창체']
+          ['창체', '창체', '동아리', '창체', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
         ];
+        this.normalizeDefaultTimetable();
         this.morningDuty = {};
         this.timetable = {};
         this.selectedTeacherFilter = 'all';
@@ -1562,6 +1673,28 @@
         if (cfgWC) cfgWC.value = this.config.weekCount;
         const cfgSD = document.getElementById('cfg-startDate');
         if (cfgSD) cfgSD.value = this.config.startDate;
+        const cfgMH = document.getElementById('cfg-maxHours');
+        if (cfgMH) cfgMH.value = this.config.maxHours || 10;
+        const cfgPPD = document.getElementById('cfg-periodsPerDay');
+        if (cfgPPD) cfgPPD.value = this.periodsPerDay;
+      },
+
+      normalizeDefaultTimetable() {
+        if (!this.defaultTimetable) this.defaultTimetable = [];
+        const targetPeriods = this.periodsPerDay || 8;
+        while (this.defaultTimetable.length < targetPeriods) {
+          this.defaultTimetable.push(['', '', '', '', '']);
+        }
+      },
+
+      onPeriodsPerDayChange(val) {
+        this.periodsPerDay = parseInt(val, 10);
+        this.config.periodsPerDay = this.periodsPerDay;
+        this.normalizeDefaultTimetable();
+        this.renderEventGrid();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+        if (this.activeTab === 5) this.runFullDiagnostic();
       },
 
       setupPresetDropdown() {
@@ -1594,6 +1727,8 @@
 
         if (tabIndex === 3) this.renderEventGrid();
         if (tabIndex === 4) {
+          this.syncConfigFromInputs();
+          this.renderConfigHeader();
           this.renderTeacherFilterTabs();
           this.renderTimetableGrid();
           this.renderTeacherSummary();
@@ -1616,6 +1751,8 @@
         this.events = JSON.parse(JSON.stringify(p.events));
         this.defaultTimetable = JSON.parse(JSON.stringify(p.defaultTimetable || []));
         this.morningDuty = JSON.parse(JSON.stringify(p.morningDuty || {}));
+        this.periodsPerDay = this.config.periodsPerDay || 8;
+        this.normalizeDefaultTimetable();
         this.timetable = {};
         this.selectedTeacherFilter = 'all';
 
@@ -1626,6 +1763,10 @@
         document.getElementById('cfg-teacherName').value = this.config.teacherName;
         document.getElementById('cfg-weekCount').value = this.config.weekCount;
         document.getElementById('cfg-startDate').value = this.config.startDate;
+        const cfgMH = document.getElementById('cfg-maxHours');
+        if (cfgMH) cfgMH.value = this.config.maxHours || 10;
+        const cfgPPD = document.getElementById('cfg-periodsPerDay');
+        if (cfgPPD) cfgPPD.value = this.periodsPerDay;
 
         this.renderAll();
         this.runAutoAllocation(false);
@@ -1651,12 +1792,50 @@
         lucide.createIcons();
       },
 
+      syncConfigFromInputs() {
+        const getVal = (id, fallback) => {
+          const el = document.getElementById(id);
+          return (el && el.value !== undefined) ? el.value : fallback;
+        };
+        this.config.title = getVal('cfg-title', this.config.title);
+        this.config.school = getVal('cfg-school', this.config.school);
+        this.config.gradeClass = getVal('cfg-gradeClass', this.config.gradeClass);
+        this.config.teacherName = getVal('cfg-teacherName', this.config.teacherName);
+        this.config.weekCount = parseInt(getVal('cfg-weekCount', this.config.weekCount || 2), 10);
+        this.config.startDate = getVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        this.config.maxHours = parseInt(getVal('cfg-maxHours', this.config.maxHours || 10), 10) || 10;
+        this.config.periodsPerDay = parseInt(getVal('cfg-periodsPerDay', this.config.periodsPerDay || 8), 10) || 8;
+        this.periodsPerDay = this.config.periodsPerDay;
+      },
+
+      onConfigChange() {
+        this.syncConfigFromInputs();
+        this.renderConfigHeader();
+        this.renderPersonalDeadlinePanel();
+        this.renderTeacherSummary();
+      },
+
       renderConfigHeader() {
-        document.getElementById('view-title').innerText = this.config.title || '교육 실습생 수업배당표';
-        document.getElementById('view-school').innerText = this.config.school || '';
-        document.getElementById('view-gradeClass').innerText = this.config.gradeClass || '';
-        document.getElementById('view-teacherName').innerText = this.config.teacherName || '';
-        document.getElementById('timetable-notes').innerText = this.config.notes || '';
+        const titleEl = document.getElementById('view-title');
+        if (titleEl) titleEl.innerText = this.config.title || '교육 실습생 수업배당표';
+        const schoolEl = document.getElementById('view-school');
+        if (schoolEl) schoolEl.innerText = this.config.school || '';
+        const gcEl = document.getElementById('view-gradeClass');
+        if (gcEl) gcEl.innerText = this.config.gradeClass || '';
+        const tnEl = document.getElementById('view-teacherName');
+        if (tnEl) tnEl.innerText = this.config.teacherName || '';
+        const notesEl = document.getElementById('timetable-notes');
+        if (notesEl) notesEl.innerText = this.config.notes || '';
+
+        // Sync personal deadline calendar metadata banner
+        const calSchool = document.getElementById('calendar-school');
+        if (calSchool) calSchool.innerText = this.config.school || '';
+        const calGC = document.getElementById('calendar-gradeClass');
+        if (calGC) calGC.innerText = this.config.gradeClass || '';
+        const calTN = document.getElementById('calendar-teacherName');
+        if (calTN) calTN.innerText = this.config.teacherName || '';
+        const calSD = document.getElementById('calendar-startDate');
+        if (calSD) calSD.innerText = this.config.startDate || '';
       },
 
       onWeekCountChange(val) {
@@ -1700,6 +1879,9 @@
                 ${demoSubjectOptions}
               </select>
             </td>
+            <td class="py-2 px-3 text-center">
+              <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
+            </td>
             <td class="py-2 px-3">
               <input type="text" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(1) 수(1) 즐(1))" onchange="App.updateTeacher(${idx}, 'note', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
@@ -1722,6 +1904,7 @@
           name: `실습생${this.teachers.length + 1}`,
           major: '초등교육',
           demoSubject: '',
+          maxHours: '',
           note: '',
           colorIdx
         });
@@ -2409,7 +2592,8 @@
         }
         html += `</tr></thead><tbody>`;
 
-        for (let p = 1; p <= 6; p++) {
+        const maxP = this.periodsPerDay || 8;
+        for (let p = 1; p <= maxP; p++) {
           html += `<tr><td class="border p-2 font-bold text-center bg-slate-50">${p}교시</td>`;
           for (let d = 0; d < days; d++) {
             const key = `${d}-${p}`;
@@ -2605,7 +2789,8 @@
           isTraineeDemo: (type === 'trainee_demo')
         };
 
-        if (span2 && p < 6) {
+        const maxP = this.periodsPerDay || 8;
+        if (span2 && p < maxP) {
           const nextKey = `${d}-${p+1}`;
           this.events[nextKey] = {
             type,
@@ -2701,11 +2886,15 @@
           ['슬생', '즐생', '슬생', '즐생', '즐생'],
           ['즐생', '즐생', '즐생', '즐생', '즐생'],
           ['체육', '음악', '미술', '창체', '창체'],
-          ['창체', '창체', '동아리', '창체', '창체']
+          ['창체', '창체', '동아리', '창체', '창체'],
+          ['', '', '', '', ''],
+          ['', '', '', '', '']
         ];
-        const current = this.defaultTimetable.length === 6 ? this.defaultTimetable : defaultSubjects;
+        this.normalizeDefaultTimetable();
+        const maxP = this.periodsPerDay || 8;
+        const current = this.defaultTimetable;
 
-        for (let p = 0; p < 6; p++) {
+        for (let p = 0; p < maxP; p++) {
           let tr = `<tr><td class="p-2 border font-bold bg-slate-50">${p+1}교시</td>`;
           for (let d = 0; d < 5; d++) {
             const val = current[p] && current[p][d] ? current[p][d] : '';
@@ -2722,8 +2911,9 @@
       },
 
       saveDefaultTimetableModal() {
+        const maxP = this.periodsPerDay || 8;
         const newTT = [];
-        for (let p = 0; p < 6; p++) {
+        for (let p = 0; p < maxP; p++) {
           newTT[p] = [];
           for (let d = 0; d < 5; d++) {
             const input = document.getElementById(`def-tt-${p}-${d}`);
@@ -2750,11 +2940,12 @@
 
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
+        const maxP = this.periodsPerDay || 8;
 
         // 1. Clear unlocked classes while preserving locked event blocks
         const newTimetable = {};
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             if (this.events[key] && this.events[key].isLocked) {
               newTimetable[key] = { ...this.events[key] };
@@ -2784,7 +2975,7 @@
 
         // 2. Pair Trainee Demo slots (⭐교생대표) with curriculum items
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const ev = newTimetable[key];
             if (ev && (ev.type === 'trainee_demo' || ev.isTraineeDemo)) {
@@ -2869,7 +3060,7 @@
         // 4. Identify remaining available slots
         const availableSlots = [];
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             if (!newTimetable[key]) {
               const dayOfWeek = d % 5;
@@ -2950,7 +3141,7 @@
 
         // Second: Assign teachers to unassigned cells with greedy cost function
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = newTimetable[key];
             if (cell && !cell.isLocked && cell.curriculumId && !cell.teacher) {
@@ -2961,6 +3152,15 @@
               candidateTeachers.forEach(t => {
                 const stat = teacherStats[t.name];
                 const curHours = stat.totalHours;
+                const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+                  ? parseInt(t.maxHours, 10)
+                  : (this.config.maxHours || 10);
+
+                // Strict Enforcement: Never assign classes beyond max hours
+                if (curHours >= tMax) {
+                  return;
+                }
+
                 const curSubHours = stat.subjectCount[cell.subject] || 0;
                 const curDayHours = stat.dailyCount[d] || 0;
 
@@ -3050,6 +3250,138 @@
       },
 
       // -----------------------------------------------------------------------
+      // TIMETABLE VALIDATION & ERROR DETECTION ENGINE (차시 순서 및 슬롯 충돌 검증)
+      // -----------------------------------------------------------------------
+      detectTimetableErrors() {
+        const errorMap = {};
+        const maxP = this.periodsPerDay || 8;
+        const totalDays = (this.config.weekCount || 2) * 5;
+
+        const parseLessonNum = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const match = String(lStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : 1;
+        };
+
+        // 1. Locked Event Collision Check (행사 슬롯 침범 오류)
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const ev = this.events[key];
+            const tt = this.timetable[key];
+            if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo') {
+              if (tt && tt.subject && !tt.isLocked) {
+                if (!errorMap[key]) errorMap[key] = [];
+                errorMap[key].push(`[일정 충돌] 잠긴 행사/강의(${ev.subject}) 슬롯에 수업(${tt.subject})이 중복 배정됨`);
+              }
+            }
+          }
+        }
+
+        // 2. Chronological Lesson Order Integrity Check per Subject (차시 순서 역전 오류)
+        const subjectOccurrences = {};
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && cell.subject && cell.lesson) {
+              if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
+              subjectOccurrences[cell.subject].push({
+                key,
+                day: d,
+                period: p,
+                time: d * 100 + p,
+                lessonNum: parseLessonNum(cell.lesson),
+                lessonStr: cell.lesson,
+                cell
+              });
+            }
+          }
+        }
+
+        Object.keys(subjectOccurrences).forEach(sub => {
+          const list = subjectOccurrences[sub];
+          for (let i = 0; i < list.length; i++) {
+            for (let j = i + 1; j < list.length; j++) {
+              const prev = list[i];
+              const next = list[j];
+              if (prev.lessonNum > next.lessonNum) {
+                if (!errorMap[prev.key]) errorMap[prev.key] = [];
+                if (!errorMap[next.key]) errorMap[next.key] = [];
+
+                const msgPrev = `[차시 역전] ${sub} ${prev.lessonStr}차시가 ${next.day+1}일차 ${next.period}교시(${next.lessonStr}차시)보다 늦은 차시인데 먼저 배치됨`;
+                const msgNext = `[차시 역전] ${sub} ${next.lessonStr}차시가 ${prev.day+1}일차 ${prev.period}교시(${prev.lessonStr}차시)보다 빠른 차시인데 나중에 배치됨`;
+
+                if (!errorMap[prev.key].includes(msgPrev)) errorMap[prev.key].push(msgPrev);
+                if (!errorMap[next.key].includes(msgNext)) errorMap[next.key].push(msgNext);
+              }
+            }
+          }
+        });
+
+        const uniqueKeys = Object.keys(errorMap);
+        const errorList = [];
+        uniqueKeys.forEach(k => {
+          const [d, p] = k.split('-').map(Number);
+          errorList.push(`• [${d+1}일차 ${p}교시]: ${errorMap[k].join(' | ')}`);
+        });
+
+        return {
+          errorMap,
+          errorCount: uniqueKeys.length,
+          errorList,
+          keys: uniqueKeys
+        };
+      },
+
+      renderErrorBanner() {
+        const banner = document.getElementById('timetable-error-banner');
+        const badge = document.getElementById('tab-violation-badge');
+        if (!banner) return;
+
+        const errs = this.timetableErrors || { errorCount: 0, errorList: [] };
+        if (errs.errorCount > 0) {
+          if (badge) {
+            badge.innerText = `${errs.errorCount}`;
+            badge.classList.remove('hidden');
+          }
+          banner.innerHTML = `
+            <div class="p-3 bg-rose-50 border-2 border-rose-300 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-sm text-rose-900 animate-pulse mb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-rose-600 text-white font-bold text-xs whitespace-nowrap">⚠️ 배당 오류 ${errs.errorCount}건 감지</span>
+                <span class="text-xs font-semibold text-rose-800 leading-tight">
+                  차시 순서가 역전되었거나 행사 슬롯과 충돌한 수업(빨간 테두리)이 있습니다. 해당 셀을 클릭하여 올바른 순서의 빈 칸이나 다른 수업과 교환하세요.
+                </span>
+              </div>
+              <button onclick="App.showErrorSummaryModal()" class="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-lg shadow-sm whitespace-nowrap self-end sm:self-auto transition">
+                오류 상세 보기
+              </button>
+            </div>
+          `;
+        } else {
+          if (badge) {
+            badge.classList.add('hidden');
+          }
+          banner.innerHTML = `
+            <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between gap-2 text-emerald-800 text-xs font-medium shadow-sm mb-3">
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold text-[10px]">✓ 검증 완료</span>
+                <span>배당표 차시 순서 무결성 100% 만족 (오류 없음 - 모든 교과 차시가 순차적으로 배당됨)</span>
+              </div>
+            </div>
+          `;
+        }
+      },
+
+      showErrorSummaryModal() {
+        if (!this.timetableErrors || this.timetableErrors.errorCount === 0) {
+          alert('현재 감지된 배당표 오류가 없습니다.');
+          return;
+        }
+        alert(['[배당표 오류 세부 목록]', ...this.timetableErrors.errorList].join('\n\n'));
+      },
+
+      // -----------------------------------------------------------------------
       // TIMETABLE GRID RENDERING (Smart Swap & Personal Highlights)
       // -----------------------------------------------------------------------
       renderTimetableGrid() {
@@ -3117,10 +3449,15 @@
         }
         tbodyHtml += `</tr>`;
 
-        // Period rows 1 to 6
+        // Validation & Error Detection for Timetable Grid
+        const maxP = this.periodsPerDay || 8;
+        this.timetableErrors = this.detectTimetableErrors();
+        this.renderErrorBanner();
+
+        // Period rows 1 to maxP
         const renderedCells = {};
 
-        for (let p = 1; p <= 6; p++) {
+        for (let p = 1; p <= maxP; p++) {
           tbodyHtml += `<tr>
             <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs w-14">${p}</td>`;
 
@@ -3130,11 +3467,14 @@
 
             const cell = this.timetable[key] || this.events[key];
             const isSelected = (this.selectedCellKey === key);
+            const hasError = this.timetableErrors && this.timetableErrors.errorMap[key];
+            const errorClass = hasError ? 'cell-error' : '';
+            const errorTooltip = hasError ? `⚠️ 배당 오류:\n${this.timetableErrors.errorMap[key].join('\n')}` : '';
 
             // 1. Holiday Full Merge
             if (cell && cell.type === 'holiday') {
               let span = 1;
-              for (let np = p + 1; np <= 6; np++) {
+              for (let np = p + 1; np <= maxP; np++) {
                 const nextKey = `${d}-${np}`;
                 const nextCell = this.timetable[nextKey] || this.events[nextKey];
                 if (nextCell && nextCell.type === 'holiday' && nextCell.subject === cell.subject) {
@@ -3152,7 +3492,7 @@
             // 2. Multi-period Locked Event
             if (cell && (cell.type === 'observation' || cell.type === 'lecture') && cell.isLocked) {
               let span = 1;
-              for (let np = p + 1; np <= 6; np++) {
+              for (let np = p + 1; np <= maxP; np++) {
                 const nextKey = `${d}-${np}`;
                 const nextCell = this.timetable[nextKey] || this.events[nextKey];
                 if (nextCell && nextCell.subject === cell.subject && nextCell.pages === cell.pages && nextCell.isLocked) {
@@ -3182,7 +3522,7 @@
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
-              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 대표수업 교생 및 교과 수정" class="border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="flex flex-col h-full divide-y divide-amber-200 text-xs">
                   <div class="py-1 font-black text-amber-900 bg-amber-100 flex items-center justify-center gap-1">
                     ⭐ ${subName}
@@ -3206,7 +3546,7 @@
               if (cell.type === 'design') bgClass = 'bg-white text-slate-800 font-semibold';
               if (cell.type === 'homeroom') bgClass = 'bg-blue-900 text-white font-bold';
 
-              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 일정명, 세부 내용 수정" class="border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 일정명, 세부 내용 수정'}" class="tt-cell ${errorClass} border-2 border-slate-900 ${bgClass} text-center p-1 text-xs h-24 cursor-pointer hover:brightness-95">
                 <div class="flex flex-col justify-center items-center h-full space-y-0.5">
                   <span class="font-bold">${cell.subject}</span>
                   ${cell.pages ? `<span class="text-[11px]">${cell.pages}</span>` : ''}
@@ -3226,7 +3566,11 @@
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
-              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" class="tt-cell ${borderHighlight} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group">
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group">
+                <!-- 원클릭 배당 삭제 버튼 (호버 시 표시) -->
+                <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
+                  ✕
+                </button>
                 <div class="flex flex-col h-full divide-y divide-slate-300 text-xs">
                   <!-- 교과명 -->
                   <div class="py-1 font-black text-slate-900 bg-slate-50/70 cell-part flex items-center justify-center gap-1">
@@ -3251,7 +3595,7 @@
 
             // 5. Empty Cell
             const selectedClass = isSelected ? 'cell-selected' : '';
-            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" class="tt-cell ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1">
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1">
               <span class="text-[10px] text-slate-300 block font-mono">+</span>
             </td>`;
             renderedCells[key] = true;
@@ -3277,56 +3621,85 @@
           return match ? parseInt(match[0], 10) : 1;
         };
         const sourceLessonNum = parseLessonNum(sourceCell.lesson);
+        const [sDay, sPeriod] = sourceKey.split('-').map(Number);
 
-        // Find chronological limits for source subject
-        // All classes of sourceSubject before sourceLessonNum must stay before targetDay
-        // All classes of sourceSubject after sourceLessonNum must stay after targetDay
+        // Helper: Check if placing a lesson preserves chronological sequence among other classes of the same subject
+        const isOrderValid = (sub, lNum, targetD, targetP, exKey1, exKey2) => {
+          const targetTime = targetD * 100 + targetP;
+          for (const k in this.timetable) {
+            if (k === exKey1 || k === exKey2) continue;
+            const c = this.timetable[k];
+            if (c && c.subject === sub) {
+              const parts = k.split('-').map(Number);
+              const cTime = parts[0] * 100 + parts[1];
+              const cLessonNum = parseLessonNum(c.lesson);
+              if (cLessonNum < lNum && cTime >= targetTime) return false;
+              if (cLessonNum > lNum && cTime <= targetTime) return false;
+            }
+          }
+          return true;
+        };
+
+        const maxP = this.periodsPerDay || 8;
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             if (key === sourceKey) continue;
 
             const el = document.getElementById(`cell-${key}`);
             if (!el) continue;
 
-            // If locked event -> Unsafe
+            // If locked event -> Cannot place class
             if (this.events[key] && this.events[key].isLocked) {
               el.classList.add('swap-unsafe');
               continue;
             }
 
-            // Simulated Check: If we move sourceCell to (d, p), does it violate subject ordering?
-            let isSafe = true;
-            for (let od = 0; od < totalDays; od++) {
-              for (let op = 1; op <= 6; op++) {
-                const oKey = `${od}-${op}`;
-                if (oKey === sourceKey || oKey === key) continue;
-                const oCell = this.timetable[oKey];
-                if (oCell && oCell.subject === sourceSubject) {
-                  const oLessonNum = parseLessonNum(oCell.lesson);
-                  const isChronologicallyBefore = (od < d || (od === d && op < p));
-                  if (oLessonNum < sourceLessonNum && !isChronologicallyBefore) {
-                    isSafe = false; // previous lesson placed after!
-                  }
-                  if (oLessonNum > sourceLessonNum && isChronologicallyBefore) {
-                    isSafe = false; // next lesson placed before!
-                  }
-                }
+            const targetCell = this.timetable[key];
+            if (targetCell) {
+              if (targetCell.isLocked) {
+                el.classList.add('swap-unsafe');
+                continue;
               }
-            }
-
-            if (isSafe) {
-              el.classList.add('swap-safe');
+              // 1:1 Swap check
+              const targetLessonNum = parseLessonNum(targetCell.lesson);
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, key);
+              const targetSafe = isOrderValid(targetCell.subject, targetLessonNum, sDay, sPeriod, sourceKey, key);
+              if (sourceSafe && targetSafe) {
+                el.classList.add('swap-safe');
+              } else {
+                el.classList.add('swap-unsafe');
+              }
             } else {
-              el.classList.add('swap-unsafe');
+              // Empty slot move check
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, null);
+              if (sourceSafe) {
+                el.classList.add('swap-safe');
+              } else {
+                el.classList.add('swap-unsafe');
+              }
             }
           }
         }
 
         const statusBox = document.getElementById('smart-swap-status');
         if (statusBox) {
-          statusBox.innerHTML = `<i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
-            <span class="text-emerald-800"><strong>[${sourceCell.subject} ${sourceCell.lesson}차시]</strong> 이동 가능 슬롯: <strong class="underline">🟢 초록색</strong> 슬롯을 클릭하거나 드롭하세요!</span>`;
+          statusBox.innerHTML = `
+            <div class="flex items-center gap-2 flex-wrap">
+              <i data-lucide="zap" class="w-4 h-4 text-emerald-600"></i>
+              <span class="text-slate-800 font-semibold">
+                [${sourceCell.subject} ${sourceCell.lesson}차시 (${sourceCell.teacher || '미배정'})] 선택됨
+              </span>
+              <span class="text-emerald-700 font-bold">🟢초록색: 이동가능</span>
+              <span class="text-rose-600 font-medium text-[11px]">🚫빨간색: 불가</span>
+              <button onclick="App.deleteCellClass('${sourceKey}', event)" class="px-2 py-0.5 bg-rose-600 hover:bg-rose-700 text-white rounded text-[11px] font-bold shadow-sm flex items-center gap-1">
+                <i data-lucide="trash-2" class="w-3 h-3"></i> 이 차시 삭제
+              </button>
+              <button onclick="App.clearSwapSelection()" class="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded text-[11px] font-medium">
+                선택 취소
+              </button>
+            </div>
+          `;
           lucide.createIcons();
         }
       },
@@ -3341,6 +3714,35 @@
             <span>셀을 드래그하거나 클릭하면 <strong class="text-emerald-700">🟢 안전한 교환 위치</strong>가 표시됩니다.</span>`;
           lucide.createIcons();
         }
+      },
+
+      clearSwapSelection() {
+        this.selectedCellKey = null;
+        this.clearSwapHighlights();
+      },
+
+      deleteCellClass(key, e, skipConfirm = false) {
+        if (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+        const cell = this.timetable[key];
+        if (!cell) return;
+        if (cell.isLocked) {
+          alert('고정된 행사/참관/강의 일정은 일정 편집창(클릭)에서 수정하거나 삭제해주세요.');
+          return;
+        }
+        if (!skipConfirm) {
+          const ok = confirm(`[${cell.subject} ${cell.lesson}차시 (${cell.teacher || '미배정'})] 배당을 삭제하시겠습니까?\n삭제된 칸은 빈 슬롯(+)으로 비워집니다.`);
+          if (!ok) return;
+        }
+        delete this.timetable[key];
+        this.clearSwapSelection();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
       },
 
       // Drag and drop event handlers
@@ -3478,14 +3880,22 @@
           const subText = Object.entries(st.subjects)
             .map(([s, c]) => `${s}(${c})`)
             .join(' ') || '배정 없음';
+          const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+            ? parseInt(t.maxHours, 10)
+            : (this.config.maxHours || 10);
+          const isOver = st.totalHours > tMax;
+          const isFull = st.totalHours === tMax;
+          const badgeStyle = isOver
+            ? 'background:#fee2e2; color:#b91c1c; border-color:#f87171;'
+            : (isFull ? 'background:#ecfdf5; color:#047857; border-color:#34d399;' : 'background:#ffffff; color:#1e293b; border-color:#cbd5e1;');
 
           html += `
             <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900">
               <div onclick="App.setTeacherFilter('${t.name}')" class="p-3 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90" style="background:${color.bg}; color:${color.text};">
                 <span class="font-black text-sm">${t.name}</span>
                 <span class="text-[11px] font-semibold opacity-80">(${t.major || '교육'})</span>
-                <span class="text-[10px] mt-1 font-bold px-1.5 py-0.5 rounded bg-white/80 border border-slate-300">
-                  총 ${st.totalHours}시수
+                <span class="text-[10px] mt-1 font-bold px-1.5 py-0.5 rounded border shadow-sm" style="${badgeStyle}">
+                  총 ${st.totalHours}/${tMax}시수
                 </span>
               </div>
               <div class="p-3 flex-1 bg-white font-bold text-xs flex items-center leading-relaxed text-slate-800">
@@ -3521,6 +3931,17 @@
 
         panel.classList.remove('hidden');
         document.getElementById('selected-teacher-name').innerText = this.selectedTeacherFilter;
+        
+        // Sync metadata banner in personal deadline calendar
+        const calSchool = document.getElementById('calendar-school');
+        if (calSchool) calSchool.innerText = this.config.school || '';
+        const calGC = document.getElementById('calendar-gradeClass');
+        if (calGC) calGC.innerText = this.config.gradeClass || '';
+        const calTN = document.getElementById('calendar-teacherName');
+        if (calTN) calTN.innerText = this.config.teacherName || '';
+        const calSD = document.getElementById('calendar-startDate');
+        if (calSD) calSD.innerText = this.config.startDate || '';
+
         const tbody = document.getElementById('personal-deadline-tbody');
         tbody.innerHTML = '';
 
@@ -3529,8 +3950,9 @@
 
         // Collect all classes for selected teacher
         const totalDays = (this.config.weekCount || 2) * 5;
+        const maxP = this.periodsPerDay || 8;
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = this.timetable[key];
             if (cell && cell.teacher === this.selectedTeacherFilter) {
@@ -3657,8 +4079,9 @@
         }
         html += `</tr>`;
 
-        // Periods 1 to 6
-        for (let p = 1; p <= 6; p++) {
+        // Periods 1 to maxP
+        const maxP = this.periodsPerDay || 8;
+        for (let p = 1; p <= maxP; p++) {
           html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">${p}</td>`;
           for (let d = 0; d < totalDays; d++) {
             const key = `${d}-${p}`;
@@ -3852,8 +4275,9 @@
           return match ? parseInt(match[0], 10) : 1;
         };
 
+        const maxP = this.periodsPerDay || 8;
         for (let d = 0; d < totalDays; d++) {
-          for (let p = 1; p <= 6; p++) {
+          for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = this.timetable[key];
             if (cell && cell.subject && cell.lesson) {
@@ -4101,8 +4525,9 @@
           c.border = borderThin;
         }
 
+        const maxP = this.periodsPerDay || 8;
         let excelRow = 6;
-        for (let p = 1; p <= 6; p++) {
+        for (let p = 1; p <= maxP; p++) {
           const pStartRow = excelRow;
           const pEndRow = pStartRow + 3;
 
