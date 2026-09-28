@@ -1643,6 +1643,7 @@
      * APP STATE MANAGEMENT
      */
     const App = {
+      TEACHER_COLORS: TEACHER_COLORS,
       activeTab: 1,
       selectedTeacherFilter: 'all', // 'all' or teacher name
       selectedCellKey: null,        // for click-to-swap
@@ -3641,9 +3642,32 @@
           <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
           const dutyTeacher = this.morningDuty[d] || '';
-          const isDimmed = (this.selectedTeacherFilter !== 'all' && dutyTeacher !== this.selectedTeacherFilter);
-          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
-            ${dutyTeacher ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">${dutyTeacher}</span>` : ''}
+          const isDimmed = (this.selectedTeacherFilter !== 'all' && (!dutyTeacher || !dutyTeacher.includes(this.selectedTeacherFilter)));
+
+          let dutyBadgeHtml = '';
+          if (dutyTeacher) {
+            const parts = dutyTeacher.split(/[,/]+/).map(p => p.trim()).filter(Boolean);
+            if (parts.length > 1) {
+              dutyBadgeHtml = parts.map(name => {
+                const teacherObj = this.teachers.find(t => t.name === name);
+                const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+                const styleStr = color 
+                  ? `background:${color.bg}; color:${color.text}; border: 1px solid ${color.border};`
+                  : 'background:#fef3c7; color:#92400e; border: 1px solid #fde68a;';
+                return `<span class="inline-block px-1.5 py-0.5 rounded text-[11px] font-bold shadow-xs whitespace-nowrap" style="${styleStr}">${name}</span>`;
+              }).join(' ');
+            } else {
+              const teacherObj = this.teachers.find(t => t.name === dutyTeacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const styleStr = color 
+                ? `background:${color.bg}; color:${color.text}; border: 1px solid ${color.border};`
+                : 'background:#fef3c7; color:#92400e; border: 1px solid #fde68a;';
+              dutyBadgeHtml = `<span class="inline-block px-2 py-0.5 rounded text-xs font-bold shadow-xs whitespace-nowrap" style="${styleStr}">${dutyTeacher}</span>`;
+            }
+          }
+
+          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" title="클릭하여 아침활동 담당 교생 수정" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-slate-100 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
+            ${dutyBadgeHtml}
           </td>`;
         }
         tbodyHtml += `</tr>`;
@@ -4274,7 +4298,11 @@
         // Morning Duty
         html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
-          html += `<td style="border: 1pt solid black; font-weight:bold;">${this.morningDuty[d] || ''}</td>`;
+          const dutyTeacher = this.morningDuty[d] || '';
+          const teacherObj = this.teachers.find(t => t.name === dutyTeacher);
+          const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+          const styleStr = color ? `background-color:${color.bg}; color:${color.text};` : '';
+          html += `<td style="border: 1pt solid black; font-weight:bold; ${styleStr}">${dutyTeacher}</td>`;
         }
         html += `</tr>`;
 

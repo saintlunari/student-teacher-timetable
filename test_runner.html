@@ -669,6 +669,66 @@
               : `검증 실패 (balanced:${allWeeksBalanced} ${JSON.stringify(weekCounts)}, lastTwoDays:${lastTwoDaysExcluded} [d18:${day18Count}, d19:${day19Count}], noUnassigned:${noUnassigned}, clean:${cleanPass})`
           };
         }
+      },
+      {
+        id: 'tc14',
+        title: '[신규 기능] 아침활동(Morning Duty) 담당 교생별 고유 색상 태그 매칭 및 동적 렌더링 검증',
+        desc: '아침활동 행에서 배정된 교생 이름의 태그 배경색, 텍스트색, 테두리가 해당 교생 고유의 색상 태그(TEACHER_COLORS)와 정확하게 일치하는지, 단일/다중 교생 표기가 올바르게 반영되는지 검증',
+        run: () => {
+          App.loadPreset('grade3', false);
+          App.autoAssignMorningDuty();
+          App.renderTimetableGrid();
+
+          const frame = document.getElementById('app-frame');
+          const doc = (frame && frame.contentDocument) ? frame.contentDocument : document;
+          const tbody = doc.getElementById('timetable-body');
+          if (!tbody) {
+            return { pass: false, message: 'timetable-body 요소를 찾을 수 없음' };
+          }
+          const morningRow = tbody.querySelector('tr');
+          if (!morningRow) {
+            return { pass: false, message: '아침활동 tr 행을 찾을 수 없음' };
+          }
+
+          const cells = Array.from(morningRow.querySelectorAll('td')).slice(1); // skip label cell
+          let matchedColors = 0;
+          let totalChecked = 0;
+          const checkedTeachers = new Set();
+
+          cells.forEach((td, d) => {
+            const dutyTeacher = App.morningDuty[d];
+            if (!dutyTeacher) return;
+            totalChecked++;
+            checkedTeachers.add(dutyTeacher);
+
+            const badge = td.querySelector('span');
+            if (!badge) return;
+
+            const teacherObj = App.teachers.find(t => t.name === dutyTeacher);
+            if (teacherObj) {
+              const expectedColor = App.TEACHER_COLORS[teacherObj.colorIdx % App.TEACHER_COLORS.length];
+              const styleAttr = badge.getAttribute('style') || '';
+              if (styleAttr.includes(expectedColor.bg) && styleAttr.includes(expectedColor.text)) {
+                matchedColors++;
+              }
+            }
+          });
+
+          // Test multi-teacher styling
+          App.morningDuty[0] = '김부설, 이공주';
+          App.renderTimetableGrid();
+          const firstDayCell = tbody.querySelector('tr').querySelectorAll('td')[1];
+          const spans = firstDayCell.querySelectorAll('span');
+          const multiTeacherPass = spans.length === 2;
+
+          const pass = (totalChecked >= 15 && matchedColors === totalChecked && multiTeacherPass && checkedTeachers.size >= 4);
+          return {
+            pass,
+            message: pass
+              ? `아침활동 ${totalChecked}일 배정 태그 모두 교생별 고유 색상 태그 완벽 일치 (${checkedTeachers.size}명 고유 색상 [김부설:파랑, 이공주:분홍, 삼알밤:초록, 사산성:주황 등]), 다중 교생 태그 분할 렌더링 검증 완료`
+              : `검증 실패 (matched:${matchedColors}/${totalChecked}, multiPass:${multiTeacherPass}, teacherCount:${checkedTeachers.size})`
+          };
+        }
       }
     ];
 
