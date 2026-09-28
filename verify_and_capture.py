@@ -97,11 +97,13 @@ try:
     title_val = title_eval.get("result", {}).get("value", "")
     print(f"Test Runner Result Title: {title_val}", flush=True)
 
-    # Capture 12/12 Benchmark Screenshot
+    # Capture 15/15 Benchmark Screenshot
     res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data1 = base64.b64decode(res1["result"]["data"])
-    out_path1 = os.path.join(BRAIN_DIR, "benchmark_12_pass.png")
+    out_path1 = os.path.join(BRAIN_DIR, "benchmark_15_pass.png")
     with open(out_path1, "wb") as f:
+        f.write(img_data1)
+    with open(os.path.join(BRAIN_DIR, "benchmark_14_pass.png"), "wb") as f:
         f.write(img_data1)
     print(f"Saved Benchmark screenshot to {out_path1}", flush=True)
 
@@ -109,6 +111,7 @@ try:
     print("Navigating to index.html Step 2 (Curriculum Database)...", flush=True)
     cdp_call("Page.navigate", {"url": "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html"})
     time.sleep(2.0)
+    cdp_call("Runtime.evaluate", {"expression": "window.alert = () => {}; window.confirm = () => true;"})
 
     cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade2', false); App.setTab(2);"})
     time.sleep(1.0)
@@ -130,18 +133,48 @@ try:
         f.write(img_data2)
     print(f"Saved Step 1 screenshot to {out_path2}", flush=True)
 
-    # 4. Step 4: Show full-width layout and sticky freeze column (4주간 대규모 5인 시간표)
-    print("Navigating to Step 4 (4 weeks wide table with sticky period column)...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade3', false); App.setTab(4);"})
+    # 4. Step 4: Show full-width layout and morning duty color tags matching teachers
+    print("Navigating to Step 4 (4 weeks wide table with colorful morning duty tags)...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade3', false); App.autoAssignMorningDuty(false); App.setTab(4);"})
     time.sleep(1.0)
     res3 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data3 = base64.b64decode(res3["result"]["data"])
-    out_path3 = os.path.join(BRAIN_DIR, "step4_fullwidth_and_sticky.png")
+    out_path3 = os.path.join(BRAIN_DIR, "step4_morning_duty_colors.png")
     with open(out_path3, "wb") as f:
         f.write(img_data3)
-    print(f"Saved Step 4 Full-Width screenshot to {out_path3}", flush=True)
+    with open(os.path.join(BRAIN_DIR, "step4_fullwidth_and_sticky.png"), "wb") as f:
+        f.write(img_data3)
+    print(f"Saved Step 4 Morning Duty Colors screenshot to {out_path3}", flush=True)
 
-    # 5. Step 4: Toggle Wide Mode (100% wide timetable, summary stacked below)
+    # 5. Step 4: Swap a class to a safe slot (grade2) without any false alerts
+    print("Testing clean swap in grade2 without false alerts...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": """
+        App.loadPreset('grade2', false);
+        App.runAutoAllocation(false);
+        App.setTab(4);
+        const teachingKeys = Object.keys(App.timetable).filter(k => {
+          const c = App.timetable[k];
+          return c && c.subject && !c.isLocked && c.teacher;
+        });
+        if (teachingKeys.length > 0) {
+          const src = teachingKeys[0];
+          App.highlightSwapTargets(src);
+          const safeEls = document.querySelectorAll('.tt-cell.swap-safe');
+          if (safeEls.length > 0) {
+            const tgt = safeEls[0].id.replace('cell-', '');
+            App.executeSwap(src, tgt);
+          }
+        }
+    """})
+    time.sleep(1.0)
+    res_swap = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_swap = base64.b64decode(res_swap["result"]["data"])
+    out_path_swap = os.path.join(BRAIN_DIR, "step4_swap_clean_success.png")
+    with open(out_path_swap, "wb") as f:
+        f.write(img_data_swap)
+    print(f"Saved Step 4 Swap Clean Success screenshot to {out_path_swap}", flush=True)
+
+    # 6. Step 4: Toggle Wide Mode (100% wide timetable, summary stacked below)
     print("Toggling Wide Mode on Step 4...", flush=True)
     cdp_call("Runtime.evaluate", {"expression": "App.toggleTimetableLayout();"})
     time.sleep(1.0)

@@ -1643,6 +1643,7 @@
      * APP STATE MANAGEMENT
      */
     const App = {
+      TEACHER_COLORS: TEACHER_COLORS,
       activeTab: 1,
       selectedTeacherFilter: 'all', // 'all' or teacher name
       selectedCellKey: null,        // for click-to-swap
@@ -2961,7 +2962,7 @@
         this.applyStampToCell(d, p);
       },
 
-      autoAssignMorningDuty() {
+      autoAssignMorningDuty(triggerAlert = true) {
         const weekCount = this.config.weekCount || 2;
         const days = weekCount * 5;
         const tCount = this.teachers.length;
@@ -2974,7 +2975,9 @@
           tIdx++;
         }
         this.renderTimetableGrid();
-        alert('아침활동 당번이 실습생 간 균등하게 순환 배정되었습니다!');
+        if (triggerAlert) {
+          alert('아침활동 당번이 실습생 간 균등하게 순환 배정되었습니다!');
+        }
       },
 
       openDefaultTimetableModal() {
@@ -3641,9 +3644,32 @@
           <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
           const dutyTeacher = this.morningDuty[d] || '';
-          const isDimmed = (this.selectedTeacherFilter !== 'all' && dutyTeacher !== this.selectedTeacherFilter);
-          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-amber-50 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
-            ${dutyTeacher ? `<span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800">${dutyTeacher}</span>` : ''}
+          const isDimmed = (this.selectedTeacherFilter !== 'all' && (!dutyTeacher || !dutyTeacher.includes(this.selectedTeacherFilter)));
+
+          let dutyBadgeHtml = '';
+          if (dutyTeacher) {
+            const parts = dutyTeacher.split(/[,/]+/).map(p => p.trim()).filter(Boolean);
+            if (parts.length > 1) {
+              dutyBadgeHtml = parts.map(name => {
+                const teacherObj = this.teachers.find(t => t.name === name);
+                const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+                const styleStr = color 
+                  ? `background:${color.bg}; color:${color.text}; border: 1px solid ${color.border};`
+                  : 'background:#fef3c7; color:#92400e; border: 1px solid #fde68a;';
+                return `<span class="inline-block px-1.5 py-0.5 rounded text-[11px] font-bold shadow-xs whitespace-nowrap" style="${styleStr}">${name}</span>`;
+              }).join(' ');
+            } else {
+              const teacherObj = this.teachers.find(t => t.name === dutyTeacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const styleStr = color 
+                ? `background:${color.bg}; color:${color.text}; border: 1px solid ${color.border};`
+                : 'background:#fef3c7; color:#92400e; border: 1px solid #fde68a;';
+              dutyBadgeHtml = `<span class="inline-block px-2 py-0.5 rounded text-xs font-bold shadow-xs whitespace-nowrap" style="${styleStr}">${dutyTeacher}</span>`;
+            }
+          }
+
+          tbodyHtml += `<td onclick="App.editMorningDuty(${d})" title="클릭하여 아침활동 담당 교생 수정" class="border-2 border-slate-900 text-center font-bold text-xs cursor-pointer hover:bg-slate-100 min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'opacity-30' : ''}">
+            ${dutyBadgeHtml}
           </td>`;
         }
         tbodyHtml += `</tr>`;
@@ -3997,6 +4023,8 @@
           return;
         }
 
+        const errorsBefore = (this.detectTimetableErrors && this.detectTimetableErrors().errorList) ? this.detectTimetableErrors().errorList.length : 0;
+
         const sourceItem = this.timetable[sourceKey];
         const targetItem = this.timetable[targetKey];
 
@@ -4013,8 +4041,13 @@
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
-        this.runFullDiagnostic(true);
+        this.runFullDiagnostic(false);
         this.renderDashboardCharts();
+
+        const errorsAfter = (this.detectTimetableErrors && this.detectTimetableErrors().errorList) ? this.detectTimetableErrors().errorList.length : 0;
+        if (errorsAfter > errorsBefore) {
+          alert('경고: 위치 이동으로 인해 새로운 차시 순서 역전 또는 일정 충돌이 발생했습니다!\n\n' + this.detectTimetableErrors().errorList.join('\n'));
+        }
       },
 
       promptAddManualClass(key) {
@@ -4274,7 +4307,11 @@
         // Morning Duty
         html += `<tr><td style="border: 1pt solid black; font-weight:bold; background-color:#f8fafc;">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
-          html += `<td style="border: 1pt solid black; font-weight:bold;">${this.morningDuty[d] || ''}</td>`;
+          const dutyTeacher = this.morningDuty[d] || '';
+          const teacherObj = this.teachers.find(t => t.name === dutyTeacher);
+          const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+          const styleStr = color ? `background-color:${color.bg}; color:${color.text};` : '';
+          html += `<td style="border: 1pt solid black; font-weight:bold; ${styleStr}">${dutyTeacher}</td>`;
         }
         html += `</tr>`;
 
@@ -4510,14 +4547,17 @@
           reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 차시 순서 역전 ${orderingViolations}건 발생!</div>`);
         }
 
-        // Locked Slot Collision Check
+        // Locked Slot Collision Check (잠긴 행사 슬롯 침범 오류 검사)
         let lockViolations = 0;
+        const studentTeacherNames = this.teachers.map(t => t.name);
         Object.keys(this.events).forEach(key => {
           const ev = this.events[key];
           const tt = this.timetable[key];
-          if (ev && ev.isLocked && tt && tt.teacher && ev.type !== 'homeroom') {
-            lockViolations++;
-            violations.push(`[불가시간 침범] ${key} 슬롯(${ev.subject})에 교생 수업이 중복 배정되었습니다.`);
+          if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo' && !ev.isTraineeDemo) {
+            if (tt && tt.subject && !tt.isLocked && (studentTeacherNames.includes(tt.teacher) || !tt.isDemo)) {
+              lockViolations++;
+              violations.push(`[불가시간 침범] ${key} 슬롯(${ev.subject})에 수업(${tt.subject}${tt.teacher ? ` - ${tt.teacher}` : ''})이 중복 배정되었습니다.`);
+            }
           }
         });
 
