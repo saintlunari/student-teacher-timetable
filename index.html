@@ -646,6 +646,10 @@
           <button onclick="App.clearAllocatedClasses()" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition border border-slate-200">
             수업만 초기화
           </button>
+          <button onclick="App.removeUnassignedClasses(true)" title="배당표에서 수업자(실습생)가 지정되지 않은 미배정 과목 일괄 제거" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl transition border border-slate-200 flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
+            미배정 과목 정리
+          </button>
 
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
 
@@ -3153,47 +3157,106 @@
           subjectQueues[sub].sort((a, b) => parseLessonNum(a.lesson) - parseLessonNum(b.lesson));
         });
 
-        // 4. Identify remaining available slots
-        const availableSlots = [];
+        // 4. Identify remaining available slots partitioned by week
+        // Exclude the last 2 days of practicum (e.g. Thu/Fri of last week) from the primary slot pool
+        const isLastTwoDays = (d) => (totalDays > 2 && d >= totalDays - 2);
+        const slotsByWeek = Array.from({ length: weekCount }, () => []);
+        const fallbackSlots = []; // Slots in the last 2 days (strictly used only if primary slots are exhausted)
+
         for (let d = 0; d < totalDays; d++) {
+          const w = Math.floor(d / 5);
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             if (!newTimetable[key]) {
               const dayOfWeek = d % 5;
               const defSubject = (this.defaultTimetable[p-1] && this.defaultTimetable[p-1][dayOfWeek]) || '';
-              availableSlots.push({ day: d, period: p, key, defSubject });
+              const slot = { day: d, period: p, key, defSubject, week: w };
+              if (isLastTwoDays(d)) {
+                fallbackSlots.push(slot);
+              } else if (w < weekCount) {
+                slotsByWeek[w].push(slot);
+              }
             }
           }
         }
 
-        // 5. Match available slots to subjects and guarantee strictly ascending lesson order
-        const subjectCountNeeded = {};
+        // 5. Match available slots to subjects evenly distributed across all weeks
+        const subjectWeeklyTarget = {};
+        let offset = 0;
         Object.keys(subjectQueues).forEach(sub => {
-          subjectCountNeeded[sub] = subjectQueues[sub].length;
+          const K = subjectQueues[sub].length;
+          subjectWeeklyTarget[sub] = Array(weekCount).fill(0);
+          const base = Math.floor(K / weekCount);
+          const rem = K % weekCount;
+          for (let w = 0; w < weekCount; w++) {
+            subjectWeeklyTarget[sub][w] = base;
+          }
+          // Spread remainder smoothly across weeks
+          for (let i = 0; i < rem; i++) {
+            const targetW = (offset + i) % weekCount;
+            subjectWeeklyTarget[sub][targetW] += 1;
+          }
+          offset = (offset + rem) % weekCount;
         });
 
         const slotsForSubject = {};
-        const unassignedSlots = [];
+        Object.keys(subjectQueues).forEach(sub => {
+          slotsForSubject[sub] = [];
+        });
 
-        // Match available slots with default timetable where needed
-        availableSlots.forEach(slot => {
-          const matchSub = slot.defSubject;
-          if (matchSub && subjectCountNeeded[matchSub] && subjectCountNeeded[matchSub] > 0) {
-            if (!slotsForSubject[matchSub]) slotsForSubject[matchSub] = [];
-            slotsForSubject[matchSub].push(slot);
-            subjectCountNeeded[matchSub]--;
-          } else {
-            unassignedSlots.push(slot);
+        const unassignedByWeek = Array.from({ length: weekCount }, () => []);
+
+        // Phase 1: In each week, match slots that match defaultTimetable subject
+        for (let w = 0; w < weekCount; w++) {
+          slotsByWeek[w].forEach(slot => {
+            const matchSub = slot.defSubject;
+            if (matchSub && subjectWeeklyTarget[matchSub] && subjectWeeklyTarget[matchSub][w] > 0) {
+              slotsForSubject[matchSub].push(slot);
+              subjectWeeklyTarget[matchSub][w]--;
+            } else {
+              unassignedByWeek[w].push(slot);
+            }
+          });
+        }
+
+        // Phase 2: In each week, fill remaining weekly target for subjects from unassigned slots in the same week
+        for (let w = 0; w < weekCount; w++) {
+          Object.keys(subjectWeeklyTarget).forEach(sub => {
+            while (subjectWeeklyTarget[sub][w] > 0 && unassignedByWeek[w].length > 0) {
+              const slot = unassignedByWeek[w].shift();
+              slotsForSubject[sub].push(slot);
+              subjectWeeklyTarget[sub][w]--;
+            }
+          });
+        }
+
+        // Phase 3: If any subject still needs slots in week w (e.g. week w was dense with events), borrow from other weeks' unassigned slots (excluding last 2 days)
+        Object.keys(subjectWeeklyTarget).forEach(sub => {
+          for (let w = 0; w < weekCount; w++) {
+            while (subjectWeeklyTarget[sub][w] > 0) {
+              let borrowed = false;
+              for (let otherW = 0; otherW < weekCount; otherW++) {
+                if (unassignedByWeek[otherW].length > 0) {
+                  const slot = unassignedByWeek[otherW].shift();
+                  slotsForSubject[sub].push(slot);
+                  subjectWeeklyTarget[sub][w]--;
+                  borrowed = true;
+                  break;
+                }
+              }
+              if (!borrowed) break;
+            }
           }
         });
 
-        // Fill remaining subject needs into available unassigned slots
-        Object.keys(subjectCountNeeded).forEach(sub => {
-          while (subjectCountNeeded[sub] > 0 && unassignedSlots.length > 0) {
-            const slot = unassignedSlots.shift();
-            if (!slotsForSubject[sub]) slotsForSubject[sub] = [];
-            slotsForSubject[sub].push(slot);
-            subjectCountNeeded[sub]--;
+        // Phase 4: Fallback to last 2 days ONLY IF regular days are completely exhausted
+        Object.keys(subjectWeeklyTarget).forEach(sub => {
+          for (let w = 0; w < weekCount; w++) {
+            while (subjectWeeklyTarget[sub][w] > 0 && fallbackSlots.length > 0) {
+              const slot = fallbackSlots.shift();
+              slotsForSubject[sub].push(slot);
+              subjectWeeklyTarget[sub][w]--;
+            }
           }
         });
 
@@ -3230,13 +3293,17 @@
               teacherStats[desig].totalHours++;
               teacherStats[desig].subjectCount[cell.subject] = (teacherStats[desig].subjectCount[cell.subject] || 0) + 1;
               const day = parseInt(key.split('-')[0], 10);
+              const week = Math.floor(day / 5);
               teacherStats[desig].dailyCount[day] = (teacherStats[desig].dailyCount[day] || 0) + 1;
+              teacherStats[desig].weeklyCount = teacherStats[desig].weeklyCount || {};
+              teacherStats[desig].weeklyCount[week] = (teacherStats[desig].weeklyCount[week] || 0) + 1;
             }
           }
         });
 
-        // Second: Assign teachers to unassigned cells with greedy cost function
+        // Second: Assign teachers to unassigned cells with greedy cost function (weekly load balancing)
         for (let d = 0; d < totalDays; d++) {
+          const week = Math.floor(d / 5);
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = newTimetable[key];
@@ -3247,6 +3314,7 @@
 
               candidateTeachers.forEach(t => {
                 const stat = teacherStats[t.name];
+                stat.weeklyCount = stat.weeklyCount || {};
                 const curHours = stat.totalHours;
                 const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
                   ? parseInt(t.maxHours, 10)
@@ -3259,8 +3327,13 @@
 
                 const curSubHours = stat.subjectCount[cell.subject] || 0;
                 const curDayHours = stat.dailyCount[d] || 0;
+                const curWeekHours = stat.weeklyCount[week] || 0;
+                const targetWeekHours = Math.ceil(tMax / weekCount);
 
                 let cost = curHours * 100 + (curSubHours * 15) + (curDayHours >= 2 ? curDayHours * 50 : curDayHours * 10);
+                if (curWeekHours >= targetWeekHours) {
+                  cost += (curWeekHours - targetWeekHours + 1) * 60; // weekly load balancing penalty
+                }
                 if (cell.isDemo && t.demoSubject === cell.subject) {
                   cost -= 80; // strong preference for trainee with this demo subject
                 }
@@ -3279,10 +3352,20 @@
                 teacherStats[bestTeacher.name].totalHours++;
                 teacherStats[bestTeacher.name].subjectCount[cell.subject] = (teacherStats[bestTeacher.name].subjectCount[cell.subject] || 0) + 1;
                 teacherStats[bestTeacher.name].dailyCount[d] = (teacherStats[bestTeacher.name].dailyCount[d] || 0) + 1;
+                teacherStats[bestTeacher.name].weeklyCount = teacherStats[bestTeacher.name].weeklyCount || {};
+                teacherStats[bestTeacher.name].weeklyCount[week] = (teacherStats[bestTeacher.name].weeklyCount[week] || 0) + 1;
               }
             }
           }
         }
+
+        // 7. Remove unassigned classes from the timetable (미배정된 과목은 배당표에서 깨끗하게 제거)
+        Object.keys(newTimetable).forEach(key => {
+          const cell = newTimetable[key];
+          if (cell && !cell.isLocked && (!cell.teacher || cell.teacher.trim() === '')) {
+            delete newTimetable[key];
+          }
+        });
 
         this.timetable = newTimetable;
         this.renderTimetableGrid();
@@ -3292,8 +3375,28 @@
         this.renderDashboardCharts();
 
         if (showAlert) {
-          alert('자동 수업 배당이 완료되었습니다! (연강 묶음 반영 및 시수 공평 분배 완료)');
+          alert('자동 수업 배당이 완료되었습니다!\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 미배정 과목 정리 완료');
         }
+      },
+
+      removeUnassignedClasses(showAlert = false) {
+        let count = 0;
+        Object.keys(this.timetable).forEach(key => {
+          const cell = this.timetable[key];
+          if (cell && !cell.isLocked && (!cell.teacher || cell.teacher.trim() === '')) {
+            delete this.timetable[key];
+            count++;
+          }
+        });
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+        if (showAlert) {
+          alert(count > 0 ? `${count}개의 미배정 과목을 배당표에서 제거하였습니다.` : '배당표에 미배정된 과목이 없습니다.');
+        }
+        return count;
       },
 
       clearAllocatedClasses() {
