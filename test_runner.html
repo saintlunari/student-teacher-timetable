@@ -676,14 +676,24 @@
         desc: '아침활동 행에서 배정된 교생 이름의 태그 배경색, 텍스트색, 테두리가 해당 교생 고유의 색상 태그(TEACHER_COLORS)와 정확하게 일치하는지, 단일/다중 교생 표기가 올바르게 반영되는지 검증',
         run: () => {
           App.loadPreset('grade3', false);
+<<<<<<< HEAD
           App.autoAssignMorningDuty(false);
+=======
+          App.autoAssignMorningDuty();
+>>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
           App.renderTimetableGrid();
 
           const frame = document.getElementById('app-frame');
           const doc = (frame && frame.contentDocument) ? frame.contentDocument : document;
+<<<<<<< HEAD
           const tbody = doc.getElementById('timetable-tbody');
           if (!tbody) {
             return { pass: false, message: 'timetable-tbody 요소를 찾을 수 없음' };
+=======
+          const tbody = doc.getElementById('timetable-body');
+          if (!tbody) {
+            return { pass: false, message: 'timetable-body 요소를 찾을 수 없음' };
+>>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
           }
           const morningRow = tbody.querySelector('tr');
           if (!morningRow) {
@@ -729,6 +739,7 @@
               : `검증 실패 (matched:${matchedColors}/${totalChecked}, multiPass:${multiTeacherPass}, teacherCount:${checkedTeachers.size})`
           };
         }
+<<<<<<< HEAD
       },
       {
         id: 'tc15',
@@ -792,6 +803,8 @@
               : `검증 실패 (zeroHard:${zeroHardViolations} [hardMetric:${hardMetricVal}], alertTriggered:${alertTriggered} [${alertMsg}], errors:${errs.errorCount})`
           };
         }
+=======
+>>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
       }
     ];
 

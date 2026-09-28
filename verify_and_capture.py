@@ -97,6 +97,7 @@ try:
     title_val = title_eval.get("result", {}).get("value", "")
     print(f"Test Runner Result Title: {title_val}", flush=True)
 
+<<<<<<< HEAD
     # Capture 15/15 Benchmark Screenshot
     res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data1 = base64.b64decode(res1["result"]["data"])
@@ -104,6 +105,15 @@ try:
     with open(out_path1, "wb") as f:
         f.write(img_data1)
     with open(os.path.join(BRAIN_DIR, "benchmark_14_pass.png"), "wb") as f:
+=======
+    # Capture 13/13 Benchmark Screenshot
+    res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data1 = base64.b64decode(res1["result"]["data"])
+    out_path1 = os.path.join(BRAIN_DIR, "benchmark_13_pass.png")
+    with open(out_path1, "wb") as f:
+        f.write(img_data1)
+    with open(os.path.join(BRAIN_DIR, "benchmark_12_pass.png"), "wb") as f:
+>>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
         f.write(img_data1)
     print(f"Saved Benchmark screenshot to {out_path1}", flush=True)
 
