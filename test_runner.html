@@ -25,7 +25,7 @@
     <div class="grid grid-cols-3 gap-4 text-center">
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">총 테스트 케이스</span>
-        <div id="total-tests" class="text-2xl font-black text-white mt-1">7</div>
+        <div id="total-tests" class="text-2xl font-black text-white mt-1">11</div>
       </div>
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">성공 (Passed)</span>
@@ -64,8 +64,9 @@
           const subjectOccurrences = {};
           const parseNum = (s) => parseInt(String(s).match(/\d+/)[0], 10);
 
+          const maxP = App.periodsPerDay || 8;
           for (let d = 0; d < totalDays; d++) {
-            for (let p = 1; p <= 6; p++) {
+            for (let p = 1; p <= maxP; p++) {
               const cell = App.timetable[`${d}-${p}`];
               if (cell && cell.subject && cell.lesson) {
                 if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
@@ -129,8 +130,9 @@
           const subjectOccurrences = {};
           const parseNum = (s) => parseInt(String(s).match(/\d+/)[0], 10);
 
+          const maxP = App.periodsPerDay || 8;
           for (let d = 0; d < totalDays; d++) {
-            for (let p = 1; p <= 6; p++) {
+            for (let p = 1; p <= maxP; p++) {
               const cell = App.timetable[`${d}-${p}`];
               if (cell && cell.subject && cell.lesson) {
                 if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
@@ -312,6 +314,156 @@
               : `DB 검증 실패 (k1:${k1Count}, k2:${k2Count}, m1:${m1Count}, m2:${m2Count}, int1:${int1Count}, int2:${int2Count}, total:${totalCount}, import:${importSuccess})`
           };
         }
+      },
+      {
+        id: 'tc10',
+        title: '[신규 기능 4종] 기본정보 실시간 동기화, 교생 최대 시수 상한 엄격 준수, 스마트 이동 가이드(초록/빨강), 차시 원클릭 삭제 무결성 테스트',
+        desc: 'Step 1 기본정보의 배당표 및 마감일 달력 즉각 동기화, 솔버의 최대 시수 초과 0건 보장, safe/unsafe 스마트 스왑 시각화, 배당 차시 개별 삭제 무결성 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+
+          // 1. 기본정보 실시간 동기화 테스트
+          const doc = App.iframeDocument || (document.getElementById('app-frame') ? document.getElementById('app-frame').contentDocument : document);
+          const titleInput = doc.getElementById('cfg-title');
+          const schoolInput = doc.getElementById('cfg-school');
+          const gcInput = doc.getElementById('cfg-gradeClass');
+          const teacherInput = doc.getElementById('cfg-teacherName');
+          const startInput = doc.getElementById('cfg-startDate');
+
+          if (titleInput) titleInput.value = '2026학년도 1학기 교육실습 배당표';
+          if (schoolInput) schoolInput.value = '행복초등학교';
+          if (gcInput) gcInput.value = '2학년 3반';
+          if (teacherInput) teacherInput.value = '박선생';
+          if (startInput) startInput.value = '2026-05-04';
+
+          App.onConfigChange();
+          App.setTeacherFilter(App.teachers[0].name);
+
+          const viewTitle = doc.getElementById('view-title').innerText;
+          const viewSchool = doc.getElementById('view-school').innerText;
+          const viewGC = doc.getElementById('view-gradeClass').innerText;
+          const viewTN = doc.getElementById('view-teacherName').innerText;
+          const calSchool = doc.getElementById('calendar-school') ? doc.getElementById('calendar-school').innerText : '';
+          const calGC = doc.getElementById('calendar-gradeClass') ? doc.getElementById('calendar-gradeClass').innerText : '';
+
+          const syncPass = (
+            viewTitle === '2026학년도 1학기 교육실습 배당표' &&
+            viewSchool === '행복초등학교' &&
+            viewGC === '2학년 3반' &&
+            viewTN === '박선생' &&
+            calSchool === '행복초등학교' &&
+            calGC === '2학년 3반'
+          );
+
+          // 2. 교생 최대 시수 상한 엄격 준수 테스트
+          // 예: 김부설 최대 4시수, 이공주 최대 5시수 설정
+          App.teachers[0].maxHours = 4;
+          App.teachers[1].maxHours = 5;
+          App.teachers[2].maxHours = 8;
+          App.runAutoAllocation(false);
+
+          let maxHoursViolations = 0;
+          App.teachers.forEach(t => {
+            const assigned = Object.values(App.timetable).filter(c => c && c.teacher === t.name).length;
+            const limit = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '') ? t.maxHours : (App.config.maxHours || 10);
+            if (assigned > limit) {
+              maxHoursViolations++;
+            }
+          });
+          const maxHoursPass = (maxHoursViolations === 0);
+
+          // 3. 스마트 스왑/이동 가이드 (초록/빨강) 테스트
+          const testKey = Object.keys(App.timetable).find(k => App.timetable[k] && App.timetable[k].subject && !App.timetable[k].isLocked);
+          App.highlightSwapTargets(testKey);
+
+          const safeCells = doc.querySelectorAll('.tt-cell.swap-safe');
+          const unsafeCells = doc.querySelectorAll('.tt-cell.swap-unsafe');
+          const swapGuidePass = (safeCells.length > 0) && (unsafeCells.length > 0);
+          App.clearSwapHighlights();
+
+          // 4. 차시 개별 삭제 무결성 테스트
+          const deleteTargetKey = testKey;
+          const beforeDeleteCount = Object.keys(App.timetable).length;
+          App.deleteCellClass(deleteTargetKey, null, true);
+          const afterDeleteCount = Object.keys(App.timetable).length;
+          const deletePass = (afterDeleteCount === beforeDeleteCount - 1) && (!App.timetable[deleteTargetKey]);
+
+          const pass = syncPass && maxHoursPass && swapGuidePass && deletePass;
+          return {
+            pass,
+            message: pass
+              ? `기본정보 동기화(학교·반·교사·달력) 100%, 최대 시수 상한 초과 0건 보장, 스마트 이동 safe(${safeCells.length})/unsafe(${unsafeCells.length}) 식별, 원클릭 차시 삭제 무결성 완벽 검증`
+              : `검증 실패 (sync:${syncPass}, maxHours:${maxHoursPass}, swap:${swapGuidePass}, delete:${deletePass})`
+          };
+        }
+      },
+      {
+        id: 'tc11',
+        title: '[신규 요구사항 3종] 단일 \'강의\' 스탬프, 8교시 시간표 확장, 배당 오류 빨간 테두리 표시 및 수정 후 자동 삭제 검증',
+        desc: '강의1/4 제거 및 단일 \'강의\' 스탬프 동작, 1일 8교시 시간표 확장 및 8교시 슬롯 유효성, 배당표 오류 시 빨간 테두리(.cell-error) 표시 및 올바른 수정 후 테두리 자동 삭제 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const doc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 단일 강의 스탬프 검증
+          App.setCurrentStamp('lecture', '강의', '', '');
+          App.applyStampToCell(0, 8); // 8교시에 도장 찍기
+          const ev08 = App.events['0-8'];
+          const stampPass = ev08 && ev08.type === 'lecture' && ev08.subject === '강의';
+
+          // 2. 8교시 시간표 확장 검증 (1~8교시)
+          const periodsPass = (App.periodsPerDay === 8) && (doc.querySelectorAll('#timetable-tbody tr').length >= 8);
+
+          // 3. 배당표 정상 자동 배당 시 오류 0건 검증
+          App.runAutoAllocation(false);
+          const initialErrors = App.detectTimetableErrors();
+          const zeroErrorPass = (initialErrors.errorCount === 0);
+
+          // 4. 의도적 차시 순서 역전 발생 시 빨간 테두리(.cell-error) 표시 검증
+          const subClasses = Object.keys(App.timetable).filter(k => App.timetable[k] && App.timetable[k].subject === '국어');
+          let errorDetectedPass = false;
+          let recoveryPass = false;
+
+          if (subClasses.length >= 2) {
+            const kEarly = subClasses[0];
+            const kLate = subClasses[subClasses.length - 1];
+            const itemEarly = { ...App.timetable[kEarly] };
+            const itemLate = { ...App.timetable[kLate] };
+
+            // Swap them to create an inversion
+            App.timetable[kEarly] = itemLate;
+            App.timetable[kLate] = itemEarly;
+            App.renderTimetableGrid();
+
+            const invertedErrors = App.detectTimetableErrors();
+            const cellEarlyEl = doc.getElementById(`cell-${kEarly}`);
+            const cellLateEl = doc.getElementById(`cell-${kLate}`);
+            const hasCellErrorClass = (cellEarlyEl && cellEarlyEl.classList.contains('cell-error')) &&
+                                      (cellLateEl && cellLateEl.classList.contains('cell-error'));
+
+            errorDetectedPass = (invertedErrors.errorCount > 0) && hasCellErrorClass;
+
+            // 5. 다시 원래대로 수정 후 빨간 테두리 자동 삭제 검증
+            App.timetable[kEarly] = itemEarly;
+            App.timetable[kLate] = itemLate;
+            App.renderTimetableGrid();
+
+            const recoveredErrors = App.detectTimetableErrors();
+            const recEarlyEl = doc.getElementById(`cell-${kEarly}`);
+            const recLateEl = doc.getElementById(`cell-${kLate}`);
+            const noCellErrorClass = (recEarlyEl && !recEarlyEl.classList.contains('cell-error')) &&
+                                     (recLateEl && !recLateEl.classList.contains('cell-error'));
+            recoveryPass = (recoveredErrors.errorCount === 0) && noCellErrorClass;
+          }
+
+          const pass = stampPass && periodsPass && zeroErrorPass && errorDetectedPass && recoveryPass;
+          return {
+            pass,
+            message: pass
+              ? `단일 '강의' 스탬프 등록 성공, 8교시 시간표 확장(8행 그리드) 확인, 순서 역전 시 빨간 테두리(.cell-error) 표시 및 정상 수정 후 빨간 테두리 자동 삭제 100% 무결성 검증 완료`
+              : `검증 실패 (stamp:${stampPass}, 8periods:${periodsPass}, zeroErr:${zeroErrorPass}, errDetected:${errorDetectedPass}, recovery:${recoveryPass})`
+          };
+        }
       }
     ];
 
@@ -363,6 +515,11 @@
       const summary = testCases.map(t => `${t.id}:${t.lastPass?'PASS':'FAIL[' + t.lastMsg + ']'}`).join(' | ');
       document.title = `[${passed}/${testCases.length}] ${summary}`;
       console.log(`[BENCHMARK FINISHED] ${passed} PASSED, ${failed} FAILED`);
+      fetch('http://127.0.0.1:8089/report', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ passed, failed, total: testCases.length, details: testCases.map(t => ({id: t.id, pass: t.lastPass, msg: t.lastMsg})) })
+      }).catch(() => {});
       lucide.createIcons();
     }
 
