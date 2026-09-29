@@ -467,7 +467,8 @@
                 <th class="py-2.5 px-3 w-24 text-center">해당 차시</th>
                 <th class="py-2.5 px-3 w-20 text-center">전체 차시</th>
                 <th class="py-2.5 px-3">단원/차시 주제 (선택)</th>
-                <th class="py-2.5 px-3 w-20 text-center">⭐ 인증수업</th>
+                <th class="py-2.5 px-3 w-20 text-center text-amber-800 font-bold">🏅 인증수업</th>
+                <th class="py-2.5 px-3 w-20 text-center text-indigo-800 font-bold">⭐ 교과대표수업</th>
                 <th class="py-2.5 px-3 w-28 text-center">👤 사전 배정 교생</th>
                 <th class="py-2.5 px-3 w-12 text-center">삭제</th>
               </tr>
@@ -556,8 +557,12 @@
             <button onclick="App.setCurrentStamp('lecture', '강의', '', '')" id="basic-stamp-lecture" class="px-2.5 py-1 text-xs rounded-lg font-bold border transition flex items-center gap-1 cursor-pointer bg-blue-100 hover:bg-blue-200 text-blue-950 border-blue-300">
               <i data-lucide="book-open" class="w-3 h-3 text-blue-700"></i> 강의
             </button>
+            <!-- 교생 인증수업 프리셋 버튼 -->
+            <button onclick="App.openTraineeCertStampModal()" id="basic-stamp-trainee-cert" class="px-2.5 py-1 text-xs rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold border border-emerald-700 shadow-sm transition flex items-center gap-1 cursor-pointer" title="교생 인증수업 스탬프">
+              <i data-lucide="award" class="w-3.5 h-3.5"></i> 🏅 교생 인증수업
+            </button>
             <!-- 교생 대표수업 프리셋 버튼 -->
-            <button onclick="App.openTraineeDemoStampModal()" class="px-2.5 py-1 text-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold border border-amber-600 shadow-sm transition flex items-center gap-1 cursor-pointer">
+            <button onclick="App.openTraineeDemoStampModal()" id="basic-stamp-trainee-demo" class="px-2.5 py-1 text-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold border border-amber-600 shadow-sm transition flex items-center gap-1 cursor-pointer" title="교생 대표수업 스탬프">
               <i data-lucide="star" class="w-3.5 h-3.5 fill-current"></i> ⭐ 교생 대표수업
             </button>
             <!-- 교과대표 참관: 틸/청록 계열 (강의와 다른 색!) -->
@@ -1112,9 +1117,19 @@
 
       <!-- Footer Actions -->
       <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-200 text-xs">
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
           <span class="font-bold text-slate-700">선택된 차시:</span>
           <span id="curriculum-db-selected-count" class="font-black text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">0개</span>
+
+          <div class="flex items-center gap-1.5 ml-2 pl-2 border-l border-slate-200">
+            <span class="font-semibold text-slate-600">수업 유형:</span>
+            <select id="db-lesson-type" class="px-2 py-1 border border-slate-300 rounded-lg bg-white font-bold text-xs text-slate-700">
+              <option value="normal">일반 수업</option>
+              <option value="cert">🏅 인증수업으로 등록</option>
+              <option value="demo">⭐ 교과대표수업으로 등록</option>
+            </select>
+          </div>
+
           <label class="flex items-center gap-1.5 text-slate-600 ml-2 cursor-pointer">
             <input type="checkbox" id="db-replace-mode" class="rounded text-amber-600 focus:ring-amber-500">
             <span>기존 진도표 지우고 새로 채우기</span>
@@ -1195,6 +1210,9 @@
             <button type="button" onclick="App.setModalEventType('lecture')" id="ev-type-btn-lecture" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-blue-50 border-blue-300 text-blue-800">
               강의
             </button>
+            <button type="button" onclick="App.setModalEventType('trainee_cert')" id="ev-type-btn-trainee_cert" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-emerald-50 border-emerald-300 text-emerald-800">
+              🏅 교생인증
+            </button>
             <button type="button" onclick="App.setModalEventType('trainee_demo')" id="ev-type-btn-trainee_demo" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-amber-50 border-amber-300 text-amber-800">
               ⭐ 교생대표
             </button>
@@ -1210,17 +1228,17 @@
             <button type="button" onclick="App.setModalEventType('homeroom')" id="ev-type-btn-homeroom" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
               담임 첫/끝인사
             </button>
-            <button type="button" onclick="App.setModalEventType('holiday')" id="ev-type-btn-holiday" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 col-span-2">
+            <button type="button" onclick="App.setModalEventType('holiday')" id="ev-type-btn-holiday" class="py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700">
               개교기념일/휴일
             </button>
           </div>
         </div>
 
-        <!-- 교생 대표수업 전용 옵션 -->
+        <!-- 교생 인증/대표수업 전용 옵션 -->
         <div id="ev-trainee-demo-group" class="p-3 bg-amber-50 rounded-xl border border-amber-200 space-y-2 hidden">
-          <label class="block text-xs font-bold text-amber-900 flex items-center gap-1">
-            <i data-lucide="star" class="w-3.5 h-3.5 fill-amber-500 text-amber-500"></i>
-            교생 대표수업 지정 (담당 교생 & 대표 과목)
+          <label id="ev-trainee-demo-label" class="block text-xs font-bold text-amber-900 flex items-center gap-1">
+            <i id="ev-trainee-demo-icon" data-lucide="star" class="w-3.5 h-3.5 fill-amber-500 text-amber-500"></i>
+            <span id="ev-trainee-demo-title">교생 대표수업 지정 (담당 교생 & 대표 과목)</span>
           </label>
           <div class="grid grid-cols-2 gap-2">
             <div>
@@ -1230,13 +1248,13 @@
               </select>
             </div>
             <div>
-              <label class="block text-[11px] font-semibold text-amber-800 mb-1">대표수업 교과</label>
+              <label id="ev-modal-sub-label" class="block text-[11px] font-semibold text-amber-800 mb-1">대표수업 교과</label>
               <select id="ev-modal-demo-subject" onchange="App.onModalDemoSubjectChange(this.value)" class="w-full text-xs px-2 py-1.5 border rounded-lg bg-white font-bold text-slate-800">
                 <!-- JS populated -->
               </select>
             </div>
           </div>
-          <p class="text-[10px] text-amber-700">* 자동 배당 시 이 요일·교시에 해당 교생의 대표수업 차시가 100% 확정(Hard-Locked) 배치됩니다.</p>
+          <p id="ev-modal-demo-hint" class="text-[10px] text-amber-700">* 자동 배당 시 이 요일·교시에 해당 교생의 대표/인증수업 차시가 100% 확정(Hard-Locked) 배치됩니다.</p>
         </div>
 
         <!-- 행사 / 강의명 -->
@@ -1405,6 +1423,48 @@
   </div>
 
   <!-- ========================================================= -->
+  <!-- MODAL: 교생 인증수업 스탬프 선택 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-trainee-cert-stamp" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+        <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+          <i data-lucide="award" class="w-5 h-5 text-emerald-600"></i>
+          <span>교생 인증수업 스탬프 선택</span>
+        </h3>
+        <button onclick="App.closeTraineeCertStampModal()" class="text-slate-400 hover:text-slate-600">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3">
+        <p class="text-xs text-slate-600">
+          시간표 칸을 클릭할 때 찍힐 <strong>교생 인증수업</strong> 담당자와 과목을 선택하세요.
+        </p>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">담당 실습생</label>
+          <select id="trainee-cert-stamp-teacher" onchange="App.onTraineeCertStampTeacherChange(this.value)" class="w-full text-xs px-3 py-2 border rounded-lg bg-white font-bold text-slate-800">
+            <!-- JS populated with teachers -->
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1">인증수업 교과목</label>
+          <select id="trainee-cert-stamp-subject" class="w-full text-xs px-3 py-2 border rounded-lg bg-white font-bold text-slate-800">
+            <!-- elementary subjects -->
+          </select>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2 border-t border-slate-100">
+        <button type="button" onclick="App.closeTraineeCertStampModal()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">취소</button>
+        <button type="button" onclick="App.applyTraineeCertStampSelection()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-lg shadow-sm">스탬프 활성화</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
   <!-- MODAL: 교생 대표수업 스탬프 선택 모달 -->
   <!-- ========================================================= -->
   <div id="modal-trainee-demo-stamp" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
@@ -1466,8 +1526,8 @@
 
     // --- 초등학교 교과군 (2022 개정 즐생(놀이) 등 지원) ---
     const ELEMENTARY_SUBJECTS = [
-      '국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어',
-      '바생', '슬생', '즐생', '즐생(놀이)', '창체'
+      '국어', '수학', '바생', '슬생', '즐생', '즐생(놀이)',
+      '사회', '도덕', '과학', '실과', '음악', '미술', '체육', '영어', '창체'
     ];
 
     // --- 4대 교과군 분류 매핑 함수 ---
@@ -1475,7 +1535,7 @@
       '인문사회': ['국어', '도덕', '사회', '영어'],
       '수리과학': ['수학', '과학', '컴퓨터', '정보'],
       '예체능': ['체육', '음악', '미술'],
-      '생활통합': ['바생', '슬생', '즐생', '실과', '창체', '놀이']
+      '생활통합': ['바생', '슬생', '즐생', '즐생(놀이)', '실과', '창체', '놀이']
     };
 
     function getSubjectCategory(subject) {
@@ -1489,7 +1549,8 @@
     function getSubjectFamily(sub) {
       if (!sub) return '';
       const s = String(sub).replace(/\s+/g, '');
-      if (s.includes('즐생') || s.includes('즐거운') || s === '즐' || s.includes('놀이')) return '즐생';
+      if (s.includes('놀이')) return '즐생(놀이)';
+      if (s.includes('즐생') || s.includes('즐거운') || s === '즐') return '즐생';
       if (s.includes('바생') || s.includes('바른') || s === '바' || s.includes('실천')) return '바생';
       if (s.includes('슬생') || s.includes('슬기') || s === '슬' || s.includes('탐구')) return '슬생';
       if (s.includes('국어') || s === '국') return '국어';
@@ -1544,12 +1605,13 @@
       '바생': { bg: 'bg-stone-100', text: 'text-stone-900', border: 'border-stone-300', badge: 'bg-stone-100 text-stone-900 border-stone-300' },
       '슬생': { bg: 'bg-green-50', text: 'text-green-900', border: 'border-green-300', badge: 'bg-green-100 text-green-900 border-green-300' },
       '즐생': { bg: 'bg-yellow-50', text: 'text-yellow-900', border: 'border-yellow-300', badge: 'bg-yellow-100 text-yellow-900 border-yellow-300' },
-      '즐생(놀이)': { bg: 'bg-yellow-50', text: 'text-yellow-900', border: 'border-yellow-300', badge: 'bg-yellow-100 text-yellow-900 border-yellow-300' },
+      '즐생(놀이)': { bg: 'bg-amber-50', text: 'text-amber-900', border: 'border-amber-300', badge: 'bg-amber-100 text-amber-900 border-amber-300' },
       'default': { bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300', badge: 'bg-slate-100 text-slate-800 border-slate-300' }
     };
 
     function getSubjectTheme(subj) {
       if (!subj) return SUBJECT_THEMES.default;
+      if (SUBJECT_THEMES[subj]) return SUBJECT_THEMES[subj];
       for (const [k, v] of Object.entries(SUBJECT_THEMES)) {
         if (k !== 'default' && (subj === k || subj.includes(k))) return v;
       }
@@ -1722,6 +1784,7 @@
       design: 'emerald',     // 초록색 (수업 설계)
       homeroom: 'amber',     // 주황색 (담임 첫/끝인사)
       holiday: 'rose',       // 빨강색 (공휴일/휴일)
+      trainee_cert: 'emerald', // 에메랄드/초록 (인증수업)
       trainee_demo: 'amber'  // 골드 (대표수업)
     };
 
@@ -1749,10 +1812,10 @@
     };
 
     const DEFAULT_TEACHERS = [
-      { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1)', colorIdx: 0 },
-      { id: 't2', name: '이공주', major: '수학', certSubject: '수학', demoSubject: '수학', note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
-      { id: 't3', name: '삼알밤', major: '미술', certSubject: '즐생', demoSubject: '즐생', note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
-      { id: 't4', name: '사산성', major: '체육', certSubject: '체육', demoSubject: '체육', note: '국(1) 수(1) 체(1)', colorIdx: 3 }
+      { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 바(1)', colorIdx: 0 },
+      { id: 't2', name: '이공주', major: '수학', certSubject: '수학', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
+      { id: 't3', name: '삼알밤', major: '미술', certSubject: '즐생', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
+      { id: 't4', name: '사산성', major: '체육', certSubject: '체육', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 체(1)', colorIdx: 3 }
     ];
 
     const DEFAULT_CURRICULUM = [
@@ -2202,10 +2265,17 @@
       },
 
       onConfigChange() {
+        const oldMax = this.config.maxHours;
         this.syncConfigFromInputs();
         this.renderConfigHeader();
         this.renderPersonalDeadlinePanel();
         this.renderTeacherSummary();
+        if (this.config.maxHours && this.config.maxHours !== oldMax && this.teachers) {
+          this.teachers.forEach(t => {
+            t.maxHours = this.config.maxHours;
+          });
+          this.renderTeachersTable();
+        }
       },
 
       renderConfigHeader() {
@@ -2243,11 +2313,10 @@
       teacherNoteTextOpen: {},
 
       getAvailableSubjects() {
-        const set = new Set();
+        const set = new Set(ELEMENTARY_SUBJECTS);
         (this.curriculum || []).forEach(c => {
           if (c && c.subject && c.subject.trim()) set.add(c.subject.trim());
         });
-        ELEMENTARY_SUBJECTS.forEach(s => set.add(s));
         return Array.from(set);
       },
 
@@ -2350,11 +2419,10 @@
             }).join('');
           }
 
-          const addableSubs = availableSubs.filter(s => !subHours[s]);
           const addSelectHtml = `
             <select onchange="if(this.value === '__CUSTOM__'){ const customSub = prompt('추가할 과목명을 입력하세요 (예: 즐생(놀이), 창체, 정보 등):'); if(customSub && customSub.trim()){ App.addTeacherSubject(${idx}, customSub.trim()); } this.value=''; } else if(this.value){ App.addTeacherSubject(${idx}, this.value); this.value=''; }" class="text-[10px] px-1.5 py-0.5 border border-dashed border-indigo-300 rounded bg-indigo-50/60 text-indigo-700 hover:bg-indigo-100/80 cursor-pointer font-medium">
               <option value="">+ 과목 추가</option>
-              ${addableSubs.map(s => `<option value="${s}">+ ${s}</option>`).join('')}
+              ${availableSubs.map(s => `<option value="${s}">+ ${s}</option>`).join('')}
               <option value="__CUSTOM__">+ 직접 입력...</option>
             </select>
           `;
@@ -2387,7 +2455,7 @@
               </select>
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" oninput="App.updateTeacherLive(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
+              <input type="number" min="1" max="50" data-field="maxHours" value="${(t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '') ? t.maxHours : (this.config.maxHours || 10)}" placeholder="${this.config.maxHours || 10}" oninput="App.onTeacherMaxHoursInput(${idx}, this.value)" onchange="App.onTeacherMaxHoursChange(${idx}, this.value)" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
             </td>
             <td class="py-2 px-3 min-w-[360px]">
               <div class="space-y-1.5">
@@ -2660,6 +2728,38 @@
         }
       },
 
+      onTeacherMaxHoursInput(idx, val) {
+        if (!this.teachers[idx]) return;
+        const num = val ? parseInt(val, 10) : '';
+        this.teachers[idx].maxHours = num;
+        if (num && num > 0) {
+          this.config.maxHours = num;
+          const cfgInput = document.getElementById('cfg-maxHours');
+          if (cfgInput && parseInt(cfgInput.value, 10) !== num) {
+            cfgInput.value = num;
+          }
+        }
+      },
+
+      onTeacherMaxHoursChange(idx, val) {
+        if (!this.teachers[idx]) return;
+        const num = val ? parseInt(val, 10) : (this.config.maxHours || 10);
+        const oldMax = this.config.maxHours || 10;
+        this.teachers[idx].maxHours = num;
+        this.config.maxHours = num;
+        const cfgInput = document.getElementById('cfg-maxHours');
+        if (cfgInput) cfgInput.value = num;
+
+        const allMatched = this.teachers.every((t, i) => i === idx || (t.maxHours || this.config.maxHours) === oldMax);
+        if (allMatched) {
+          this.teachers.forEach(t => { t.maxHours = num; });
+        }
+
+        this.renderTeachersTable();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+      },
+
       syncTeachersFromDOM() {
         const tbody = document.getElementById('teacher-table-body');
         if (!tbody) return;
@@ -2684,8 +2784,9 @@
             const fallbackSelect = tr.querySelector('select');
             if (fallbackSelect) this.teachers[idx].demoSubject = fallbackSelect.value;
           }
-          if (inputs[2]) {
-            this.teachers[idx].maxHours = inputs[2].value ? parseInt(inputs[2].value, 10) : '';
+          const maxInput = tr.querySelector('input[data-field="maxHours"]') || inputs[2];
+          if (maxInput) {
+            this.teachers[idx].maxHours = maxInput.value ? parseInt(maxInput.value, 10) : (this.config.maxHours || 10);
           }
           const noteInp = tr.querySelector('input[id^="teacher-note-input-"]');
           if (noteInp) {
@@ -2704,7 +2805,7 @@
           major: '초등교육',
           certSubject: '',
           demoSubject: '',
-          maxHours: '',
+          maxHours: this.config.maxHours || 10,
           note: '',
           subjectHours: {},
           colorIdx
@@ -2719,6 +2820,13 @@
         if (this.teachers[idx]) {
           const oldName = this.teachers[idx].name;
           this.teachers[idx][field] = val;
+          if (field === 'maxHours') {
+            const num = val ? parseInt(val, 10) : (this.config.maxHours || 10);
+            this.config.maxHours = num;
+            const cfgInp = document.getElementById('cfg-maxHours');
+            if (cfgInp) cfgInp.value = num;
+            this.renderTeachersTable();
+          }
           if (field === 'name' && oldName !== val) {
             this.curriculum.forEach(c => {
               if (c.designatedTeacher === oldName) c.designatedTeacher = val;
@@ -2787,7 +2895,10 @@
               <input type="text" data-field="topic" value="${c.topic || ''}" placeholder="단원/주제 (선택)" oninput="App.updateCurriculumLive(${idx}, 'topic', this.value)" onchange="App.updateCurriculum(${idx}, 'topic', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
             </td>
             <td class="py-2 px-3 text-center">
-              <input type="checkbox" data-field="isDemo" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="대표수업 차시 여부">
+              <input type="checkbox" data-field="isCert" ${c.isCert ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isCert', this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer" title="인증수업 차시 여부">
+            </td>
+            <td class="py-2 px-3 text-center">
+              <input type="checkbox" data-field="isDemo" ${c.isDemo ? 'checked' : ''} onchange="App.updateCurriculum(${idx}, 'isDemo', this.checked)" class="w-4 h-4 text-indigo-600 rounded focus:ring-indigo-500 cursor-pointer" title="교과대표수업 차시 여부">
             </td>
             <td class="py-2 px-3 text-center">
               <select data-field="designatedTeacher" onchange="App.updateCurriculum(${idx}, 'designatedTeacher', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs ${c.designatedTeacher ? 'font-bold text-indigo-700 bg-indigo-50/50' : 'text-slate-600'}">
@@ -2814,6 +2925,7 @@
           lesson: '1',
           totalLesson: 10,
           topic: '',
+          isCert: false,
           isDemo: false,
           designatedTeacher: ''
         });
@@ -2836,6 +2948,7 @@
           const lessonInput = row.querySelector('input[data-field="lesson"]');
           const totalInput = row.querySelector('input[data-field="totalLesson"]');
           const topicInput = row.querySelector('input[data-field="topic"]');
+          const certInput = row.querySelector('input[data-field="isCert"]');
           const demoInput = row.querySelector('input[data-field="isDemo"]');
           const teacherSelect = row.querySelector('select[data-field="designatedTeacher"]');
 
@@ -2847,6 +2960,7 @@
             if (!isNaN(v)) this.curriculum[idx].totalLesson = v;
           }
           if (topicInput) this.curriculum[idx].topic = topicInput.value.trim();
+          if (certInput) this.curriculum[idx].isCert = certInput.checked;
           if (demoInput) this.curriculum[idx].isDemo = demoInput.checked;
           if (teacherSelect) this.curriculum[idx].designatedTeacher = teacherSelect.value;
         });
@@ -3097,7 +3211,8 @@
               { id: '통합', label: '통합(전체)' },
               { id: '바생', label: '바생' },
               { id: '슬생', label: '슬생' },
-              { id: '즐생', label: '즐생' }
+              { id: '즐생', label: '즐생' },
+              { id: '즐생(놀이)', label: '즐생(놀이)' }
             ];
           } else if (grade <= 4) {
             subjects = [
@@ -3130,7 +3245,7 @@
           subjects.forEach(s => {
             const isActive = (s.id === subject);
             let items = this.getCurriculumDbSourceItems(grade, semester, s.id);
-            if (s.id === '바생' || s.id === '슬생' || s.id === '즐생') {
+            if (s.id === '바생' || s.id === '슬생' || s.id === '즐생' || s.id === '즐생(놀이)') {
               items = items.filter(it => it.subject === s.id);
             }
             const count = items.length;
@@ -3289,6 +3404,10 @@
           this.curriculum = [];
         }
 
+        const lessonType = document.getElementById('db-lesson-type')?.value || 'normal';
+        const isCert = (lessonType === 'cert');
+        const isDemo = (lessonType === 'demo');
+
         selected.forEach(idx => {
           const it = sourceItems[idx];
           if (!it) return;
@@ -3300,7 +3419,8 @@
             totalLesson: it.totalLesson || 1,
             unit: it.unit || '',
             topic: it.unit ? `${it.unit} - ${it.topic}` : it.topic,
-            isDemo: false,
+            isCert: isCert,
+            isDemo: isDemo,
             designatedTeacher: ''
           });
         });
@@ -3417,6 +3537,28 @@
         setBtn('basic-stamp-homeroom-first', colors.homeroom || 'amber');
         setBtn('basic-stamp-homeroom-last', colors.homeroom || 'amber');
         setBtn('basic-stamp-holiday', colors.holiday || 'rose');
+
+        const certEl = document.getElementById('basic-stamp-trainee-cert');
+        if (certEl) {
+          const certColor = colors.trainee_cert || 'emerald';
+          if (certColor === 'emerald') {
+            certEl.className = 'px-2.5 py-1 text-xs rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold border border-emerald-700 shadow-sm transition flex items-center gap-1 cursor-pointer';
+          } else {
+            const pal = STAMP_PALETTES[certColor] || STAMP_PALETTES.emerald;
+            certEl.className = `px-2.5 py-1 text-xs rounded-lg font-bold border transition flex items-center gap-1 cursor-pointer ${pal.cellClass || pal.btnBg}`;
+          }
+        }
+
+        const demoEl = document.getElementById('basic-stamp-trainee-demo');
+        if (demoEl) {
+          const demoColor = colors.trainee_demo || 'amber';
+          if (demoColor === 'amber') {
+            demoEl.className = 'px-2.5 py-1 text-xs rounded-lg bg-amber-500 hover:bg-amber-600 text-white font-bold border border-amber-600 shadow-sm transition flex items-center gap-1 cursor-pointer';
+          } else {
+            const pal = STAMP_PALETTES[demoColor] || STAMP_PALETTES.amber;
+            demoEl.className = `px-2.5 py-1 text-xs rounded-lg font-bold border transition flex items-center gap-1 cursor-pointer ${pal.cellClass || pal.btnBg}`;
+          }
+        }
       },
 
       openBasicStampColorModal() {
@@ -3434,6 +3576,8 @@
         if (!container) return;
         const types = [
           { type: 'lecture', label: '강의', desc: '특강, 교직 실무, 이론 연수 등' },
+          { type: 'trainee_cert', label: '🏅 교생 인증수업', desc: '담당 실습생의 교생 인증수업 (0.1초 원클릭 도장)' },
+          { type: 'trainee_demo', label: '⭐ 교생 대표수업', desc: '담당 실습생의 교과대표수업 (0.1초 원클릭 도장)' },
           { type: 'observation', label: '수업 참관', desc: '교과대표수업 및 학년공개수업 참관 (강의와 구분)' },
           { type: 'meeting', label: '협의회', desc: '학급 협의회, 전공별 협의 및 컨설팅' },
           { type: 'design', label: '수업 설계', desc: '수업지도안 작성 및 설계 시간' },
@@ -3755,6 +3899,10 @@
         } else if (this.currentStamp.type === 'clear') {
           badge.className = 'text-xs px-3 py-1 rounded-full bg-rose-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
           badge.innerHTML = '<i data-lucide="eraser" class="w-3.5 h-3.5"></i> 활성: <strong>지우개</strong> (칸 클릭 시 즉시 삭제)';
+        } else if (this.currentStamp.type === 'trainee_cert') {
+          badge.className = 'text-xs px-3 py-1 rounded-full bg-emerald-600 text-white font-medium flex items-center gap-1.5 shadow-sm';
+          const info = `🏅 교생인증 [${this.currentStamp.pages || '인증수업'}] (${this.currentStamp.teacher || ''})`;
+          badge.innerHTML = `<i data-lucide="award" class="w-3.5 h-3.5 fill-current"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
         } else if (this.currentStamp.type === 'trainee_demo') {
           badge.className = 'text-xs px-3 py-1 rounded-full bg-amber-500 text-white font-medium flex items-center gap-1.5 shadow-sm';
           const info = `⭐ 교생대표 [${this.currentStamp.pages || '대표수업'}] (${this.currentStamp.teacher || ''})`;
@@ -3766,6 +3914,48 @@
           badge.innerHTML = `<i data-lucide="stamp" class="w-3.5 h-3.5"></i> 도장 모드: <strong>${info}</strong> (칸 클릭 시 0.1초 즉시 찍힘)`;
         }
         lucide.createIcons();
+      },
+
+      openTraineeCertStampModal() {
+        const teacherSelect = document.getElementById('trainee-cert-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-cert-stamp-subject');
+        if (teacherSelect) {
+          teacherSelect.innerHTML = this.teachers.map(t => 
+            `<option value="${t.name}">${t.name}${t.certSubject ? ` (인증과목: ${t.certSubject})` : ''}</option>`
+          ).join('');
+        }
+        if (subjectSelect) {
+          subjectSelect.innerHTML = ELEMENTARY_SUBJECTS.map(s => 
+            `<option value="${s}">${s}</option>`
+          ).join('');
+          if (this.teachers.length > 0 && this.teachers[0].certSubject) {
+            subjectSelect.value = this.teachers[0].certSubject;
+          }
+        }
+        document.getElementById('modal-trainee-cert-stamp').classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeTraineeCertStampModal() {
+        document.getElementById('modal-trainee-cert-stamp').classList.add('hidden');
+      },
+
+      onTraineeCertStampTeacherChange(tName) {
+        const teacher = this.teachers.find(t => t.name === tName);
+        if (teacher && teacher.certSubject) {
+          const subSelect = document.getElementById('trainee-cert-stamp-subject');
+          if (subSelect) subSelect.value = teacher.certSubject;
+        }
+      },
+
+      applyTraineeCertStampSelection() {
+        const teacherSelect = document.getElementById('trainee-cert-stamp-teacher');
+        const subjectSelect = document.getElementById('trainee-cert-stamp-subject');
+        const teacherName = teacherSelect ? teacherSelect.value : (this.teachers[0] ? this.teachers[0].name : '');
+        const subjectName = subjectSelect ? subjectSelect.value : '국어';
+
+        this.setCurrentStamp('trainee_cert', '교생인증', subjectName, teacherName);
+        this.closeTraineeCertStampModal();
       },
 
       openTraineeDemoStampModal() {
@@ -3844,6 +4034,10 @@
               if (ev.type === 'holiday') {
                 text = ev.subject || '공휴일';
                 textColor = style.textColor || 'text-rose-800';
+              } else if (ev.type === 'trainee_cert' || ev.isTraineeCert) {
+                cellStyle = 'bg-emerald-600 text-white font-bold hover:bg-emerald-700';
+                text = `🏅교생인증<br><span class="text-[10px] font-normal">[${ev.pages || ''}]</span>${ev.teacher ? `<br><span class="text-[9px] text-emerald-100">(${ev.teacher})</span>` : ''}`;
+                textColor = 'text-white';
               } else if (ev.type === 'trainee_demo' || ev.isTraineeDemo) {
                 cellStyle = 'bg-amber-500 text-white font-bold hover:bg-amber-600';
                 text = `⭐교생대표<br><span class="text-[10px] font-normal">[${ev.pages || ''}]</span>${ev.teacher ? `<br><span class="text-[9px] text-amber-100">(${ev.teacher})</span>` : ''}`;
@@ -3893,12 +4087,13 @@
           teacher = this.currentStamp.teacher || '';
         }
 
-        // Populate trainee and demo subject selects in modal
+        // Populate trainee and demo/cert subject selects in modal
         const traineeSelect = document.getElementById('ev-modal-trainee-select');
         if (traineeSelect) {
-          traineeSelect.innerHTML = this.teachers.map(t => 
-            `<option value="${t.name}">${t.name}${t.demoSubject ? ` (대표: ${t.demoSubject})` : ''}</option>`
-          ).join('');
+          traineeSelect.innerHTML = this.teachers.map(t => {
+            const extra = [t.certSubject ? `인증:${t.certSubject}` : '', t.demoSubject ? `대표:${t.demoSubject}` : ''].filter(Boolean).join(', ');
+            return `<option value="${t.name}">${t.name}${extra ? ` (${extra})` : ''}</option>`;
+          }).join('');
           if (teacher) traineeSelect.value = teacher;
         }
         const demoSubSelect = document.getElementById('ev-modal-demo-subject');
@@ -3925,13 +4120,15 @@
 
       setModalEventType(type, autoFillDefault = true) {
         this.modalSelectedType = type;
-        const types = ['lecture', 'trainee_demo', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
+        const types = ['lecture', 'trainee_cert', 'trainee_demo', 'observation', 'meeting', 'design', 'homeroom', 'holiday'];
         types.forEach(t => {
           const btn = document.getElementById(`ev-type-btn-${t}`);
           if (!btn) return;
           if (t === type) {
             btn.className = (t === 'trainee_demo')
               ? 'py-1.5 px-2 rounded-lg border text-center font-bold bg-amber-500 text-white border-amber-500 shadow-sm'
+              : (t === 'trainee_cert')
+              ? 'py-1.5 px-2 rounded-lg border text-center font-bold bg-emerald-600 text-white border-emerald-600 shadow-sm'
               : 'py-1.5 px-2 rounded-lg border text-center font-bold bg-sky-600 text-white border-sky-600 shadow-sm';
           } else {
             btn.className = 'py-1.5 px-2 rounded-lg border text-center font-medium bg-slate-50 border-slate-200 text-slate-700 hover:bg-slate-100';
@@ -3939,9 +4136,28 @@
         });
 
         const demoGroup = document.getElementById('ev-trainee-demo-group');
+        const demoTitle = document.getElementById('ev-trainee-demo-title');
+        const demoIcon = document.getElementById('ev-trainee-demo-icon');
+        const demoSubLabel = document.getElementById('ev-modal-sub-label');
         if (demoGroup) {
-          if (type === 'trainee_demo') {
+          if (type === 'trainee_demo' || type === 'trainee_cert') {
             demoGroup.classList.remove('hidden');
+            if (type === 'trainee_cert') {
+              if (demoTitle) demoTitle.innerText = '교생 인증수업 지정 (담당 교생 & 인증 교과)';
+              if (demoSubLabel) demoSubLabel.innerText = '인증수업 교과';
+              if (demoIcon) {
+                demoIcon.setAttribute('data-lucide', 'award');
+                demoIcon.className = 'w-3.5 h-3.5 text-emerald-600 fill-emerald-600';
+              }
+            } else {
+              if (demoTitle) demoTitle.innerText = '교생 대표수업 지정 (담당 교생 & 대표 과목)';
+              if (demoSubLabel) demoSubLabel.innerText = '대표수업 교과';
+              if (demoIcon) {
+                demoIcon.setAttribute('data-lucide', 'star');
+                demoIcon.className = 'w-3.5 h-3.5 fill-amber-500 text-amber-500';
+              }
+            }
+            lucide.createIcons();
           } else {
             demoGroup.classList.add('hidden');
           }
@@ -3951,6 +4167,7 @@
           const subInput = document.getElementById('ev-modal-subject');
           if (subInput) {
             if (type === 'lecture') subInput.value = '강의';
+            else if (type === 'trainee_cert') subInput.value = '교생인증';
             else if (type === 'trainee_demo') subInput.value = '교생대표';
             else if (type === 'observation') subInput.value = '수업 참관';
             else if (type === 'meeting') subInput.value = '학급 협의회';
@@ -3958,23 +4175,30 @@
             else if (type === 'homeroom') subInput.value = '창체';
             else if (type === 'holiday') subInput.value = '공휴일';
           }
-          if (type === 'trainee_demo' && this.teachers.length > 0) {
+          if ((type === 'trainee_demo' || type === 'trainee_cert') && this.teachers.length > 0) {
             const firstTeacher = this.teachers[0];
             const traineeSelect = document.getElementById('ev-modal-trainee-select');
             if (traineeSelect) traineeSelect.value = firstTeacher.name;
+            const targetSubject = (type === 'trainee_cert')
+              ? (firstTeacher.certSubject || '국어')
+              : (firstTeacher.demoSubject || '국어');
             const demoSubSelect = document.getElementById('ev-modal-demo-subject');
-            if (demoSubSelect) demoSubSelect.value = firstTeacher.demoSubject || '국어';
+            if (demoSubSelect) demoSubSelect.value = targetSubject;
             document.getElementById('ev-modal-teacher').value = firstTeacher.name;
-            document.getElementById('ev-modal-pages').value = firstTeacher.demoSubject || '국어';
+            document.getElementById('ev-modal-pages').value = targetSubject;
           }
         }
       },
 
       onModalTraineeChange(tName) {
         const teacher = this.teachers.find(t => t.name === tName);
-        if (teacher && teacher.demoSubject) {
-          const demoSub = document.getElementById('ev-modal-demo-subject');
-          if (demoSub) demoSub.value = teacher.demoSubject;
+        const type = this.modalSelectedType;
+        if (teacher) {
+          const targetSub = (type === 'trainee_cert') ? teacher.certSubject : teacher.demoSubject;
+          if (targetSub) {
+            const demoSub = document.getElementById('ev-modal-demo-subject');
+            if (demoSub) demoSub.value = targetSub;
+          }
         }
         document.getElementById('ev-modal-teacher').value = tName;
         const sub = document.getElementById('ev-modal-demo-subject');
@@ -3993,12 +4217,12 @@
         let pages = document.getElementById('ev-modal-pages').value.trim();
         let teacher = document.getElementById('ev-modal-teacher').value.trim();
 
-        if (type === 'trainee_demo') {
+        if (type === 'trainee_demo' || type === 'trainee_cert') {
           const traineeSelect = document.getElementById('ev-modal-trainee-select');
           const demoSub = document.getElementById('ev-modal-demo-subject');
           if (traineeSelect && traineeSelect.value) teacher = traineeSelect.value;
           if (demoSub && demoSub.value) pages = demoSub.value;
-          if (!subject) subject = '교생대표';
+          if (!subject) subject = (type === 'trainee_cert' ? '교생인증' : '교생대표');
         }
 
         if (!subject) {
@@ -4008,13 +4232,15 @@
         const span2 = document.getElementById('ev-modal-span2').checked;
 
         const eventColorKey = (this.basicStampColors && this.basicStampColors[type]) || DEFAULT_TYPE_COLORS[type] || 'blue';
+        const lessonStr = (type === 'trainee_cert') ? '인증수업' : (type === 'trainee_demo' ? '대표수업' : '');
         this.events[key] = {
           type,
           subject,
           pages,
-          lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+          lessonStr,
           teacher,
           isLocked: true,
+          isTraineeCert: (type === 'trainee_cert'),
           isTraineeDemo: (type === 'trainee_demo'),
           colorKey: eventColorKey
         };
@@ -4029,9 +4255,10 @@
             type,
             subject,
             pages,
-            lessonStr: type === 'trainee_demo' ? '대표수업' : '',
+            lessonStr,
             teacher,
             isLocked: true,
+            isTraineeCert: (type === 'trainee_cert'),
             isTraineeDemo: (type === 'trainee_demo'),
             colorKey: eventColorKey
           };
@@ -4073,13 +4300,15 @@
         }
 
         // 선택된 스탬프로 즉시 값 주입 (0.1초 원클릭 도장)
+        const lessonStr = (this.currentStamp.type === 'trainee_cert') ? '인증수업' : (this.currentStamp.type === 'trainee_demo' ? '대표수업' : '');
         this.events[key] = {
           type: this.currentStamp.type,
           subject: this.currentStamp.subject,
           pages: this.currentStamp.pages || '',
-          lessonStr: this.currentStamp.type === 'trainee_demo' ? '대표수업' : '',
+          lessonStr: lessonStr,
           teacher: this.currentStamp.teacher || '',
           isLocked: true,
+          isTraineeCert: (this.currentStamp.type === 'trainee_cert'),
           isTraineeDemo: (this.currentStamp.type === 'trainee_demo'),
           colorKey: this.currentStamp.colorKey || (this.basicStampColors && this.basicStampColors[this.currentStamp.type]) || DEFAULT_TYPE_COLORS[this.currentStamp.type] || 'blue'
         };
@@ -4220,7 +4449,81 @@
           };
         });
 
-        // 2. Pair Trainee Demo slots (⭐교생대표) with curriculum items
+        // 2-A. Pair Trainee Cert slots (🏅교생인증) with curriculum items
+        for (let d = 0; d < totalDays; d++) {
+          for (let p = 1; p <= maxP; p++) {
+            const key = `${d}-${p}`;
+            const ev = newTimetable[key];
+            if (ev && (ev.type === 'trainee_cert' || ev.isTraineeCert)) {
+              const tName = ev.teacher || '';
+              const subName = ev.pages || ev.subject || '';
+
+              // Match priority:
+              // 1. isCert && subject matches && (designatedTeacher matches or empty)
+              // 2. isCert && designatedTeacher matches
+              // 3. subject matches && (designatedTeacher matches or empty)
+              // 4. any curriculum item matching subject
+              let matchIdx = unassignedCurriculum.findIndex(c => 
+                !c._consumed && c.isCert && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+              );
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.isCert && c.designatedTeacher === tName
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName && (!c.designatedTeacher || c.designatedTeacher === tName)
+                );
+              }
+              if (matchIdx === -1) {
+                matchIdx = unassignedCurriculum.findIndex(c => 
+                  !c._consumed && c.subject === subName
+                );
+              }
+
+              if (matchIdx !== -1) {
+                const curr = unassignedCurriculum[matchIdx];
+                curr._consumed = true;
+                newTimetable[key] = {
+                  subject: curr.subject,
+                  pages: curr.pages,
+                  lesson: curr.lesson,
+                  totalLesson: curr.totalLesson,
+                  topic: curr.topic || '',
+                  teacher: tName || curr.designatedTeacher || '',
+                  isCert: true,
+                  isTraineeCert: true,
+                  isLocked: true,
+                  curriculumId: curr.id
+                };
+              } else {
+                newTimetable[key] = {
+                  ...ev,
+                  subject: subName || '인증수업',
+                  pages: ev.pages || '',
+                  lesson: '인증',
+                  totalLesson: 1,
+                  teacher: tName,
+                  isCert: true,
+                  isTraineeCert: true,
+                  isLocked: true
+                };
+              }
+
+              // Update teacherStats for the cert slot
+              const assignedTeacher = newTimetable[key].teacher;
+              if (assignedTeacher && teacherStats[assignedTeacher]) {
+                teacherStats[assignedTeacher].totalHours++;
+                const sub = newTimetable[key].subject;
+                teacherStats[assignedTeacher].subjectCount[sub] = (teacherStats[assignedTeacher].subjectCount[sub] || 0) + 1;
+                teacherStats[assignedTeacher].dailyCount[d] = (teacherStats[assignedTeacher].dailyCount[d] || 0) + 1;
+              }
+            }
+          }
+        }
+
+        // 2-B. Pair Trainee Demo slots (⭐교생대표) with curriculum items
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
@@ -4421,6 +4724,7 @@
               lesson: curr.lesson,
               totalLesson: curr.totalLesson,
               topic: curr.topic || '',
+              isCert: curr.isCert || false,
               isDemo: curr.isDemo || false,
               demoTeacher: curr.demoTeacher || '',
               designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
@@ -4484,7 +4788,9 @@
                 if (cell.isDemo && t.demoSubject === cell.subject) {
                   cost -= 80; // strong preference for trainee with this demo subject
                 }
-                if (t.certSubject && (cell.subject === t.certSubject || (getSubjectFamily(t.certSubject) && getSubjectFamily(t.certSubject) === getSubjectFamily(cell.subject)))) {
+                if (cell.isCert && t.certSubject === cell.subject) {
+                  cost -= 80; // strong preference for trainee with this cert subject
+                } else if (t.certSubject && (cell.subject === t.certSubject || (getSubjectFamily(t.certSubject) && getSubjectFamily(t.certSubject) === getSubjectFamily(cell.subject)))) {
                   cost -= 25; // preference for trainee with this cert subject
                 }
                 if (t.major && cell.subject.includes(t.major)) {
@@ -4638,7 +4944,7 @@
             const key = `${d}-${p}`;
             const ev = this.events[key];
             const tt = this.timetable[key];
-            if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo') {
+            if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo' && !ev.isTraineeDemo && ev.type !== 'trainee_cert' && !ev.isTraineeCert) {
               if (tt && tt.subject && !tt.isLocked) {
                 if (!errorMap[key]) errorMap[key] = [];
                 errorMap[key].push(`[일정 충돌] 잠긴 행사/강의(${ev.subject}) 슬롯에 수업(${tt.subject})이 중복 배정됨`);
@@ -4881,7 +5187,33 @@
               continue;
             }
 
-            // 2. Trainee Demo Slot (교생 대표수업 슬롯)
+            // 2-A. Trainee Cert Slot (교생 인증수업 슬롯)
+            if (cell && (cell.type === 'trainee_cert' || cell.isTraineeCert)) {
+              const teacherObj = this.teachers.find(t => t.name === cell.teacher);
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              const subName = (cell.type === 'trainee_cert' ? cell.pages : cell.subject) || '인증수업';
+              const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '인증수업';
+              const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_cert' ? cell.subject : '');
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+
+              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'dimmed-cell' : ''}">
+                <div class="flex flex-col h-full divide-y divide-emerald-200 text-xs">
+                  <div class="py-1 font-black text-emerald-900 bg-emerald-100 flex items-center justify-center gap-1">
+                    🏅 ${subName}
+                    <span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-extrabold">인증</span>
+                  </div>
+                  <div class="py-0.5 text-[11px] text-emerald-800 font-medium">${pagesInfo || '-'}</div>
+                  <div class="py-0.5 text-[11px] text-emerald-900 font-bold">${lessonInfo}</div>
+                  <div class="py-1 font-bold text-xs flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#ecfdf5; color:#065f46;'}">
+                    ${cell.teacher ? `<span class="underline decoration-emerald-600 font-black">${cell.teacher}</span>` : '교생미정'}
+                  </div>
+                </div>
+              </td>`;
+              renderedCells[key] = true;
+              continue;
+            }
+
+            // 2-B. Trainee Demo Slot (교생 대표수업 슬롯)
             if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
               const teacherObj = this.teachers.find(t => t.name === cell.teacher);
               const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
@@ -4939,7 +5271,12 @@
             if (cell && cell.subject) {
               const teacherObj = this.teachers.find(t => t.name === cell.teacher);
               const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
-              const borderHighlight = cell.isDemo ? 'border-4 border-amber-500 shadow-sm' : 'border-2 border-slate-900';
+              let borderHighlight = 'border-2 border-slate-900';
+              if (cell.isDemo) {
+                borderHighlight = 'border-4 border-amber-500 shadow-sm';
+              } else if (cell.isCert) {
+                borderHighlight = 'border-4 border-emerald-500 shadow-sm';
+              }
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
@@ -4952,6 +5289,7 @@
                   <!-- 교과명 -->
                   <div class="py-1 font-black text-slate-900 bg-slate-50/70 cell-part flex items-center justify-center gap-1">
                     ${cell.subject}
+                    ${cell.isCert ? '<span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-black" title="인증수업">🏅인증</span>' : ''}
                     ${cell.isDemo ? '<span class="px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-black" title="대표수업">⭐대표</span>' : ''}
                   </div>
                   <!-- 쪽수 -->
@@ -5476,6 +5814,12 @@
             const cell = this.timetable[key] || this.events[key];
             if (cell && cell.type === 'holiday') {
               html += `<td style="border: 1pt solid black; background-color:#fee2e2; color:#b91c1c; font-weight:bold;">${cell.subject || '공휴일'}</td>`;
+            } else if (cell && (cell.type === 'trainee_cert' || cell.isTraineeCert)) {
+              html += `<td style="border: 2pt solid #059669; background-color:#ecfdf5; color:#065f46; font-size:8pt; padding:2px;">
+                <div style="font-weight:bold; color:#047857;">🏅 ${cell.pages || cell.subject || '인증수업'}</div>
+                <div style="font-size:7.5pt;">${cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '인증수업'}</div>
+                <div style="font-weight:bold; font-size:8.5pt; text-decoration:underline;">${cell.teacher || ''}</div>
+              </td>`;
             } else if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo)) {
               html += `<td style="border: 2pt solid #d97706; background-color:#fef3c7; color:#78350f; font-size:8pt; padding:2px;">
                 <div style="font-weight:bold; color:#b45309;">⭐ ${cell.pages || cell.subject || '대표수업'}</div>
@@ -5487,9 +5831,15 @@
             } else if (cell && cell.isLocked) {
               html += `<td style="border: 1pt solid black; font-size:8pt; background-color:#f1f5f9;"><strong>${cell.subject}</strong><br>${cell.pages || ''}</td>`;
             } else if (cell && cell.subject) {
-              const borderStyle = cell.isDemo ? 'border: 2pt solid #d97706; background-color:#fef3c7;' : 'border: 1pt solid black;';
+              let borderStyle = 'border: 1pt solid black;';
+              if (cell.isDemo) {
+                borderStyle = 'border: 2pt solid #d97706; background-color:#fef3c7;';
+              } else if (cell.isCert) {
+                borderStyle = 'border: 2pt solid #059669; background-color:#ecfdf5;';
+              }
+              const certDemoBadges = (cell.isCert ? ' 🏅' : '') + (cell.isDemo ? ' ⭐' : '');
               html += `<td style="${borderStyle} padding:2px;">
-                <div style="font-weight:bold; font-size:9pt;">${cell.subject}${cell.isDemo ? ' ⭐' : ''}</div>
+                <div style="font-weight:bold; font-size:9pt;">${cell.subject}${certDemoBadges}</div>
                 <div style="font-size:8pt; color:#475569;">${cell.pages || '-'}</div>
                 <div style="font-size:8pt;">${cell.lesson}/${cell.totalLesson}</div>
                 <div style="font-weight:bold; font-size:9pt; background-color:#e0f2fe;">${cell.teacher || ''}</div>
@@ -5705,8 +6055,8 @@
         Object.keys(this.events).forEach(key => {
           const ev = this.events[key];
           const tt = this.timetable[key];
-          if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo' && !ev.isTraineeDemo) {
-            if (tt && tt.subject && !tt.isLocked && (studentTeacherNames.includes(tt.teacher) || !tt.isDemo)) {
+          if (ev && ev.isLocked && ev.type !== 'homeroom' && ev.type !== 'trainee_demo' && !ev.isTraineeDemo && ev.type !== 'trainee_cert' && !ev.isTraineeCert) {
+            if (tt && tt.subject && !tt.isLocked && (studentTeacherNames.includes(tt.teacher) || (!tt.isDemo && !tt.isCert))) {
               lockViolations++;
               violations.push(`[불가시간 침범] ${key} 슬롯(${ev.subject})에 수업(${tt.subject}${tt.teacher ? ` - ${tt.teacher}` : ''})이 중복 배정되었습니다.`);
             }

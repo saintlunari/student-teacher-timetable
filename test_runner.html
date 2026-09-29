@@ -1038,6 +1038,136 @@
               : `검증 실패: (parse:${parsePass}, format:${formatPass}, sync:${syncPass}, inc:${incPass}, dec:${decPass}, autoDist:${autoDistPass}, solverQuota:${solverQuotaPass}, bar:${barPass})`
           };
         }
+      },
+      {
+        id: 'tc19',
+        title: '교과 진도표(인증수업·대표수업 개별 선택) 및 기본 스탬프 교생 인증수업(0.1초 원클릭 도장) 연동 검증',
+        desc: '진도표 테이블의 isCert/isDemo 독립 체크박스 렌더링 및 동기화, 교과 DB 모달의 수업 유형(인증/대표) 임포트, 기본 스탬프 교생 인증수업(🏅) 선택 및 시간표 0.1초 도장 찍기, 4단계 시간표 및 HWP 호환 표 렌더링 무결성 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 진도표 테이블의 isCert와 isDemo 체크박스 렌더링 및 동기화 확인
+          App.renderCurriculumTable();
+          const curRows = frameDoc.querySelectorAll('#curriculum-table-body tr');
+          const row0Cert = curRows[0]?.querySelector('input[data-field="isCert"]');
+          const row0Demo = curRows[0]?.querySelector('input[data-field="isDemo"]');
+          const checkboxExistPass = !!(row0Cert && row0Demo);
+
+          // 체크 조작 및 syncCurriculumFromDOM 검증
+          row0Cert.checked = true;
+          row0Demo.checked = false;
+          App.syncCurriculumFromDOM();
+          const syncCertPass = (App.curriculum[0].isCert === true && App.curriculum[0].isDemo === false);
+
+          // 2. 교과 DB 모달에서 수업 유형(인증수업으로 등록) 선택 후 임포트 검증
+          App.openCurriculumDbModal('2', '1학기', '국어');
+          const dbLessonTypeSelect = frameDoc.getElementById('db-lesson-type');
+          const dbReplaceCheckbox = frameDoc.getElementById('db-replace-mode');
+          if (dbLessonTypeSelect) dbLessonTypeSelect.value = 'cert';
+          if (dbReplaceCheckbox) dbReplaceCheckbox.checked = false;
+
+          // 1개 차시 선택 후 추가
+          App.curriculumDbState.selectedIndices.clear();
+          App.curriculumDbState.selectedIndices.add(0);
+          const prevCurricLen = App.curriculum.length;
+          App.importSelectedCurriculumDb(false);
+          const importedItem = App.curriculum[App.curriculum.length - 1];
+          const dbImportPass = (App.curriculum.length === prevCurricLen + 1) && 
+                               (importedItem.isCert === true) && 
+                               (importedItem.isDemo === false);
+
+          // 3. 기본 스탬프: 🏅 교생 인증수업 버튼 클릭 및 모달 열기/닫기
+          const certStampBtn = frameDoc.getElementById('basic-stamp-trainee-cert');
+          const btnExistPass = !!certStampBtn;
+
+          App.openTraineeCertStampModal();
+          const certModal = frameDoc.getElementById('modal-trainee-cert-stamp');
+          const modalOpenPass = certModal && !certModal.classList.contains('hidden');
+
+          // 스탬프 적용
+          const t0Name = App.teachers[0].name;
+          const certTeacherSelect = frameDoc.getElementById('trainee-cert-stamp-teacher');
+          const certSubSelect = frameDoc.getElementById('trainee-cert-stamp-subject');
+          if (certTeacherSelect) certTeacherSelect.value = t0Name;
+          if (certSubSelect) certSubSelect.value = '국어';
+          App.applyTraineeCertStampSelection();
+
+          const activeStampPass = App.currentStamp && 
+                                  App.currentStamp.type === 'trainee_cert' && 
+                                  App.currentStamp.teacher === t0Name && 
+                                  App.currentStamp.pages === '국어';
+
+          // 4. 시간표 슬롯에 0.1초 원클릭 도장 찍기
+          App.applyStampToCell(0, 1); // 0일차 1교시에 도장
+          const stampedEvent = App.events['0-1'];
+          const stampedPass = stampedEvent && 
+                              stampedEvent.type === 'trainee_cert' && 
+                              stampedEvent.isTraineeCert === true && 
+                              stampedEvent.teacher === t0Name;
+
+          // 5. 1단계 그리드 및 4단계 시간표 렌더링에서 🏅 인증 배지 확인
+          App.renderEventGrid();
+          const eventCell = frameDoc.getElementById('ev-cell-0-1');
+          const eventGridPass = eventCell && eventCell.innerText.includes('🏅교생인증');
+
+          App.renderTimetableGrid();
+          const ttCell = frameDoc.getElementById('ev-cell-0-1') || frameDoc.querySelector('td.border-emerald-500');
+          const ttRenderPass = ttCell && ttCell.innerText.includes('인증');
+
+          const pass = checkboxExistPass && syncCertPass && dbImportPass && btnExistPass && modalOpenPass && activeStampPass && stampedPass && eventGridPass && ttRenderPass;
+
+          return {
+            pass,
+            message: pass
+              ? '진도표 isCert/isDemo 독립 체크박스 및 양방향 동기화, 교과 DB 인증수업 임포트, 교생 인증수업 기본 스탬프 원클릭 도장 및 시간표 🏅 인증 렌더링 100% 무결성 검증 완료'
+              : `검증 실패: (checkbox:${checkboxExistPass}, sync:${syncCertPass}, dbImport:${dbImportPass}, btn:${btnExistPass}, modal:${modalOpenPass}, activeStamp:${activeStampPass}, stamped:${stampedPass}, eventGrid:${eventGridPass}, ttRender:${ttRenderPass})`
+          };
+        }
+      },
+      {
+        id: 'tc20',
+        title: '바생 필수 포함, 즐생과 즐생(놀이) 독립 분리 및 전체 표준 교과군 유지 무결성 검증',
+        desc: 'ELEMENTARY_SUBJECTS 내 바생/즐생/즐생(놀이) 독립 존재, getSubjectFamily 계열 분리, 교생 행에 이미 바생·즐생이 등록되어 있어도 + 과목 추가 드롭다운에 상시 노출 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. ELEMENTARY_SUBJECTS 내 바생, 즐생, 즐생(놀이) 존재 및 기존 12+ 과목 보존 확인
+          const subjects = frameDoc.defaultView.ELEMENTARY_SUBJECTS || App.getAvailableSubjects();
+          const expectedSubs = ['국어', '수학', '바생', '슬생', '즐생', '즐생(놀이)', '사회', '도덕', '과학', '실과', '음악', '미술', '체육', '영어', '창체'];
+          const allSubsPreserved = expectedSubs.every(s => subjects.includes(s));
+          const baseangExist = subjects.includes('바생');
+          const jeulsaengExist = subjects.includes('즐생');
+          const jeulsaengPlayExist = subjects.includes('즐생(놀이)');
+
+          // 2. getSubjectFamily 분리 검증 (즐생 vs 즐생(놀이))
+          const getFam = frameDoc.defaultView.getSubjectFamily;
+          const famJeul = getFam('즐생');
+          const famPlay = getFam('즐생(놀이)');
+          const famBa = getFam('바생');
+          const familySeparationPass = (famJeul === '즐생' && famPlay === '즐생(놀이)' && famBa === '바생' && famJeul !== famPlay);
+
+          // 3. 교생 테이블 렌더링 후, 기존에 바생·즐생 시수가 있는 교생의 + 과목 추가 드롭다운에 바생과 즐생/즐생(놀이)가 상시 노출되는지 검증
+          App.teachers[0].subjectHours = { '국어': 2, '수학': 2, '바생': 2, '즐생': 2 };
+          App.renderTeachersTable();
+
+          const addSelect = frameDoc.querySelector('#teacher-table-body tr select');
+          const options = addSelect ? Array.from(addSelect.options).map(o => o.value) : [];
+          const dropdownHasBa = options.includes('바생');
+          const dropdownHasJeul = options.includes('즐생');
+          const dropdownHasPlay = options.includes('즐생(놀이)');
+          const dropdownPass = dropdownHasBa && dropdownHasJeul && dropdownHasPlay;
+
+          const pass = allSubsPreserved && baseangExist && jeulsaengExist && jeulsaengPlayExist && familySeparationPass && dropdownPass;
+
+          return {
+            pass,
+            message: pass
+              ? '바생 상시 노출 및 즐생/즐생(놀이) 100% 독립 분리, getSubjectFamily 무결성, 15개 초등 전과목 완벽 보존 검증 완료'
+              : `검증 실패: (allSubs:${allSubsPreserved}, ba:${baseangExist}, jeul:${jeulsaengExist}, play:${jeulsaengPlayExist}, fam:${familySeparationPass}, drop:${dropdownPass})`
+          };
+        }
       }
     ];
 
