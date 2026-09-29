@@ -24,13 +24,13 @@
    - 실습생의 전공 심화 교과 배정 비율(%) 및 일별 최대 수업 집중도 그래프 제공.
 6. **⚡ 교과 차시 순서 100% 무결성 보장 & 압축 차시(`3~4/15`) 지원**:
    - 1교시에 2차시 분량을 다루는 압축 차시(`3~4`, `5-6`)의 1시수 인정 및 교과 진도 정밀 연동.
-   - 7대 하네스 벤치마크 테스트([`test_runner.html`](file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/test_runner.html)) 100% All Passed 달성.
+   - 17대 하네스 벤치마크 테스트([`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)) 100% All Passed 달성.
 
 ---
 
 ## 🚀 사용 방법
 
-1. [`index.html`](file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html) 파일을 더블 클릭하여 크롬/엣지 브라우저에서 엽니다.
+1. [`index.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/index.html) 파일을 더블 클릭하여 크롬/엣지 브라우저에서 엽니다.
 2. 상단 우측의 **'실제 예시 프리셋'**에서 [사진 1] 또는 [사진 2]를 선택하면 실제 데이터로 배당표가 즉시 완성됩니다.
 3. 보기 모드에서 교생 이름을 클릭하여 **1인 맞춤 시간표 및 지도안 마감일 달력**을 확인하고 카톡으로 복사해보세요.
 4. 상단의 **[한글(HWP) 표 복사]**를 누르고 한글 문서에서 `Ctrl + V`를 눌러보세요.

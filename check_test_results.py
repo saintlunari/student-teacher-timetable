@@ -1,4 +1,6 @@
-import subprocess, time, json, urllib.request, tempfile, urllib.parse, socket, base64, os, struct
+import subprocess, time, json, urllib.request, tempfile, urllib.parse, socket, base64, os, struct, io, sys
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
 EDGE_PATH = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
 USER_DATA = tempfile.mkdtemp(prefix="edge_debug_")
@@ -10,7 +12,7 @@ proc = subprocess.Popen([
     f"--user-data-dir={USER_DATA}",
     "--allow-file-access-from-files",
     "--disable-web-security",
-    "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/test_runner.html"
+    "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html"
 ])
 
 time.sleep(5)

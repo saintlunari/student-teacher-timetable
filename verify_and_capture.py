@@ -17,7 +17,7 @@ proc = subprocess.Popen([
     "--disable-web-security",
     "--disable-gpu",
     "--window-size=1550,1050",
-    "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/test_runner.html"
+    "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html"
 ])
 
 try:
@@ -123,7 +123,7 @@ try:
 
     # 2. Navigate to index.html Step 3 (행사 & 불가 시간 등록)
     print("Navigating to index.html Step 3...", flush=True)
-    cdp_call("Page.navigate", {"url": "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html"})
+    cdp_call("Page.navigate", {"url": "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/index.html"})
     time.sleep(2.0)
     cdp_call("Runtime.evaluate", {"expression": "window.alert = () => {}; window.confirm = () => true;"})
 
