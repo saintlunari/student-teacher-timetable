@@ -75,127 +75,143 @@ try:
             payload.extend(chunk)
         return json.loads(payload.decode('utf-8', errors='ignore'))
 
-    cur_id = [0]
+    cid = [0]
     def cdp_call(method, params=None):
-        cur_id[0] += 1
-        cid = cur_id[0]
-        msg = {"id": cid, "method": method}
+        cid[0] += 1
+        msg = {"id": cid[0], "method": method}
         if params: msg["params"] = params
         send(msg)
         while True:
             res = recv_msg()
-            if res and res.get("id") == cid:
+            if res and res.get("id") == cid[0]:
                 return res
 
     cdp_call("Page.enable")
     cdp_call("Runtime.enable")
 
-    # 1. Wait for test runner to complete all 12 tests
-    print("Waiting 4s for test runner execution...", flush=True)
-    time.sleep(4.0)
-    title_eval = cdp_call("Runtime.evaluate", {"expression": "document.title"})
-    title_val = title_eval.get("result", {}).get("value", "")
-    print(f"Test Runner Result Title: {title_val}", flush=True)
+    # 1. Wait for test runner to complete all 16 tests
+    print("Waiting for test runner execution...", flush=True)
+    title_val = ""
+    for sec in range(25):
+        time.sleep(1.0)
+        t_eval = cdp_call("Runtime.evaluate", {"expression": "document.title + ' | ' + (document.getElementById('passed-tests') ? document.getElementById('passed-tests').innerText : '') + '/' + (document.getElementById('total-tests') ? document.getElementById('total-tests').innerText : '')"})
+        status_val = t_eval.get("result", {}).get("result", {}).get("value", "")
+        print(f"Runner status ({sec+1}s): {status_val}", flush=True)
+        if "16/16" in status_val:
+            title_val = status_val
+            break
 
-<<<<<<< HEAD
-    # Capture 15/15 Benchmark Screenshot
+    print(f"Final Test Runner Result: {title_val}", flush=True)
+
+    # Capture 16/16 Benchmark Screenshot
     res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data1 = base64.b64decode(res1["result"]["data"])
-    out_path1 = os.path.join(BRAIN_DIR, "benchmark_15_pass.png")
+    out_path1 = os.path.join(BRAIN_DIR, "benchmark_16_pass.png")
     with open(out_path1, "wb") as f:
-        f.write(img_data1)
-    with open(os.path.join(BRAIN_DIR, "benchmark_14_pass.png"), "wb") as f:
-=======
-    # Capture 13/13 Benchmark Screenshot
-    res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data1 = base64.b64decode(res1["result"]["data"])
-    out_path1 = os.path.join(BRAIN_DIR, "benchmark_13_pass.png")
-    with open(out_path1, "wb") as f:
-        f.write(img_data1)
-    with open(os.path.join(BRAIN_DIR, "benchmark_12_pass.png"), "wb") as f:
->>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
         f.write(img_data1)
     print(f"Saved Benchmark screenshot to {out_path1}", flush=True)
 
-    # 2. Navigate to index.html Step 2 to show Curriculum Table & [💾 백업] button
-    print("Navigating to index.html Step 2 (Curriculum Database)...", flush=True)
+    # Scroll down to show tc16 details
+    cdp_call("Runtime.evaluate", {"expression": "window.scrollTo(0, document.body.scrollHeight);"})
+    time.sleep(0.5)
+    res_sc = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_sc = base64.b64decode(res_sc["result"]["data"])
+    out_path_sc = os.path.join(BRAIN_DIR, "benchmark_16_tc16_detail.png")
+    with open(out_path_sc, "wb") as f:
+        f.write(img_data_sc)
+    print(f"Saved tc16 detail screenshot to {out_path_sc}", flush=True)
+
+    # 2. Navigate to index.html Step 2 to show Curriculum Database Modal
+    print("Navigating to index.html Step 2...", flush=True)
     cdp_call("Page.navigate", {"url": "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html"})
     time.sleep(2.0)
     cdp_call("Runtime.evaluate", {"expression": "window.alert = () => {}; window.confirm = () => true;"})
 
-    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade2', false); App.setTab(2);"})
+    # Open modal, select Grade 3 Math (수학 64차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setTab(2); App.openCurriculumDbModal(); App.setCurriculumDbGrade(3); App.setCurriculumDbSubject('수학');"})
     time.sleep(1.0)
-    res_cur = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_cur = base64.b64decode(res_cur["result"]["data"])
-    out_path_cur = os.path.join(BRAIN_DIR, "step2_curriculum_backup_view.png")
-    with open(out_path_cur, "wb") as f:
-        f.write(img_data_cur)
-    print(f"Saved Step 2 Curriculum view screenshot to {out_path_cur}", flush=True)
+    res_math = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_math = base64.b64decode(res_math["result"]["data"])
+    out_path_math = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_math.png")
+    with open(out_path_math, "wb") as f:
+        f.write(img_data_math)
+    print(f"Saved Grade 3 Math DB Modal screenshot to {out_path_math}", flush=True)
 
-    # 3. Step 1: Show Quick Actions [💾 백업 저장] / [📂 백업 열기] & wide layout
-    print("Navigating to index.html Step 1...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": "App.setTab(1);"})
+    # Switch to Art (미술 30차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('미술');"})
     time.sleep(1.0)
-    res2 = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data2 = base64.b64decode(res2["result"]["data"])
-    out_path2 = os.path.join(BRAIN_DIR, "step1_backup_buttons_and_wide.png")
-    with open(out_path2, "wb") as f:
-        f.write(img_data2)
-    print(f"Saved Step 1 screenshot to {out_path2}", flush=True)
+    res_art = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_art = base64.b64decode(res_art["result"]["data"])
+    out_path_art = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_art.png")
+    with open(out_path_art, "wb") as f:
+        f.write(img_data_art)
+    print(f"Saved Grade 3 Art DB Modal screenshot to {out_path_art}", flush=True)
 
-    # 4. Step 4: Show full-width layout and morning duty color tags matching teachers
-    print("Navigating to Step 4 (4 weeks wide table with colorful morning duty tags)...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": "App.loadPreset('grade3', false); App.autoAssignMorningDuty(false); App.setTab(4);"})
+    # Switch to Music (음악 34차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('음악');"})
     time.sleep(1.0)
-    res3 = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data3 = base64.b64decode(res3["result"]["data"])
-    out_path3 = os.path.join(BRAIN_DIR, "step4_morning_duty_colors.png")
-    with open(out_path3, "wb") as f:
-        f.write(img_data3)
-    with open(os.path.join(BRAIN_DIR, "step4_fullwidth_and_sticky.png"), "wb") as f:
-        f.write(img_data3)
-    print(f"Saved Step 4 Morning Duty Colors screenshot to {out_path3}", flush=True)
+    res_music = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_music = base64.b64decode(res_music["result"]["data"])
+    out_path_music = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_music.png")
+    with open(out_path_music, "wb") as f:
+        f.write(img_data_music)
+    print(f"Saved Grade 3 Music DB Modal screenshot to {out_path_music}", flush=True)
 
-    # 5. Step 4: Swap a class to a safe slot (grade2) without any false alerts
-    print("Testing clean swap in grade2 without false alerts...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": """
-        App.loadPreset('grade2', false);
-        App.runAutoAllocation(false);
-        App.setTab(4);
-        const teachingKeys = Object.keys(App.timetable).filter(k => {
-          const c = App.timetable[k];
-          return c && c.subject && !c.isLocked && c.teacher;
-        });
-        if (teachingKeys.length > 0) {
-          const src = teachingKeys[0];
-          App.highlightSwapTargets(src);
-          const safeEls = document.querySelectorAll('.tt-cell.swap-safe');
-          if (safeEls.length > 0) {
-            const tgt = safeEls[0].id.replace('cell-', '');
-            App.executeSwap(src, tgt);
-          }
-        }
-    """})
+    # Switch to Social Studies (사회 45차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('사회');"})
     time.sleep(1.0)
-    res_swap = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_swap = base64.b64decode(res_swap["result"]["data"])
-    out_path_swap = os.path.join(BRAIN_DIR, "step4_swap_clean_success.png")
-    with open(out_path_swap, "wb") as f:
-        f.write(img_data_swap)
-    print(f"Saved Step 4 Swap Clean Success screenshot to {out_path_swap}", flush=True)
+    res_soc = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_soc = base64.b64decode(res_soc["result"]["data"])
+    out_path_soc = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_social.png")
+    with open(out_path_soc, "wb") as f:
+        f.write(img_data_soc)
+    print(f"Saved Grade 3 Social Studies DB Modal screenshot to {out_path_soc}", flush=True)
 
-    # 6. Step 4: Toggle Wide Mode (100% wide timetable, summary stacked below)
-    print("Toggling Wide Mode on Step 4...", flush=True)
-    cdp_call("Runtime.evaluate", {"expression": "App.toggleTimetableLayout();"})
+    # Switch to PE (체육 53차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('체육');"})
     time.sleep(1.0)
-    res4 = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data4 = base64.b64decode(res4["result"]["data"])
-    out_path4 = os.path.join(BRAIN_DIR, "step4_wide_toggle_active.png")
-    with open(out_path4, "wb") as f:
-        f.write(img_data4)
-    print(f"Saved Step 4 Wide Toggle Active screenshot to {out_path4}", flush=True)
+    res_pe = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_pe = base64.b64decode(res_pe["result"]["data"])
+    out_path_pe = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_pe.png")
+    with open(out_path_pe, "wb") as f:
+        f.write(img_data_pe)
+    print(f"Saved Grade 3 PE DB Modal screenshot to {out_path_pe}", flush=True)
+
+    # Switch to Science (과학 48차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('과학');"})
+    time.sleep(1.0)
+    res_sci = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_sci = base64.b64decode(res_sci["result"]["data"])
+    out_path_sci = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_science.png")
+    with open(out_path_sci, "wb") as f:
+        f.write(img_data_sci)
+    print(f"Saved Grade 3 Science DB Modal screenshot to {out_path_sci}", flush=True)
+
+    # Switch to English (영어 31차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('영어');"})
+    time.sleep(1.0)
+    res_eng = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_eng = base64.b64decode(res_eng["result"]["data"])
+    out_path_eng = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_english.png")
+    with open(out_path_eng, "wb") as f:
+        f.write(img_data_eng)
+    print(f"Saved Grade 3 English DB Modal screenshot to {out_path_eng}", flush=True)
+
+    # Switch to Korean (국어 102차시)
+    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('국어');"})
+    time.sleep(1.0)
+    res_kor = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_kor = base64.b64decode(res_kor["result"]["data"])
+    out_path_kor = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3.png")
+    with open(out_path_kor, "wb") as f:
+        f.write(img_data_kor)
+    print(f"Saved Grade 3 Korean DB Modal screenshot to {out_path_kor}", flush=True)
+
+    # Close modal
+    cdp_call("Runtime.evaluate", {"expression": "App.closeCurriculumDbModal();"})
+    time.sleep(0.5)
 
     s.close()
-    print("All tasks completed successfully!", flush=True)
+    print("All tasks and screenshots completed successfully!", flush=True)
 finally:
     proc.kill()

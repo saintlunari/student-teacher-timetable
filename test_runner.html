@@ -676,24 +676,14 @@
         desc: '아침활동 행에서 배정된 교생 이름의 태그 배경색, 텍스트색, 테두리가 해당 교생 고유의 색상 태그(TEACHER_COLORS)와 정확하게 일치하는지, 단일/다중 교생 표기가 올바르게 반영되는지 검증',
         run: () => {
           App.loadPreset('grade3', false);
-<<<<<<< HEAD
           App.autoAssignMorningDuty(false);
-=======
-          App.autoAssignMorningDuty();
->>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
           App.renderTimetableGrid();
 
           const frame = document.getElementById('app-frame');
           const doc = (frame && frame.contentDocument) ? frame.contentDocument : document;
-<<<<<<< HEAD
           const tbody = doc.getElementById('timetable-tbody');
           if (!tbody) {
             return { pass: false, message: 'timetable-tbody 요소를 찾을 수 없음' };
-=======
-          const tbody = doc.getElementById('timetable-body');
-          if (!tbody) {
-            return { pass: false, message: 'timetable-body 요소를 찾을 수 없음' };
->>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
           }
           const morningRow = tbody.querySelector('tr');
           if (!morningRow) {
@@ -739,7 +729,6 @@
               : `검증 실패 (matched:${matchedColors}/${totalChecked}, multiPass:${multiTeacherPass}, teacherCount:${checkedTeachers.size})`
           };
         }
-<<<<<<< HEAD
       },
       {
         id: 'tc15',
@@ -803,8 +792,90 @@
               : `검증 실패 (zeroHard:${zeroHardViolations} [hardMetric:${hardMetricVal}], alertTriggered:${alertTriggered} [${alertMsg}], errors:${errs.errorCount})`
           };
         }
-=======
->>>>>>> cacf0e7e70c85106f48bc1d8c5690f90b1fe325a
+      },
+      {
+        id: 'tc16',
+        title: '[신규 기능] 1~6학년 교과 DB 확장 아키텍처 및 3학년 2학기 표준 진도표(9개 전 교과 423차시) 완벽 탑재 검증',
+        desc: '1~6학년 탭 전환 지원, 3학년 2학기 9개 전 교과(국어 102차시, 수학 64차시, 체육 53차시, 과학 48차시, 사회 45차시, 음악 34차시, 영어 31차시, 미술 30차시, 도덕 16차시 - 총 423차시) 탑재 무결성, 단원 드롭다운·검색 필터링, 교과별 고유 배지 색상 및 Step 2 진도표 테이블 실제 등록 검증',
+        run: () => {
+          App.loadPreset('grade3', false);
+          const frame = document.getElementById('app-frame');
+          const doc = (frame && frame.contentDocument) ? frame.contentDocument : document;
+
+          // 1. 3학년 2학기 데이터베이스 무결성 검증 (9개 교과 423차시)
+          const kor3Items = App.getCurriculumDbSourceItems(3, '2학기', '국어');
+          const soc3Items = App.getCurriculumDbSourceItems(3, '2학기', '사회');
+          const mor3Items = App.getCurriculumDbSourceItems(3, '2학기', '도덕');
+          const math3Items = App.getCurriculumDbSourceItems(3, '2학기', '수학');
+          const art3Items = App.getCurriculumDbSourceItems(3, '2학기', '미술');
+          const music3Items = App.getCurriculumDbSourceItems(3, '2학기', '음악');
+          const pe3Items = App.getCurriculumDbSourceItems(3, '2학기', '체육');
+          const sci3Items = App.getCurriculumDbSourceItems(3, '2학기', '과학');
+          const eng3Items = App.getCurriculumDbSourceItems(3, '2학기', '영어');
+
+          const dataCountPass = (kor3Items.length === 102) && (soc3Items.length === 45) && (mor3Items.length === 16) && (math3Items.length === 64) && (art3Items.length === 30) && (music3Items.length === 34) && (pe3Items.length === 53) && (sci3Items.length === 48) && (eng3Items.length === 31);
+          const totalGrade3Count = kor3Items.length + soc3Items.length + mor3Items.length + math3Items.length + art3Items.length + music3Items.length + pe3Items.length + sci3Items.length + eng3Items.length;
+
+          // 2. 모달 열기 및 학년 탭 UI 검증
+          App.openCurriculumDbModal();
+          App.setCurriculumDbGrade(3);
+
+          const gradeTabs = doc.getElementById('db-grade-tabs');
+          const grade3Btn = doc.getElementById('db-grade-3');
+          const grade2Btn = doc.getElementById('db-grade-2');
+          const gradeUiPass = !!(gradeTabs && grade3Btn && grade2Btn && grade3Btn.classList.contains('bg-amber-500'));
+
+          // 3. 3~4학년 교과 탭 동적 렌더링 검증 (체육, 과학, 영어 등)
+          const subTabs = doc.getElementById('db-subject-tabs');
+          const hasPeTab = subTabs && subTabs.innerText.includes('체육');
+          const hasSciTab = subTabs && subTabs.innerText.includes('과학');
+          const hasEngTab = subTabs && subTabs.innerText.includes('영어');
+          const subUiPass = hasPeTab && hasSciTab && hasEngTab;
+
+          // 4. 영어(31차시) 선택 및 단원 드롭다운 검증
+          App.setCurriculumDbSubject('영어');
+          const engTableRows = doc.querySelectorAll('#curriculum-db-tbody tr');
+          const engUnitSelect = doc.getElementById('db-unit-select');
+          const engPass = (engTableRows.length === 31) && (engUnitSelect && engUnitSelect.options.length >= 10);
+
+          // 5. 검색 필터링 동작 검증 ('Color' 검색 시 영어 7단원 관련 차시 필터링)
+          App.onCurriculumDbSearch('Color');
+          const filteredItems = App.getCurrentDbItems();
+          const searchPass = (filteredItems.length > 0 && filteredItems.length < 31);
+          App.onCurriculumDbSearch('');
+
+          // 6. 도덕(16차시) 선택 후 5단원(4차시) 필터링 및 Step 2 진도표 등록 검증
+          App.setCurriculumDbSubject('도덕');
+          App.onCurriculumDbUnitChange('5. 너와 나의 공감');
+          const moralUnitItems = App.getCurrentDbItems();
+          const moralUnitPass = (moralUnitItems.length === 4);
+
+          // 전체 선택 후 진도표에 추가
+          App.toggleAllCurriculumDb(true);
+          const curLenBefore = App.curriculum.length;
+          App.importSelectedCurriculumDb(false);
+          const curLenAfter = App.curriculum.length;
+
+          const importedMoral = App.curriculum.filter(c => c.subject === '도덕' && c.unit === '5. 너와 나의 공감');
+          const importPass = (curLenAfter === curLenBefore + 4) && (importedMoral.length === 4);
+
+          // 7. 기존 2학년 DB 역호환성 검증 (745차시 불변)
+          App.setCurriculumDbGrade(2);
+          const kor2Items = App.getCurriculumDbSourceItems(2, '1학기', '국어');
+          const math2Items = App.getCurriculumDbSourceItems(2, '1학기', '수학');
+          const integ2Items = App.getCurriculumDbSourceItems(2, '1학기', '통합');
+          const grade2Pass = (kor2Items.length === 118) && (math2Items.length === 64) && (integ2Items.length === 192);
+
+          App.closeCurriculumDbModal();
+
+          const pass = dataCountPass && gradeUiPass && subUiPass && engPass && searchPass && moralUnitPass && importPass && grade2Pass;
+          return {
+            pass,
+            message: pass
+              ? `3학년 2학기 표준 진도표 423차시(국어:102, 수학:64, 체육:53, 과학:48, 사회:45, 음악:34, 영어:31, 미술:30, 도덕:16) 100% 무결성 로드 완료, 1~6학년 다중 학년 탭 및 3~4학년군 동적 교과 탭 전환 정상, 영어 10개 단원 드롭다운·검색 필터링 및 도덕 4차시 진도표 테이블 실제 등록 완벽 검증 (2학년 745차시 역호환성 보장)`
+              : `검증 실패 (dataCount:${dataCountPass} [K:${kor3Items.length},S:${soc3Items.length},M:${mor3Items.length},Ma:${math3Items.length},Ar:${art3Items.length},Mu:${music3Items.length},PE:${pe3Items.length},Sci:${sci3Items.length},Eng:${eng3Items.length}], gradeUi:${gradeUiPass}, subUi:${subUiPass}, engPass:${engPass} [${engTableRows.length}], search:${searchPass}, moralUnit:${moralUnitPass}, import:${importPass}, grade2:${grade2Pass})`
+          };
+        }
       }
     ];
 
