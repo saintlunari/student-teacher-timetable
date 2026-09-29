@@ -378,14 +378,16 @@
                 <tr>
                   <th class="py-2.5 px-3 w-12 text-center">번호</th>
                   <th class="py-2.5 px-3 w-24">성명</th>
-                  <th class="py-2.5 px-3 w-28">전공 심화</th>
+                  <th class="py-2.5 px-3 w-24">전공 심화</th>
                   <th class="py-2.5 px-3 w-20 text-center">색상 태그</th>
-                  <th class="py-2.5 px-3 w-32">⭐ 인증수업 과목</th>
-                  <th class="py-2.5 px-3 min-w-[340px]">
+                  <th class="py-2.5 px-3 w-28 text-amber-900 font-bold">🏅 인증수업 과목</th>
+                  <th class="py-2.5 px-3 w-28 text-indigo-900 font-bold">⭐ 교과대표수업</th>
+                  <th class="py-2.5 px-3 w-20 text-center">최대 시수</th>
+                  <th class="py-2.5 px-3 min-w-[380px]">
                     <div class="flex items-center justify-between gap-2">
                       <span class="font-bold text-slate-700 flex items-center gap-1.5">
                         <span>수업 배당 (교과별 시수 배정)</span>
-                        <span class="text-[10px] text-slate-400 font-normal">칩/스피너(+/-) & 텍스트</span>
+                        <span class="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">2열 칩 배치</span>
                       </span>
                       <button type="button" onclick="App.autoDistributeSubjectHours()" title="Step 2 진도표 차시를 실습생 전원에게 공평하게 균등 분배합니다" class="text-[11px] px-2.5 py-1 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-bold rounded-lg shadow-sm flex items-center gap-1 transition shrink-0 active:scale-95 cursor-pointer">
                         <i data-lucide="sparkles" class="w-3 h-3"></i> ⚡ 균등 분배
@@ -1462,15 +1464,18 @@
     };
 
 
-    // --- 초등학교 13대 교과군 ---
-    const ELEMENTARY_SUBJECTS = ['국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어', '바생', '슬생', '즐생'];
+    // --- 초등학교 교과군 (2022 개정 즐생(놀이), 바생(실천), 슬생(탐구) 등 확장 지원) ---
+    const ELEMENTARY_SUBJECTS = [
+      '국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어',
+      '바생', '슬생', '즐생', '즐생(놀이)', '바생(실천)', '슬생(탐구)', '창체'
+    ];
 
     // --- 4대 교과군 분류 매핑 함수 ---
     const SUBJECT_CATEGORIES = {
       '인문사회': ['국어', '도덕', '사회', '영어'],
       '수리과학': ['수학', '과학', '컴퓨터', '정보'],
       '예체능': ['체육', '음악', '미술'],
-      '생활통합': ['바생', '슬생', '즐생', '실과', '창체']
+      '생활통합': ['바생', '슬생', '즐생', '실과', '창체', '놀이', '실천', '탐구']
     };
 
     function getSubjectCategory(subject) {
@@ -1480,24 +1485,49 @@
       return '인문사회';
     }
 
+    // --- 교과 계열(패밀리) 정규화 함수 ---
+    function getSubjectFamily(sub) {
+      if (!sub) return '';
+      const s = String(sub).replace(/\s+/g, '');
+      if (s.includes('즐생') || s.includes('즐거운') || s === '즐' || s.includes('놀이')) return '즐생';
+      if (s.includes('바생') || s.includes('바른') || s === '바' || s.includes('실천')) return '바생';
+      if (s.includes('슬생') || s.includes('슬기') || s === '슬' || s.includes('탐구')) return '슬생';
+      if (s.includes('국어') || s === '국') return '국어';
+      if (s.includes('수학') || s === '수') return '수학';
+      if (s.includes('사회') || s === '사') return '사회';
+      if (s.includes('과학') || s === '과') return '과학';
+      if (s.includes('도덕') || s === '도') return '도덕';
+      if (s.includes('체육') || s === '체') return '체육';
+      if (s.includes('음악') || s === '음') return '음악';
+      if (s.includes('미술') || s === '미') return '미술';
+      if (s.includes('실과') || s === '실') return '실과';
+      if (s.includes('영어') || s === '영') return '영어';
+      if (s.includes('창체') || s === '창' || s.includes('체험')) return '창체';
+      if (s.includes('안전')) return '안전';
+      return s;
+    }
+
     // --- 초등학교 교과명 축약 및 매핑 규칙 ---
     const SUBJECT_SHORT_MAP = {
-      '국어': '국', '수학': '수', '바생': '바', '바른생활': '바',
-      '슬생': '슬', '슬기로운생활': '슬', '즐생': '즐', '즐거운생활': '즐',
+      '국어': '국', '수학': '수', '바생': '바', '바른생활': '바', '바생(실천)': '바(실)',
+      '슬생': '슬', '슬기로운생활': '슬', '슬생(탐구)': '슬(탐)',
+      '즐생': '즐', '즐거운생활': '즐', '즐생(놀이)': '즐생(놀이)', '즐거운생활(놀이)': '즐생(놀이)',
       '사회': '사', '과학': '과', '도덕': '도', '체육': '체',
-      '음악': '음', '미술': '미', '실과': '실', '영어': '영', '창체': '창'
+      '음악': '음', '미술': '미', '실과': '실', '영어': '영', '창체': '창', '안전': '안'
     };
 
     const SHORT_TO_FULL_MAP = {
       '국': '국어', '국어': '국어', '수': '수학', '수학': '수학',
-      '바': '바생', '바생': '바생', '바른생활': '바생',
-      '슬': '슬생', '슬생': '슬생', '슬기로운생활': '슬생',
+      '바': '바생', '바생': '바생', '바른생활': '바생', '바생(실천)': '바생(실천)', '바(실)': '바생(실천)', '실천': '바생(실천)',
+      '슬': '슬생', '슬생': '슬생', '슬기로운생활': '슬생', '슬생(탐구)': '슬생(탐구)', '슬(탐)': '슬생(탐구)', '탐구': '슬생(탐구)',
       '즐': '즐생', '즐생': '즐생', '즐거운생활': '즐생',
+      '즐생(놀이)': '즐생(놀이)', '즐거운생활(놀이)': '즐생(놀이)', '즐(놀)': '즐생(놀이)', '놀이': '즐생(놀이)',
       '사': '사회', '사회': '사회', '과': '과학', '과학': '과학',
       '도': '도덕', '도덕': '도덕', '체': '체육', '체육': '체육',
       '음': '음악', '음악': '음악', '미': '미술', '미술': '미술',
       '실': '실과', '실과': '실과', '영': '영어', '영어': '영어',
-      '창': '창체', '창체': '창체'
+      '창': '창체', '창체': '창체', '창의적체험활동': '창체',
+      '안': '안전', '안전': '안전', '안전한생활': '안전'
     };
 
     const SUBJECT_THEMES = {
@@ -1514,6 +1544,7 @@
       '바생': { bg: 'bg-stone-100', text: 'text-stone-900', border: 'border-stone-300', badge: 'bg-stone-100 text-stone-900 border-stone-300' },
       '슬생': { bg: 'bg-green-50', text: 'text-green-900', border: 'border-green-300', badge: 'bg-green-100 text-green-900 border-green-300' },
       '즐생': { bg: 'bg-yellow-50', text: 'text-yellow-900', border: 'border-yellow-300', badge: 'bg-yellow-100 text-yellow-900 border-yellow-300' },
+      '즐생(놀이)': { bg: 'bg-yellow-50', text: 'text-yellow-900', border: 'border-yellow-300', badge: 'bg-yellow-100 text-yellow-900 border-yellow-300' },
       'default': { bg: 'bg-slate-100', text: 'text-slate-800', border: 'border-slate-300', badge: 'bg-slate-100 text-slate-800 border-slate-300' }
     };
 
@@ -1528,7 +1559,7 @@
     function parseSubjectHours(noteStr) {
       if (!noteStr || typeof noteStr !== 'string') return {};
       const res = {};
-      const regex = /([가-힣a-zA-Z]+)(?:\s*\(\s*(\d+)\s*\)|\s*[:=]\s*(\d+)|\s+(\d+))/g;
+      const regex = /([가-힣a-zA-Z]+(?:\([가-힣a-zA-Z0-9]+\))?)\s*(?:\(\s*(\d+)\s*\)|[:=]\s*(\d+)|\s+(\d+))/g;
       let match;
       while ((match = regex.exec(noteStr)) !== null) {
         const rawSub = match[1].trim();
@@ -1560,6 +1591,8 @@
     window.SHORT_TO_FULL_MAP = SHORT_TO_FULL_MAP;
     window.SUBJECT_THEMES = SUBJECT_THEMES;
     window.getSubjectTheme = getSubjectTheme;
+    window.getSubjectFamily = getSubjectFamily;
+    window.ELEMENTARY_SUBJECTS = ELEMENTARY_SUBJECTS;
 
     // --- 9대 스탬프/일정 테마 색상 팔레트 시스템 ---
     const STAMP_PALETTES = {
@@ -1716,10 +1749,10 @@
     };
 
     const DEFAULT_TEACHERS = [
-      { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1)', colorIdx: 0 },
-      { id: 't2', name: '이공주', major: '수학', demoSubject: '수학', note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
-      { id: 't3', name: '삼알밤', major: '미술', demoSubject: '즐생', note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
-      { id: 't4', name: '사산성', major: '체육', demoSubject: '체육', note: '국(1) 수(1) 체(1)', colorIdx: 3 }
+      { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1)', colorIdx: 0 },
+      { id: 't2', name: '이공주', major: '수학', certSubject: '수학', demoSubject: '수학', note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
+      { id: 't3', name: '삼알밤', major: '미술', certSubject: '즐생', demoSubject: '즐생', note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
+      { id: 't4', name: '사산성', major: '체육', certSubject: '체육', demoSubject: '체육', note: '국(1) 수(1) 체(1)', colorIdx: 3 }
     ];
 
     const DEFAULT_CURRICULUM = [
@@ -1743,9 +1776,9 @@
           notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 27(월) 2-3교시\n3. 오후 일정은 실습일정표 참조'
         },
         teachers: [
-          { id: 't1', name: '김부설', major: '교육', demoSubject: '국어', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 0 },
-          { id: 't2', name: '이공주', major: '실과', demoSubject: '수학', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 1 },
-          { id: 't3', name: '삼알밤', major: '음악', demoSubject: '즐생', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 2 }
+          { id: 't1', name: '김부설', major: '교육', certSubject: '국어', demoSubject: '국어', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '실과', certSubject: '수학', demoSubject: '수학', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '음악', certSubject: '즐생', demoSubject: '즐생', note: '국(1) 수(1) 바(1) 슬(1) 즐(2)', colorIdx: 2 }
         ],
         curriculum: [
           { id: 'c1', subject: '국어', pages: '118-120', lesson: '3', totalLesson: 15, isBlock: false },
@@ -1847,11 +1880,11 @@
           notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업 30(목) 2-3교시\n3. 오후 일정은 실습일정표 참조'
         },
         teachers: [
-          { id: 't1', name: '김부설', major: '국어', demoSubject: '국어', note: '국(2) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(1)', colorIdx: 0 },
-          { id: 't2', name: '이공주', major: '과학', demoSubject: '과학', note: '국(1) 도(1) 사(1) 수(2) 과(2) 체(1) 음(1) 영(1)', colorIdx: 1 },
-          { id: 't3', name: '삼알밤', major: '미술', demoSubject: '미술', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(2) 영(1)', colorIdx: 2 },
-          { id: 't4', name: '사산성', major: '영어', demoSubject: '영어', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(2)', colorIdx: 3 },
-          { id: 't5', name: '오금강', major: '컴퓨터', demoSubject: '수학', note: '국(1) 도(2) 사(1) 수(2) 과(1) 체(1) 음(1) 미(1)', colorIdx: 4 }
+          { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '국어', note: '국(2) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(1)', colorIdx: 0 },
+          { id: 't2', name: '이공주', major: '과학', certSubject: '과학', demoSubject: '과학', note: '국(1) 도(1) 사(1) 수(2) 과(2) 체(1) 음(1) 영(1)', colorIdx: 1 },
+          { id: 't3', name: '삼알밤', major: '미술', certSubject: '미술', demoSubject: '미술', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(2) 영(1)', colorIdx: 2 },
+          { id: 't4', name: '사산성', major: '영어', certSubject: '영어', demoSubject: '영어', note: '국(1) 도(1) 사(1) 수(1) 과(1) 체(1) 음(1) 미(1) 영(2)', colorIdx: 3 },
+          { id: 't5', name: '오금강', major: '컴퓨터', certSubject: '수학', demoSubject: '수학', note: '국(1) 도(2) 사(1) 수(2) 과(1) 체(1) 음(1) 미(1)', colorIdx: 4 }
         ],
         curriculum: [
           { id: 'c1', subject: '음악', pages: '102-103', lesson: '1', totalLesson: 4, isBlock: false },
@@ -2218,6 +2251,42 @@
         return Array.from(set);
       },
 
+      harmonizeTeacherSubjectsWithCurriculum() {
+        if (!this.curriculum || this.curriculum.length === 0 || !this.teachers) return;
+        const currSubs = Array.from(new Set(this.curriculum.map(c => (c.subject || '').trim()).filter(Boolean)));
+        if (currSubs.length === 0) return;
+
+        this.teachers.forEach(t => {
+          if (!t.subjectHours || typeof t.subjectHours !== 'object') {
+            t.subjectHours = parseSubjectHours(t.note || '');
+          }
+          const subH = t.subjectHours;
+          let changed = false;
+          const newSubH = {};
+
+          Object.entries(subH).forEach(([subj, hours]) => {
+            if (hours <= 0) return;
+            if (currSubs.includes(subj)) {
+              newSubH[subj] = (newSubH[subj] || 0) + hours;
+            } else {
+              const fam = getSubjectFamily(subj);
+              const matchedCurrSub = currSubs.find(cs => getSubjectFamily(cs) === fam);
+              if (matchedCurrSub) {
+                newSubH[matchedCurrSub] = (newSubH[matchedCurrSub] || 0) + hours;
+                changed = true;
+              } else {
+                newSubH[subj] = (newSubH[subj] || 0) + hours;
+              }
+            }
+          });
+
+          if (changed) {
+            t.subjectHours = newSubH;
+            t.note = formatSubjectHours(newSubH);
+          }
+        });
+      },
+
       renderTeachersTable() {
         const tbody = document.getElementById('teacher-table-body');
         if (!tbody) return;
@@ -2225,12 +2294,15 @@
         const badgeEl = document.getElementById('teacher-count-badge');
         if (badgeEl) badgeEl.innerText = `총 ${this.teachers.length}명`;
 
+        this.harmonizeTeacherSubjectsWithCurriculum();
         const availableSubs = this.getAvailableSubjects();
 
         this.teachers.forEach((t, idx) => {
           const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          let certSubjectOptions = `<option value="">(미지정)</option>`;
           let demoSubjectOptions = `<option value="">(미지정)</option>`;
           ELEMENTARY_SUBJECTS.forEach(sub => {
+            certSubjectOptions += `<option value="${sub}" ${t.certSubject === sub ? 'selected' : ''}>${sub}</option>`;
             demoSubjectOptions += `<option value="${sub}" ${t.demoSubject === sub ? 'selected' : ''}>${sub}</option>`;
           });
 
@@ -2253,39 +2325,39 @@
             statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 shrink-0 shadow-2xs">합계 ${totalSubHours}/${tMax}h 🔴 (+${totalSubHours - tMax}h)</span>`;
           }
 
-          // Build Chips
+          // Build Chips (2-Column Grid Layout)
           const subEntries = Object.entries(subHours).filter(([_, h]) => typeof h === 'number' && h > 0);
           let chipsHtml = '';
           if (subEntries.length === 0) {
-            chipsHtml = `<span class="text-[11px] text-slate-400 italic">과목 없음 (+ 과목 추가 클릭)</span>`;
+            chipsHtml = `<div class="col-span-2 py-1 text-center text-slate-400 text-[11px] italic">과목 없음 (+ 과목 추가 클릭)</div>`;
           } else {
             chipsHtml = subEntries.map(([subj, hours]) => {
               const theme = getSubjectTheme(subj);
               const short = SUBJECT_SHORT_MAP[subj] || subj;
               return `
-                <span class="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[11px] font-semibold ${theme.badge} shadow-2xs">
-                  <span title="${subj}">${short}</span>
-                  <span class="inline-flex items-center bg-white/95 rounded px-1 border border-black/10">
-                    <button type="button" onclick="App.changeTeacherSubjectHour(${idx}, '${subj}', -1)" class="w-3.5 h-3.5 flex items-center justify-center font-black hover:bg-black/10 rounded cursor-pointer leading-none" title="1시수 감소">-</button>
-                    <span class="font-mono font-bold text-xs px-1">${hours}</span>
-                    <button type="button" onclick="App.changeTeacherSubjectHour(${idx}, '${subj}', 1)" class="w-3.5 h-3.5 flex items-center justify-center font-black hover:bg-black/10 rounded cursor-pointer leading-none" title="1시수 증가">+</button>
-                  </span>
-                  <button type="button" onclick="App.removeTeacherSubject(${idx}, '${subj}')" class="opacity-40 hover:opacity-100 hover:text-rose-600 font-bold px-0.5 cursor-pointer leading-none" title="${subj} 삭제">&times;</button>
-                </span>
+                <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg border text-[11px] font-semibold ${theme.badge} shadow-2xs">
+                  <span class="truncate max-w-[70px]" title="${subj}">${short}</span>
+                  <div class="flex items-center gap-1 shrink-0">
+                    <span class="inline-flex items-center bg-white/95 rounded px-1 border border-black/10 shadow-2xs">
+                      <button type="button" onclick="App.changeTeacherSubjectHour(${idx}, '${subj}', -1)" class="w-3.5 h-3.5 flex items-center justify-center font-black hover:bg-black/10 rounded cursor-pointer leading-none text-slate-700" title="1시수 감소">-</button>
+                      <span class="font-mono font-bold text-xs px-1 text-slate-900">${hours}</span>
+                      <button type="button" onclick="App.changeTeacherSubjectHour(${idx}, '${subj}', 1)" class="w-3.5 h-3.5 flex items-center justify-center font-black hover:bg-black/10 rounded cursor-pointer leading-none text-slate-700" title="1시수 증가">+</button>
+                    </span>
+                    <button type="button" onclick="App.removeTeacherSubject(${idx}, '${subj}')" class="opacity-40 hover:opacity-100 hover:text-rose-600 font-bold px-0.5 cursor-pointer leading-none text-xs" title="${subj} 삭제">&times;</button>
+                  </div>
+                </div>
               `;
             }).join('');
           }
 
           const addableSubs = availableSubs.filter(s => !subHours[s]);
-          let addSelectHtml = '';
-          if (addableSubs.length > 0) {
-            addSelectHtml = `
-              <select onchange="if(this.value){ App.addTeacherSubject(${idx}, this.value); this.value=''; }" class="text-[10px] px-1.5 py-0.5 border border-dashed border-indigo-300 rounded bg-indigo-50/60 text-indigo-700 hover:bg-indigo-100/80 cursor-pointer font-medium">
-                <option value="">+ 과목 추가</option>
-                ${addableSubs.map(s => `<option value="${s}">+ ${s}</option>`).join('')}
-              </select>
-            `;
-          }
+          const addSelectHtml = `
+            <select onchange="if(this.value === '__CUSTOM__'){ const customSub = prompt('추가할 과목명을 입력하세요 (예: 즐생(놀이), 창체, 정보 등):'); if(customSub && customSub.trim()){ App.addTeacherSubject(${idx}, customSub.trim()); } this.value=''; } else if(this.value){ App.addTeacherSubject(${idx}, this.value); this.value=''; }" class="text-[10px] px-1.5 py-0.5 border border-dashed border-indigo-300 rounded bg-indigo-50/60 text-indigo-700 hover:bg-indigo-100/80 cursor-pointer font-medium">
+              <option value="">+ 과목 추가</option>
+              ${addableSubs.map(s => `<option value="${s}">+ ${s}</option>`).join('')}
+              <option value="__CUSTOM__">+ 직접 입력...</option>
+            </select>
+          `;
 
           const isTextOpen = (this.teacherNoteTextOpen && this.teacherNoteTextOpen[idx]);
 
@@ -2305,27 +2377,32 @@
               </span>
             </td>
             <td class="py-2 px-3">
-              <select onchange="App.updateTeacher(${idx}, 'demoSubject', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs font-semibold text-indigo-700">
+              <select data-field="certSubject" onchange="App.updateTeacher(${idx}, 'certSubject', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs font-semibold text-amber-700 focus:ring-1 focus:ring-amber-500">
+                ${certSubjectOptions}
+              </select>
+            </td>
+            <td class="py-2 px-3">
+              <select data-field="demoSubject" onchange="App.updateTeacher(${idx}, 'demoSubject', this.value)" class="w-full px-1.5 py-1 border rounded bg-white text-xs font-semibold text-indigo-700 focus:ring-1 focus:ring-indigo-500">
                 ${demoSubjectOptions}
               </select>
             </td>
             <td class="py-2 px-3 text-center">
               <input type="number" min="1" max="50" value="${t.maxHours !== undefined && t.maxHours !== null ? t.maxHours : ''}" placeholder="${this.config.maxHours || 10}" oninput="App.updateTeacherLive(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" onchange="App.updateTeacher(${idx}, 'maxHours', this.value ? parseInt(this.value, 10) : '')" class="w-16 px-1.5 py-1 border rounded bg-white text-xs text-center font-bold text-slate-700 focus:ring-1 focus:ring-indigo-500">
             </td>
-            <td class="py-2 px-3">
+            <td class="py-2 px-3 min-w-[360px]">
               <div class="space-y-1.5">
                 <div class="flex items-center justify-between gap-1.5 flex-wrap">
-                  <div class="flex items-center gap-1.5 flex-wrap flex-1">
-                    ${statusBadge}
-                    <div class="flex items-center gap-1 flex-wrap">
-                      ${chipsHtml}
-                      ${addSelectHtml}
-                    </div>
+                  ${statusBadge}
+                  <div class="flex items-center gap-1.5">
+                    ${addSelectHtml}
+                    <button type="button" onclick="App.toggleTeacherNoteInput(${idx})" class="text-[10px] px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 bg-white transition flex items-center gap-0.5 shrink-0 cursor-pointer shadow-2xs" title="직접 타이핑 텍스트 입력창 열기/닫기">
+                      <i data-lucide="${isTextOpen ? 'chevron-up' : 'edit-3'}" class="w-3 h-3"></i>
+                      <span>${isTextOpen ? '접기' : '텍스트'}</span>
+                    </button>
                   </div>
-                  <button type="button" onclick="App.toggleTeacherNoteInput(${idx})" class="text-[10px] px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 bg-white transition flex items-center gap-0.5 shrink-0 cursor-pointer shadow-2xs" title="직접 타이핑 텍스트 입력창 열기/닫기">
-                    <i data-lucide="${isTextOpen ? 'chevron-up' : 'edit-3'}" class="w-3 h-3"></i>
-                    <span>${isTextOpen ? '접기' : '텍스트'}</span>
-                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-1.5 w-full">
+                  ${chipsHtml}
                 </div>
                 <div id="teacher-note-text-wrap-${idx}" class="${isTextOpen ? '' : 'hidden'}">
                   <input type="text" id="teacher-note-input-${idx}" value="${t.note || ''}" placeholder="수업 배당 메모 (예: 국(3) 수(3) 바(2) 슬(2) 즐(2))" oninput="App.updateTeacherNoteTextLive(${idx}, this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs font-mono focus:ring-1 focus:ring-indigo-500">
@@ -2444,8 +2521,12 @@
 
           if (rem > 0) {
             const sortedTeachers = [...this.teachers].sort((a, b) => {
-              const aScore = (a.major && sub.includes(a.major)) ? 0 : ((a.demoSubject === sub) ? 1 : 2);
-              const bScore = (b.major && sub.includes(b.major)) ? 0 : ((b.demoSubject === sub) ? 1 : 2);
+              const aMajorMatch = a.major && (sub.includes(a.major) || (getSubjectFamily(sub) && getSubjectFamily(sub) === getSubjectFamily(a.major)));
+              const bMajorMatch = b.major && (sub.includes(b.major) || (getSubjectFamily(sub) && getSubjectFamily(sub) === getSubjectFamily(b.major)));
+              const aSpecialMatch = (a.demoSubject === sub || (getSubjectFamily(a.demoSubject) && getSubjectFamily(a.demoSubject) === getSubjectFamily(sub)) || a.certSubject === sub || (getSubjectFamily(a.certSubject) && getSubjectFamily(a.certSubject) === getSubjectFamily(sub)));
+              const bSpecialMatch = (b.demoSubject === sub || (getSubjectFamily(b.demoSubject) && getSubjectFamily(b.demoSubject) === getSubjectFamily(sub)) || b.certSubject === sub || (getSubjectFamily(b.certSubject) && getSubjectFamily(b.certSubject) === getSubjectFamily(sub)));
+              const aScore = aMajorMatch ? 0 : (aSpecialMatch ? 1 : 2);
+              const bScore = bMajorMatch ? 0 : (bSpecialMatch ? 1 : 2);
               if (aScore !== bScore) return aScore - bScore;
               return teacherTotals[a.name] - teacherTotals[b.name];
             });
@@ -2476,6 +2557,8 @@
           return;
         }
 
+        this.harmonizeTeacherSubjectsWithCurriculum();
+
         const curricCounts = {};
         this.curriculum.forEach(c => {
           const sub = (c.subject || '').trim();
@@ -2503,8 +2586,9 @@
           const short = SUBJECT_SHORT_MAP[s] || s;
           const badgeColor = match 
             ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold' 
-            : (tCount < cCount ? 'bg-amber-50 text-amber-800 border-amber-300 font-bold' : 'bg-rose-50 text-rose-800 border-rose-300 font-bold');
-          return `<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] border ${badgeColor} shadow-2xs">
+            : (tCount < cCount ? 'bg-amber-50 text-amber-800 border-amber-300 font-bold hover:bg-amber-100 cursor-pointer' : 'bg-rose-50 text-rose-800 border-rose-300 font-bold');
+          const clickAttr = (tCount < cCount) ? `onclick="App.quickAddSubjectQuota('${s}')" title="클릭 시 부족한 ${cCount - tCount}시간을 실습생들에게 즉시 배분합니다"` : '';
+          return `<span ${clickAttr} class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] border ${badgeColor} shadow-2xs transition">
             <span>${short}</span>
             <span class="font-mono">${tCount}/${cCount}h</span>
             <span>${match ? '✓' : (tCount < cCount ? `(-${cCount - tCount})` : `(+${tCount - cCount})`)}</span>
@@ -2535,6 +2619,37 @@
         lucide.createIcons();
       },
 
+      quickAddSubjectQuota(subj) {
+        if (!subj || !this.teachers || this.teachers.length === 0) return;
+        const curricCount = this.curriculum.filter(c => (c.subject || '').trim() === subj).length;
+        let currentAssigned = 0;
+        this.teachers.forEach(t => {
+          const subH = t.subjectHours || {};
+          currentAssigned += (subH[subj] || 0);
+        });
+        const deficit = curricCount - currentAssigned;
+        if (deficit <= 0) {
+          alert(`'${subj}' 과목은 이미 진도표 차시와 실습생 배당 시수가 일치합니다.`);
+          return;
+        }
+
+        const n = this.teachers.length;
+        const base = Math.floor(deficit / n);
+        const rem = deficit % n;
+
+        this.teachers.forEach((t, i) => {
+          if (!t.subjectHours) t.subjectHours = {};
+          const add = base + (i < rem ? 1 : 0);
+          if (add > 0) {
+            t.subjectHours[subj] = (t.subjectHours[subj] || 0) + add;
+            t.note = formatSubjectHours(t.subjectHours);
+          }
+        });
+
+        this.renderTeachersTable();
+        alert(`'${subj}' 부족 시수 ${deficit}시간이 실습생 ${n}명에게 균등 추가되었습니다!`);
+      },
+
       updateTeacherLive(idx, field, val) {
         if (!this.teachers[idx]) return;
         this.teachers[idx][field] = val;
@@ -2551,15 +2666,22 @@
         rows.forEach((tr, idx) => {
           if (!this.teachers[idx]) return;
           const inputs = tr.querySelectorAll('input');
-          const select = tr.querySelector('select');
+          const certSelect = tr.querySelector('select[data-field="certSubject"]');
+          const demoSelect = tr.querySelector('select[data-field="demoSubject"]');
           if (inputs[0] && inputs[0].value.trim()) {
             this.teachers[idx].name = inputs[0].value.trim();
           }
           if (inputs[1]) {
             this.teachers[idx].major = inputs[1].value.trim();
           }
-          if (select) {
-            this.teachers[idx].demoSubject = select.value;
+          if (certSelect) {
+            this.teachers[idx].certSubject = certSelect.value;
+          }
+          if (demoSelect) {
+            this.teachers[idx].demoSubject = demoSelect.value;
+          } else {
+            const fallbackSelect = tr.querySelector('select');
+            if (fallbackSelect) this.teachers[idx].demoSubject = fallbackSelect.value;
           }
           if (inputs[2]) {
             this.teachers[idx].maxHours = inputs[2].value ? parseInt(inputs[2].value, 10) : '';
@@ -2579,6 +2701,7 @@
           id: nextId,
           name: `실습생${this.teachers.length + 1}`,
           major: '초등교육',
+          certSubject: '',
           demoSubject: '',
           maxHours: '',
           note: '',
@@ -4063,6 +4186,8 @@
         const totalDays = weekCount * 5;
         const maxP = this.periodsPerDay || 8;
 
+        this.harmonizeTeacherSubjectsWithCurriculum();
+
         // 1. Clear unlocked classes while preserving locked event blocks
         const newTimetable = {};
         for (let d = 0; d < totalDays; d++) {
@@ -4358,6 +4483,9 @@
                 if (cell.isDemo && t.demoSubject === cell.subject) {
                   cost -= 80; // strong preference for trainee with this demo subject
                 }
+                if (t.certSubject && (cell.subject === t.certSubject || (getSubjectFamily(t.certSubject) && getSubjectFamily(t.certSubject) === getSubjectFamily(cell.subject)))) {
+                  cost -= 25; // preference for trainee with this cert subject
+                }
                 if (t.major && cell.subject.includes(t.major)) {
                   cost -= 25; // major bonus
                 }
@@ -4365,7 +4493,12 @@
                 // >>> TARGET SUBJECT QUOTA CONSTRAINT <<<
                 const subHours = t.subjectHours || parseSubjectHours(t.note || '');
                 if (subHours && Object.keys(subHours).length > 0) {
-                  const targetSubHours = subHours[cell.subject];
+                  let targetSubHours = subHours[cell.subject];
+                  if (targetSubHours === undefined) {
+                    const fam = getSubjectFamily(cell.subject);
+                    const altKey = Object.keys(subHours).find(k => getSubjectFamily(k) === fam);
+                    if (altKey) targetSubHours = subHours[altKey];
+                  }
                   if (targetSubHours !== undefined) {
                     if (curSubHours >= targetSubHours) {
                       cost += 3000 + (curSubHours - targetSubHours + 1) * 1000;
