@@ -63,10 +63,11 @@ try:
     while True:
         res = recv_msg()
         if res and res.get("id") == 1:
-            print("Evaluation res:", res)
             result_obj = res.get("result", {}).get("result", {})
             if "value" in result_obj:
                 val = json.loads(result_obj["value"])
+                passed = sum(1 for item in val if item["pass"])
+                print(f"Total: {passed}/{len(val)} passed")
                 for item in val:
                     status = "PASS" if item["pass"] else "FAIL"
                     print(f"{item['id']}: {status} -> {item['msg']}")

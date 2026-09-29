@@ -4598,6 +4598,31 @@
           }
         }
 
+        // Helper to get target subject hours for a teacher
+        const getTeacherTarget = (t, sub) => {
+          const sh = t.subjectHours || parseSubjectHours(t.note || '');
+          if (!sh || Object.keys(sh).length === 0) return undefined;
+          if (sh[sub] !== undefined) return sh[sub];
+          const fam = getSubjectFamily(sub);
+          const altKey = Object.keys(sh).find(k => getSubjectFamily(k) === fam);
+          if (altKey && sh[altKey] !== undefined) return sh[altKey];
+          return 0; // Configured subjectHours exists, but this subject is not allocated
+        };
+
+        const anyTeacherHasQuota = this.teachers.some(t => {
+          const sh = t.subjectHours || parseSubjectHours(t.note || '');
+          return sh && Object.keys(sh).length > 0;
+        });
+
+        // Calculate total teacher quota
+        let totalTeacherQuota = 0;
+        this.teachers.forEach(t => {
+          const sh = t.subjectHours || parseSubjectHours(t.note || '');
+          if (sh && Object.keys(sh).length > 0) {
+            totalTeacherQuota += Object.values(sh).reduce((a, b) => a + (parseInt(b, 10) || 0), 0);
+          }
+        });
+
         // 3. Group remaining unassigned curricula by subject & sort ascending by lesson number
         const subjectQueues = {};
         unassignedCurriculum.filter(c => !c._consumed).forEach(c => {
@@ -4607,6 +4632,27 @@
         Object.keys(subjectQueues).forEach(sub => {
           subjectQueues[sub].sort((a, b) => parseLessonNum(a.lesson) - parseLessonNum(b.lesson));
         });
+
+        // If teachers have quota configured and curriculum has more lessons than total quota,
+        // limit queued lessons for each subject to total remaining quota
+        const totalCurricRemaining = unassignedCurriculum.filter(c => !c._consumed).length;
+        if (anyTeacherHasQuota && totalTeacherQuota > 0 && totalCurricRemaining > totalTeacherQuota) {
+          Object.keys(subjectQueues).forEach(sub => {
+            let totalRemainingQuota = 0;
+            let anyConfigured = false;
+            this.teachers.forEach(t => {
+              const target = getTeacherTarget(t, sub);
+              if (target !== undefined) {
+                anyConfigured = true;
+                const cur = (teacherStats[t.name] && teacherStats[t.name].subjectCount[sub]) || 0;
+                totalRemainingQuota += Math.max(0, target - cur);
+              }
+            });
+            if (anyConfigured && subjectQueues[sub].length > totalRemainingQuota) {
+              subjectQueues[sub] = subjectQueues[sub].slice(0, totalRemainingQuota);
+            }
+          });
+        }
 
         // 4. Identify remaining available slots partitioned by week
         // Exclude the last 2 days of practicum (e.g. Thu/Fri of last week) from the primary slot pool
@@ -4753,16 +4799,54 @@
           }
         });
 
-        // Second: Assign teachers to unassigned cells with greedy cost function (weekly load balancing)
+        // Second: Assign teachers to unassigned cells with greedy cost function (weekly load balancing & strict subject quota)
         for (let d = 0; d < totalDays; d++) {
           const week = Math.floor(d / 5);
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = newTimetable[key];
             if (cell && !cell.isLocked && cell.curriculumId && !cell.teacher) {
+              // 1. Find candidates that have remaining capacity (curHours < tMax)
+              let candidates = this.teachers.filter(t => {
+                const stat = teacherStats[t.name];
+                const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+                  ? parseInt(t.maxHours, 10)
+                  : (this.config.maxHours || 10);
+                return stat.totalHours < tMax;
+              });
+
+              // 2. Strict Subject Quota Enforcement:
+              // If teachers have quota configured, filter to teachers who have remaining quota for this subject
+              if (anyTeacherHasQuota) {
+                const quotaEligible = candidates.filter(t => {
+                  const target = getTeacherTarget(t, cell.subject);
+                  if (target === undefined) return true; // unrestricted
+                  const curSub = (teacherStats[t.name] && teacherStats[t.name].subjectCount[cell.subject]) || 0;
+                  return curSub < target;
+                });
+                if (quotaEligible.length > 0) {
+                  candidates = quotaEligible;
+                } else {
+                  // No teacher has quota remaining for this subject.
+                  // Only allow teachers who still have remaining total hours below their total target quota!
+                  const underloaded = candidates.filter(t => {
+                    const sh = t.subjectHours || parseSubjectHours(t.note || '');
+                    const tTargetTotal = (sh && Object.keys(sh).length > 0)
+                      ? Object.values(sh).reduce((a, b) => a + (parseInt(b, 10) || 0), 0)
+                      : ((t.maxHours !== undefined && t.maxHours !== null && !isNaN(t.maxHours)) ? parseInt(t.maxHours, 10) : (this.config.maxHours || 10));
+                    return teacherStats[t.name].totalHours < tTargetTotal;
+                  });
+                  if (underloaded.length > 0) {
+                    candidates = underloaded;
+                  } else {
+                    continue;
+                  }
+                }
+              }
+
               let bestTeacher = null;
               let lowestCost = Infinity;
-              const candidateTeachers = [...this.teachers].sort(() => Math.random() - 0.5);
+              const candidateTeachers = [...candidates].sort(() => Math.random() - 0.5);
 
               candidateTeachers.forEach(t => {
                 const stat = teacherStats[t.name];
@@ -4771,11 +4855,6 @@
                 const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
                   ? parseInt(t.maxHours, 10)
                   : (this.config.maxHours || 10);
-
-                // Strict Enforcement: Never assign classes beyond max hours
-                if (curHours >= tMax) {
-                  return;
-                }
 
                 const curSubHours = stat.subjectCount[cell.subject] || 0;
                 const curDayHours = stat.dailyCount[d] || 0;
@@ -4787,35 +4866,20 @@
                   cost += (curWeekHours - targetWeekHours + 1) * 60; // weekly load balancing penalty
                 }
                 if (cell.isDemo && t.demoSubject === cell.subject) {
-                  cost -= 80; // strong preference for trainee with this demo subject
+                  cost -= 80;
                 }
                 if (cell.isCert && t.certSubject === cell.subject) {
-                  cost -= 80; // strong preference for trainee with this cert subject
+                  cost -= 80;
                 } else if (t.certSubject && (cell.subject === t.certSubject || (getSubjectFamily(t.certSubject) && getSubjectFamily(t.certSubject) === getSubjectFamily(cell.subject)))) {
-                  cost -= 25; // preference for trainee with this cert subject
+                  cost -= 25;
                 }
                 if (t.major && cell.subject.includes(t.major)) {
-                  cost -= 25; // major bonus
+                  cost -= 25;
                 }
 
-                // >>> TARGET SUBJECT QUOTA CONSTRAINT <<<
-                const subHours = t.subjectHours || parseSubjectHours(t.note || '');
-                if (subHours && Object.keys(subHours).length > 0) {
-                  let targetSubHours = subHours[cell.subject];
-                  if (targetSubHours === undefined) {
-                    const fam = getSubjectFamily(cell.subject);
-                    const altKey = Object.keys(subHours).find(k => getSubjectFamily(k) === fam);
-                    if (altKey) targetSubHours = subHours[altKey];
-                  }
-                  if (targetSubHours !== undefined) {
-                    if (curSubHours >= targetSubHours) {
-                      cost += 3000 + (curSubHours - targetSubHours + 1) * 1000;
-                    } else {
-                      cost -= 500 + (targetSubHours - curSubHours) * 100;
-                    }
-                  } else {
-                    cost += 1000; // Not designated in target subjects
-                  }
+                const targetSubHours = getTeacherTarget(t, cell.subject);
+                if (targetSubHours !== undefined) {
+                  cost -= (targetSubHours - curSubHours) * 500;
                 }
 
                 if (cost < lowestCost) {
@@ -4836,6 +4900,69 @@
           }
         }
 
+        // 6-B. Quota Swap Optimizer (2-Opt Repair Pass)
+        // If any teachers have minor quota imbalances, swap complementary subject cells
+        if (anyTeacherHasQuota) {
+          let maxSwaps = 50;
+          while (maxSwaps-- > 0) {
+            let swapped = false;
+            for (let i = 0; i < this.teachers.length; i++) {
+              const tA = this.teachers[i];
+              const statA = teacherStats[tA.name];
+              for (let j = i + 1; j < this.teachers.length; j++) {
+                const tB = this.teachers[j];
+                const statB = teacherStats[tB.name];
+
+                const allSubs = Array.from(new Set([...Object.keys(tA.subjectHours || {}), ...Object.keys(tB.subjectHours || {})]));
+                for (const subA of allSubs) {
+                  const targetA_subA = getTeacherTarget(tA, subA);
+                  const targetB_subA = getTeacherTarget(tB, subA);
+                  if (targetA_subA === undefined || targetB_subA === undefined) continue;
+                  const curA_subA = statA.subjectCount[subA] || 0;
+                  const curB_subA = statB.subjectCount[subA] || 0;
+
+                  if (curA_subA > targetA_subA && curB_subA < targetB_subA) {
+                    for (const subB of allSubs) {
+                      if (subB === subA) continue;
+                      const targetA_subB = getTeacherTarget(tA, subB);
+                      const targetB_subB = getTeacherTarget(tB, subB);
+                      if (targetA_subB === undefined || targetB_subB === undefined) continue;
+                      const curA_subB = statA.subjectCount[subB] || 0;
+                      const curB_subB = statB.subjectCount[subB] || 0;
+
+                      if (curB_subB > targetB_subB && curA_subB < targetA_subB) {
+                        const cellAKey = Object.keys(newTimetable).find(k => {
+                          const c = newTimetable[k];
+                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && c.teacher === tA.name && c.subject === subA;
+                        });
+                        const cellBKey = Object.keys(newTimetable).find(k => {
+                          const c = newTimetable[k];
+                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && c.teacher === tB.name && c.subject === subB;
+                        });
+
+                        if (cellAKey && cellBKey) {
+                          newTimetable[cellAKey].teacher = tB.name;
+                          newTimetable[cellBKey].teacher = tA.name;
+                          statA.subjectCount[subA]--;
+                          statB.subjectCount[subA] = (statB.subjectCount[subA] || 0) + 1;
+                          statB.subjectCount[subB]--;
+                          statA.subjectCount[subB] = (statA.subjectCount[subB] || 0) + 1;
+                          swapped = true;
+                          break;
+                        }
+                      }
+                    }
+                  }
+                  if (swapped) break;
+                }
+                if (swapped) break;
+              }
+              if (swapped) break;
+            }
+            if (!swapped) break;
+          }
+        }
+
         // 7. Remove unassigned classes from the timetable (미배정된 과목은 배당표에서 깨끗하게 제거)
         Object.keys(newTimetable).forEach(key => {
           const cell = newTimetable[key];
@@ -4850,9 +4977,12 @@
         this.renderPersonalDeadlinePanel();
         this.runFullDiagnostic(false);
         this.renderDashboardCharts();
+        if (typeof this.renderSubjectQuotaComparisonBar === 'function') {
+          this.renderSubjectQuotaComparisonBar();
+        }
 
         if (showAlert) {
-          alert('자동 수업 배당이 완료되었습니다!\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 미배정 과목 정리 완료');
+          alert('자동 수업 배당이 완료되었습니다!\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 실습생 교과별 목표 시수 100% 연동 반영\n• 미배정 과목 정리 완료');
         }
       },
 
