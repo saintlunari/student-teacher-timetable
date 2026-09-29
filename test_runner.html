@@ -25,7 +25,7 @@
     <div class="grid grid-cols-3 gap-4 text-center">
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">총 테스트 케이스</span>
-        <div id="total-tests" class="text-2xl font-black text-white mt-1">11</div>
+        <div id="total-tests" class="text-2xl font-black text-white mt-1">18</div>
       </div>
       <div class="bg-slate-800/80 p-4 rounded-xl border border-slate-700">
         <span class="text-xs text-slate-400">성공 (Passed)</span>
@@ -965,6 +965,79 @@
               : `검증 실패: (diffColor:${diffColorPass}, btnColor:${btnColorPass}, customBasic:${customBasicPass}, customColor:${customStampColorPass}, edit:${editPass}, matchAll:${matchAll}, stampApply:${stampApplyPass}, timetableMatch:${timetableMatchPass})`
           };
         }
+      },
+      {
+        id: 'tc18',
+        title: '수업 배당(교과별 목표 시수) 칩 UI, 텍스트 파싱, 원클릭 균등 배분 및 솔버 제약조건 연동 무결성 검증',
+        desc: '국(3) 수(3) 바(2)... 텍스트 및 subjectHours 객체 양방향 동기화, +/- 스피너 조작, 자동 균등 분배 알고리즘, 솔버의 교과별 목표 시수 100% 충족 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+
+          // 1. 텍스트 파싱 & 포맷팅 양방향 무결성 검증
+          const parseFn = App.parseSubjectHours || window.parseSubjectHours;
+          const formatFn = App.formatSubjectHours || window.formatSubjectHours;
+          const sampleText = '국(3) 수(3) 바(2) 슬(2) 즐(2)';
+          const parsed = parseFn(sampleText);
+          const formatted = formatFn(parsed);
+          const parsePass = (parsed['국어'] === 3 && parsed['수학'] === 3 && parsed['바생'] === 2 && parsed['슬생'] === 2 && parsed['즐생'] === 2);
+          const formatPass = (formatted === sampleText);
+
+          // 2. 실습생 객체에 주입 및 렌더링 검증
+          App.updateTeacherNoteTextLive(0, sampleText);
+          const t0 = App.teachers[0];
+          const syncPass = t0.note === sampleText && t0.subjectHours && t0.subjectHours['국어'] === 3;
+
+          // 3. 인라인 +/- 스피너 조작 검증
+          App.changeTeacherSubjectHour(0, '국어', 1); // 3 -> 4
+          const incPass = App.teachers[0].subjectHours['국어'] === 4 && App.teachers[0].note.includes('국(4)');
+          App.changeTeacherSubjectHour(0, '국어', -1); // 4 -> 3
+          const decPass = App.teachers[0].subjectHours['국어'] === 3;
+
+          // 4. 원클릭 균등 배분 (autoDistributeSubjectHours) 검증
+          // 2학년 프리셋: 3명 실습생, 18차시 (국:3, 수:3, 바:3, 슬:3, 즐:6)
+          App.autoDistributeSubjectHours();
+          const distT0 = App.teachers[0].subjectHours;
+          const distT1 = App.teachers[1].subjectHours;
+          const distT2 = App.teachers[2].subjectHours;
+          const t0Total = Object.values(distT0).reduce((a,b)=>a+b, 0);
+          const t1Total = Object.values(distT1).reduce((a,b)=>a+b, 0);
+          const t2Total = Object.values(distT2).reduce((a,b)=>a+b, 0);
+          const autoDistPass = (t0Total === 6 && t1Total === 6 && t2Total === 6);
+
+          // 5. 솔버(runAutoAllocation) 목표 시수 100% 충족 검증 (오차 0시간 완벽 일치)
+          App.runAutoAllocation(false);
+
+          // 시간표 실제 배정 결과 확인
+          const actualCounts = { [App.teachers[0].name]: {}, [App.teachers[1].name]: {}, [App.teachers[2].name]: {} };
+          Object.values(App.timetable).forEach(c => {
+            if (c && actualCounts[c.teacher]) {
+              actualCounts[c.teacher][c.subject] = (actualCounts[c.teacher][c.subject] || 0) + 1;
+            }
+          });
+
+          let solverQuotaPass = true;
+          App.teachers.forEach(t => {
+            const targets = t.subjectHours || {};
+            const actuals = actualCounts[t.name] || {};
+            Object.keys(targets).forEach(sub => {
+              if ((actuals[sub] || 0) !== targets[sub]) solverQuotaPass = false;
+            });
+          });
+
+          // 6. 실시간 비교 바 렌더링 확인
+          App.renderSubjectQuotaComparisonBar();
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+          const barEl = frameDoc.getElementById('subject-quota-comparison-bar');
+          const barPass = barEl && barEl.innerText.includes('100% 일치');
+
+          const pass = parsePass && formatPass && syncPass && incPass && decPass && autoDistPass && solverQuotaPass && barPass;
+          return {
+            pass,
+            message: pass
+              ? '국(3) 수(3)... 텍스트 & subjectHours 100% 양방향 파싱, +/- 스피너 조작 및 실시간 뱃지 연동, 진도표 기반 원클릭 균등 배분 성공, 솔버 목표 시수 제약조건 100% 충족(오차 0) 무결성 검증 완료'
+              : `검증 실패: (parse:${parsePass}, format:${formatPass}, sync:${syncPass}, inc:${incPass}, dec:${decPass}, autoDist:${autoDistPass}, solverQuota:${solverQuotaPass}, bar:${barPass})`
+          };
+        }
       }
     ];
 
@@ -1032,6 +1105,8 @@
         if (frame && frame.contentWindow && frame.contentWindow.App) {
           App = frame.contentWindow.App;
           window.App = App;
+          window.parseSubjectHours = App.parseSubjectHours || frame.contentWindow.parseSubjectHours;
+          window.formatSubjectHours = App.formatSubjectHours || frame.contentWindow.formatSubjectHours;
           frame.contentWindow.alert = () => {};
           frame.contentWindow.confirm = () => true;
           window.alert = () => {};
