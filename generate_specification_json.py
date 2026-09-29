@@ -1,0 +1,145 @@
+import json, os, sys, io
+
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+
+specification = {
+  "metadata": {
+    "organization": "공주교육대학교부설초등학교",
+    "year": 2026,
+    "curriculum_version": "2022 개정 교육과정",
+    "document_type": "교과대표수업 교수학습과정안 (세안 및 본시안)",
+    "source_template": "2026학년도 지도안_세안 양식(2022)최종.hwp",
+    "source_examples_dir": r"C:\Users\user\Desktop\과정안 (총 23개 교과대표수업 HWP/PDF/HWPX 전수 분석)"
+  },
+  "document_types": {
+    "representational_plan": {
+      "name": "본시안 (교과대표수업 과정안 - 약 4~6페이지)",
+      "sections": [
+        {
+          "index": "1",
+          "title": "1. 교수 · 학습 개요",
+          "type": "table_with_focus_note",
+          "required_fields": [
+            "일시 (예: 2026.4.21.(화) 6교시)",
+            "대상 (예: 5학년 4반(19명))",
+            "수업자 (예: 교사 박건일)",
+            "단원(차시) (예: 3. 용해와 용액(4/12))",
+            "학습 모형 (예: 탐구학습모형)",
+            "장소 (예: 제1 과학실)",
+            "핵심역량 (2022 개정 총론 6대 역량 중 1~2개)",
+            "교과역량 (해당 교과 고유 역량 2개 내외)",
+            "인성교육 가치·덕목 (협동, 존중, 배려, 소통 등)",
+            "디지털 활용요소 (앱, 스프레드시트, 패들렛 등 구체적 에듀테크 활동)",
+            "성취기준 (코드 번호 [ ] 및 해설)",
+            "학습목표 (~할 수 있다. 종결 어미)",
+            "교수·학습 자료 (교사 / 학생 구분)",
+            "수업 주안점 (도입/활동1/활동2/활동3 의도, 학생 실태 반영 및 역량 신장 효과 서술)"
+          ]
+        },
+        {
+          "index": "2",
+          "title": "2. 교수 · 학습 과정",
+          "type": "5_column_table",
+          "columns": [
+            { "name": "단계 (시간)", "width_percent": 12, "desc": "도입(5′), 전개(30′), 정리(5′) 또는 수업모형별 단계명" },
+            { "name": "학습내용 (학습 집단)", "width_percent": 15, "desc": "동기유발, 문제확인, [활동1], [활동2], [활동3] + (전체)/(모둠)/(개별) + 인성덕목" },
+            { "name": "교수·학습 활동", "width_percent": 45, "desc": "◦ 교사지시 / ∙ 학생활동 / - 발문 / ( ) 예상응답 / 학습문제 박스" },
+            { "name": "자료(∙),유의점(＊)", "width_percent": 16, "desc": "∙ 교구/디지털자료 / ＊ 주의사항 및 비계" },
+            { "name": "평가", "width_percent": 12, "desc": "평가방법(관찰, 구술 등) 및 구체적 평가내용" }
+          ]
+        },
+        {
+          "index": "3",
+          "title": "3. 판서 계획",
+          "type": "three_column_blackboard_table",
+          "structure": {
+            "top": "단원명 (가운데 정렬)",
+            "left_column": "<학습 문제> 및 [활동1, 2, 3] 안내",
+            "center_column": "활동별 핵심 도식, 실험 결과 데이터, 개념 카드, 산출물 배치",
+            "right_column": "학습 정리, 결론, 다음 차시 예고"
+          }
+        },
+        {
+          "index": "4",
+          "title": "4. 과정중심평가 계획",
+          "subsections": [
+            {
+              "index": "가",
+              "title": "가. 평가 내용 및 기준",
+              "type": "evaluation_matrix_table",
+              "columns": ["평가 범주 (지식·이해 / 과정·기능 / 가치·태도)", "평가 내용", "평가 준거 (상/중/하 구체적 성취 수준)", "평가 척도 (상/중/하)", "평가 시기 (예: 활동2)", "평가 방법 (관찰, 구술, 산출물, 자기평가 등)"]
+            },
+            {
+              "index": "나",
+              "title": "나. 평가시 유의점",
+              "type": "narrative_guidelines",
+              "required_paragraphs": [
+                "1단락: 단원 및 본시 평가 목적의 개괄적 서술, 전 과정 종합 평가 원칙",
+                "2단락: '지식·이해' 영역 평가 관점 및 어려움을 겪는 학생 지원(피드백/비계) 방안",
+                "3단락: '과정·기능' 영역 평가 관점 및 안전 수칙, 도구 활용 및 모둠 협업 지원 방안",
+                "4단락: '가치·태도' 영역 평가 관점 및 상호 존중, 책임감, 소통 태도 관찰 방안"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "comprehensive_master_plan": {
+      "name": "종합 세안 (8~12페이지 종합 지도안)",
+      "structure": [
+        "Ⅰ. 단원 안내 (1. 단원, 2. 교과역량과 성취기준, 3. 단원의 개관, 4. 단원 학습 계열, 5. 단원의 목표, 6. 단원 지도 계획 및 과정중심 평가 계획)",
+        "Ⅱ. 본시 교수 · 학습의 실제 (1. 교수·학습 개요, 2. 교수·학습 과정, 3. 판서 계획, 4. 과정중심평가 계획)",
+        "Ⅲ. 학생 실태 분석 및 지도 대책 (1. 실태 조사 설문/관찰, 2. 실태 분석 및 지도 대책: 인지/정의/방법/환경/기능별 통계 및 반영 방안)",
+        "Ⅳ. 참고 문헌 (APA/국가수준/논문 표준 양식)"
+      ]
+    }
+  },
+  "formatting_rules": {
+    "fonts": {
+      "body_primary": "함초롬바탕",
+      "headings_and_tables": "함초롬돋움 또는 함초롬바탕"
+    },
+    "font_sizes": {
+      "doc_title": "16pt ~ 18pt 진하게 (세안 표지: 27pt)",
+      "section_major": "12pt ~ 13pt 진하게 (줄간격 160%)",
+      "subsection": "11pt 진하게 (들여쓰기 5pt)",
+      "body_text": "10.5pt (줄간격 150% ~ 160%, 양쪽 정렬)",
+      "table_content": "10.5pt 또는 10pt (줄간격 135% ~ 150%)",
+      "table_header": "10.5pt 진하게 가운데 정렬",
+      "citations_and_references": "9pt ~ 10pt (내어쓰기 10pt)"
+    },
+    "symbol_standards": {
+      "teacher_activity": "◦ (흰 동그라미 U+25E6)",
+      "student_activity": "∙ (가운뎃점 U+2219 또는 U+318D)",
+      "teacher_question": "- (하이픈)",
+      "student_response": "( ) (소괄호 안 응답)",
+      "materials": "∙ (가운뎃점 불릿 뒤에 도구명)",
+      "cautions": "＊ (전각 별표 U+FF0A)",
+      "statistic_format": "N명(NN.N%)"
+    },
+    "three_part_blackboard_rule": {
+      "left": "단원명, <학습 문제>, [활동1], [활동2], [활동3]",
+      "center": "활동별 시각 자료, 생각 피라미드, 실험 결과 데이터 표, 핵심 개념",
+      "right": "배운 내용 정리, 퀴즈/형성평가, 차시 예고"
+    }
+  },
+  "subject_model_mapping": {
+    "국어": { "primary_model": "문제해결학습모형", "stages": ["문제 확인하기(5′)", "문제 해결 방법 찾기(10′)", "문제 해결하기(20′)", "적용 및 새로운 문제 발견(5′)"], "competencies": ["비판적·창의적 사고 역량", "디지털·미디어 역량", "의사소통 역량", "공동체·대인 관계 역량", "문화 향유 역량", "자기 성찰·계발 역량"] },
+    "수학": { "primary_model": "문제해결학습모형, 개념형성학습모형", "stages": ["문제 이해(5′)", "해결 계획 수립(5′)", "해결 계획 실행(20′)", "반성 및 발전(10′)"], "competencies": ["문제해결", "추론", "의사소통", "연결", "정보처리"] },
+    "과학": { "primary_model": "탐구학습모형, 발견학습모형, POE모형", "stages": ["탐색 및 문제 파악(5′)", "가설 설정(5′)", "실험 설계 및 가설 검증(20′)", "적용 및 새로운 문제 발견(10′)"], "competencies": ["과학적 탐구 역량", "과학적 문제 해결 역량", "과학적 의사결정 능력"] },
+    "사회": { "primary_model": "조사학습모형, 문제해결학습모형, 탐구학습모형", "stages": ["문제 제기(5′)", "조사 계획 수립(10′)", "조사 활동 및 분석(15′)", "정리 및 발전(10′)"], "competencies": ["비판적 사고력", "문제 해결력 및 의사 결정력", "정보 활용 능력", "의사소통 및 협업 능력"] },
+    "도덕": { "primary_model": "철학적 탐구 공동체 수업 모형, 도덕적 토론 수업 모형", "stages": ["도덕적 문제 제시(5′)", "도덕적 탐구 및 대화(20′)", "도덕적 판단 및 반성(10′)", "실천 동기화(5′)"], "competencies": ["도덕적 탐구 역량", "도덕적 성찰 역량", "도덕적 대인 관계 역량"] },
+    "실과": { "primary_model": "실천적 문제 해결 학습, 문제 중심 학습(PBL)", "stages": ["문제 정의(5′)", "실천적 추론(10′)", "행동 및 실천(20′)", "결과 평가 및 반성(5′)"], "competencies": ["생활 자립 능력", "관계 형성 능력", "기술적 문제해결능력"] },
+    "음악": { "primary_model": "음악과 일반수업모형, 창작 활동 중심 수업 모형", "stages": ["음악적 경험(5′)", "표현 및 탐색(15′)", "창작 및 심화(15′)", "감상 및 정리(5′)"], "competencies": ["음악적 감성 역량", "음악적 창의·융합 사고 역량", "음악적 소통 역량"] },
+    "미술": { "primary_model": "창의적 문제 해결법, 반응 중심 학습법", "stages": ["문제 인식(5′)", "아이디어 탐색(10′)", "아이디어 정교화 및 표현(20′)", "반응 및 감상(5′)"], "competencies": ["미적 감수성", "시각적 소통 역량", "창의·융합 능력", "미술 문화 이해 역량"] },
+    "체육": { "primary_model": "직접 교수 모형, 탐구 수업 모형, 이해 중심 게임 모형", "stages": ["도입 및 준비 운동(5′)", "기본 기능 익히기(10′)", "응용 활동 및 게임(20′)", "정리 및 반성(5′)"], "competencies": ["신체활동 역량", "자기관리 역량", "협력적 소통 역량"] },
+    "영어": { "primary_model": "PPP 모형 (Presentation-Practice-Production)", "stages": ["Warm-up & Presentation(10′)", "Practice(15′)", "Production(10′)", "Wrap-up(5′)"], "competencies": ["영어 의사소통 역량", "자기관리 역량", "공동체 역량"] },
+    "통합교과(바·슬·즐)": { "primary_model": "바생: 실천활동중심모형 / 슬생: 탐구활동중심모형 / 즐생: 놀이활동중심모형, 이야기모형", "stages": ["바생: 학습문제 확인-기본활동-실천적용-정리 / 슬생: 탐색-탐구-정리 / 즐생: 열기-놀이-표현-정리"], "competencies": ["지금-여기-우리 삶 역량", "배움-성장 역량"] }
+  }
+}
+
+out_file = r"c:\Users\user\Documents\GitHub\student-teacher-timetable\lesson_plan_format_specification.json"
+with open(out_file, "w", encoding="utf-8") as f:
+    json.dump(specification, f, ensure_ascii=False, indent=2)
+
+print(f"Successfully generated {out_file} (Size: {os.path.getsize(out_file)} bytes)")
