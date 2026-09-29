@@ -1464,10 +1464,10 @@
     };
 
 
-    // --- 초등학교 교과군 (2022 개정 즐생(놀이), 바생(실천), 슬생(탐구) 등 확장 지원) ---
+    // --- 초등학교 교과군 (2022 개정 즐생(놀이) 등 지원) ---
     const ELEMENTARY_SUBJECTS = [
       '국어', '사회', '도덕', '수학', '과학', '실과', '음악', '미술', '체육', '영어',
-      '바생', '슬생', '즐생', '즐생(놀이)', '바생(실천)', '슬생(탐구)', '창체'
+      '바생', '슬생', '즐생', '즐생(놀이)', '창체'
     ];
 
     // --- 4대 교과군 분류 매핑 함수 ---
@@ -1475,7 +1475,7 @@
       '인문사회': ['국어', '도덕', '사회', '영어'],
       '수리과학': ['수학', '과학', '컴퓨터', '정보'],
       '예체능': ['체육', '음악', '미술'],
-      '생활통합': ['바생', '슬생', '즐생', '실과', '창체', '놀이', '실천', '탐구']
+      '생활통합': ['바생', '슬생', '즐생', '실과', '창체', '놀이']
     };
 
     function getSubjectCategory(subject) {
@@ -1509,8 +1509,8 @@
 
     // --- 초등학교 교과명 축약 및 매핑 규칙 ---
     const SUBJECT_SHORT_MAP = {
-      '국어': '국', '수학': '수', '바생': '바', '바른생활': '바', '바생(실천)': '바(실)',
-      '슬생': '슬', '슬기로운생활': '슬', '슬생(탐구)': '슬(탐)',
+      '국어': '국', '수학': '수', '바생': '바', '바른생활': '바', '바생(실천)': '바',
+      '슬생': '슬', '슬기로운생활': '슬', '슬생(탐구)': '슬',
       '즐생': '즐', '즐거운생활': '즐', '즐생(놀이)': '즐생(놀이)', '즐거운생활(놀이)': '즐생(놀이)',
       '사회': '사', '과학': '과', '도덕': '도', '체육': '체',
       '음악': '음', '미술': '미', '실과': '실', '영어': '영', '창체': '창', '안전': '안'
@@ -1518,8 +1518,8 @@
 
     const SHORT_TO_FULL_MAP = {
       '국': '국어', '국어': '국어', '수': '수학', '수학': '수학',
-      '바': '바생', '바생': '바생', '바른생활': '바생', '바생(실천)': '바생(실천)', '바(실)': '바생(실천)', '실천': '바생(실천)',
-      '슬': '슬생', '슬생': '슬생', '슬기로운생활': '슬생', '슬생(탐구)': '슬생(탐구)', '슬(탐)': '슬생(탐구)', '탐구': '슬생(탐구)',
+      '바': '바생', '바생': '바생', '바른생활': '바생', '바생(실천)': '바생', '바(실)': '바생', '실천': '바생',
+      '슬': '슬생', '슬생': '슬생', '슬기로운생활': '슬생', '슬생(탐구)': '슬생', '슬(탐)': '슬생', '탐구': '슬생',
       '즐': '즐생', '즐생': '즐생', '즐거운생활': '즐생',
       '즐생(놀이)': '즐생(놀이)', '즐거운생활(놀이)': '즐생(놀이)', '즐(놀)': '즐생(놀이)', '놀이': '즐생(놀이)',
       '사': '사회', '사회': '사회', '과': '과학', '과학': '과학',
@@ -2333,10 +2333,10 @@
           } else {
             chipsHtml = subEntries.map(([subj, hours]) => {
               const theme = getSubjectTheme(subj);
-              const short = SUBJECT_SHORT_MAP[subj] || subj;
+              const displayName = SHORT_TO_FULL_MAP[subj] || subj;
               return `
                 <div class="flex items-center justify-between gap-1 px-2 py-1 rounded-lg border text-[11px] font-semibold ${theme.badge} shadow-2xs">
-                  <span class="truncate max-w-[70px]" title="${subj}">${short}</span>
+                  <span class="truncate max-w-[85px]" title="${subj}">${displayName}</span>
                   <div class="flex items-center gap-1 shrink-0">
                     <span class="inline-flex items-center bg-white/95 rounded px-1 border border-black/10 shadow-2xs">
                       <button type="button" onclick="App.changeTeacherSubjectHour(${idx}, '${subj}', -1)" class="w-3.5 h-3.5 flex items-center justify-center font-black hover:bg-black/10 rounded cursor-pointer leading-none text-slate-700" title="1시수 감소">-</button>
@@ -2453,11 +2453,12 @@
 
       addTeacherSubject(tIdx, subj) {
         if (!this.teachers[tIdx] || !subj) return;
+        const fullSub = SHORT_TO_FULL_MAP[subj] || subj;
         const t = this.teachers[tIdx];
         if (!t.subjectHours || typeof t.subjectHours !== 'object') {
           t.subjectHours = parseSubjectHours(t.note || '');
         }
-        t.subjectHours[subj] = (t.subjectHours[subj] || 0) + 1;
+        t.subjectHours[fullSub] = (t.subjectHours[fullSub] || 0) + 1;
         t.note = formatSubjectHours(t.subjectHours);
         this.renderTeachersTable();
       },
@@ -2583,13 +2584,13 @@
           const cCount = curricCounts[s] || 0;
           const tCount = teacherCounts[s] || 0;
           const match = (cCount === tCount);
-          const short = SUBJECT_SHORT_MAP[s] || s;
+          const displayName = SHORT_TO_FULL_MAP[s] || s;
           const badgeColor = match 
             ? 'bg-emerald-50 text-emerald-800 border-emerald-300 font-bold' 
             : (tCount < cCount ? 'bg-amber-50 text-amber-800 border-amber-300 font-bold hover:bg-amber-100 cursor-pointer' : 'bg-rose-50 text-rose-800 border-rose-300 font-bold');
           const clickAttr = (tCount < cCount) ? `onclick="App.quickAddSubjectQuota('${s}')" title="클릭 시 부족한 ${cCount - tCount}시간을 실습생들에게 즉시 배분합니다"` : '';
           return `<span ${clickAttr} class="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] border ${badgeColor} shadow-2xs transition">
-            <span>${short}</span>
+            <span>${displayName}</span>
             <span class="font-mono">${tCount}/${cCount}h</span>
             <span>${match ? '✓' : (tCount < cCount ? `(-${cCount - tCount})` : `(+${tCount - cCount})`)}</span>
           </span>`;
