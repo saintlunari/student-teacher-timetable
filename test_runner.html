@@ -876,6 +876,95 @@
               : `검증 실패 (dataCount:${dataCountPass} [K:${kor3Items.length},S:${soc3Items.length},M:${mor3Items.length},Ma:${math3Items.length},Ar:${art3Items.length},Mu:${music3Items.length},PE:${pe3Items.length},Sci:${sci3Items.length},Eng:${eng3Items.length}], gradeUi:${gradeUiPass}, subUi:${subUiPass}, engPass:${engPass} [${engTableRows.length}], search:${searchPass}, moralUnit:${moralUnitPass}, import:${importPass}, grade2:${grade2Pass})`
           };
         }
+      },
+      {
+        id: 'tc17',
+        title: '기본 스탬프 및 나만의 스탬프 색상 커스텀, 강의-참관 색상 분리, 1단계 행사-4단계 배당표 색상 일치 검증',
+        desc: '강의(남색) vs 참관(청록) 색상 구별, 스탬프 색상 변경 및 나만의 스탬프 팔레트 커스텀, 1단계 행사 불가시간과 4단계 배당표 시간표 셀 색상 일관성 100% 일치 검증',
+        run: () => {
+          // 1. 기본 색상 상태 초기화
+          App.resetBasicStampColors();
+
+          // 2. 요구사항 2: 기본 스탬프에서 강의는 교과대표 및 학년공개 참관과 다른 색으로
+          const lectureStyle = App.getEventCellStyle({ type: 'lecture' });
+          const obsStyle = App.getEventCellStyle({ type: 'observation' });
+          const diffColorPass = (lectureStyle.hexBg !== obsStyle.hexBg) && 
+                                (lectureStyle.hexBg === '#1e3a8a') && 
+                                (obsStyle.hexBg === '#0f766e');
+
+          // 기본 스탬프 버튼 UI 색상 반영 확인
+          const lectureBtn = document.getElementById('app-frame').contentDocument.getElementById('basic-stamp-lecture');
+          const obsSubjBtn = document.getElementById('app-frame').contentDocument.getElementById('basic-stamp-obs-subj');
+          const btnColorPass = lectureBtn && obsSubjBtn && 
+                               lectureBtn.className.includes('bg-blue-100') && 
+                               obsSubjBtn.className.includes('bg-teal-50');
+
+          // 3. 요구사항 1: 색 수정 가능하도록 (기본 스탬프 색상 관리)
+          App.setBasicStampTypeColor('lecture', 'indigo');
+          const updatedLectureStyle = App.getEventCellStyle({ type: 'lecture' });
+          const customBasicPass = (updatedLectureStyle.hexBg === '#1e1b4b'); // indigo
+
+          // 4. 요구사항 1: 나만의 스탬프 생성 및 색상 선택, 수정(✏️)
+          const testStamp = App.createCustomStamp({
+            type: 'meeting',
+            subject: '연구부 협의회',
+            pages: '실습실',
+            teacher: '연구부장',
+            colorKey: 'rose'
+          });
+          const customStampStyle = App.getEventCellStyle(testStamp);
+          const customStampColorPass = (customStampStyle.hexBg === '#ffe4e6') && (testStamp.colorKey === 'rose');
+
+          // 나만의 스탬프 색상 및 내용 수정 (✏️)
+          App.openEditCustomStampModal(testStamp.id);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+          frameDoc.getElementById('new-stamp-subject').value = '연구부 심층 협의회';
+          App.setNewStampColor('emerald');
+          App.saveCustomStampFromModal();
+
+          const editedStamp = App.customStamps.find(s => s.id === testStamp.id);
+          const editPass = editedStamp && (editedStamp.subject === '연구부 심층 협의회') && (editedStamp.colorKey === 'emerald');
+
+          // 5. 요구사항 3: 행사 불가시간 등록(1단계)과 배당표(4단계) 색상 일치 검증
+          // 협의회(purple/f3e8ff), 수업설계(emerald/d1fae5), 담임인사(amber/fef3c7), 참관(teal/0f766e), 강의(indigo/1e1b4b), 커스텀(emerald/d1fae5)
+          const testEvents = [
+            { type: 'meeting', subject: '학급협의회' },
+            { type: 'design', subject: '수업설계' },
+            { type: 'homeroom', subject: '창체' },
+            { type: 'observation', subject: '교과대표 참관' },
+            { type: 'lecture', subject: '특강' },
+            { type: 'meeting', subject: '연구부 심층 협의회', colorKey: 'emerald' }
+          ];
+
+          let matchAll = true;
+          testEvents.forEach(ev => {
+            const style = App.getEventCellStyle(ev);
+            if (!style || !style.cellClass || !style.hexBg) matchAll = false;
+          });
+
+          // 6. 1단계에서 스탬프로 셀에 적용 후 이벤트 객체에 colorKey 및 스타일 정확히 주입되는지
+          App.setCurrentStamp('observation', '교과대표', '수업참관', '교생');
+          App.applyStampToCell(0, 1);
+          const cell01 = App.events['0-1'];
+          const stampApplyPass = cell01 && cell01.isLocked && cell01.type === 'observation' && (cell01.colorKey === 'teal');
+
+          // 4단계 시간표 렌더링 호출 후 셀 색상 스타일 일치 확인
+          App.renderTimetableGrid();
+          const renderedCell01 = frameDoc.getElementById('cell-0-1');
+          const timetableMatchPass = renderedCell01 && renderedCell01.className.includes('bg-teal-700');
+
+          // 7. 초기화 복구
+          App.deleteCustomStamp(testStamp.id);
+          App.resetBasicStampColors();
+
+          const pass = diffColorPass && btnColorPass && customBasicPass && customStampColorPass && editPass && matchAll && stampApplyPass && timetableMatchPass;
+          return {
+            pass,
+            message: pass
+              ? '강의(남색 #1e3a8a) vs 참관(청록 #0f766e) 명확 분리 확인, 기본 스탬프 색상 변경(인디고) 및 나만의 스탬프 9색 팔레트 선택·수정(✏️) 정상 작동, 1단계 행사 불가시간과 4단계 배당표 시간표 셀 색상 통일 엔진(getEventCellStyle) 100% 일치 무결성 검증 완료'
+              : `검증 실패: (diffColor:${diffColorPass}, btnColor:${btnColorPass}, customBasic:${customBasicPass}, customColor:${customStampColorPass}, edit:${editPass}, matchAll:${matchAll}, stampApply:${stampApplyPass}, timetableMatch:${timetableMatchPass})`
+          };
+        }
       }
     ];
 

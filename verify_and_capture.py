@@ -89,127 +89,98 @@ try:
     cdp_call("Page.enable")
     cdp_call("Runtime.enable")
 
-    # 1. Wait for test runner to complete all 16 tests
+    # 1. Wait for test runner to complete all 17 tests
     print("Waiting for test runner execution...", flush=True)
     title_val = ""
-    for sec in range(25):
+    for sec in range(30):
         time.sleep(1.0)
         t_eval = cdp_call("Runtime.evaluate", {"expression": "document.title + ' | ' + (document.getElementById('passed-tests') ? document.getElementById('passed-tests').innerText : '') + '/' + (document.getElementById('total-tests') ? document.getElementById('total-tests').innerText : '')"})
         status_val = t_eval.get("result", {}).get("result", {}).get("value", "")
         print(f"Runner status ({sec+1}s): {status_val}", flush=True)
-        if "16/16" in status_val:
+        if "17/17" in status_val:
             title_val = status_val
             break
 
     print(f"Final Test Runner Result: {title_val}", flush=True)
 
-    # Capture 16/16 Benchmark Screenshot
+    # Capture 17/17 Benchmark Screenshot
     res1 = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data1 = base64.b64decode(res1["result"]["data"])
-    out_path1 = os.path.join(BRAIN_DIR, "benchmark_16_pass.png")
+    out_path1 = os.path.join(BRAIN_DIR, "benchmark_17_pass.png")
     with open(out_path1, "wb") as f:
         f.write(img_data1)
     print(f"Saved Benchmark screenshot to {out_path1}", flush=True)
 
-    # Scroll down to show tc16 details
+    # Scroll down to show tc17 details
     cdp_call("Runtime.evaluate", {"expression": "window.scrollTo(0, document.body.scrollHeight);"})
     time.sleep(0.5)
     res_sc = cdp_call("Page.captureScreenshot", {"format": "png"})
     img_data_sc = base64.b64decode(res_sc["result"]["data"])
-    out_path_sc = os.path.join(BRAIN_DIR, "benchmark_16_tc16_detail.png")
+    out_path_sc = os.path.join(BRAIN_DIR, "benchmark_17_tc17_detail.png")
     with open(out_path_sc, "wb") as f:
         f.write(img_data_sc)
-    print(f"Saved tc16 detail screenshot to {out_path_sc}", flush=True)
+    print(f"Saved tc17 detail screenshot to {out_path_sc}", flush=True)
 
-    # 2. Navigate to index.html Step 2 to show Curriculum Database Modal
-    print("Navigating to index.html Step 2...", flush=True)
+    # 2. Navigate to index.html Step 3 (행사 & 불가 시간 등록)
+    print("Navigating to index.html Step 3...", flush=True)
     cdp_call("Page.navigate", {"url": "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/index.html"})
     time.sleep(2.0)
     cdp_call("Runtime.evaluate", {"expression": "window.alert = () => {}; window.confirm = () => true;"})
 
-    # Open modal, select Grade 3 Math (수학 64차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setTab(2); App.openCurriculumDbModal(); App.setCurriculumDbGrade(3); App.setCurriculumDbSubject('수학');"})
+    # Prepare custom stamp and view Step 3
+    cdp_call("Runtime.evaluate", {"expression": """
+        App.loadPreset('grade2', false);
+        App.createCustomStamp({ type: 'meeting', subject: '연구부 협의회', pages: '실습실', teacher: '연구부장', colorKey: 'rose' });
+        App.createCustomStamp({ type: 'lecture', subject: 'AI 디지털 교육', pages: '시청각실', teacher: '외부강사', colorKey: 'indigo' });
+        App.setTab(3);
+    """})
     time.sleep(1.0)
-    res_math = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_math = base64.b64decode(res_math["result"]["data"])
-    out_path_math = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_math.png")
-    with open(out_path_math, "wb") as f:
-        f.write(img_data_math)
-    print(f"Saved Grade 3 Math DB Modal screenshot to {out_path_math}", flush=True)
+    res_s3 = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_s3 = base64.b64decode(res_s3["result"]["data"])
+    out_path_s3 = os.path.join(BRAIN_DIR, "step3_event_grid_and_stamp_bar.png")
+    with open(out_path_s3, "wb") as f:
+        f.write(img_data_s3)
+    print(f"Saved Step 3 Stamp Bar screenshot to {out_path_s3}", flush=True)
 
-    # Switch to Art (미술 30차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('미술');"})
+    # Open basic stamp colors modal
+    cdp_call("Runtime.evaluate", {"expression": "App.openBasicStampColorModal();"})
     time.sleep(1.0)
-    res_art = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_art = base64.b64decode(res_art["result"]["data"])
-    out_path_art = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_art.png")
-    with open(out_path_art, "wb") as f:
-        f.write(img_data_art)
-    print(f"Saved Grade 3 Art DB Modal screenshot to {out_path_art}", flush=True)
+    res_modal_basic = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_modal_basic = base64.b64decode(res_modal_basic["result"]["data"])
+    out_path_modal_basic = os.path.join(BRAIN_DIR, "step3_basic_stamp_color_modal.png")
+    with open(out_path_modal_basic, "wb") as f:
+        f.write(img_data_modal_basic)
+    print(f"Saved Basic Stamp Color Modal screenshot to {out_path_modal_basic}", flush=True)
 
-    # Switch to Music (음악 34차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('음악');"})
-    time.sleep(1.0)
-    res_music = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_music = base64.b64decode(res_music["result"]["data"])
-    out_path_music = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_music.png")
-    with open(out_path_music, "wb") as f:
-        f.write(img_data_music)
-    print(f"Saved Grade 3 Music DB Modal screenshot to {out_path_music}", flush=True)
-
-    # Switch to Social Studies (사회 45차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('사회');"})
-    time.sleep(1.0)
-    res_soc = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_soc = base64.b64decode(res_soc["result"]["data"])
-    out_path_soc = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_social.png")
-    with open(out_path_soc, "wb") as f:
-        f.write(img_data_soc)
-    print(f"Saved Grade 3 Social Studies DB Modal screenshot to {out_path_soc}", flush=True)
-
-    # Switch to PE (체육 53차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('체육');"})
-    time.sleep(1.0)
-    res_pe = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_pe = base64.b64decode(res_pe["result"]["data"])
-    out_path_pe = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_pe.png")
-    with open(out_path_pe, "wb") as f:
-        f.write(img_data_pe)
-    print(f"Saved Grade 3 PE DB Modal screenshot to {out_path_pe}", flush=True)
-
-    # Switch to Science (과학 48차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('과학');"})
-    time.sleep(1.0)
-    res_sci = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_sci = base64.b64decode(res_sci["result"]["data"])
-    out_path_sci = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_science.png")
-    with open(out_path_sci, "wb") as f:
-        f.write(img_data_sci)
-    print(f"Saved Grade 3 Science DB Modal screenshot to {out_path_sci}", flush=True)
-
-    # Switch to English (영어 31차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('영어');"})
-    time.sleep(1.0)
-    res_eng = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_eng = base64.b64decode(res_eng["result"]["data"])
-    out_path_eng = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3_english.png")
-    with open(out_path_eng, "wb") as f:
-        f.write(img_data_eng)
-    print(f"Saved Grade 3 English DB Modal screenshot to {out_path_eng}", flush=True)
-
-    # Switch to Korean (국어 102차시)
-    cdp_call("Runtime.evaluate", {"expression": "App.setCurriculumDbSubject('국어');"})
-    time.sleep(1.0)
-    res_kor = cdp_call("Page.captureScreenshot", {"format": "png"})
-    img_data_kor = base64.b64decode(res_kor["result"]["data"])
-    out_path_kor = os.path.join(BRAIN_DIR, "step2_curriculum_db_grade3.png")
-    with open(out_path_kor, "wb") as f:
-        f.write(img_data_kor)
-    print(f"Saved Grade 3 Korean DB Modal screenshot to {out_path_kor}", flush=True)
-
-    # Close modal
-    cdp_call("Runtime.evaluate", {"expression": "App.closeCurriculumDbModal();"})
+    cdp_call("Runtime.evaluate", {"expression": "App.closeBasicStampColorModal();"})
     time.sleep(0.5)
+
+    # Open custom stamp creation modal
+    cdp_call("Runtime.evaluate", {"expression": "App.openCustomStampModal();"})
+    time.sleep(1.0)
+    res_modal_custom = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_modal_custom = base64.b64decode(res_modal_custom["result"]["data"])
+    out_path_modal_custom = os.path.join(BRAIN_DIR, "step3_custom_stamp_create_modal.png")
+    with open(out_path_modal_custom, "wb") as f:
+        f.write(img_data_modal_custom)
+    print(f"Saved Custom Stamp Create Modal screenshot to {out_path_modal_custom}", flush=True)
+
+    cdp_call("Runtime.evaluate", {"expression": "App.closeCustomStampModal();"})
+    time.sleep(0.5)
+
+    # 3. Navigate to Step 4 Timetable (배당표)
+    print("Navigating to index.html Step 4...", flush=True)
+    cdp_call("Runtime.evaluate", {"expression": """
+        App.runAutoAllocation(false);
+        App.setTab(4);
+    """})
+    time.sleep(1.5)
+    res_s4 = cdp_call("Page.captureScreenshot", {"format": "png"})
+    img_data_s4 = base64.b64decode(res_s4["result"]["data"])
+    out_path_s4 = os.path.join(BRAIN_DIR, "step4_timetable_color_matching.png")
+    with open(out_path_s4, "wb") as f:
+        f.write(img_data_s4)
+    print(f"Saved Step 4 Timetable Color Matching screenshot to {out_path_s4}", flush=True)
 
     s.close()
     print("All tasks and screenshots completed successfully!", flush=True)
