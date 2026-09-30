@@ -15,7 +15,7 @@ proc = subprocess.Popen([
     "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html"
 ])
 
-time.sleep(5)
+time.sleep(6)
 try:
     req = urllib.request.urlopen("http://127.0.0.1:9352/json")
     pages = json.loads(req.read().decode("utf-8"))
@@ -66,11 +66,11 @@ try:
             result_obj = res.get("result", {}).get("result", {})
             if "value" in result_obj:
                 val = json.loads(result_obj["value"])
-                passed = sum(1 for item in val if item["pass"])
+                passed = sum(1 for item in val if item.get("pass"))
                 print(f"Total: {passed}/{len(val)} passed")
                 for item in val:
-                    status = "PASS" if item["pass"] else "FAIL"
-                    print(f"{item['id']}: {status} -> {item['msg']}")
+                    status = "PASS" if item.get("pass") else "FAIL"
+                    print(f"{item['id']}: {status} -> {item.get('msg')}")
             else:
                 print("No value in result_obj:", result_obj)
             break
