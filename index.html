@@ -242,6 +242,23 @@
       border-bottom: 1px solid #fde68a !important;
       color: #78350f !important;
     }
+    .tt-badge-svg {
+      display: inline-block !important;
+      vertical-align: middle !important;
+      margin-left: 2px !important;
+      flex-shrink: 0 !important;
+    }
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
     /* Scrollbar */
     ::-webkit-scrollbar {
       width: 8px;
@@ -5285,6 +5302,19 @@
       },
 
       // -----------------------------------------------------------------------
+      // TIMETABLE BADGE RENDERING (Crisp SVG Pill Badges for 100% Web & Export Consistency)
+      // -----------------------------------------------------------------------
+      renderBadge(type) {
+        if (type === 'demo') {
+          return `<svg class="tt-badge-svg" width="38" height="15" viewBox="0 0 38 15" title="대표수업"><rect width="38" height="15" rx="7.5" fill="#f59e0b"/><polygon points="7.5,3 9,6.5 12.5,7 10,9.5 10.5,13 7.5,11.2 4.5,13 5,9.5 2.5,7 6,6.5" fill="#ffffff"/><text x="13.5" y="11" font-family="Pretendard, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="900" fill="#ffffff" letter-spacing="-0.5px">대표</text></svg><span class="sr-only">대표</span>`;
+        }
+        if (type === 'cert') {
+          return `<svg class="tt-badge-svg" width="38" height="15" viewBox="0 0 38 15" title="인증수업"><rect width="38" height="15" rx="7.5" fill="#059669"/><circle cx="7.5" cy="5.5" r="3" fill="#ffffff"/><polygon points="5.5,8.5 9.5,8.5 10.5,12.5 7.5,11.2 4.5,12.5" fill="#ffffff"/><text x="13.5" y="11" font-family="Pretendard, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9" font-weight="900" fill="#ffffff" letter-spacing="-0.5px">인증</text></svg><span class="sr-only">인증</span>`;
+        }
+        return '';
+      },
+
+      // -----------------------------------------------------------------------
       // TIMETABLE GRID RENDERING (Smart Swap & Personal Highlights)
       // -----------------------------------------------------------------------
       renderTimetableGrid() {
@@ -5427,8 +5457,8 @@
               tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-cert text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
-                    <span>🏅 ${subName}</span>
-                    <span class="ml-1 text-[9.5px] font-black text-emerald-700">[인증]</span>
+                    <span>${subName}</span>
+                    ${this.renderBadge('cert')}
                   </div>
                   <div class="tt-cell-row tt-row-page cell-part" title="${pagesInfo || ''}">${pagesInfo || '-'}</div>
                   <div class="tt-cell-row tt-row-lesson cell-part">${lessonInfo}</div>
@@ -5453,8 +5483,8 @@
               tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-demo text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
-                    <span>⭐ ${subName}</span>
-                    <span class="ml-1 text-[9.5px] font-black text-amber-700">[대표]</span>
+                    <span>${subName}</span>
+                    ${this.renderBadge('demo')}
                   </div>
                   <div class="tt-cell-row tt-row-page cell-part" title="${pagesInfo || ''}">${pagesInfo || '-'}</div>
                   <div class="tt-cell-row tt-row-lesson cell-part">${lessonInfo}</div>
@@ -5517,8 +5547,8 @@
                   <!-- 교과명 -->
                   <div class="tt-cell-row tt-row-sub cell-part bg-slate-50/70 text-slate-900">
                     <span>${cell.subject}</span>
-                    ${cell.isCert ? '<span class="ml-1 text-[9.5px] font-black text-emerald-700" title="인증수업">[인증]</span>' : ''}
-                    ${cell.isDemo ? '<span class="ml-1 text-[9.5px] font-black text-amber-700" title="대표수업">[대표]</span>' : ''}
+                    ${cell.isCert ? this.renderBadge('cert') : ''}
+                    ${cell.isDemo ? this.renderBadge('demo') : ''}
                   </div>
                   <!-- 단원 및 쪽수 -->
                   <div class="tt-cell-row tt-row-page cell-part" title="${cell.pages || ''}">${cell.pages || '-'}</div>
@@ -6143,14 +6173,28 @@
             clonedDoc.querySelectorAll('.no-print').forEach(el => {
               el.style.display = 'none';
             });
-            clonedDoc.querySelectorAll('.tt-cell').forEach(td => {
-              td.style.minWidth = '84px';
-            });
-            clonedDoc.querySelectorAll('#timetable-thead th').forEach(th => {
-              if (!th.colSpan || th.colSpan <= 1) {
-                th.style.minWidth = '84px';
+            // Sync exact column widths from the live table so the exported image matches the web view 1:1
+            const liveTable = document.getElementById('timetable-table');
+            if (liveTable && table) {
+              const liveFirstTh = liveTable.querySelector('#timetable-thead th[rowspan="3"]');
+              const clonedFirstTh = table.querySelector('#timetable-thead th[rowspan="3"]');
+              if (liveFirstTh && clonedFirstTh) {
+                const w = Math.ceil(liveFirstTh.getBoundingClientRect().width);
+                clonedFirstTh.style.width = `${w}px`;
+                clonedFirstTh.style.minWidth = `${w}px`;
+                clonedFirstTh.style.maxWidth = `${w}px`;
               }
-            });
+              const liveDayThs = liveTable.querySelectorAll('#timetable-thead tr:last-child th');
+              const clonedDayThs = table.querySelectorAll('#timetable-thead tr:last-child th');
+              liveDayThs.forEach((liveTh, i) => {
+                if (clonedDayThs[i]) {
+                  const w = Math.ceil(liveTh.getBoundingClientRect().width);
+                  clonedDayThs[i].style.width = `${w}px`;
+                  clonedDayThs[i].style.minWidth = `${w}px`;
+                  clonedDayThs[i].style.maxWidth = `${w}px`;
+                }
+              });
+            }
             const title = clonedDoc.getElementById('view-title');
             if (title) {
               title.classList.remove('underline', 'decoration-slate-400', 'underline-offset-4');
