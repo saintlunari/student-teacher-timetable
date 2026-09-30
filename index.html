@@ -5874,18 +5874,29 @@
             : (this.config.maxHours || 10);
           const isOver = st.totalHours > tMax;
           const isFull = st.totalHours === tMax;
-          const badgeStyle = isOver
-            ? 'background:#fee2e2; color:#b91c1c; border-color:#f87171;'
-            : (isFull ? 'background:#ecfdf5; color:#047857; border-color:#34d399;' : 'background:#ffffff; color:#1e293b; border-color:#cbd5e1;');
+
+          let badgeBg = '#ffffff', badgeStroke = '#cbd5e1', badgeText = '#1e293b';
+          if (isOver) {
+            badgeBg = '#fee2e2'; badgeStroke = '#f87171'; badgeText = '#b91c1c';
+          } else if (isFull) {
+            badgeBg = '#ecfdf5'; badgeStroke = '#34d399'; badgeText = '#047857';
+          }
+          const badgeSvg = `
+            <div class="flex items-center justify-center" style="height: 20px;">
+              <svg class="inline-block" width="76" height="20" viewBox="0 0 76 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="0.5" y="0.5" width="75" height="19" rx="4" fill="${badgeBg}" stroke="${badgeStroke}"/>
+                <text x="38" y="13.5" text-anchor="middle" fill="${badgeText}" font-size="10" font-weight="bold" font-family="'Pretendard', sans-serif, -apple-system">총 ${st.totalHours}/${tMax}시수</text>
+              </svg>
+              <span class="sr-only">총 ${st.totalHours}/${tMax}시수</span>
+            </div>
+          `.trim();
 
           html += `
             <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900">
-              <div onclick="App.setTeacherFilter('${t.name}')" class="p-3 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90" style="background:${color.bg}; color:${color.text};">
-                <span class="font-black text-sm">${t.name}</span>
-                <span class="text-[11px] font-semibold opacity-80">(${t.major || '교육'})</span>
-                <span class="text-[10px] mt-1 font-bold px-1.5 py-0.5 rounded border shadow-sm" style="${badgeStyle}">
-                  총 ${st.totalHours}/${tMax}시수
-                </span>
+              <div onclick="App.setTeacherFilter('${t.name}')" class="py-2.5 px-1.5 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90 box-border" style="background:${color.bg}; color:${color.text}; min-height: 64px;">
+                <span class="font-black text-[13px] leading-tight mb-0.5">${t.name}</span>
+                <span class="text-[11px] font-semibold opacity-85 leading-tight mb-1.5">(${t.major || '교육'})</span>
+                ${badgeSvg}
               </div>
               <div class="p-3 flex-1 bg-white font-bold text-xs flex items-center leading-relaxed text-slate-800">
                 ${subText}
