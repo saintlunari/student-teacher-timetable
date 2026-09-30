@@ -39,6 +39,7 @@
     .tt-cell {
       min-width: 96px;
       height: 104px;
+      vertical-align: top;
       transition: all 0.15s ease-in-out;
     }
     .tt-cell:hover {
@@ -144,6 +145,75 @@
     .cell-part {
       line-height: 1.25;
       text-align: center;
+    }
+    /* Timetable Grid Internal 4-Row Layout (html2canvas & Browser Compatible) */
+    .tt-cell-grid {
+      display: grid !important;
+      grid-template-rows: 26px 22px 22px 1fr !important;
+      height: 100% !important;
+      min-height: 104px !important;
+      box-sizing: border-box !important;
+      text-align: center !important;
+    }
+    .tt-cell-row {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      box-sizing: border-box !important;
+      overflow: visible !important;
+      white-space: nowrap !important;
+      line-height: 1.3 !important;
+    }
+    .tt-row-sub {
+      border-bottom: 1px solid #cbd5e1;
+      font-weight: 900;
+      font-size: 11px;
+      padding: 0 2px;
+      gap: 2px;
+    }
+    .tt-row-page {
+      border-bottom: 1px solid #cbd5e1;
+      font-size: 11px;
+      color: #475569;
+      font-weight: 500;
+      padding: 2px 0 !important;
+    }
+    .tt-row-lesson {
+      border-bottom: 1px solid #cbd5e1;
+      font-size: 11px;
+      color: #1e293b;
+      font-weight: bold;
+      padding: 2px 0 !important;
+    }
+    .tt-row-teacher {
+      font-weight: bold;
+      font-size: 11px;
+    }
+    .tt-cell-grid.grid-cert .tt-row-sub {
+      border-bottom: 1px solid #a7f3d0;
+      background: #d1fae5;
+      color: #064e3b;
+    }
+    .tt-cell-grid.grid-cert .tt-row-page {
+      border-bottom: 1px solid #a7f3d0;
+      color: #065f46;
+    }
+    .tt-cell-grid.grid-cert .tt-row-lesson {
+      border-bottom: 1px solid #a7f3d0;
+      color: #064e3b;
+    }
+    .tt-cell-grid.grid-demo .tt-row-sub {
+      border-bottom: 1px solid #fde68a;
+      background: #fef3c7;
+      color: #78350f;
+    }
+    .tt-cell-grid.grid-demo .tt-row-page {
+      border-bottom: 1px solid #fde68a;
+      color: #92400e;
+    }
+    .tt-cell-grid.grid-demo .tt-row-lesson {
+      border-bottom: 1px solid #fde68a;
+      color: #78350f;
     }
     /* Scrollbar */
     ::-webkit-scrollbar {
@@ -719,7 +789,7 @@
         <!-- 상단 헤더 타이틀 & 우측 메타데이터 -->
         <div class="flex flex-col sm:flex-row sm:items-end justify-between border-b-2 border-slate-800 pb-3 gap-2">
           <div>
-            <h2 id="view-title" class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 underline decoration-slate-400 underline-offset-4">
+            <h2 id="view-title" class="text-xl sm:text-2xl font-black tracking-tight text-slate-900 border-b-2 border-slate-700 pb-1 inline-block">
               교육실습IV(종합) 교육 실습생 수업배당표(0학년)
             </h2>
           </div>
@@ -5328,14 +5398,14 @@
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
               tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'dimmed-cell' : ''}">
-                <div class="flex flex-col h-full divide-y divide-emerald-200 text-xs">
-                  <div class="py-1 font-black text-emerald-900 bg-emerald-100 flex items-center justify-center gap-1">
+                <div class="tt-cell-grid grid-cert text-xs">
+                  <div class="tt-cell-row tt-row-sub cell-part">
                     🏅 ${subName}
-                    <span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-extrabold">인증</span>
+                    <span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-extrabold ml-1">인증</span>
                   </div>
-                  <div class="py-0.5 text-[11px] text-emerald-800 font-medium">${pagesInfo || '-'}</div>
-                  <div class="py-0.5 text-[11px] text-emerald-900 font-bold">${lessonInfo}</div>
-                  <div class="py-1 font-bold text-xs flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#ecfdf5; color:#065f46;'}">
+                  <div class="tt-cell-row tt-row-page cell-part">${pagesInfo || '-'}</div>
+                  <div class="tt-cell-row tt-row-lesson cell-part">${lessonInfo}</div>
+                  <div class="tt-cell-row tt-row-teacher cell-part" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#ecfdf5; color:#065f46;'}">
                     ${cell.teacher ? `<span class="underline decoration-emerald-600 font-black">${cell.teacher}</span>` : '교생미정'}
                   </div>
                 </div>
@@ -5354,14 +5424,14 @@
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
               tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[68px] sm:min-w-[74px] ${isDimmed ? 'dimmed-cell' : ''}">
-                <div class="flex flex-col h-full divide-y divide-amber-200 text-xs">
-                  <div class="py-1 font-black text-amber-900 bg-amber-100 flex items-center justify-center gap-1">
+                <div class="tt-cell-grid grid-demo text-xs">
+                  <div class="tt-cell-row tt-row-sub cell-part">
                     ⭐ ${subName}
-                    <span class="px-1 py-0.2 rounded bg-amber-600 text-white text-[9px] font-extrabold">대표</span>
+                    <span class="px-1 py-0.2 rounded bg-amber-600 text-white text-[9px] font-extrabold ml-1">대표</span>
                   </div>
-                  <div class="py-0.5 text-[11px] text-amber-800 font-medium">${pagesInfo || '-'}</div>
-                  <div class="py-0.5 text-[11px] text-amber-900 font-bold">${lessonInfo}</div>
-                  <div class="py-1 font-bold text-xs flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#fef3c7; color:#92400e;'}">
+                  <div class="tt-cell-row tt-row-page cell-part">${pagesInfo || '-'}</div>
+                  <div class="tt-cell-row tt-row-lesson cell-part">${lessonInfo}</div>
+                  <div class="tt-cell-row tt-row-teacher cell-part" style="${color ? `background:${color.bg}; color:${color.text};` : 'background:#fef3c7; color:#92400e;'}">
                     ${cell.teacher ? `<span class="underline decoration-amber-600 font-black">${cell.teacher}</span>` : '교생미정'}
                   </div>
                 </div>
@@ -5416,21 +5486,21 @@
                 <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
                   ✕
                 </button>
-                <div class="flex flex-col h-full divide-y divide-slate-300 text-xs">
+                <div class="tt-cell-grid text-xs">
                   <!-- 교과명 -->
-                  <div class="py-1 font-black text-slate-900 bg-slate-50/70 cell-part flex items-center justify-center gap-1">
+                  <div class="tt-cell-row tt-row-sub cell-part bg-slate-50/70 text-slate-900">
                     ${cell.subject}
-                    ${cell.isCert ? '<span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-black" title="인증수업">🏅인증</span>' : ''}
-                    ${cell.isDemo ? '<span class="px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-black" title="대표수업">⭐대표</span>' : ''}
+                    ${cell.isCert ? '<span class="px-1 py-0.2 rounded bg-emerald-600 text-white text-[9px] font-black ml-1" title="인증수업">🏅인증</span>' : ''}
+                    ${cell.isDemo ? '<span class="px-1 py-0.2 rounded bg-amber-500 text-white text-[9px] font-black ml-1" title="대표수업">⭐대표</span>' : ''}
                   </div>
                   <!-- 쪽수 -->
-                  <div class="py-0.5 text-[11px] text-slate-600 cell-part font-medium">${cell.pages || '-'}</div>
+                  <div class="tt-cell-row tt-row-page cell-part">${cell.pages || '-'}</div>
                   <!-- 차시 -->
-                  <div class="py-0.5 text-[11px] text-slate-700 font-bold cell-part">
+                  <div class="tt-cell-row tt-row-lesson cell-part">
                     ${cell.lesson}/${cell.totalLesson}
                   </div>
                   <!-- 수업자 -->
-                  <div class="py-1 font-bold text-xs cell-part flex-1 flex items-center justify-center" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
+                  <div class="tt-cell-row tt-row-teacher cell-part" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
                     ${cell.teacher || '<span class="text-slate-300 font-normal">미배정</span>'}
                   </div>
                 </div>
@@ -6011,9 +6081,46 @@
           return;
         }
 
+        const scrollW = area.scrollWidth || 2500;
+        const targetWidth = Math.max(scrollW, 2600);
+
         html2canvas(area, {
           scale: 2,
-          backgroundColor: '#ffffff'
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          logging: false,
+          windowWidth: targetWidth + 200,
+          scrollX: 0,
+          scrollY: 0,
+          ignoreElements: (el) => el.classList && el.classList.contains('no-print'),
+          onclone: (clonedDoc) => {
+            const clonedArea = clonedDoc.getElementById('timetable-capture-area');
+            if (clonedArea) {
+              clonedArea.style.width = 'max-content';
+              clonedArea.style.minWidth = '100%';
+              clonedArea.style.maxWidth = 'none';
+            }
+            const scrollContainer = clonedDoc.querySelector('#timetable-layout-container > div:first-child');
+            if (scrollContainer) {
+              scrollContainer.style.overflow = 'visible';
+              scrollContainer.style.width = 'auto';
+              scrollContainer.style.maxWidth = 'none';
+            }
+            const table = clonedDoc.getElementById('timetable-table');
+            if (table) {
+              table.style.width = 'max-content';
+            }
+            clonedDoc.querySelectorAll('th.sticky, td.sticky').forEach(el => {
+              el.style.position = 'static';
+            });
+            clonedDoc.querySelectorAll('.no-print').forEach(el => {
+              el.style.display = 'none';
+            });
+            const title = clonedDoc.getElementById('view-title');
+            if (title) {
+              title.classList.remove('underline', 'decoration-slate-400', 'underline-offset-4');
+            }
+          }
         }).then(canvas => {
           canvas.toBlob(blob => {
             saveAs(blob, `${this.config.title || '수업배당표'}.png`);
