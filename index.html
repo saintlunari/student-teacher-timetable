@@ -6471,7 +6471,8 @@
       },
 
       // -----------------------------------------------------------------------
-      // EXCEL EXPORTER (ExcelJS - 100% Matching User's Photos)
+      // -----------------------------------------------------------------------
+      // EXCEL EXPORTER (ExcelJS - 배당표 & 맞춤 달력 100% 색상 연동)
       // -----------------------------------------------------------------------
       async exportExcel() {
         if (typeof ExcelJS === 'undefined') {
@@ -6483,9 +6484,17 @@
         wb.creator = 'Antigravity Timetable Harness Pro';
         wb.created = new Date();
 
-        const ws = wb.addWorksheet('수업배당표', {
-          pageSetup: { orientation: 'landscape', paperSize: 9, fitToPage: true, fitToWidth: 1, fitToHeight: 1 }
-        });
+        // Color Converter Helper: Hex (#ffffff or #fff) -> ExcelJS ARGB (FFFFFFFF)
+        const toArgb = (hex, fallback = 'FFFFFFFF') => {
+          if (!hex) return fallback;
+          let c = String(hex).replace('#', '').trim();
+          if (c.length === 3) {
+            c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+          }
+          if (c.length === 6) return 'FF' + c.toUpperCase();
+          if (c.length === 8) return c.toUpperCase();
+          return fallback;
+        };
 
         const fontTitle = { name: '맑은 고딕', size: 16, bold: true, underline: true };
         const fontHeader = { name: '맑은 고딕', size: 10, bold: true };
@@ -6508,6 +6517,27 @@
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
         const startDate = new Date(this.config.startDate || '2026-04-20');
+        const dayNamesKo = ['일', '월', '화', '수', '목', '금', '토'];
+
+        // Teacher stats map for summary and calendar
+        const stats = {};
+        this.teachers.forEach(t => {
+          stats[t.name] = { teacher: t, totalHours: 0, subjects: {} };
+        });
+        Object.values(this.timetable).forEach(c => {
+          if (c && c.teacher && stats[c.teacher]) {
+            stats[c.teacher].totalHours++;
+            const sub = c.subject;
+            stats[c.teacher].subjects[sub] = (stats[c.teacher].subjects[sub] || 0) + 1;
+          }
+        });
+
+        // =====================================================================
+        // WORKSHEET 1: 수업배당표 (전체 시간표 - 웹 화면 100% 색상 연동)
+        // =====================================================================
+        const ws = wb.addWorksheet('수업배당표', {
+          pageSetup: { orientation: 'landscape', paperSize: 9, fitToPage: true, fitToWidth: 1, fitToHeight: 1 }
+        });
 
         ws.getColumn(1).width = 10;
         for (let c = 2; c <= totalDays + 1; c++) {
@@ -6516,7 +6546,7 @@
         ws.getColumn(totalDays + 2).width = 14;
         ws.getColumn(totalDays + 3).width = 24;
 
-        // Title
+        // 1. Title Row
         const titleRow = ws.getRow(1);
         titleRow.height = 30;
         ws.mergeCells(1, 1, 1, Math.min(totalDays, 6));
@@ -6531,7 +6561,7 @@
         cellMeta.font = fontBold;
         cellMeta.alignment = { vertical: 'middle', horizontal: 'right' };
 
-        // Headers
+        // 2. Diagonal Header (날짜 / 교시)
         const r2 = ws.getRow(2);
         r2.height = 20;
         ws.mergeCells(2, 1, 4, 1);
@@ -6542,6 +6572,7 @@
         cDiag.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
         cDiag.border = borderThick;
 
+        // 3. Week Headers
         for (let w = 0; w < weekCount; w++) {
           const colStart = 2 + (w * 5);
           const colEnd = colStart + 4;
@@ -6561,6 +6592,7 @@
           cWeek.border = borderThick;
         }
 
+        // 4. Right Summary Header
         ws.mergeCells(2, totalDays + 2, 2, totalDays + 3);
         const cSummHead = ws.getCell(2, totalDays + 2);
         cSummHead.value = '교육실습생 수업 교과';
@@ -6569,40 +6601,62 @@
         cSummHead.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE2E8F0' } };
         cSummHead.border = borderThick;
 
+        // 5. Dates & Days Rows
         for (let d = 0; d < totalDays; d++) {
           const curDate = new Date(startDate);
           curDate.setDate(startDate.getDate() + (Math.floor(d/5)*7) + (d%5));
+          const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
+
           const c = ws.getCell(3, 2 + d);
           c.value = curDate.getDate();
-          c.font = fontHeader;
+          c.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: isHoliday ? 'FFDC2626' : 'FF0F172A' } };
           c.alignment = { vertical: 'middle', horizontal: 'center' };
+          c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isHoliday ? 'FFFFE4E6' : 'FFFFFFFF' } };
           c.border = borderThin;
 
           const dayName = ['월', '화', '수', '목', '금'][d % 5];
           const cDay = ws.getCell(4, 2 + d);
           cDay.value = dayName;
-          cDay.font = fontHeader;
+          cDay.font = { name: '맑은 고딕', size: 10, bold: true, color: { argb: isHoliday ? 'FFDC2626' : 'FF334155' } };
           cDay.alignment = { vertical: 'middle', horizontal: 'center' };
+          cDay.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isHoliday ? 'FFFFE4E6' : 'FFFFFFFF' } };
           cDay.border = borderThin;
         }
 
-        // Morning Duty
+        // 6. Morning Duty Row (아침활동 - 교생별 색상 매칭)
         const r5 = ws.getRow(5);
-        r5.height = 20;
+        r5.height = 22;
         const cMorn = ws.getCell(5, 1);
         cMorn.value = '아침활동';
         cMorn.font = fontBold;
         cMorn.alignment = { vertical: 'middle', horizontal: 'center' };
+        cMorn.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
         cMorn.border = borderThick;
 
         for (let d = 0; d < totalDays; d++) {
           const c = ws.getCell(5, 2 + d);
-          c.value = this.morningDuty[d] || '';
-          c.font = fontBold;
+          const dutyTeacher = this.morningDuty[d] || '';
+          c.value = dutyTeacher;
           c.alignment = { vertical: 'middle', horizontal: 'center' };
           c.border = borderThin;
+
+          if (dutyTeacher) {
+            const teacherObj = this.teachers.find(t => t.name === dutyTeacher.trim());
+            if (teacherObj) {
+              const color = TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length];
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(color.bg) } };
+              c.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: toArgb(color.text) } };
+            } else {
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+              c.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF92400E' } };
+            }
+          } else {
+            c.font = fontRegular;
+            c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
+          }
         }
 
+        // 7. Period Rows (교시별 시간표 셀 렌더링)
         const maxP = this.periodsPerDay || 8;
         let excelRow = 6;
         for (let p = 1; p <= maxP; p++) {
@@ -6614,6 +6668,7 @@
           cP.value = p;
           cP.font = fontHeader;
           cP.alignment = { vertical: 'middle', horizontal: 'center' };
+          cP.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
           cP.border = borderThick;
 
           for (let d = 0; d < totalDays; d++) {
@@ -6621,6 +6676,7 @@
             const cell = this.timetable[key] || this.events[key];
             const col = 2 + d;
 
+            // 7-A. Holiday
             if (cell && cell.type === 'holiday') {
               ws.mergeCells(pStartRow, col, pEndRow, col);
               const c = ws.getCell(pStartRow, col);
@@ -6629,58 +6685,143 @@
               c.alignment = { vertical: 'middle', horizontal: 'center' };
               c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE4E6' } };
               c.border = borderThin;
-            } else if (cell && (cell.type === 'observation' || cell.type === 'lecture')) {
-              ws.mergeCells(pStartRow, col, pEndRow, col);
-              const c = ws.getCell(pStartRow, col);
-              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.lessonStr || ''}\n${cell.teacher || ''}`.trim();
-              c.font = { name: '맑은 고딕', size: 8, bold: true, color: { argb: 'FFFFFFFF' } };
-              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E3A8A' } };
-              c.border = borderThin;
-            } else if (cell && cell.isLocked) {
-              ws.mergeCells(pStartRow, col, pEndRow, col);
-              const c = ws.getCell(pStartRow, col);
-              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.teacher || ''}`.trim();
-              c.font = fontBold;
-              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
-              c.border = borderThin;
-            } else if (cell && cell.subject) {
+            }
+            // 7-B. Trainee Demo / Cert Dedicated Slot
+            else if (cell && (cell.type === 'trainee_demo' || cell.isTraineeDemo || cell.type === 'trainee_cert' || cell.isTraineeCert)) {
+              const isDemo = (cell.type === 'trainee_demo' || cell.isTraineeDemo);
+              const badgeTxt = isDemo ? ' ⭐대표' : ' 🏅인증';
+              const subName = (cell.type === 'trainee_cert' ? cell.pages : (cell.type === 'trainee_demo' ? cell.pages : cell.subject)) || (isDemo ? '대표수업' : '인증수업');
+              const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : ((cell.type === 'trainee_cert' || cell.type === 'trainee_demo') ? cell.subject : (cell.pages || '-'));
+              const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : (isDemo ? '대표수업' : '인증수업');
+
               const c1 = ws.getCell(pStartRow, col);
-              c1.value = cell.subject;
-              c1.font = fontBold;
+              c1.value = subName + badgeTxt;
+              c1.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: isDemo ? 'FF92400E' : 'FF065F46' } };
+              c1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFEF3C7' : 'FFD1FAE5' } };
               c1.alignment = { vertical: 'middle', horizontal: 'center' };
-              c1.border = borderThin;
 
               const c2 = ws.getCell(pStartRow + 1, col);
-              c2.value = cell.pages || '';
+              c2.value = pagesInfo || '-';
               c2.font = fontRegular;
+              c2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFFFBEB' : 'FFECFDF5' } };
               c2.alignment = { vertical: 'middle', horizontal: 'center' };
-              c2.border = borderThin;
 
               const c3 = ws.getCell(pStartRow + 2, col);
-              c3.value = `${cell.lesson}/${cell.totalLesson}`;
+              c3.value = lessonInfo;
               c3.font = fontRegular;
+              c3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFFFBEB' : 'FFECFDF5' } };
               c3.alignment = { vertical: 'middle', horizontal: 'center' };
-              c3.border = borderThin;
 
               const c4 = ws.getCell(pStartRow + 3, col);
-              c4.value = cell.teacher || '';
-              c4.font = fontBold;
-              c4.alignment = { vertical: 'middle', horizontal: 'center' };
-              c4.border = borderThin;
-
-              if (cell.isDemo) {
-                c1.border = borderThick; c2.border = borderThick; c3.border = borderThick; c4.border = borderThick;
+              c4.value = cell.teacher || '교생미정';
+              const teacherObj = cell.teacher ? this.teachers.find(t => t.name === cell.teacher) : null;
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+              if (color) {
+                c4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(color.bg) } };
+                c4.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: toArgb(color.text) } };
+              } else {
+                c4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFEF3C7' : 'FFD1FAE5' } };
+                c4.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: isDemo ? 'FF92400E' : 'FF065F46' } };
               }
-            } else {
+              c4.alignment = { vertical: 'middle', horizontal: 'center' };
+
+              const bCol = isDemo ? { style: 'medium', color: { argb: 'FFF59E0B' } } : { style: 'medium', color: { argb: 'FF10B981' } };
+              c1.border = { top: bCol, left: bCol, right: bCol, bottom: borderThin.bottom };
+              c2.border = { top: borderThin.top, left: bCol, right: bCol, bottom: borderThin.bottom };
+              c3.border = { top: borderThin.top, left: bCol, right: bCol, bottom: borderThin.bottom };
+              c4.border = { top: borderThin.top, left: bCol, right: bCol, bottom: bCol };
+            }
+            // 7-C. Locked Events (강의, 참관, 협의회, 수업설계 등 - getEventCellStyle 색상 100% 매칭)
+            else if (cell && cell.isLocked) {
+              ws.mergeCells(pStartRow, col, pEndRow, col);
+              const c = ws.getCell(pStartRow, col);
+              const style = this.getEventCellStyle(cell);
+              c.value = `${cell.subject}\n${cell.pages || ''}\n${cell.lessonStr || ''}\n${cell.teacher ? `(${cell.teacher})` : ''}`.trim();
+              c.font = { name: '맑은 고딕', size: 8, bold: true, color: { argb: toArgb(style.hexText) } };
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(style.hexBg) } };
+              c.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+              c.border = borderThin;
+            }
+            // 7-D. Regular Teaching Class Cell (일반/대표/인증 수업 교생 색상 100% 매칭)
+            else if (cell && cell.subject) {
+              const isDemo = !!cell.isDemo;
+              const isCert = !!cell.isCert;
+              const teacherObj = cell.teacher ? this.teachers.find(t => t.name === cell.teacher) : null;
+              const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
+
+              // Row 1: 교과명
+              const c1 = ws.getCell(pStartRow, col);
+              c1.value = cell.subject + (isDemo ? ' ⭐대표' : '') + (isCert ? ' 🏅인증' : '');
+              c1.alignment = { vertical: 'middle', horizontal: 'center' };
+              if (isDemo) {
+                c1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+                c1.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF92400E' } };
+              } else if (isCert) {
+                c1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD1FAE5' } };
+                c1.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF065F46' } };
+              } else {
+                c1.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF8FAFC' } };
+                c1.font = fontBold;
+              }
+
+              // Row 2: 단원 및 쪽수
+              const c2 = ws.getCell(pStartRow + 1, col);
+              c2.value = cell.pages || '-';
+              c2.font = fontRegular;
+              c2.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFFFBEB' : (isCert ? 'FFECFDF5' : 'FFFFFFFF') } };
+              c2.alignment = { vertical: 'middle', horizontal: 'center' };
+
+              // Row 3: 차시
+              const c3 = ws.getCell(pStartRow + 2, col);
+              c3.value = (cell.lesson && cell.totalLesson) ? `${cell.lesson}/${cell.totalLesson}` : (cell.lesson || '-');
+              c3.font = fontRegular;
+              c3.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: isDemo ? 'FFFFFBEB' : (isCert ? 'FFECFDF5' : 'FFFFFFFF') } };
+              c3.alignment = { vertical: 'middle', horizontal: 'center' };
+
+              // Row 4: 수업자 (교생 고유 색상 매칭!)
+              const c4 = ws.getCell(pStartRow + 3, col);
+              c4.value = cell.teacher || '미배정';
+              c4.alignment = { vertical: 'middle', horizontal: 'center' };
+              if (color) {
+                c4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(color.bg) } };
+                c4.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: toArgb(color.text) } };
+              } else {
+                c4.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
+                c4.font = { name: '맑은 고딕', size: 9, color: { argb: 'FF94A3B8' } };
+              }
+
+              // Borders
+              if (isDemo) {
+                const bDemo = { style: 'medium', color: { argb: 'FFF59E0B' } };
+                c1.border = { top: bDemo, left: bDemo, right: bDemo, bottom: borderThin.bottom };
+                c2.border = { top: borderThin.top, left: bDemo, right: bDemo, bottom: borderThin.bottom };
+                c3.border = { top: borderThin.top, left: bDemo, right: bDemo, bottom: borderThin.bottom };
+                c4.border = { top: borderThin.top, left: bDemo, right: bDemo, bottom: bDemo };
+              } else if (isCert) {
+                const bCert = { style: 'medium', color: { argb: 'FF10B981' } };
+                c1.border = { top: bCert, left: bCert, right: bCert, bottom: borderThin.bottom };
+                c2.border = { top: borderThin.top, left: bCert, right: bCert, bottom: borderThin.bottom };
+                c3.border = { top: borderThin.top, left: bCert, right: bCert, bottom: borderThin.bottom };
+                c4.border = { top: borderThin.top, left: bCert, right: bCert, bottom: bCert };
+              } else {
+                c1.border = borderThin;
+                c2.border = borderThin;
+                c3.border = borderThin;
+                c4.border = borderThin;
+              }
+            }
+            // 7-E. Empty Cell
+            else {
               ws.mergeCells(pStartRow, col, pEndRow, col);
               const c = ws.getCell(pStartRow, col);
               c.border = borderThin;
+              c.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
             }
           }
           excelRow += 4;
         }
 
+        // 8. Right Summary Table (교육실습생 수업 교과 - 교생별 색상 매칭)
         const totalExcelRows = excelRow - 3;
         const rowsPerTeacher = Math.floor(totalExcelRows / (this.teachers.length || 1));
         let curSummRow = 3;
@@ -6688,43 +6829,222 @@
         this.teachers.forEach((t, idx) => {
           const isLast = (idx === this.teachers.length - 1);
           const endRow = isLast ? (excelRow - 1) : (curSummRow + rowsPerTeacher - 1);
+          const st = stats[t.name] || { totalHours: 0, subjects: {} };
+          const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+            ? parseInt(t.maxHours, 10)
+            : (this.config.maxHours || 10);
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
 
+          // Teacher Name & Hours Box (교생 고유 색상 매칭)
           ws.mergeCells(curSummRow, totalDays + 2, endRow, totalDays + 2);
           const cName = ws.getCell(curSummRow, totalDays + 2);
-          cName.value = `${t.name}\n(${t.major || '교육'})`;
-          cName.font = fontBold;
+          cName.value = `${t.name}\n(${t.major || '교육'})\n총 ${st.totalHours}/${tMax}시수`;
+          cName.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: toArgb(color.text) } };
+          cName.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(color.bg) } };
           cName.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
           cName.border = borderThick;
 
+          // Assigned Subjects Box
           ws.mergeCells(curSummRow, totalDays + 3, endRow, totalDays + 3);
           const cSub = ws.getCell(curSummRow, totalDays + 3);
-          
-          const counts = {};
-          Object.values(this.timetable).forEach(c => {
-            if (c && c.teacher === t.name) counts[c.subject] = (counts[c.subject] || 0) + 1;
-          });
-          const text = Object.entries(counts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '배정 없음';
+          const text = Object.entries(st.subjects).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '배정 없음';
           cSub.value = text;
-          cSub.font = fontRegular;
-          cSub.alignment = { vertical: 'middle', horizontal: 'center', wrapText: true };
+          cSub.font = fontBold;
+          cSub.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
+          cSub.alignment = { vertical: 'middle', horizontal: 'left', wrapText: true };
           cSub.border = borderThick;
 
           curSummRow = endRow + 1;
         });
 
-        // Bottom Notes
+        // 9. Bottom Notes Row
         const noteRow = excelRow;
         ws.mergeCells(noteRow, 1, noteRow + 2, totalDays + 3);
         const cNote = ws.getCell(noteRow, 1);
         cNote.value = this.config.notes || '';
         cNote.font = fontRegular;
+        cNote.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
         cNote.alignment = { vertical: 'top', horizontal: 'left', wrapText: true };
         cNote.border = borderThick;
 
+        // =====================================================================
+        // WORKSHEET 2: 맞춤달력 (교생 개인별 수업 일정 & 지도안 마감일 달력)
+        // =====================================================================
+        const wsCal = wb.addWorksheet('맞춤달력', {
+          pageSetup: { orientation: 'portrait', paperSize: 9, fitToPage: true, fitToWidth: 1 }
+        });
+
+        wsCal.getColumn(1).width = 17; // 수업 일시
+        wsCal.getColumn(2).width = 14; // 교과명
+        wsCal.getColumn(3).width = 10; // 차시
+        wsCal.getColumn(4).width = 14; // 교과서 쪽수
+        wsCal.getColumn(5).width = 24; // D-3 1차안 마감일
+        wsCal.getColumn(6).width = 24; // D-1 최종안 마감일
+        wsCal.getColumn(7).width = 13; // 구분
+
+        let calRow = 1;
+        // Main Title
+        wsCal.mergeCells(calRow, 1, calRow, 7);
+        const calTitle = wsCal.getCell(calRow, 1);
+        calTitle.value = `${this.config.title || '교육실습'} - 교생 개인별 맞춤 지도안 제출 달력`;
+        calTitle.font = { name: '맑은 고딕', size: 14, bold: true, color: { argb: 'FF1E293B' } };
+        calTitle.alignment = { vertical: 'middle', horizontal: 'left' };
+        wsCal.getRow(calRow).height = 28;
+        calRow++;
+
+        // Subtitle Info
+        wsCal.mergeCells(calRow, 1, calRow, 7);
+        const calSub = wsCal.getCell(calRow, 1);
+        calSub.value = `학교: ${this.config.school || ''}  |  학급: ${this.config.gradeClass || ''}  |  지도교사: ${this.config.teacherName || ''}  |  실습시작: ${this.config.startDate || ''}  |  * 수업 3일 전(D-3) 17시 1차안 제출, 1일 전(D-1) 14시 최종안 제출 (주말 제외)`;
+        calSub.font = { name: '맑은 고딕', size: 9, color: { argb: 'FF475569' } };
+        calSub.alignment = { vertical: 'middle', horizontal: 'left' };
+        wsCal.getRow(calRow).height = 20;
+        calRow += 2;
+
+        this.teachers.forEach(t => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const st = stats[t.name] || { totalHours: 0, subjects: {} };
+          const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
+            ? parseInt(t.maxHours, 10)
+            : (this.config.maxHours || 10);
+
+          // 1. Teacher Banner (교생 고유 색상 배너)
+          wsCal.mergeCells(calRow, 1, calRow, 7);
+          const tBanner = wsCal.getCell(calRow, 1);
+          tBanner.value = `👨‍🏫 [ ${t.name} 실습생 ]  전공: ${t.major || '교육'}  |  총 배정 시수: ${st.totalHours}/${tMax}시수`;
+          tBanner.font = { name: '맑은 고딕', size: 11, bold: true, color: { argb: toArgb(color.text) } };
+          tBanner.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(color.bg) } };
+          tBanner.alignment = { vertical: 'middle', horizontal: 'left', indent: 1 };
+          tBanner.border = borderThick;
+          wsCal.getRow(calRow).height = 26;
+          calRow++;
+
+          // 2. Table Headers
+          wsCal.getRow(calRow).height = 22;
+          const headers = ['수업 일시', '교과명', '차시', '교과서 쪽수', 'D-3 1차안 제출일 (17:00)', 'D-1 최종안 제출일 (14:00)', '구분'];
+          headers.forEach((h, hIdx) => {
+            const hCell = wsCal.getCell(calRow, hIdx + 1);
+            hCell.value = h;
+            hCell.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF1E293B' } };
+            hCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+            hCell.alignment = { vertical: 'middle', horizontal: 'center' };
+            hCell.border = borderThin;
+          });
+          calRow++;
+
+          // 3. Classes for this teacher
+          const teacherClasses = [];
+          for (let d = 0; d < totalDays; d++) {
+            for (let p = 1; p <= maxP; p++) {
+              const key = `${d}-${p}`;
+              const cell = this.timetable[key];
+              if (cell && cell.teacher === t.name) {
+                const curDate = new Date(startDate);
+                const weekOffset = Math.floor(d / 5);
+                const dayOffset = d % 5;
+                curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+
+                const d3Date = new Date(curDate);
+                d3Date.setDate(curDate.getDate() - 3);
+                if (d3Date.getDay() === 0) d3Date.setDate(d3Date.getDate() - 2);
+                if (d3Date.getDay() === 6) d3Date.setDate(d3Date.getDate() - 1);
+
+                const d1Date = new Date(curDate);
+                d1Date.setDate(curDate.getDate() - 1);
+                if (d1Date.getDay() === 0) d1Date.setDate(d1Date.getDate() - 2);
+
+                teacherClasses.push({
+                  curDate,
+                  period: p,
+                  dateStr: `${curDate.getMonth()+1}.${curDate.getDate()}(${dayNamesKo[curDate.getDay()]}) ${p}교시`,
+                  d3Str: `${d3Date.getMonth()+1}.${d3Date.getDate()}(${dayNamesKo[d3Date.getDay()]}) 17:00까지`,
+                  d1Str: `${d1Date.getMonth()+1}.${d1Date.getDate()}(${dayNamesKo[d1Date.getDay()]}) 14:00까지`,
+                  cell
+                });
+              }
+            }
+          }
+
+          if (teacherClasses.length === 0) {
+            wsCal.mergeCells(calRow, 1, calRow, 7);
+            const noCell = wsCal.getCell(calRow, 1);
+            noCell.value = '배정된 수업이 없습니다.';
+            noCell.font = { name: '맑은 고딕', size: 9, color: { argb: 'FF94A3B8' } };
+            noCell.alignment = { vertical: 'middle', horizontal: 'center' };
+            noCell.border = borderThin;
+            wsCal.getRow(calRow).height = 20;
+            calRow++;
+          } else {
+            teacherClasses.forEach(item => {
+              wsCal.getRow(calRow).height = 20;
+
+              const c1 = wsCal.getCell(calRow, 1);
+              c1.value = item.dateStr;
+              c1.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF0F172A' } };
+              c1.alignment = { vertical: 'middle', horizontal: 'center' };
+              c1.border = borderThin;
+
+              const c2 = wsCal.getCell(calRow, 2);
+              c2.value = item.cell.subject;
+              c2.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF4338CA' } };
+              c2.alignment = { vertical: 'middle', horizontal: 'center' };
+              c2.border = borderThin;
+
+              const c3 = wsCal.getCell(calRow, 3);
+              c3.value = (item.cell.lesson && item.cell.totalLesson) ? `${item.cell.lesson}/${item.cell.totalLesson}` : (item.cell.lesson || '-');
+              c3.font = fontRegular;
+              c3.alignment = { vertical: 'middle', horizontal: 'center' };
+              c3.border = borderThin;
+
+              const c4 = wsCal.getCell(calRow, 4);
+              c4.value = item.cell.pages || '-';
+              c4.font = fontRegular;
+              c4.alignment = { vertical: 'middle', horizontal: 'center' };
+              c4.border = borderThin;
+
+              const c5 = wsCal.getCell(calRow, 5);
+              c5.value = item.d3Str;
+              c5.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FFB45309' } };
+              c5.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+              c5.alignment = { vertical: 'middle', horizontal: 'center' };
+              c5.border = borderThin;
+
+              const c6 = wsCal.getCell(calRow, 6);
+              c6.value = item.d1Str;
+              c6.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FFBE123C' } };
+              c6.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFE4E6' } };
+              c6.alignment = { vertical: 'middle', horizontal: 'center' };
+              c6.border = borderThin;
+
+              const c7 = wsCal.getCell(calRow, 7);
+              if (item.cell.isDemo || item.cell.type === 'trainee_demo') {
+                c7.value = '⭐ 대표수업';
+                c7.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FFB45309' } };
+                c7.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFEF3C7' } };
+              } else if (item.cell.isCert || item.cell.type === 'trainee_cert') {
+                c7.value = '🏅 인증수업';
+                c7.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: 'FF065F46' } };
+                c7.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD1FAE5' } };
+              } else {
+                c7.value = '일반수업';
+                c7.font = { name: '맑은 고딕', size: 9, color: { argb: 'FF64748B' } };
+                c7.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
+              }
+              c7.alignment = { vertical: 'middle', horizontal: 'center' };
+              c7.border = borderThin;
+
+              calRow++;
+            });
+          }
+
+          calRow += 2;
+        });
+
+        // 10. Write & Save
         const buffer = await wb.xlsx.writeBuffer();
         const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        saveAs(blob, `${this.config.title || '교생수업배당표'}.xlsx`);
-        alert('엑셀 파일이 성공적으로 생성되어 다운로드되었습니다!');
+        saveAs(blob, `${this.config.title || '교육실습_수업배당표_및_맞춤달력'}.xlsx`);
+        alert('엑셀 파일(수업배당표 & 맞춤달력)이 성공적으로 생성되어 다운로드되었습니다!');
       },
 
       // -----------------------------------------------------------------------
