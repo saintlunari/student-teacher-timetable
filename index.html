@@ -822,6 +822,19 @@
               아침활동 공평 순환 배정
             </button>
           </div>
+
+          <!-- 전일제 실습 수업일 설정 -->
+          <div class="p-4 bg-amber-50/60 rounded-xl border border-amber-200/90 space-y-2">
+            <h3 class="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+              <i data-lucide="sun-medium" class="w-4 h-4 text-amber-600"></i> 전일제 실습 수업일 설정
+            </h3>
+            <p class="text-[11px] text-amber-900 leading-relaxed">
+              하루 4교시(1~4교시) 동안 실습생 1명이 모든 수업을 전담하는 전일제 수업일을 선택 지정합니다.
+            </p>
+            <button onclick="App.openFullDayModal()" class="px-3 py-1.5 bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold rounded-lg shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+              <i data-lucide="calendar" class="w-3.5 h-3.5"></i> 전일제 수업일 설정 및 관리
+            </button>
+          </div>
         </div>
       </div>
 
@@ -862,6 +875,13 @@
           <button onclick="App.toggleMultiSelectMode()" id="btn-toggle-multi-select" class="flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xl transition shadow-xs" title="여러 수업 셀을 동시에 선택하여 드래그하거나 방향키로 한꺼번에 이동합니다">
             <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-600"></i>
             <span id="multi-select-btn-text">다중 선택 (일괄 이동)</span>
+          </button>
+
+          <!-- 전일제 실습 수업일 선택 적용 모달 열기 -->
+          <button onclick="App.openFullDayModal()" id="btn-open-fullday-modal" class="flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-xl transition shadow-xs cursor-pointer" title="하루 4교시(1~4교시) 동안 1교생이 모든 수업을 전담하는 전일제 수업일을 선택 지정하고 적용합니다">
+            <i data-lucide="sun-medium" class="w-3.5 h-3.5"></i>
+            <span>전일제 선택 적용</span>
+            <span id="fullday-btn-badge" class="hidden px-1.5 py-0.2 rounded-full bg-amber-200 text-amber-950 font-black text-[10px]">0일</span>
           </button>
 
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
@@ -1399,6 +1419,81 @@
       <div class="flex justify-end gap-2">
         <button onclick="App.closeDefaultTimetableModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg">닫기</button>
         <button onclick="App.saveDefaultTimetableModal()" class="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold rounded-lg">저장 및 적용</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 전일제 실습 수업일 선택 및 적용 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-fullday-teaching" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-3xl w-full p-6 space-y-4 shadow-2xl flex flex-col max-h-[90vh]">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-100 shrink-0">
+        <div class="flex items-center gap-2">
+          <div class="p-2 rounded-xl bg-amber-50 text-amber-600 border border-amber-200">
+            <i data-lucide="sun-medium" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-1.5">
+              전일제 실습 수업일 선택 및 적용
+              <span id="fullday-modal-badge" class="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold font-mono">0일 지정</span>
+            </h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              <strong>전일제</strong>는 해당일 <strong>4교시(1~4교시)</strong> 동안 1명의 실습생이 모든 수업을 전담하여 진행하는 집중 실습입니다.
+            </p>
+          </div>
+        </div>
+        <button onclick="App.closeFullDayModal()" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Quick Control Toolbar inside modal -->
+      <div class="flex flex-wrap items-center justify-between gap-2 p-3 bg-amber-50/60 rounded-xl border border-amber-200/80 text-xs shrink-0">
+        <div class="text-amber-900 font-medium">
+          💡 원하는 날짜의 체크박스를 켜고 담당 교생을 선택하거나, 원클릭 자동 순환 지정을 활용하세요.
+        </div>
+        <div class="flex items-center gap-1.5">
+          <button onclick="App.autoCycleFullDayTeaching()" title="등록된 실습생 전원에게 1일씩 전일제를 공평하게 분배 지정합니다" class="flex items-center gap-1 px-2.5 py-1.5 font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition shadow-xs cursor-pointer">
+            <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i> 교생별 1일씩 자동 순환 지정
+          </button>
+          <button onclick="App.clearAllFullDayTeaching()" class="flex items-center gap-1 px-2.5 py-1.5 font-semibold bg-white hover:bg-rose-50 text-rose-700 rounded-lg transition border border-rose-200 shadow-2xs cursor-pointer">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-500"></i> 전체 해제
+          </button>
+        </div>
+      </div>
+
+      <!-- Days Table Container (Scrollable) -->
+      <div class="overflow-y-auto overflow-x-auto flex-1 border border-slate-200 rounded-xl">
+        <table class="w-full text-xs text-left">
+          <thead class="bg-slate-50 sticky top-0 border-b border-slate-200 z-10 font-bold text-slate-700">
+            <tr>
+              <th class="py-2.5 px-3 text-center w-14">전일제</th>
+              <th class="py-2.5 px-3 w-36">실습 일자 (요일)</th>
+              <th class="py-2.5 px-3 w-40">전담 교생 (1교생)</th>
+              <th class="py-2.5 px-3">해당일 4교시(1~4교시) 수업 현황 미리보기</th>
+              <th class="py-2.5 px-3 text-center w-28">시간표 반영</th>
+            </tr>
+          </thead>
+          <tbody id="fullday-modal-table-body" class="divide-y divide-slate-100">
+            <!-- JS populated -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-100 shrink-0">
+        <div class="text-[11px] text-slate-500">
+          * [시간표 즉시 일괄 적용]을 누르면 현재 배당표의 1~4교시 수업이 지정된 교생에게 즉시 배정되며, [자동 배당(Solver)] 실행 시에도 전일제 제약이 100% 반영됩니다.
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="App.applyFullDayTeachingToTimetable(null, true)" class="flex items-center gap-1.5 px-3.5 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-sm transition cursor-pointer">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> 현재 시간표에 즉시 일괄 적용
+          </button>
+          <button onclick="App.closeFullDayModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition cursor-pointer">
+            닫기
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -2332,6 +2427,7 @@
         ['', '', '', '', '']
       ],
       morningDuty: {},
+      fullDayTeaching: {}, // { [dayIndex]: teacherName } - 전일제(해당일 4교시 1교생 전담)
       timetable: {},
 
       // Charts instance
@@ -2464,6 +2560,7 @@
         this.events = JSON.parse(JSON.stringify(p.events));
         this.defaultTimetable = JSON.parse(JSON.stringify(p.defaultTimetable || []));
         this.morningDuty = JSON.parse(JSON.stringify(p.morningDuty || {}));
+        this.fullDayTeaching = JSON.parse(JSON.stringify(p.fullDayTeaching || {}));
         this.periodsPerDay = this.config.periodsPerDay || 8;
         this.normalizeDefaultTimetable();
         this.timetable = {};
@@ -2491,6 +2588,7 @@
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
+        this.updateFullDayButtonBadge();
         this.runFullDiagnostic(false);
         lucide.createIcons();
       },
@@ -4849,6 +4947,256 @@
       },
 
       // -----------------------------------------------------------------------
+      // FULL-DAY TEACHING (전일제: 해당일 4교시 동안 1교생이 모두 수업)
+      // -----------------------------------------------------------------------
+      openFullDayModal(focusDay = null) {
+        const modal = document.getElementById('modal-fullday-teaching');
+        if (!modal) return;
+        this.renderFullDayModal(focusDay);
+        modal.classList.remove('hidden');
+        lucide.createIcons();
+      },
+
+      closeFullDayModal() {
+        const modal = document.getElementById('modal-fullday-teaching');
+        if (modal) modal.classList.add('hidden');
+      },
+
+      renderFullDayModal(focusDay = null) {
+        const tbody = document.getElementById('fullday-modal-table-body');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+
+        if (!this.fullDayTeaching) this.fullDayTeaching = {};
+
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+
+        let activeCount = 0;
+
+        for (let d = 0; d < totalDays; d++) {
+          const week = Math.floor(d / 5) + 1;
+          const dayName = ['월', '화', '수', '목', '금'][d % 5];
+          const curDate = new Date(startDate);
+          curDate.setDate(startDate.getDate() + (Math.floor(d / 5) * 7) + (d % 5));
+          const dateStr = `${curDate.getMonth() + 1}/${curDate.getDate()} (${dayName})`;
+          const isLast2Days = (d >= totalDays - 2);
+
+          const assignedTeacher = this.fullDayTeaching[d] || '';
+          const isAssigned = !!assignedTeacher;
+          if (isAssigned) activeCount++;
+
+          // 1~4 periods status preview
+          const periodPills = [];
+          for (let p = 1; p <= 4; p++) {
+            const key = `${d}-${p}`;
+            const ev = this.events && this.events[key];
+            const tt = this.timetable && this.timetable[key];
+            const defSub = (this.defaultTimetable && this.defaultTimetable[p - 1] && this.defaultTimetable[p - 1][d % 5]) || '';
+
+            if (ev && ev.isLocked) {
+              periodPills.push(`<span class="px-1.5 py-0.5 rounded bg-slate-200 text-slate-700 font-bold text-[10px]" title="잠긴 행사: ${ev.subject}">${p}교시: ${ev.subject}(🔒)</span>`);
+            } else if (tt && tt.subject) {
+              const tDisp = tt.teacher ? `<span class="text-indigo-600 font-bold">${tt.teacher}</span>` : '<span class="text-amber-600 font-medium">미배정</span>';
+              periodPills.push(`<span class="px-1.5 py-0.5 rounded bg-sky-50 text-sky-900 border border-sky-200 text-[10px]">${p}교시: ${tt.subject} (${tDisp})</span>`);
+            } else if (defSub) {
+              periodPills.push(`<span class="px-1.5 py-0.5 rounded bg-slate-50 text-slate-600 border border-slate-200 text-[10px]">${p}교시: ${defSub}</span>`);
+            } else {
+              periodPills.push(`<span class="px-1.5 py-0.5 rounded bg-slate-50 text-slate-400 border border-slate-100 text-[10px]">${p}교시: 빈 슬롯</span>`);
+            }
+          }
+
+          let teacherOptions = `<option value="">-- 교생 선택 --</option>`;
+          (this.teachers || []).forEach(t => {
+            const sel = (t.name === assignedTeacher) ? 'selected' : '';
+            teacherOptions += `<option value="${t.name}" ${sel}>${t.name} (${t.major || '교생'})</option>`;
+          });
+
+          const isFocused = (focusDay !== null && focusDay === d);
+          const tr = document.createElement('tr');
+          tr.className = `hover:bg-slate-50/80 transition ${isAssigned ? 'bg-amber-50/30' : ''} ${isFocused ? 'ring-2 ring-amber-400 bg-amber-50/50' : ''}`;
+          tr.innerHTML = `
+            <td class="py-2.5 px-3 text-center">
+              <input type="checkbox" id="fullday-chk-${d}" ${isAssigned ? 'checked' : ''} onchange="App.toggleFullDayForDay(${d}, this.checked)" class="w-4 h-4 text-amber-600 rounded focus:ring-amber-500 cursor-pointer">
+            </td>
+            <td class="py-2.5 px-3 font-semibold text-slate-800">
+              <div class="flex items-center gap-1.5">
+                <span>${week}주차 · ${dateStr}</span>
+                ${isLast2Days ? '<span class="text-[10px] text-slate-400 font-normal">(실습종합일)</span>' : ''}
+              </div>
+            </td>
+            <td class="py-2.5 px-3">
+              <select id="fullday-sel-${d}" onchange="App.changeFullDayTeacher(${d}, this.value)" class="w-full px-2 py-1 border rounded-lg text-xs font-bold ${isAssigned ? 'text-amber-900 border-amber-300 bg-amber-50/50' : 'text-slate-600 border-slate-200 bg-white'} cursor-pointer">
+                ${teacherOptions}
+              </select>
+            </td>
+            <td class="py-2.5 px-3">
+              <div class="flex flex-wrap items-center gap-1">
+                ${periodPills.join('')}
+              </div>
+            </td>
+            <td class="py-2.5 px-3 text-center">
+              <button onclick="App.applyFullDayTeachingToTimetable(${d}, true)" ${!isAssigned ? 'disabled' : ''} class="px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${isAssigned ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 cursor-pointer' : 'bg-slate-100 text-slate-400 cursor-not-allowed'}">
+                이 날만 적용
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        }
+
+        this.updateFullDayButtonBadge();
+        lucide.createIcons();
+      },
+
+      toggleFullDayForDay(d, isEnabled) {
+        if (!this.fullDayTeaching) this.fullDayTeaching = {};
+        if (isEnabled) {
+          if (!this.fullDayTeaching[d]) {
+            const firstTeacher = (this.teachers && this.teachers[0]) ? this.teachers[0].name : '';
+            this.fullDayTeaching[d] = firstTeacher;
+          }
+        } else {
+          delete this.fullDayTeaching[d];
+        }
+        this.renderFullDayModal();
+        this.updateFullDayButtonBadge();
+        this.renderTimetableGrid();
+      },
+
+      changeFullDayTeacher(d, teacherName) {
+        if (!this.fullDayTeaching) this.fullDayTeaching = {};
+        if (teacherName && teacherName.trim()) {
+          this.fullDayTeaching[d] = teacherName.trim();
+        } else {
+          delete this.fullDayTeaching[d];
+        }
+        this.renderFullDayModal();
+        this.updateFullDayButtonBadge();
+        this.renderTimetableGrid();
+      },
+
+      autoCycleFullDayTeaching() {
+        if (!this.teachers || this.teachers.length === 0) {
+          alert('등록된 실습생이 없습니다. Step 1에서 실습생을 먼저 등록해 주세요.');
+          return;
+        }
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        this.fullDayTeaching = {};
+
+        const candidateDays = [];
+        for (let d = 0; d < totalDays; d++) {
+          if (d >= totalDays - 2) continue; // Exclude last 2 days of practicum
+          let lockedCount = 0;
+          for (let p = 1; p <= 4; p++) {
+            const key = `${d}-${p}`;
+            if (this.events[key] && this.events[key].isLocked) lockedCount++;
+          }
+          if (lockedCount < 4) {
+            candidateDays.push({ day: d, lockedCount, dayOfWeek: d % 5 });
+          }
+        }
+
+        // Sort candidate days preferring Tue, Wed, Thu
+        candidateDays.sort((a, b) => {
+          if (a.lockedCount !== b.lockedCount) return a.lockedCount - b.lockedCount;
+          const prefA = [1, 2, 3].includes(a.dayOfWeek) ? 0 : 1;
+          const prefB = [1, 2, 3].includes(b.dayOfWeek) ? 0 : 1;
+          if (prefA !== prefB) return prefA - prefB;
+          return a.day - b.day;
+        });
+
+        const assignedTeachers = [];
+        for (let i = 0; i < this.teachers.length && i < candidateDays.length; i++) {
+          const t = this.teachers[i];
+          const dObj = candidateDays[i];
+          this.fullDayTeaching[dObj.day] = t.name;
+          assignedTeachers.push({ day: dObj.day, teacher: t.name });
+        }
+
+        this.renderFullDayModal();
+        this.updateFullDayButtonBadge();
+        this.renderTimetableGrid();
+
+        alert(`실습생 ${assignedTeachers.length}명에게 전일제 수업일(1인당 1일, 1~4교시 전담)이 균등 순환 배정되었습니다!\n[현재 시간표에 즉시 일괄 적용] 또는 [자동 수업 배당(Solver)]을 실행하세요.`);
+      },
+
+      clearAllFullDayTeaching() {
+        if (!this.fullDayTeaching || Object.keys(this.fullDayTeaching).length === 0) {
+          alert('설정된 전일제 수업일이 없습니다.');
+          return;
+        }
+        if (!confirm('설정된 모든 전일제 수업일을 해제하시겠습니까?')) return;
+        this.fullDayTeaching = {};
+        this.renderFullDayModal();
+        this.updateFullDayButtonBadge();
+        this.renderTimetableGrid();
+      },
+
+      applyFullDayTeachingToTimetable(targetDay = null, showAlert = true) {
+        if (!this.fullDayTeaching) this.fullDayTeaching = {};
+        const daysToApply = (targetDay !== null)
+          ? (this.fullDayTeaching[targetDay] ? [targetDay] : [])
+          : Object.keys(this.fullDayTeaching).map(Number);
+
+        if (daysToApply.length === 0) {
+          if (showAlert) alert('선택 적용할 전일제 수업일이 없습니다. 먼저 요일별 전일제 체크 및 교생을 지정해 주세요.');
+          return;
+        }
+
+        let appliedCells = 0;
+        let dayCount = 0;
+
+        daysToApply.forEach(d => {
+          const tName = this.fullDayTeaching[d];
+          if (!tName) return;
+          let changedInDay = 0;
+          for (let p = 1; p <= 4; p++) {
+            const key = `${d}-${p}`;
+            const cell = this.timetable[key];
+            if (cell && !cell.isLocked) {
+              cell.teacher = tName;
+              appliedCells++;
+              changedInDay++;
+            }
+          }
+          if (changedInDay > 0) dayCount++;
+        });
+
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        if (typeof this.runFullDiagnostic === 'function') this.runFullDiagnostic(false);
+        if (typeof this.renderDashboardCharts === 'function') this.renderDashboardCharts();
+
+        if (showAlert) {
+          if (targetDay !== null) {
+            alert(`선택하신 일자에 1~4교시 모두 '${this.fullDayTeaching[targetDay]}' 교생으로 전일제 수업이 즉시 적용되었습니다!`);
+          } else {
+            alert(`총 ${dayCount}개 전일제 수업일(${appliedCells}개 교시)에 해당일 4교시(1~4교시) 1교생 전담 수업이 현재 시간표에 성공적으로 적용되었습니다!`);
+          }
+        }
+      },
+
+      updateFullDayButtonBadge() {
+        const badge = document.getElementById('fullday-btn-badge');
+        const count = Object.keys(this.fullDayTeaching || {}).length;
+        if (badge) {
+          if (count > 0) {
+            badge.innerText = `${count}일`;
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+        const modalBadge = document.getElementById('fullday-modal-badge');
+        if (modalBadge) {
+          modalBadge.innerText = `${count}일 지정`;
+        }
+      },
+
+      // -----------------------------------------------------------------------
       // ALLOCATION SOLVER ENGINE (Block Time & Compressed Lesson Support)
       // -----------------------------------------------------------------------
       runAutoAllocation(showAlert = true) {
@@ -5246,6 +5594,44 @@
             }
           }
         });
+
+        // 6-B. Full-Day Teaching (전일제: 해당일 4교시 동안 1교생이 모두 수업) Priority Binding
+        if (this.fullDayTeaching && Object.keys(this.fullDayTeaching).length > 0) {
+          Object.keys(this.fullDayTeaching).forEach(dayStr => {
+            const d = parseInt(dayStr, 10);
+            const fullDayTeacher = this.fullDayTeaching[d];
+            if (fullDayTeacher && teacherStats[fullDayTeacher]) {
+              const week = Math.floor(d / 5);
+              for (let p = 1; p <= 4; p++) {
+                const key = `${d}-${p}`;
+                const cell = newTimetable[key];
+                if (cell && !cell.isLocked && cell.curriculumId) {
+                  // If previously assigned to another designated teacher, refund old teacher's stats
+                  if (cell.teacher && cell.teacher !== fullDayTeacher && teacherStats[cell.teacher]) {
+                    teacherStats[cell.teacher].totalHours--;
+                    if (teacherStats[cell.teacher].subjectCount[cell.subject]) {
+                      teacherStats[cell.teacher].subjectCount[cell.subject]--;
+                    }
+                    if (teacherStats[cell.teacher].dailyCount[d]) {
+                      teacherStats[cell.teacher].dailyCount[d]--;
+                    }
+                    if (teacherStats[cell.teacher].weeklyCount && teacherStats[cell.teacher].weeklyCount[week]) {
+                      teacherStats[cell.teacher].weeklyCount[week]--;
+                    }
+                  }
+                  if (cell.teacher !== fullDayTeacher) {
+                    cell.teacher = fullDayTeacher;
+                    teacherStats[fullDayTeacher].totalHours++;
+                    teacherStats[fullDayTeacher].subjectCount[cell.subject] = (teacherStats[fullDayTeacher].subjectCount[cell.subject] || 0) + 1;
+                    teacherStats[fullDayTeacher].dailyCount[d] = (teacherStats[fullDayTeacher].dailyCount[d] || 0) + 1;
+                    teacherStats[fullDayTeacher].weeklyCount = teacherStats[fullDayTeacher].weeklyCount || {};
+                    teacherStats[fullDayTeacher].weeklyCount[week] = (teacherStats[fullDayTeacher].weeklyCount[week] || 0) + 1;
+                  }
+                }
+              }
+            }
+          });
+        }
 
         // Second: Assign teachers to unassigned cells with greedy cost function (weekly load balancing & strict subject quota)
         for (let d = 0; d < totalDays; d++) {
@@ -5698,7 +6084,14 @@
           const dayName = ['월', '화', '수', '목', '금'][d % 5];
           const isHoliday = (this.events[`${d}-1`] && this.events[`${d}-1`].type === 'holiday');
           const colorClass = isHoliday ? 'text-rose-600 font-black' : 'text-slate-700 font-semibold';
-          r3 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[78px] sm:min-w-[84px]">${dayName}</th>`;
+          const fullDayTeacher = (this.fullDayTeaching && this.fullDayTeaching[d]) ? this.fullDayTeaching[d] : null;
+          const fullDayBadge = fullDayTeacher
+            ? `<div onclick="event.stopPropagation(); App.openFullDayModal(${d})" title="전일제 수업일 (1~4교시 ${fullDayTeacher} 전담) - 클릭하여 설정 변경" class="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[10px] font-black bg-amber-100 text-amber-900 border border-amber-300 mt-0.5 shadow-2xs hover:bg-amber-200 cursor-pointer">🌟${fullDayTeacher}</div>`
+            : '';
+          r3 += `<th class="border-2 border-slate-900 bg-white py-1 px-1 text-center ${colorClass} text-xs min-w-[78px] sm:min-w-[84px]">
+            <div>${dayName}</div>
+            ${fullDayBadge}
+          </th>`;
         }
         r3 += `</tr>`;
 
@@ -7641,6 +8034,7 @@
           events: JSON.parse(JSON.stringify(this.events)),
           defaultTimetable: JSON.parse(JSON.stringify(this.defaultTimetable)),
           morningDuty: JSON.parse(JSON.stringify(this.morningDuty)),
+          fullDayTeaching: JSON.parse(JSON.stringify(this.fullDayTeaching || {})),
           timetable: JSON.parse(JSON.stringify(this.timetable)),
           basicStampColors: JSON.parse(JSON.stringify(this.basicStampColors || DEFAULT_TYPE_COLORS)),
           customStamps: JSON.parse(JSON.stringify(this.customStamps || []))
@@ -7684,6 +8078,11 @@
             }
             if (data.morningDuty) {
               this.morningDuty = JSON.parse(JSON.stringify(data.morningDuty));
+            }
+            if (data.fullDayTeaching) {
+              this.fullDayTeaching = JSON.parse(JSON.stringify(data.fullDayTeaching));
+            } else {
+              this.fullDayTeaching = {};
             }
             if (data.timetable) {
               this.timetable = JSON.parse(JSON.stringify(data.timetable));

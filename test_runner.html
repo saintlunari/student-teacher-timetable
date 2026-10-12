@@ -1474,6 +1474,81 @@
               : `검증 실패 (btn:${hasBtn}, init:${hasInitialCurriculum}, arr:${arrayEmpty}, rows:${rowCountZero}, badge:${badgeZero}, filter:${filterZero}, restore:${restorePass})`
           };
         }
+      },
+      {
+        id: 'tc26',
+        title: '전일제 선택 적용 기능 (해당일 4교시 1교생 전담 수업 및 솔버 연동) 무결성 검증',
+        desc: '전일제 모달/툴바 UI 존재, 요일별 1인 전담 지정, 시간표 즉시 선택 적용 및 솔버 자동 배당 시 해당일 1~4교시 1교생 전담 100% 무결성 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. UI 요소 존재 검증
+          const fulldayBtn = frameDoc.getElementById('btn-open-fullday-modal');
+          const fulldayModal = frameDoc.getElementById('modal-fullday-teaching');
+          const hasUI = !!fulldayBtn && !!fulldayModal;
+
+          // 2. 모달 열기 및 자동 순환 배정 검증
+          App.openFullDayModal(1);
+          const modalOpen = !fulldayModal.classList.contains('hidden');
+          App.autoCycleFullDayTeaching();
+          const autoCycleCount = Object.keys(App.fullDayTeaching || {}).length;
+          const autoCyclePass = (autoCycleCount === App.teachers.length);
+
+          // 3. 특정 일자(1일차 = 1주차 화요일) 전일제 수동 선택 적용 검증 (김부설 1~4교시 전담)
+          App.loadPreset('grade2', false);
+          App.runAutoAllocation(false);
+          App.fullDayTeaching = { 1: '김부설' };
+          App.applyFullDayTeachingToTimetable(1, false);
+
+          let day1ClassesCount = 0;
+          let day1KimCount = 0;
+          for (let p = 1; p <= 4; p++) {
+            const key = `1-${p}`;
+            const cell = App.timetable[key];
+            if (cell && !cell.isLocked) {
+              day1ClassesCount++;
+              if (cell.teacher === '김부설') day1KimCount++;
+            }
+          }
+          const manualApplyPass = (day1ClassesCount > 0 && day1KimCount === day1ClassesCount);
+
+          // 4. 솔버 자동 배당 연동 검증 (2일차 = 1주차 수요일, 이공주 1~4교시 전담)
+          App.loadPreset('grade2', false);
+          App.fullDayTeaching = { 2: '이공주' };
+          App.runAutoAllocation(false);
+
+          let day2ClassesCount = 0;
+          let day2LeeCount = 0;
+          for (let p = 1; p <= 4; p++) {
+            const key = `2-${p}`;
+            const cell = App.timetable[key];
+            if (cell && !cell.isLocked && cell.curriculumId) {
+              day2ClassesCount++;
+              if (cell.teacher === '이공주') day2LeeCount++;
+            }
+          }
+          const solverApplyPass = (day2ClassesCount > 0 && day2LeeCount === day2ClassesCount);
+
+          // 5. 시간표 헤더 배지 및 전체 해제 검증
+          const headerHtml = frameDoc.getElementById('timetable-thead')?.innerHTML || '';
+          const hasBadge = headerHtml.includes('이공주');
+
+          App.clearAllFullDayTeaching();
+          const clearPass = (Object.keys(App.fullDayTeaching || {}).length === 0);
+          App.closeFullDayModal();
+
+          // 원복
+          App.loadPreset('grade2', false);
+
+          const pass = hasUI && modalOpen && autoCyclePass && manualApplyPass && solverApplyPass && hasBadge && clearPass;
+          return {
+            pass,
+            message: pass
+              ? `전일제 모달 및 툴바 정상, 교생 ${autoCycleCount}명 1일씩 자동 순환 지정, 수동 선택 적용(1주차 화요일 1~4교시 김부설 ${day1KimCount}/${day1ClassesCount} 전담) 및 솔버 연동(1주차 수요일 1~4교시 이공주 ${day2LeeCount}/${day2ClassesCount} 전담) 100% 무결성 검증 완료`
+              : `검증 실패: (ui:${hasUI}, modal:${modalOpen}, cycle:${autoCyclePass}, manual:${manualApplyPass}, solver:${solverApplyPass}, badge:${hasBadge}, clear:${clearPass})`
+          };
+        }
       }
     ];
 
