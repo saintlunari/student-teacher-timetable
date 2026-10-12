@@ -1429,6 +1429,51 @@
               : `검증 실패: (select:${selectPass}, shift:${shiftPass}, drag:${dragPass}, clear:${clearPass})`
           };
         }
+      },
+      {
+        id: 'tc25',
+        title: '교과 진도표 데이터베이스 등록 [모두 삭제] 버튼 및 전수 초기화 무결성 검증',
+        desc: 'Tab 2 상단 [모두 삭제] 버튼 존재 여부, 클릭 시 진도표 배열·테이블 행·카운트 배지·과목 필터바 100% 초기화 및 복원 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. [모두 삭제] 버튼 확인
+          const clearBtn = frameDoc.getElementById('btn-clear-curriculum');
+          const hasBtn = !!clearBtn && clearBtn.innerText.includes('모두 삭제');
+
+          // 초기 상태: 2학년 진도표는 여러 차시 존재
+          const initialCount = App.curriculum.length;
+          const hasInitialCurriculum = initialCount > 0;
+
+          // 2. clearCurriculum(false) 실행 (무음/테스트 모드)
+          App.clearCurriculum(false);
+
+          // 3. 전수 초기화 검증: 배열 0개, 테이블 행 0개, 배지 0차시, 필터바 (0)
+          const arrayEmpty = (App.curriculum.length === 0);
+          const tbody = frameDoc.getElementById('curriculum-table-body');
+          const rowCountZero = tbody ? (tbody.querySelectorAll('tr').length === 0) : false;
+          const badgeText = frameDoc.getElementById('curriculum-count-badge')?.innerText || '';
+          const badgeZero = badgeText.includes('0차시');
+          const filterBar = frameDoc.getElementById('curriculum-subject-filter-bar');
+          const filterZero = filterBar ? filterBar.innerText.includes('(0)') : false;
+
+          // 4. 초기화 후 다시 행 추가 및 복구 가능 여부 검증
+          App.addCurriculumRow();
+          const restorePass = (App.curriculum.length === 1) &&
+                              (frameDoc.getElementById('curriculum-count-badge')?.innerText.includes('1차시'));
+
+          // 원복
+          App.loadPreset('grade2', false);
+
+          const pass = hasBtn && hasInitialCurriculum && arrayEmpty && rowCountZero && badgeZero && filterZero && restorePass;
+          return {
+            pass,
+            message: pass
+              ? `[모두 삭제] 버튼 정상 배치, 초기 ${initialCount}차시 전수 삭제(배열 0개, 행 0개, 배지 '총 0차시', 필터바 '전체 과목 (0)') 및 재추가 복구 100% 무결성 검증 완료`
+              : `검증 실패 (btn:${hasBtn}, init:${hasInitialCurriculum}, arr:${arrayEmpty}, rows:${rowCountZero}, badge:${badgeZero}, filter:${filterZero}, restore:${restorePass})`
+          };
+        }
       }
     ];
 

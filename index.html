@@ -600,6 +600,9 @@
           </div>
 
           <div class="flex items-center gap-2">
+            <button id="btn-clear-curriculum" onclick="App.clearCurriculum()" title="등록된 진도표 항목을 모두 삭제합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg transition border border-rose-200 shadow-2xs cursor-pointer">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 모두 삭제
+            </button>
             <button onclick="App.sortCurriculumBySubject()" title="진도표 항목을 과목별(국어, 도덕, 사회, 수학, 과학, 실과, 체육, 음악, 미술, 영어...) 및 차시 오름차순으로 모아 정렬합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200 shadow-2xs cursor-pointer">
               <i data-lucide="arrow-down-a-z" class="w-3.5 h-3.5"></i> 과목별 모아 정렬
             </button>
@@ -3355,6 +3358,20 @@
 
       deleteCurriculum(idx) {
         this.curriculum.splice(idx, 1);
+        this.renderCurriculumTable();
+      },
+
+      clearCurriculum(showAlert = true) {
+        if (!this.curriculum || this.curriculum.length === 0) {
+          if (showAlert) alert('삭제할 진도표 항목이 없습니다.');
+          return;
+        }
+        if (showAlert) {
+          const ok = confirm(`등록된 교과 진도표(총 ${this.curriculum.length}차시)를 모두 삭제하시겠습니까?\n(삭제 후에는 복구할 수 없습니다.)`);
+          if (!ok) return;
+        }
+        this.curriculum = [];
+        this.curriculumSubjectFilter = 'all';
         this.renderCurriculumTable();
       },
 
