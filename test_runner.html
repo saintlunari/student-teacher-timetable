@@ -1168,6 +1168,85 @@
               : `검증 실패: (allSubs:${allSubsPreserved}, ba:${baseangExist}, jeul:${jeulsaengExist}, play:${jeulsaengPlayExist}, fam:${familySeparationPass}, drop:${dropdownPass})`
           };
         }
+      },
+      {
+        id: 'tc21',
+        title: '[신규 기능] 5학년 2학기 교과 진도표 표준 데이터베이스(10개 전 교과 452차시) 탑재 및 연동 무결성 검증',
+        desc: '5학년 2학기 10개 전 교과(국어 102차시, 수학 64차시, 사회 46차시, 과학 48차시, 도덕 16차시, 실과 33차시, 체육 33차시, 음악 34차시, 미술 32차시, 영어 44차시 - 총 452차시) 무결성, 5학년 탭 뱃지(452), 실과 포함 10개 교과 탭 동적 렌더링, 단원 드롭다운·검색 필터링 및 Step 2 진도표 테이블 실제 등록 검증 (2학년·3학년 역호환성 보장)',
+        run: () => {
+          App.loadPreset('grade3', false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 5학년 2학기 데이터베이스 무결성 검증 (10개 교과 452차시)
+          const kor5 = App.getCurriculumDbSourceItems(5, '2학기', '국어');
+          const math5 = App.getCurriculumDbSourceItems(5, '2학기', '수학');
+          const soc5 = App.getCurriculumDbSourceItems(5, '2학기', '사회');
+          const sci5 = App.getCurriculumDbSourceItems(5, '2학기', '과학');
+          const mor5 = App.getCurriculumDbSourceItems(5, '2학기', '도덕');
+          const prac5 = App.getCurriculumDbSourceItems(5, '2학기', '실과');
+          const pe5 = App.getCurriculumDbSourceItems(5, '2학기', '체육');
+          const mus5 = App.getCurriculumDbSourceItems(5, '2학기', '음악');
+          const art5 = App.getCurriculumDbSourceItems(5, '2학기', '미술');
+          const eng5 = App.getCurriculumDbSourceItems(5, '2학기', '영어');
+
+          const countsValid = (kor5.length === 102) && (math5.length === 64) && (soc5.length === 46) &&
+                              (sci5.length === 48) && (mor5.length === 16) && (prac5.length === 33) &&
+                              (pe5.length === 33) && (mus5.length === 34) && (art5.length === 32) && (eng5.length === 44);
+          const totalGrade5 = kor5.length + math5.length + soc5.length + sci5.length + mor5.length +
+                              prac5.length + pe5.length + mus5.length + art5.length + eng5.length;
+
+          // 2. 모달 열기 및 5학년 탭 UI 검증
+          App.openCurriculumDbModal();
+          App.setCurriculumDbGrade(5);
+
+          const grade5Btn = frameDoc.getElementById('db-grade-5');
+          const gradeBadgePass = grade5Btn && (grade5Btn.innerText.includes('5학년 (452)') || grade5Btn.innerText.includes('(452)'));
+
+          // 3. 5~6학년군 교과 탭에 '실과' 포함 10개 교과 동적 렌더링 검증
+          const subTabs = frameDoc.getElementById('db-subject-tabs');
+          const hasPracTab = subTabs && subTabs.innerText.includes('실과');
+          const hasSciTab = subTabs && subTabs.innerText.includes('과학');
+          const hasSocTab = subTabs && subTabs.innerText.includes('사회');
+
+          // 4. 실과(33차시) 선택 및 단원 드롭다운 검증
+          App.setCurriculumDbSubject('실과');
+          const pracRows = frameDoc.querySelectorAll('#curriculum-db-tbody tr');
+          const pracUnitSelect = frameDoc.getElementById('db-unit-select');
+          const pracPass = (pracRows.length === 33) && (pracUnitSelect && pracUnitSelect.options.length >= 4);
+
+          // 5. 검색 필터링 동작 검증 ('수송' 검색 시 실과 4단원 관련 차시 필터링)
+          App.onCurriculumDbSearch('수송');
+          const filteredItems = App.getCurrentDbItems();
+          const searchPass = (filteredItems.length > 0 && filteredItems.length < 33);
+          App.onCurriculumDbSearch('');
+
+          // 6. 실과 4단원(7차시) 필터링 후 Step 2 진도표 등록 검증
+          App.onCurriculumDbUnitChange('4. 우리 생활과 수송');
+          const transportItems = App.getCurrentDbItems();
+          const transportCountPass = (transportItems.length === 7);
+
+          App.toggleAllCurriculumDb(true);
+          const curLenBefore = App.curriculum.length;
+          App.importSelectedCurriculumDb(false);
+          const curLenAfter = App.curriculum.length;
+
+          const importedTransport = App.curriculum.filter(c => c.subject === '실과' && c.unit === '4. 우리 생활과 수송');
+          const importPass = (curLenAfter === curLenBefore + 7) && (importedTransport.length === 7);
+
+          // 7. 기존 2학년, 3학년 DB 역호환성 유지 확인
+          const kor2 = App.getCurriculumDbSourceItems(2, '1학기', '국어');
+          const kor3 = App.getCurriculumDbSourceItems(3, '2학기', '국어');
+          const compatPass = (kor2.length === 118) && (kor3.length === 102);
+
+          const pass = countsValid && (totalGrade5 === 452) && gradeBadgePass && hasPracTab && hasSciTab && hasSocTab && pracPass && searchPass && transportCountPass && importPass && compatPass;
+
+          return {
+            pass,
+            message: pass
+              ? '5학년 2학기 표준 진도표 452차시(국어:102, 수학:64, 과학:48, 사회:46, 음악:34, 실과:33, 체육:33, 미술:32, 영어:44, 도덕:16) 100% 무결성 로드 완료, 10개 전 교과 탭 및 실과 단원/검색 필터링, 실과 7차시 진도표 테이블 실제 등록 완벽 검증 (2·3학년 역호환성 보장)'
+              : `검증 실패: (counts:${countsValid}, total:${totalGrade5}, badge:${gradeBadgePass}, pracTab:${hasPracTab}, pracRows:${pracRows.length}, search:${searchPass}, trans:${transportCountPass}, import:${importPass}, compat:${compatPass})`
+          };
+        }
       }
     ];
 
