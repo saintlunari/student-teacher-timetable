@@ -1549,6 +1549,63 @@
               : `검증 실패: (ui:${hasUI}, modal:${modalOpen}, cycle:${autoCyclePass}, manual:${manualApplyPass}, solver:${solverApplyPass}, badge:${hasBadge}, clear:${clearPass})`
           };
         }
+      },
+      {
+        id: 'tc27',
+        title: '[신규 기능] 실습 시작일 시스템 실행일 자동 동기화, 오늘/이번주/다음주 퀵 프리셋 버튼 및 헤더 연동 무결성 검증',
+        desc: '시스템 최초 실행 시 당일 날짜(YYYY-MM-DD) 자동 반영, [오늘]·[이번 주(월)]·[다음 주(월)] 원클릭 퀵 버튼 동작, 행사 그리드 및 마감일 달력 실시간 동기화 검증',
+        run: () => {
+          const frameDoc = App.iframeDocument || (document.getElementById('app-frame') ? document.getElementById('app-frame').contentDocument : document);
+
+          // 1. 시스템 실행 당일 날짜 자동 반영 검증
+          App.initCleanDefault();
+          const now = new Date();
+          const expY = now.getFullYear();
+          const expM = String(now.getMonth() + 1).padStart(2, '0');
+          const expD = String(now.getDate()).padStart(2, '0');
+          const todayStr = `${expY}-${expM}-${expD}`;
+
+          const cleanStartPass = (App.config.startDate === todayStr);
+          const inputEl = frameDoc.getElementById('cfg-startDate');
+          const inputPass = (inputEl && inputEl.value === todayStr);
+
+          // 2. [이번 주(월)] 퀵 프리셋 검증
+          App.setStartDateTo('this_monday');
+          const thisMonStr = App.config.startDate;
+          const [tY, tM, tD] = thisMonStr.split('-').map(Number);
+          const thisMonDate = new Date(tY, tM - 1, tD);
+          const isThisMonday = (thisMonDate.getDay() === 1);
+          const inputThisMonPass = (inputEl && inputEl.value === thisMonStr);
+
+          // 3. [다음 주(월)] 퀵 프리셋 검증
+          App.setStartDateTo('next_monday');
+          const nextMonStr = App.config.startDate;
+          const [nY, nM, nD] = nextMonStr.split('-').map(Number);
+          const nextMonDate = new Date(nY, nM - 1, nD);
+          const isNextMonday = (nextMonDate.getDay() === 1);
+          const diffDays = Math.round((nextMonDate - thisMonDate) / (1000 * 60 * 60 * 24));
+          const is7DaysDiff = (diffDays === 7);
+
+          // 4. [오늘] 퀵 프리셋 복원 검증
+          App.setStartDateTo('today');
+          const todayRestorePass = (App.config.startDate === todayStr) && (inputEl && inputEl.value === todayStr);
+
+          // 5. 달력 배너 및 행사 그리드 헤더 실시간 반영 검증
+          const calSD = frameDoc.getElementById('calendar-startDate');
+          const calSyncPass = (calSD && calSD.innerText === todayStr);
+
+          // 6. 프리셋 로드 시 기존 고정 날짜 온전 복원 검증
+          App.loadPreset('grade2', false);
+          const presetRestorePass = (App.config.startDate === '2026-04-20');
+
+          const pass = cleanStartPass && inputPass && isThisMonday && inputThisMonPass && isNextMonday && is7DaysDiff && todayRestorePass && calSyncPass && presetRestorePass;
+          return {
+            pass,
+            message: pass
+              ? `실습 시작일 시스템 오늘 날짜(${todayStr}) 자동 동기화 100%, 이번 주 월요일(${thisMonStr}) 및 다음 주 월요일(${nextMonStr}) 퀵 프리셋 정상 동작, 마감일 달력 실시간 연동 및 프리셋 복원(2026-04-20) 무결성 100% 검증 완료`
+              : `검증 실패: (clean:${cleanStartPass}, input:${inputPass}, thisMon:${isThisMonday}, nextMon:${isNextMonday}, diff7:${is7DaysDiff}, today:${todayRestorePass}, cal:${calSyncPass}, preset:${presetRestorePass})`
+          };
+        }
       }
     ];
 

@@ -473,8 +473,18 @@
             </div>
             <div class="grid grid-cols-3 gap-3">
               <div>
-                <label class="block text-xs font-medium text-slate-600 mb-1">실습 시작일 (월요일)</label>
-                <input type="date" id="cfg-startDate" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none" value="2026-04-20">
+                <div class="flex items-center justify-between mb-1">
+                  <label class="block text-xs font-medium text-slate-600">실습 시작일 (월요일)</label>
+                  <span class="text-[10px] text-sky-600 font-semibold cursor-pointer hover:underline flex items-center gap-0.5" onclick="App.setStartDateTo('today')" title="오늘 날짜로 설정">
+                    <i data-lucide="calendar" class="w-3 h-3"></i> 오늘
+                  </span>
+                </div>
+                <input type="date" id="cfg-startDate" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                <div class="flex items-center gap-1 mt-1 text-[10px]">
+                  <button type="button" onclick="App.setStartDateTo('today')" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded transition border border-slate-300" title="시스템 실행일 당일 날짜로 설정">오늘</button>
+                  <button type="button" onclick="App.setStartDateTo('this_monday')" class="px-1.5 py-0.5 bg-sky-50 hover:bg-sky-100 text-sky-700 font-medium rounded transition border border-sky-300" title="이번 주 월요일 날짜로 설정">이번 주(월)</button>
+                  <button type="button" onclick="App.setStartDateTo('next_monday')" class="px-1.5 py-0.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-medium rounded transition border border-indigo-300" title="다음 주 월요일 날짜로 설정">다음 주(월)</button>
+                </div>
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">교생 기본 최대 시수</label>
@@ -1032,7 +1042,7 @@
           <span>🏫 <strong id="calendar-school" class="text-slate-900 font-bold">공주교육대학교부설초등학교</strong></span>
           <span>🏷️ <strong id="calendar-gradeClass" class="text-slate-900 font-bold">0학년 0반</strong></span>
           <span>👨‍🏫 지도교사: <strong id="calendar-teacherName" class="text-slate-900 font-bold">김지도</strong></span>
-          <span>📅 실습 시작일: <strong id="calendar-startDate" class="text-indigo-700 font-bold">2026-04-20</strong></span>
+          <span>📅 실습 시작일: <strong id="calendar-startDate" class="text-indigo-700 font-bold">-</strong></span>
         </div>
 
         <p class="text-xs text-slate-500">
@@ -2134,14 +2144,22 @@
       }
     };
 
-    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생, 기본 시수 12 고정) ---
+    function getSystemTodayString() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth() + 1).padStart(2, '0');
+      const d = String(now.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생, 기본 시수 12 고정, 시스템 당일 날짜 자동 반영) ---
     const DEFAULT_CONFIG = {
       title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
       school: '공주교육대학교부설초등학교',
       gradeClass: '0학년 0반',
       teacherName: '김지도',
       weekCount: 2,
-      startDate: '2026-04-20',
+      startDate: getSystemTodayString(),
       maxHours: 12,
       periodsPerDay: 8,
       notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 실습일정표 참조\n3. 오후 일정은 실습일정표 참조'
@@ -2478,7 +2496,7 @@
         setVal('cfg-gradeClass', this.config.gradeClass || '');
         setVal('cfg-teacherName', this.config.teacherName || '');
         setVal('cfg-weekCount', this.config.weekCount || 2);
-        setVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        setVal('cfg-startDate', this.config.startDate || getSystemTodayString());
         setVal('cfg-maxHours', this.config.maxHours || 10);
         setVal('cfg-periodsPerDay', this.periodsPerDay || this.config.periodsPerDay || 8);
       },
@@ -2603,7 +2621,7 @@
         this.config.gradeClass = getVal('cfg-gradeClass', this.config.gradeClass);
         this.config.teacherName = getVal('cfg-teacherName', this.config.teacherName);
         this.config.weekCount = parseInt(getVal('cfg-weekCount', this.config.weekCount || 2), 10);
-        this.config.startDate = getVal('cfg-startDate', this.config.startDate || '2026-04-20');
+        this.config.startDate = getVal('cfg-startDate', this.config.startDate || getSystemTodayString());
         this.config.maxHours = parseInt(getVal('cfg-maxHours', this.config.maxHours || 10), 10) || 10;
         this.config.periodsPerDay = parseInt(getVal('cfg-periodsPerDay', this.config.periodsPerDay || 8), 10) || 8;
         this.periodsPerDay = this.config.periodsPerDay;
@@ -2615,6 +2633,7 @@
         this.renderConfigHeader();
         this.renderPersonalDeadlinePanel();
         this.renderTeacherSummary();
+        this.renderEventGrid();
         if (this.config.maxHours && this.config.maxHours !== oldMax && this.teachers) {
           this.teachers.forEach(t => {
             t.maxHours = this.config.maxHours;
@@ -2650,6 +2669,32 @@
         this.config.weekCount = parseInt(val, 10);
         this.renderEventGrid();
         this.renderTimetableGrid();
+      },
+
+      setStartDateTo(type) {
+        const now = new Date();
+        const target = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        if (type === 'today') {
+          // target is today
+        } else if (type === 'this_monday') {
+          const day = target.getDay(); // 0 is Sun, 1 is Mon, ..., 6 is Sat
+          const diff = day === 0 ? -6 : 1 - day;
+          target.setDate(target.getDate() + diff);
+        } else if (type === 'next_monday') {
+          const day = target.getDay();
+          const diff = day === 0 ? 1 : (8 - day);
+          target.setDate(target.getDate() + diff);
+        }
+        const y = target.getFullYear();
+        const m = String(target.getMonth() + 1).padStart(2, '0');
+        const d = String(target.getDate()).padStart(2, '0');
+        const dateStr = `${y}-${m}-${d}`;
+
+        this.config.startDate = dateStr;
+        const input = document.getElementById('cfg-startDate');
+        if (input) input.value = dateStr;
+        this.onConfigChange();
+        if (window.lucide) window.lucide.createIcons();
       },
 
       // -----------------------------------------------------------------------
@@ -4527,7 +4572,7 @@
         if (!container) return;
         const weekCount = this.config.weekCount || 2;
         const days = weekCount * 5;
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
 
         let html = `<table class="w-full text-xs border-collapse border border-slate-300">`;
         html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16 sticky left-0 bg-slate-100 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">교시</th>`;
@@ -4608,7 +4653,7 @@
 
         const week = Math.floor(d / 5) + 1;
         const dayName = ['월', '화', '수', '목', '금'][d % 5];
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
         const curDate = new Date(startDate);
         const weekOffset = Math.floor(d / 5);
         const dayOffset = d % 5;
@@ -4971,7 +5016,7 @@
 
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
 
         let activeCount = 0;
 
@@ -6066,7 +6111,7 @@
 
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
 
         // Header Rows
         let r1 = `<tr>
@@ -6899,7 +6944,7 @@
         const tbody = document.getElementById('personal-deadline-tbody');
         tbody.innerHTML = '';
 
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
         const teacherClasses = [];
 
         // Collect all classes for selected teacher
@@ -6985,7 +7030,7 @@
       async copyHwpTable() {
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
 
         let html = `<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; border: 1.5pt solid black; font-family:'맑은 고딕', sans-serif; font-size:9pt; text-align:center; width:100%;">`;
         
@@ -7470,7 +7515,7 @@
 
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
-        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const startDate = new Date(this.config.startDate || getSystemTodayString());
         const dayNamesKo = ['일', '월', '화', '수', '목', '금', '토'];
 
         // Teacher stats map for summary and calendar
