@@ -1247,6 +1247,188 @@
               : `검증 실패: (counts:${countsValid}, total:${totalGrade5}, badge:${gradeBadgePass}, pracTab:${hasPracTab}, pracRows:${pracRows.length}, search:${searchPass}, trans:${transportCountPass}, import:${importPass}, compat:${compatPass})`
           };
         }
+      },
+      {
+        id: 'tc22',
+        title: '[수업 배당 프리셋] 저/중/고학년 12시수 표준 배당 프리셋 및 기본 시수 12시간 고정 무결성 검증',
+        desc: '신규 클린 상태 기본 시수 12시간 고정(DEFAULT_CONFIG 및 #cfg-maxHours), 저학년(12h: 국2 수2 바2 슬3 즐2 즐놀1), 중학년(12h: 국3 수2 사1 도1 과1 음1 미1 체1 영1), 고학년(12h: 국2 수2 사1 도1 과1 실1 음1 미1 체1 영1) 프리셋 일괄 및 개별 적용 무결성 100% 검증',
+        run: () => {
+          App.initCleanDefault();
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 기본 시수 12시간 고정 검증
+          const defaultMaxHours = App.config.maxHours;
+          const inputMaxVal = parseInt(frameDoc.getElementById('cfg-maxHours').value, 10);
+          const defaultHoursPass = (defaultMaxHours === 12) && (inputMaxVal === 12);
+
+          // 2. 저학년 프리셋 일괄 적용 검증 (국2 수2 바2 슬3 즐2 즐생(놀이)1 = 12h)
+          App.applyGradeQuotaPresetToAll('lower', false);
+          const lowerPass = App.teachers.every(t => {
+            const sh = t.subjectHours || {};
+            const sum = Object.values(sh).reduce((a, b) => a + b, 0);
+            return (t.maxHours === 12) && (sum === 12) &&
+                   (sh['국어'] === 2) && (sh['수학'] === 2) && (sh['바생'] === 2) &&
+                   (sh['슬생'] === 3) && (sh['즐생'] === 2) && (sh['즐생(놀이)'] === 1);
+          });
+
+          // 3. 중학년 프리셋 일괄 적용 검증 (국3 수2 사1 도1 과1 음1 미1 체1 영1 = 12h)
+          App.applyGradeQuotaPresetToAll('middle', false);
+          const middlePass = App.teachers.every(t => {
+            const sh = t.subjectHours || {};
+            const sum = Object.values(sh).reduce((a, b) => a + b, 0);
+            return (t.maxHours === 12) && (sum === 12) &&
+                   (sh['국어'] === 3) && (sh['수학'] === 2) && (sh['사회'] === 1) &&
+                   (sh['도덕'] === 1) && (sh['과학'] === 1) && (sh['음악'] === 1) &&
+                   (sh['미술'] === 1) && (sh['체육'] === 1) && (sh['영어'] === 1);
+          });
+
+          // 4. 고학년 프리셋 일괄 적용 검증 (국2 수2 사1 도1 과1 실1 음1 미1 체1 영1 = 12h)
+          App.applyGradeQuotaPresetToAll('upper', false);
+          const upperPass = App.teachers.every(t => {
+            const sh = t.subjectHours || {};
+            const sum = Object.values(sh).reduce((a, b) => a + b, 0);
+            return (t.maxHours === 12) && (sum === 12) &&
+                   (sh['국어'] === 2) && (sh['수학'] === 2) && (sh['사회'] === 1) &&
+                   (sh['도덕'] === 1) && (sh['과학'] === 1) && (sh['실과'] === 1) &&
+                   (sh['음악'] === 1) && (sh['미술'] === 1) && (sh['체육'] === 1) && (sh['영어'] === 1);
+          });
+
+          // 5. 개별 실습생 프리셋 단독 적용 검증
+          App.applyGradeQuotaPresetToTeacher(0, 'lower');
+          const t0 = App.teachers[0];
+          const t1 = App.teachers[1];
+          const singlePass = (t0.subjectHours['슬생'] === 3) && (t1.subjectHours['실과'] === 1);
+
+          const pass = defaultHoursPass && lowerPass && middlePass && upperPass && singlePass;
+          return {
+            pass,
+            message: pass
+              ? '기본 시수 12시간 고정 확인 완료, 저학년(12h: 국2수2바2슬3즐2즐놀1)·중학년(12h: 국3수2사1도1과1음1미1체1영1)·고학년(12h: 국2수2사1도1과1실1음1미1체1영1) 표준 쿼터 및 개별/전체 일괄 적용 무결성 100% 검증'
+              : `검증 실패: (default:${defaultHoursPass}, lower:${lowerPass}, middle:${middlePass}, upper:${upperPass}, single:${singlePass})`
+          };
+        }
+      },
+      {
+        id: 'tc23',
+        title: '[진도표 과목별 정렬 & 행사 날짜 표기] 진도표 과목별 모아 정렬 및 행사 불가시간 실제 날짜(월/일) 표기 검증',
+        desc: '진도표 과목별 표준 순서(국·도·사·수·과·실·체·음·미·영·바·슬·즐) 및 차시 오름차순 자동 정렬, 과목별 동적 필터링 바 동작, 행사 불가 시간 그리드 열 헤더 및 편집 모달에 시작일 기준 실제 날짜(4/20(월) 등) 정확한 계산·표기 검증',
+        run: () => {
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 임의의 뒤섞인 진도표 데이터 주입 및 렌더링
+          App.curriculum = [
+            { id: 'c1', subject: '음악', pages: '10', lesson: '2', totalLesson: 4 },
+            { id: 'c2', subject: '국어', pages: '20', lesson: '5', totalLesson: 15 },
+            { id: 'c3', subject: '수학', pages: '30', lesson: '3', totalLesson: 10 },
+            { id: 'c4', subject: '국어', pages: '10', lesson: '1', totalLesson: 15 },
+            { id: 'c5', subject: '도덕', pages: '15', lesson: '1', totalLesson: 12 },
+            { id: 'c6', subject: '바생', pages: '25', lesson: '1', totalLesson: 20 },
+            { id: 'c7', subject: '국어', pages: '15', lesson: '2', totalLesson: 15 }
+          ];
+          App.renderCurriculumTable();
+
+          // 2. 과목별 모아 정렬 실행
+          App.sortCurriculumBySubject(false);
+          const sortedSubs = App.curriculum.map(c => `${c.subject}-${c.lesson}`);
+          // 국어(1) -> 국어(2) -> 국어(5) -> 도덕(1) -> 수학(3) -> 음악(2) -> 바생(1)
+          const sortPass = (sortedSubs[0] === '국어-1') &&
+                           (sortedSubs[1] === '국어-2') &&
+                           (sortedSubs[2] === '국어-5') &&
+                           (sortedSubs[3] === '도덕-1') &&
+                           (sortedSubs[4] === '수학-3') &&
+                           (sortedSubs[5] === '음악-2') &&
+                           (sortedSubs[6] === '바생-1');
+
+          // 3. 과목별 필터링 기능 검증
+          App.setCurriculumSubjectFilter('국어');
+          const korRows = frameDoc.querySelectorAll('#curriculum-table-body tr');
+          const filterPass = (korRows.length === 3);
+
+          App.setCurriculumSubjectFilter('all');
+          const allRows = frameDoc.querySelectorAll('#curriculum-table-body tr');
+          const resetFilterPass = (allRows.length === 7);
+
+          // 4. 행사 불가 시간 그리드 실제 날짜 표기 검증
+          App.config.startDate = '2026-04-20';
+          App.renderEventGrid();
+          const gridHeaders = frameDoc.querySelectorAll('#event-grid-container thead th');
+          // headers: 0: 교시, 1: 1일차(4/20 월), 2: 2일차(4/21 화)
+          const h1Text = gridHeaders[1] ? gridHeaders[1].innerText : '';
+          const h2Text = gridHeaders[2] ? gridHeaders[2].innerText : '';
+          const dateHeaderPass = h1Text.includes('4/20') && h1Text.includes('월') &&
+                                 h2Text.includes('4/21') && h2Text.includes('화');
+
+          // 5. 행사 편집 모달 실제 날짜 표기 검증
+          App.openEventEditModal(0, 2);
+          const modalHeader = frameDoc.getElementById('ev-modal-header').innerText;
+          const modalDatePass = modalHeader.includes('4/20') && modalHeader.includes('월') && modalHeader.includes('2교시');
+
+          const pass = sortPass && filterPass && resetFilterPass && dateHeaderPass && modalDatePass;
+          return {
+            pass,
+            message: pass
+              ? '진도표 과목별 표준 순서(국·도·사·수·과·실·체·음·미·영·바·슬·즐) 및 차시 오름차순 모아 정렬 성공, 과목 필터링 바 연동 확인, 행사 그리드 및 모달에 시작일 기준 실제 날짜(4/20(월) 2교시) 100% 무결성 검증'
+              : `검증 실패: (sort:${sortPass}, filter:${filterPass}, reset:${resetFilterPass}, dateHeader:${dateHeaderPass}, modalDate:${modalDatePass})`
+          };
+        }
+      },
+      {
+        id: 'tc24',
+        title: '[배당표 및 맞춤 달력 일괄 드래그 이동] 다중 셀 일괄 선택, 방향키 평행 이동 및 드래그 일괄 이동 무결성 검증',
+        desc: '교생 맞춤 달력에서 교생 전체 수업 일괄 선택(selectTeacherClassesForBulkMove), 다중 선택 바 노출 및 뱃지 카운트 확인, 방향키(shiftSelectedCells) 평행 일괄 이동 성공, 드래그 앤 드롭(executeBulkMove) 앵커 기준 묶음 전체 동시 이동 무결성 100% 검증',
+        run: () => {
+          App.loadPreset('grade2', false);
+          App.runAutoAllocation(false);
+          const frameDoc = document.getElementById('app-frame').contentDocument;
+
+          // 1. 김부설 교생 수업 일괄 선택 검증
+          App.selectTeacherClassesForBulkMove('김부설');
+          const hasSelectedCount = (App.selectedCellKeys.length === 6);
+          const barVisible = !frameDoc.getElementById('multi-move-bar').classList.contains('hidden');
+          const badgeText = frameDoc.getElementById('multi-selected-count-badge').innerText;
+          const selectPass = hasSelectedCount && barVisible && badgeText.includes('6개');
+
+          // 2. 안전한 전용 슬롯(7교시 영역)을 활용한 다중 셀 방향키 평행 이동 검증
+          App.timetable['0-7'] = { subject: '국어', lesson: '1', totalLesson: 10, teacher: '김부설' };
+          App.timetable['1-7'] = { subject: '수학', lesson: '1', totalLesson: 10, teacher: '김부설' };
+          App.timetable['2-7'] = { subject: '즐생', lesson: '1', totalLesson: 10, teacher: '김부설' };
+          App.selectedCellKeys = ['0-7', '1-7', '2-7'];
+          App.updateMultiSelectedClassOnDOM();
+          App.updateMultiMoveBar();
+
+          // 1일 뒤(+1, 0)로 방향키 평행 이동
+          App.shiftSelectedCells(1, 0);
+          const shiftedKeys = [...App.selectedCellKeys];
+          const shiftPass = (shiftedKeys.length === 3) &&
+                            (shiftedKeys[0] === '1-7') && (App.timetable['1-7'].subject === '국어') &&
+                            (shiftedKeys[1] === '2-7') && (App.timetable['2-7'].subject === '수학') &&
+                            (shiftedKeys[2] === '3-7') && (App.timetable['3-7'].subject === '즐생') &&
+                            (!App.timetable['0-7']);
+
+          // 3. 드래그 앤 드롭 앵커 일괄 이동 검증 (executeBulkMove: 1-7 -> 0-7 복귀)
+          App.executeBulkMove('1-7', '0-7');
+          const restoredKeys = [...App.selectedCellKeys];
+          const dragPass = (restoredKeys.length === 3) &&
+                           (restoredKeys[0] === '0-7') && (App.timetable['0-7'].subject === '국어') &&
+                           (restoredKeys[1] === '1-7') && (App.timetable['1-7'].subject === '수학') &&
+                           (restoredKeys[2] === '2-7') && (App.timetable['2-7'].subject === '즐생');
+
+          // 4. 선택 해제(clearMultiSelection) 검증
+          App.clearMultiSelection();
+          delete App.timetable['0-7'];
+          delete App.timetable['1-7'];
+          delete App.timetable['2-7'];
+          const clearPass = (App.selectedCellKeys.length === 0) &&
+                            frameDoc.getElementById('multi-move-bar').classList.contains('hidden');
+
+          const pass = selectPass && shiftPass && dragPass && clearPass;
+          return {
+            pass,
+            message: pass
+              ? '김부설 교생 6개 수업 원클릭 일괄 선택 성공, 컨트롤 바 활성화 확인, 방향키 1일 뒤(+1) 평행 일괄 이동 성공, 드래그 앤 드롭 앵커 일괄 복원 및 선택 해제 100% 무결성 검증 완료'
+              : `검증 실패: (select:${selectPass}, shift:${shiftPass}, drag:${dragPass}, clear:${clearPass})`
+          };
+        }
       }
     ];
 

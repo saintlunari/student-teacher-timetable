@@ -12,23 +12,29 @@ proc = subprocess.Popen([
     f"--user-data-dir={USER_DATA}",
     "--allow-file-access-from-files",
     "--disable-web-security",
+    "--no-first-run",
+    "--no-default-browser-check",
     "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html"
 ])
 
-time.sleep(6)
 try:
-    req = urllib.request.urlopen("http://127.0.0.1:9352/json")
-    pages = json.loads(req.read().decode("utf-8"))
     ws_url = None
-    for p in pages:
-        if p.get("type") == "page" and "test_runner.html" in p.get("url", ""):
-            ws_url = p.get("webSocketDebuggerUrl")
-            break
-    if not ws_url:
-        for p in pages:
-            if p.get("type") == "page":
-                ws_url = p.get("webSocketDebuggerUrl")
+    for _ in range(15):
+        time.sleep(1)
+        try:
+            req = urllib.request.urlopen("http://127.0.0.1:9352/json")
+            pages = json.loads(req.read().decode("utf-8"))
+            for p in pages:
+                if p.get("type") == "page" and "test_runner.html" in p.get("url", ""):
+                    ws_url = p.get("webSocketDebuggerUrl")
+                    break
+            if ws_url:
                 break
+        except Exception:
+            pass
+    
+    if not ws_url:
+        raise RuntimeError("Could not find test_runner.html page in Edge")
     
     url_parts = urllib.parse.urlparse(ws_url)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -58,6 +64,14 @@ try:
             if not chunk: break
             payload.extend(chunk)
         return json.loads(payload.decode("utf-8", errors="ignore"))
+
+    # Wait until all tests have completed
+    for _ in range(20):
+        time.sleep(0.5)
+        send({"id": 99, "method": "Runtime.evaluate", "params": {"expression": "typeof testCases !== 'undefined' && testCases.length > 0 && testCases.every(t => t.lastPass !== undefined)"}})
+        res = recv_msg()
+        if res and res.get("id") == 99 and res.get("result", {}).get("result", {}).get("value") is True:
+            break
 
     send({"id": 1, "method": "Runtime.evaluate", "params": {"expression": "JSON.stringify(testCases.map(t => ({id: t.id, pass: t.lastPass, msg: t.lastMsg})))"}})
     while True:

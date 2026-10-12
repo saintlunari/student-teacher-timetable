@@ -115,6 +115,33 @@
       pointer-events: none;
       box-shadow: 0 1px 3px rgba(0,0,0,0.25);
     }
+    /* Multi-selected Cells Style (다중 선택 및 일괄 이동용) */
+    .tt-cell.multi-selected {
+      position: relative !important;
+      border: 3.5px solid #6366f1 !important;
+      background-color: #e0e7ff !important;
+      box-shadow: 0 0 16px rgba(99, 102, 241, 0.55) !important;
+    }
+    .tt-cell.multi-selected::before {
+      content: '📦선택';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      font-size: 9px;
+      font-weight: 800;
+      background: #4f46e5;
+      color: #ffffff;
+      padding: 1px 4px;
+      border-radius: 4px;
+      z-index: 25;
+      pointer-events: none;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+    .tt-cell.multi-target-hover {
+      background-color: #e0f2fe !important;
+      border: 3px dashed #0284c7 !important;
+      box-shadow: 0 0 12px rgba(2, 132, 199, 0.4) !important;
+    }
     /* Allocation Error Highlight Styles (오류 발생 항목 빨간 테두리 및 배지) */
     .tt-cell.cell-error {
       position: relative !important;
@@ -451,7 +478,7 @@
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">교생 기본 최대 시수</label>
-                <input type="number" id="cfg-maxHours" min="1" max="50" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-indigo-700" value="10">
+                <input type="number" id="cfg-maxHours" min="1" max="50" oninput="App.onConfigChange()" onchange="App.onConfigChange()" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-sky-500 focus:outline-none font-bold text-indigo-700" value="12">
               </div>
               <div>
                 <label class="block text-xs font-medium text-slate-600 mb-1">1일 수업 교시 수</label>
@@ -506,15 +533,28 @@
                   <th class="py-2.5 px-3 w-28 text-amber-900 font-bold">🏅 인증수업 과목</th>
                   <th class="py-2.5 px-3 w-28 text-indigo-900 font-bold">⭐ 교과대표수업</th>
                   <th class="py-2.5 px-3 w-20 text-center">최대 시수</th>
-                  <th class="py-2.5 px-3 min-w-[380px]">
-                    <div class="flex items-center justify-between gap-2">
-                      <span class="font-bold text-slate-700 flex items-center gap-1.5">
-                        <span>수업 배당 (교과별 시수 배정)</span>
-                        <span class="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">2열 칩 배치</span>
-                      </span>
-                      <button type="button" onclick="App.autoDistributeSubjectHours()" title="Step 2 진도표 차시를 실습생 전원에게 공평하게 균등 분배합니다" class="text-[11px] px-2.5 py-1 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-bold rounded-lg shadow-sm flex items-center gap-1 transition shrink-0 active:scale-95 cursor-pointer">
-                        <i data-lucide="sparkles" class="w-3 h-3"></i> ⚡ 균등 분배
-                      </button>
+                  <th class="py-2.5 px-3 min-w-[420px]">
+                    <div class="flex flex-wrap items-center justify-between gap-2">
+                      <div class="flex items-center gap-1.5">
+                        <span class="font-bold text-slate-700">수업 배당 (교과별 시수 배정)</span>
+                        <span class="text-[10px] text-indigo-600 font-bold bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">12시수 기준</span>
+                      </div>
+                      <div class="flex items-center gap-1">
+                        <div class="flex items-center bg-slate-100 p-0.5 rounded-lg border border-slate-200 gap-0.5">
+                          <button type="button" onclick="App.applyGradeQuotaPresetToAll('lower')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-white hover:bg-emerald-50 text-emerald-800 border border-slate-200 shadow-2xs transition cursor-pointer" title="전체 실습생에게 저학년 시수 프리셋(국2 수2 바2 슬3 즐2 즐놀1 = 총12h) 일괄 적용">
+                            🎒저학년(12h)
+                          </button>
+                          <button type="button" onclick="App.applyGradeQuotaPresetToAll('middle')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-white hover:bg-sky-50 text-sky-800 border border-slate-200 shadow-2xs transition cursor-pointer" title="전체 실습생에게 중학년 시수 프리셋(국3 수2 사1 도1 과1 음1 미1 체1 영1 = 총12h) 일괄 적용">
+                            📚중학년(12h)
+                          </button>
+                          <button type="button" onclick="App.applyGradeQuotaPresetToAll('upper')" class="px-2 py-0.5 text-[10px] font-bold rounded bg-white hover:bg-purple-50 text-purple-800 border border-slate-200 shadow-2xs transition cursor-pointer" title="전체 실습생에게 고학년 시수 프리셋(국2 수2 사1 도1 과1 실1 음1 미1 체1 영1 = 총12h) 일괄 적용">
+                            🎓고학년(12h)
+                          </button>
+                        </div>
+                        <button type="button" onclick="App.autoDistributeSubjectHours()" title="Step 2 진도표 차시를 실습생 전원에게 공평하게 균등 분배합니다" class="text-[11px] px-2 py-1 bg-gradient-to-r from-indigo-600 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-bold rounded-lg shadow-sm flex items-center gap-1 transition shrink-0 active:scale-95 cursor-pointer">
+                          <i data-lucide="sparkles" class="w-3 h-3"></i> ⚡균등
+                        </button>
+                      </div>
                     </div>
                   </th>
                   <th class="py-2.5 px-3 w-12 text-center">삭제</th>
@@ -560,6 +600,9 @@
           </div>
 
           <div class="flex items-center gap-2">
+            <button onclick="App.sortCurriculumBySubject()" title="진도표 항목을 과목별(국어, 도덕, 사회, 수학, 과학, 실과, 체육, 음악, 미술, 영어...) 및 차시 오름차순으로 모아 정렬합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200 shadow-2xs cursor-pointer">
+              <i data-lucide="arrow-down-a-z" class="w-3.5 h-3.5"></i> 과목별 모아 정렬
+            </button>
             <button onclick="App.openCurriculumDbModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-500 hover:bg-amber-600 text-white rounded-lg transition shadow-sm">
               <i data-lucide="database" class="w-3.5 h-3.5"></i> 📚 표준 교과 DB 불러오기 (1~6학년)
             </button>
@@ -576,8 +619,14 @@
           </div>
         </div>
 
-        <div class="text-xs text-slate-500">
-          * 2차시 분량을 1교시에 수업하는 경우 해당 차시에 <strong>'3~4'</strong> 또는 <strong>'5-6'</strong> 형태로 압축 입력할 수 있습니다.
+        <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+          <div>* 2차시 분량을 1교시에 수업하는 경우 해당 차시에 <strong>'3~4'</strong> 또는 <strong>'5-6'</strong> 형태로 압축 입력할 수 있습니다.</div>
+          <div class="text-[11px] text-slate-400 italic">💡 [과목별 모아 정렬]을 누르면 국어, 수학 등 동일 과목끼리 모여 차시 순서대로 정렬됩니다.</div>
+        </div>
+
+        <!-- 교과목별 모아보기 필터 탭 바 -->
+        <div id="curriculum-subject-filter-bar" class="flex flex-wrap items-center gap-1.5 pt-1">
+          <!-- Dynamically populated by renderCurriculumSubjectFilterBar() -->
         </div>
 
         <div class="overflow-x-auto max-h-[500px]">
@@ -806,6 +855,12 @@
             미배정 과목 정리
           </button>
 
+          <!-- 다중 선택 / 일괄 이동 모드 토글 -->
+          <button onclick="App.toggleMultiSelectMode()" id="btn-toggle-multi-select" class="flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xl transition shadow-xs" title="여러 수업 셀을 동시에 선택하여 드래그하거나 방향키로 한꺼번에 이동합니다">
+            <i data-lucide="layers" class="w-3.5 h-3.5 text-amber-600"></i>
+            <span id="multi-select-btn-text">다중 선택 (일괄 이동)</span>
+          </button>
+
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
 
           <!-- 스마트 스왑 안내 표시기 -->
@@ -831,6 +886,38 @@
           <i id="toggle-layout-icon" data-lucide="maximize-2" class="w-3.5 h-3.5"></i>
           <span id="toggle-layout-text">시간표 전체폭 확대</span>
         </button>
+      </div>
+
+      <!-- 다중 셀 일괄 이동 플로팅/인라인 제어 바 (선택 활성화 시 자동 노출) -->
+      <div id="multi-move-bar" class="hidden bg-gradient-to-r from-amber-50 to-orange-50 p-3 rounded-2xl border-2 border-amber-300 shadow-sm flex flex-wrap items-center justify-between gap-3 text-xs animate-fadeIn">
+        <div class="flex items-center gap-2.5 flex-wrap">
+          <span class="inline-flex items-center justify-center p-1.5 bg-amber-500 text-white rounded-lg shadow-xs font-black">
+            <i data-lucide="boxes" class="w-4 h-4"></i>
+          </span>
+          <span class="font-bold text-amber-950">다중 선택 모드:</span>
+          <span class="font-black text-amber-800 bg-amber-200/80 px-2.5 py-0.5 rounded-full border border-amber-400" id="multi-selected-count-badge">0개 수업 선택됨</span>
+          <span class="text-amber-900 text-[11px] font-medium hidden sm:inline">
+            (선택된 셀 중 하나를 원하는 빈 슬롯으로 <strong>드래그&드롭</strong>하거나 우측 <strong>방향키</strong>를 누르면 묶음 전체가 동일한 간격으로 한꺼번에 이동합니다)
+          </span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[11px] font-bold text-amber-900 mr-1">일괄 이동:</span>
+          <button type="button" onclick="App.shiftSelectedCells(-1, 0)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold rounded-lg shadow-2xs transition" title="1일(어제) 앞으로 일괄 이동">
+            ◀ 1일 전
+          </button>
+          <button type="button" onclick="App.shiftSelectedCells(1, 0)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold rounded-lg shadow-2xs transition" title="1일(내일) 뒤로 일괄 이동">
+            1일 후 ▶
+          </button>
+          <button type="button" onclick="App.shiftSelectedCells(0, -1)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold rounded-lg shadow-2xs transition" title="1교시 앞으로 일괄 이동">
+            ▲ 1교시 앞
+          </button>
+          <button type="button" onclick="App.shiftSelectedCells(0, 1)" class="px-2.5 py-1 bg-white hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold rounded-lg shadow-2xs transition" title="1교시 뒤로 일괄 이동">
+            1교시 뒤 ▼
+          </button>
+          <button type="button" onclick="App.clearMultiSelection()" class="px-2.5 py-1 bg-amber-200/70 hover:bg-amber-300 text-amber-900 font-bold rounded-lg transition ml-2">
+            선택 해제
+          </button>
+        </div>
       </div>
 
       <!-- 배당표 메인 뷰 (인쇄 및 이미지 캡처 대상 영역) -->
@@ -905,6 +992,9 @@
             </h3>
           </div>
           <div class="flex items-center gap-2">
+            <button onclick="App.selectTeacherClassesForBulkMove()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-lg transition border border-amber-300" title="이 실습생의 모든 수업을 한 번에 선택하여 배당표에서 드래그/방향키로 일괄 이동합니다">
+              <i data-lucide="boxes" class="w-3.5 h-3.5 text-amber-600"></i> 전체 수업 일괄 선택(이동)
+            </button>
             <button onclick="App.copyDeadlinesToClipboard()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> 마감일 텍스트 복사 (카톡/메신저용)
             </button>
@@ -1924,7 +2014,29 @@
       { bg: '#f0fdfa', text: '#115e59', border: '#99f6e4', rgba: 'rgba(20, 184, 166, 0.4)', rgb: '#14b8a6' },
     ];
 
-    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생) ---
+    // --- 학년군별 수업 배당 (교과별 시수 배정) 표준 프리셋 (1인당 기본 12시수 고정) ---
+    const GRADE_QUOTA_PRESETS = {
+      lower: {
+        name: '저학년 (1~2학년)',
+        totalHours: 12,
+        note: '국(2) 수(2) 바(2) 슬(3) 즐(2) 즐생(놀이)(1)',
+        subjectHours: { '국어': 2, '수학': 2, '바생': 2, '슬생': 3, '즐생': 2, '즐생(놀이)': 1 }
+      },
+      middle: {
+        name: '중학년 (3~4학년)',
+        totalHours: 12,
+        note: '국(3) 수(2) 사(1) 도(1) 과(1) 음(1) 미(1) 체(1) 영(1)',
+        subjectHours: { '국어': 3, '수학': 2, '사회': 1, '도덕': 1, '과학': 1, '음악': 1, '미술': 1, '체육': 1, '영어': 1 }
+      },
+      upper: {
+        name: '고학년 (5~6학년)',
+        totalHours: 12,
+        note: '국(2) 수(2) 사(1) 도(1) 과(1) 실(1) 음(1) 미(1) 체(1) 영(1)',
+        subjectHours: { '국어': 2, '수학': 2, '사회': 1, '도덕': 1, '과학': 1, '실과': 1, '음악': 1, '미술': 1, '체육': 1, '영어': 1 }
+      }
+    };
+
+    // --- 기본 초기 클린 데이터 (시작 시 빈 시간표 & 3개 진도표 & 4명 익명 실습생, 기본 시수 12 고정) ---
     const DEFAULT_CONFIG = {
       title: '교육실습IV(종합) 교육 실습생 수업배당표(0학년)',
       school: '공주교육대학교부설초등학교',
@@ -1932,16 +2044,16 @@
       teacherName: '김지도',
       weekCount: 2,
       startDate: '2026-04-20',
-      maxHours: 10,
+      maxHours: 12,
       periodsPerDay: 8,
       notes: '1. 처음, 마지막 시간은 학생과 만남\n2. 교생 교과대표수업: 실습일정표 참조\n3. 오후 일정은 실습일정표 참조'
     };
 
     const DEFAULT_TEACHERS = [
-      { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 바(1)', colorIdx: 0 },
-      { id: 't2', name: '이공주', major: '수학', certSubject: '수학', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 즐(1)', colorIdx: 1 },
-      { id: 't3', name: '삼알밤', major: '미술', certSubject: '즐생', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 슬(1)', colorIdx: 2 },
-      { id: 't4', name: '사산성', major: '체육', certSubject: '체육', demoSubject: '', maxHours: 10, note: '국(1) 수(1) 체(1)', colorIdx: 3 }
+      { id: 't1', name: '김부설', major: '국어', certSubject: '국어', demoSubject: '', maxHours: 12, note: '국(2) 수(2) 바(2) 슬(3) 즐(2) 즐생(놀이)(1)', colorIdx: 0 },
+      { id: 't2', name: '이공주', major: '수학', certSubject: '수학', demoSubject: '', maxHours: 12, note: '국(2) 수(2) 바(2) 슬(3) 즐(2) 즐생(놀이)(1)', colorIdx: 1 },
+      { id: 't3', name: '삼알밤', major: '미술', certSubject: '즐생', demoSubject: '', maxHours: 12, note: '국(2) 수(2) 바(2) 슬(3) 즐(2) 즐생(놀이)(1)', colorIdx: 2 },
+      { id: 't4', name: '사산성', major: '체육', certSubject: '체육', demoSubject: '', maxHours: 12, note: '국(2) 수(2) 바(2) 슬(3) 즐(2) 즐생(놀이)(1)', colorIdx: 3 }
     ];
 
     const DEFAULT_CURRICULUM = [
@@ -2195,6 +2307,12 @@
       periodsPerDay: 8,
       timetableErrors: { errorMap: {}, errorCount: 0, errorList: [] },
 
+      // Multi-Select & Bulk Drag & Move State
+      selectedCellKeys: [],         // Array of selected cell keys ('d-p')
+      multiSelectMode: false,       // Toggle mode for multi-selection
+      draggedGroup: null,           // { anchorKey, keys } during bulk drag
+      curriculumSubjectFilter: 'all', // Step 2 subject filter ('all' or specific subject)
+
       // Active state: Clean initial state with 0학년 0반, 빈 시간표, 3개 진도표, 4명 익명 실습생
       config: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
       teachers: JSON.parse(JSON.stringify(DEFAULT_TEACHERS)),
@@ -2438,6 +2556,42 @@
       // -----------------------------------------------------------------------
       teacherNoteTextOpen: {},
 
+      applyGradeQuotaPresetToTeacher(idx, presetKey) {
+        const preset = GRADE_QUOTA_PRESETS[presetKey];
+        if (!preset || !this.teachers[idx]) return;
+        const t = this.teachers[idx];
+        t.maxHours = 12;
+        this.config.maxHours = 12;
+        const cfgInput = document.getElementById('cfg-maxHours');
+        if (cfgInput) cfgInput.value = 12;
+        t.note = preset.note;
+        t.subjectHours = JSON.parse(JSON.stringify(preset.subjectHours));
+        this.renderTeachersTable();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+      },
+
+      applyGradeQuotaPresetToAll(presetKey, showAlert = true) {
+        const preset = GRADE_QUOTA_PRESETS[presetKey];
+        if (!preset || !this.teachers || this.teachers.length === 0) return;
+        this.config.maxHours = 12;
+        const cfgInput = document.getElementById('cfg-maxHours');
+        if (cfgInput) cfgInput.value = 12;
+
+        this.teachers.forEach(t => {
+          t.maxHours = 12;
+          t.note = preset.note;
+          t.subjectHours = JSON.parse(JSON.stringify(preset.subjectHours));
+        });
+
+        this.renderTeachersTable();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        if (showAlert) {
+          alert(`실습생 전체(${this.teachers.length}명)에게 '${preset.name}' 12시수 표준 배당 프리셋이 적용되었습니다!\n(${preset.note})`);
+        }
+      },
+
       getAvailableSubjects() {
         const set = new Set(ELEMENTARY_SUBJECTS);
         (this.curriculum || []).forEach(c => {
@@ -2553,6 +2707,15 @@
             </select>
           `;
 
+          const presetSelectHtml = `
+            <select onchange="if(this.value){ App.applyGradeQuotaPresetToTeacher(${idx}, this.value); this.value=''; }" class="text-[10px] px-1.5 py-0.5 border border-amber-300 rounded bg-amber-50 text-amber-900 hover:bg-amber-100 cursor-pointer font-bold shadow-2xs" title="이 실습생에게 학년군별 12시수 표준 배당 프리셋 적용">
+              <option value="">⚙️ 프리셋(12h)</option>
+              <option value="lower">🎒 저학년(12h)</option>
+              <option value="middle">📚 중학년(12h)</option>
+              <option value="upper">🎓 고학년(12h)</option>
+            </select>
+          `;
+
           const isTextOpen = (this.teacherNoteTextOpen && this.teacherNoteTextOpen[idx]);
 
           const tr = document.createElement('tr');
@@ -2588,6 +2751,7 @@
                 <div class="flex items-center justify-between gap-1.5 flex-wrap">
                   ${statusBadge}
                   <div class="flex items-center gap-1.5">
+                    ${presetSelectHtml}
                     ${addSelectHtml}
                     <button type="button" onclick="App.toggleTeacherNoteInput(${idx})" class="text-[10px] px-1.5 py-0.5 rounded border border-slate-200 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 bg-white transition flex items-center gap-0.5 shrink-0 cursor-pointer shadow-2xs" title="직접 타이핑 텍스트 입력창 열기/닫기">
                       <i data-lucide="${isTextOpen ? 'chevron-up' : 'edit-3'}" class="w-3 h-3"></i>
@@ -2987,14 +3151,105 @@
       },
 
       // -----------------------------------------------------------------------
-      // CURRICULUM MANAGEMENT (Block Time & Compressed Lesson Support)
+      // CURRICULUM MANAGEMENT (Block Time, Compressed Lesson & Subject Sorting)
       // -----------------------------------------------------------------------
+      sortCurriculumBySubject(showAlert = true) {
+        const rows = document.querySelectorAll('#curriculum-table-body tr');
+        if (rows && rows.length === this.curriculum.length) {
+          this.syncCurriculumFromDOM();
+        }
+        const SUBJECT_ORDER = [
+          '국어', '도덕', '사회', '수학', '과학', '실과', '체육', '음악', '미술', '영어',
+          '바생', '바른 생활', '바른생활', '슬생', '슬기로운 생활', '슬기로운생활',
+          '즐생', '즐거운 생활', '즐거운생활', '즐생(놀이)', '창체', '창의적 체험활동'
+        ];
+        const getSubOrder = (s) => {
+          if (!s) return 999;
+          const clean = s.trim();
+          const idx = SUBJECT_ORDER.indexOf(clean);
+          if (idx !== -1) return idx;
+          const fam = (typeof getSubjectFamily === 'function') ? getSubjectFamily(clean) : clean;
+          const fIdx = SUBJECT_ORDER.indexOf(fam);
+          return fIdx !== -1 ? fIdx : 900;
+        };
+        const parseNum = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const m = String(lStr || '').match(/\d+/);
+          return m ? parseInt(m[0], 10) : 0;
+        };
+
+        this.curriculum.sort((a, b) => {
+          const oA = getSubOrder(a.subject);
+          const oB = getSubOrder(b.subject);
+          if (oA !== oB) return oA - oB;
+          if (a.subject !== b.subject) return (a.subject || '').localeCompare(b.subject || '', 'ko');
+          const lA = parseNum(a.lesson);
+          const lB = parseNum(b.lesson);
+          if (lA !== lB) return lA - lB;
+          return (a.totalLesson || 0) - (b.totalLesson || 0);
+        });
+
+        this.renderCurriculumTable();
+        this.renderCurriculumSubjectFilterBar();
+        if (showAlert) {
+          alert(`진도표 총 ${this.curriculum.length}차시가 과목별 표준 순서(국·도·사·수·과·실·체·음·미·영·바·슬·즐) 및 차시 오름차순으로 모아 정렬되었습니다!`);
+        }
+      },
+
+      setCurriculumSubjectFilter(sub) {
+        this.curriculumSubjectFilter = sub;
+        this.renderCurriculumTable();
+        this.renderCurriculumSubjectFilterBar();
+      },
+
+      renderCurriculumSubjectFilterBar() {
+        const bar = document.getElementById('curriculum-subject-filter-bar');
+        if (!bar) return;
+
+        const subCounts = {};
+        this.curriculum.forEach(c => {
+          const s = (c.subject || '').trim();
+          if (s) subCounts[s] = (subCounts[s] || 0) + 1;
+        });
+
+        const activeFilter = this.curriculumSubjectFilter || 'all';
+        const isAll = (activeFilter === 'all');
+
+        let html = `
+          <button type="button" onclick="App.setCurriculumSubjectFilter('all')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer border ${isAll ? 'bg-indigo-600 text-white border-indigo-700 shadow-xs' : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-300'}">
+            전체 과목 (${this.curriculum.length})
+          </button>
+        `;
+
+        Object.keys(subCounts).forEach(s => {
+          const isAct = (activeFilter === s);
+          const theme = (typeof getSubjectTheme === 'function') ? getSubjectTheme(s) : { badge: 'bg-slate-100 text-slate-800' };
+          html += `
+            <button type="button" onclick="App.setCurriculumSubjectFilter('${s}')" class="px-2.5 py-1 rounded-lg text-xs font-bold transition cursor-pointer border ${isAct ? 'bg-indigo-600 text-white border-indigo-700 shadow-xs ring-2 ring-indigo-400' : `${theme.badge} hover:brightness-95 border-slate-300`}">
+              ${s} (${subCounts[s]})
+            </button>
+          `;
+        });
+
+        bar.innerHTML = html;
+      },
+
       renderCurriculumTable() {
         const tbody = document.getElementById('curriculum-table-body');
+        if (!tbody) return;
         tbody.innerHTML = '';
-        document.getElementById('curriculum-count-badge').innerText = `총 ${this.curriculum.length}차시`;
+        const badgeEl = document.getElementById('curriculum-count-badge');
+        if (badgeEl) badgeEl.innerText = `총 ${this.curriculum.length}차시`;
 
-        this.curriculum.forEach((c, idx) => {
+        this.renderCurriculumSubjectFilterBar();
+
+        const activeFilter = this.curriculumSubjectFilter || 'all';
+        const displayItems = this.curriculum.map((c, idx) => ({ c, originalIdx: idx })).filter(item => {
+          if (activeFilter === 'all') return true;
+          return (item.c.subject || '').trim() === activeFilter;
+        });
+
+        displayItems.forEach(({ c, originalIdx: idx }, rowNum) => {
           let teacherOpts = `<option value="">(자동 배정)</option>`;
           this.teachers.forEach(t => {
             const isSel = (c.designatedTeacher === t.name || (!c.designatedTeacher && c.demoTeacher === t.name));
@@ -4157,15 +4412,23 @@
         if (!container) return;
         const weekCount = this.config.weekCount || 2;
         const days = weekCount * 5;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
 
         let html = `<table class="w-full text-xs border-collapse border border-slate-300">`;
         html += `<thead class="bg-slate-100"><tr><th class="border p-2 w-16 sticky left-0 bg-slate-100 z-10 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.15)]">교시</th>`;
         for (let d = 0; d < days; d++) {
           const week = Math.floor(d / 5) + 1;
           const dayName = ['월', '화', '수', '목', '금'][d % 5];
-          html += `<th class="border p-1.5 text-center min-w-[70px]">
+          const curDate = new Date(startDate);
+          const weekOffset = Math.floor(d / 5);
+          const dayOffset = d % 5;
+          curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+          const m = curDate.getMonth() + 1;
+          const dt = curDate.getDate();
+
+          html += `<th class="border p-1.5 text-center min-w-[72px]">
             <span class="text-[10px] text-slate-500 block">${week}주차</span>
-            <span class="font-bold">${dayName}</span>
+            <span class="text-xs font-black text-slate-800">${m}/${dt} (${dayName})</span>
           </th>`;
         }
         html += `</tr></thead><tbody>`;
@@ -4176,6 +4439,16 @@
           for (let d = 0; d < days; d++) {
             const key = `${d}-${p}`;
             const ev = this.events[key];
+            const week = Math.floor(d / 5) + 1;
+            const dayName = ['월', '화', '수', '목', '금'][d % 5];
+            const curDate = new Date(startDate);
+            const weekOffset = Math.floor(d / 5);
+            const dayOffset = d % 5;
+            curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+            const m = curDate.getMonth() + 1;
+            const dt = curDate.getDate();
+            const dateStr = `${week}주차 · ${m}/${dt}(${dayName}) ${p}교시`;
+
             let cellStyle = 'bg-white hover:bg-sky-50';
             let text = '+ 설정';
             let textColor = 'text-slate-300';
@@ -4200,7 +4473,7 @@
               }
             }
 
-            html += `<td id="ev-cell-${key}" onclick="App.onEventCellClick(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="클릭: 스탬프 찍기 (상세모드 시 편집창) / 우클릭: 상세 내용 및 강사명 직접 편집" class="border p-1 text-center cursor-pointer select-none ${cellStyle} h-14 transition">
+            html += `<td id="ev-cell-${key}" onclick="App.onEventCellClick(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="[${dateStr}]\n클릭: 스탬프 찍기 (상세모드 시 편집창) / 우클릭: 상세 내용 및 강사명 직접 편집" class="border p-1 text-center cursor-pointer select-none ${cellStyle} h-14 transition">
               <div class="${textColor} leading-tight">${text}</div>
             </td>`;
           }
@@ -4220,7 +4493,14 @@
 
         const week = Math.floor(d / 5) + 1;
         const dayName = ['월', '화', '수', '목', '금'][d % 5];
-        document.getElementById('ev-modal-header').innerText = `행사 및 강의 일정 편집 [${week}주차 ${dayName}요일 ${p}교시]`;
+        const startDate = new Date(this.config.startDate || '2026-04-20');
+        const curDate = new Date(startDate);
+        const weekOffset = Math.floor(d / 5);
+        const dayOffset = d % 5;
+        curDate.setDate(startDate.getDate() + (weekOffset * 7) + dayOffset);
+        const m = curDate.getMonth() + 1;
+        const dt = curDate.getDate();
+        document.getElementById('ev-modal-header').innerText = `행사 및 강의 일정 편집 [${week}주차 · ${m}/${dt}(${dayName}) ${p}교시]`;
 
         let type = 'lecture';
         let subject = '강의';
@@ -5575,7 +5855,7 @@
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
-              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[78px] sm:min-w-[84px]">
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[78px] sm:min-w-[84px]">
                 <!-- 원클릭 배당 삭제 버튼 (호버 시 표시) -->
                 <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
                   ✕
@@ -5605,7 +5885,7 @@
 
             // 5. Empty Cell
             const selectedClass = isSelected ? 'cell-selected' : '';
-            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}')" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[78px] sm:min-w-[84px]">
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[78px] sm:min-w-[84px]">
               <span class="text-[10px] text-slate-300 block font-mono">+</span>
             </td>`;
             renderedCells[key] = true;
@@ -5614,6 +5894,8 @@
         }
 
         tbody.innerHTML = tbodyHtml;
+        this.updateMultiSelectedClassOnDOM();
+        this.updateMultiMoveBar();
       },
 
       // -----------------------------------------------------------------------
@@ -5755,8 +6037,194 @@
         this.renderDashboardCharts();
       },
 
+      // -----------------------------------------------------------------------
+      // MULTI-SELECTION & BULK MOVE ENGINE (배당표 및 맞춤 달력 일괄 드래그/이동)
+      // -----------------------------------------------------------------------
+      toggleMultiSelectMode() {
+        this.multiSelectMode = !this.multiSelectMode;
+        if (!this.multiSelectMode && this.selectedCellKeys.length === 0) {
+          this.clearMultiSelection();
+        } else {
+          this.updateMultiSelectedClassOnDOM();
+          this.updateMultiMoveBar();
+        }
+      },
+
+      clearMultiSelection() {
+        this.selectedCellKeys = [];
+        this.draggedGroup = null;
+        this.multiSelectMode = false;
+        this.updateMultiSelectedClassOnDOM();
+        this.updateMultiMoveBar();
+      },
+
+      updateMultiSelectedClassOnDOM() {
+        document.querySelectorAll('.tt-cell').forEach(el => {
+          el.classList.remove('multi-selected');
+        });
+        (this.selectedCellKeys || []).forEach(k => {
+          const el = document.getElementById(`cell-${k}`);
+          if (el) el.classList.add('multi-selected');
+        });
+      },
+
+      updateMultiMoveBar() {
+        const bar = document.getElementById('multi-move-bar');
+        const countBadge = document.getElementById('multi-selected-count-badge');
+        const btnToggle = document.getElementById('btn-toggle-multi-select');
+        const btnText = document.getElementById('multi-select-btn-text');
+
+        const count = (this.selectedCellKeys || []).length;
+        const isVisible = (this.multiSelectMode || count > 0);
+        if (bar) {
+          if (isVisible) bar.classList.remove('hidden');
+          else bar.classList.add('hidden');
+        }
+
+        if (countBadge) {
+          countBadge.innerText = `${count}개 수업 선택됨`;
+        }
+
+        if (btnToggle) {
+          if (this.multiSelectMode) {
+            btnToggle.className = 'flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-amber-500 text-white border border-amber-600 rounded-xl transition shadow-sm ring-2 ring-amber-300';
+            if (btnText) btnText.innerText = '다중 선택 모드 ON';
+          } else {
+            btnToggle.className = 'flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 rounded-xl transition shadow-xs';
+            if (btnText) btnText.innerText = '다중 선택 (일괄 이동)';
+          }
+        }
+      },
+
+      selectTeacherClassesForBulkMove(teacherName) {
+        const targetTeacher = teacherName || (this.selectedTeacherFilter !== 'all' ? this.selectedTeacherFilter : (this.teachers[0] ? this.teachers[0].name : ''));
+        if (!targetTeacher) {
+          alert('선택할 실습생 정보가 없습니다.');
+          return;
+        }
+
+        const keys = [];
+        Object.keys(this.timetable).forEach(k => {
+          const cell = this.timetable[k];
+          if (cell && cell.teacher === targetTeacher && !cell.isLocked) {
+            keys.push(k);
+          }
+        });
+
+        if (keys.length === 0) {
+          alert(`'${targetTeacher}' 실습생에게 배당된 일반 수업이 없습니다.`);
+          return;
+        }
+
+        this.selectedCellKeys = keys;
+        this.multiSelectMode = true;
+        this.setTeacherFilter('all');
+        this.updateMultiSelectedClassOnDOM();
+        this.updateMultiMoveBar();
+
+        alert(`[${targetTeacher}] 실습생의 모든 수업 ${keys.length}개가 한꺼번에 선택되었습니다!\n• 선택된 셀 중 하나를 빈 슬롯으로 드래그하면 그룹 전체가 함께 이동합니다.\n• 또는 하단 컨트롤 바의 방향키(◀, ▶, ▲, ▼)를 눌러 한꺼번에 이동할 수 있습니다.`);
+      },
+
+      shiftSelectedCells(dDay, dPeriod) {
+        if (!this.selectedCellKeys || this.selectedCellKeys.length === 0) {
+          alert('먼저 일괄 이동할 수업 셀들을 선택해주세요.');
+          return;
+        }
+        this.executeBulkMoveDelta(dDay, dPeriod);
+      },
+
+      executeBulkMove(anchorKey, targetKey) {
+        const [aD, aP] = anchorKey.split('-').map(Number);
+        const [tD, tP] = targetKey.split('-').map(Number);
+        const deltaD = tD - aD;
+        const deltaP = tP - aP;
+        if (deltaD === 0 && deltaP === 0) return;
+        this.executeBulkMoveDelta(deltaD, deltaP);
+      },
+
+      executeBulkMoveDelta(deltaD, deltaP) {
+        const totalDays = (this.config.weekCount || 2) * 5;
+        const maxP = this.periodsPerDay || 8;
+        const keys = [...(this.selectedCellKeys || [])];
+        if (keys.length === 0) return;
+
+        const newKeysMap = {};
+        const newKeySet = new Set();
+
+        // 1. Boundary & Locked slot validation
+        for (const k of keys) {
+          const [d, p] = k.split('-').map(Number);
+          const nD = d + deltaD;
+          const nP = p + deltaP;
+
+          if (nD < 0 || nD >= totalDays || nP < 1 || nP > maxP) {
+            alert(`일괄 이동 시 시간표 범위(1~${totalDays}일차, 1~${maxP}교시)를 벗어나는 수업이 있어 이동할 수 없습니다.`);
+            return;
+          }
+
+          const nKey = `${nD}-${nP}`;
+          if (this.events[nKey] && this.events[nKey].isLocked) {
+            const ev = this.events[nKey];
+            alert(`잠긴 행사/강의(${ev.subject || '일정'}, ${nD+1}일차 ${nP}교시) 슬롯과 충돌하여 일괄 이동할 수 없습니다.`);
+            return;
+          }
+
+          newKeysMap[k] = nKey;
+          newKeySet.add(nKey);
+        }
+
+        // 2. Collision with unselected classes validation
+        const externalCollisions = [];
+        Object.keys(newKeysMap).forEach(k => {
+          const nKey = newKeysMap[k];
+          if (!keys.includes(nKey) && this.timetable[nKey] && this.timetable[nKey].subject) {
+            externalCollisions.push(`${nKey}(${this.timetable[nKey].subject})`);
+          }
+        });
+
+        if (externalCollisions.length > 0) {
+          const ok = confirm(`이동할 위치에 이미 다른 수업(${externalCollisions.length}건: ${externalCollisions.slice(0, 3).join(', ')}...)이 있습니다.\n해당 슬롯을 덮어쓰고 일괄 이동을 계속하시겠습니까?`);
+          if (!ok) return;
+        }
+
+        // 3. Atomic Move Execution
+        const movingData = {};
+        keys.forEach(k => {
+          movingData[k] = this.timetable[k];
+          delete this.timetable[k];
+        });
+
+        keys.forEach(k => {
+          const nKey = newKeysMap[k];
+          this.timetable[nKey] = movingData[k];
+        });
+
+        // 4. Update selectedCellKeys to new positions
+        this.selectedCellKeys = Object.values(newKeysMap);
+
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        this.updateMultiSelectedClassOnDOM();
+        this.updateMultiMoveBar();
+        this.runFullDiagnostic(false);
+        this.renderDashboardCharts();
+
+        if (this.timetableErrors && this.timetableErrors.errorCount > 0) {
+          alert(`일괄 이동 완료! (주의: 이동으로 인해 차시 순서 경고가 발생했으니 확인해주세요)`);
+        }
+      },
+
       // Drag and drop event handlers
       onDragStart(e, key) {
+        if (this.selectedCellKeys && this.selectedCellKeys.includes(key)) {
+          this.draggedGroup = { anchorKey: key, keys: [...this.selectedCellKeys] };
+          this.draggedKey = key;
+          e.dataTransfer.setData('text/plain', key);
+          e.dataTransfer.effectAllowed = 'move';
+          return;
+        }
+        this.draggedGroup = null;
         this.draggedKey = key;
         e.dataTransfer.setData('text/plain', key);
         e.dataTransfer.effectAllowed = 'move';
@@ -5772,14 +6240,40 @@
       onDrop(e, targetKey) {
         e.preventDefault();
         e.currentTarget.classList.remove('dragging-over');
-        const sourceKey = this.draggedKey;
         this.clearSwapHighlights();
+
+        if (this.draggedGroup && this.draggedGroup.keys.includes(this.draggedKey)) {
+          const anchorKey = this.draggedGroup.anchorKey || this.draggedKey;
+          this.draggedGroup = null;
+          this.executeBulkMove(anchorKey, targetKey);
+          return;
+        }
+
+        const sourceKey = this.draggedKey;
         if (!sourceKey || sourceKey === targetKey) return;
         this.executeSwap(sourceKey, targetKey);
       },
 
       // Click to swap handlers
-      onCellClick(key) {
+      onCellClick(key, e) {
+        const isMulti = this.multiSelectMode || (e && (e.shiftKey || e.ctrlKey || e.metaKey));
+        if (isMulti) {
+          const cell = this.timetable[key];
+          if (!cell || !cell.subject || cell.isLocked) {
+            return;
+          }
+          if (!this.selectedCellKeys) this.selectedCellKeys = [];
+          const idx = this.selectedCellKeys.indexOf(key);
+          if (idx >= 0) {
+            this.selectedCellKeys.splice(idx, 1);
+          } else {
+            this.selectedCellKeys.push(key);
+          }
+          this.updateMultiSelectedClassOnDOM();
+          this.updateMultiMoveBar();
+          return;
+        }
+
         if (!this.selectedCellKey) {
           const cell = this.timetable[key];
           if (!cell || !cell.subject) {
