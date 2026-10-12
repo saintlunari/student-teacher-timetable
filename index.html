@@ -5765,13 +5765,18 @@
                       const curB_subB = statB.subjectCount[subB] || 0;
 
                       if (curB_subB > targetB_subB && curA_subB < targetA_subB) {
+                        const isFullDaySlot = (key) => {
+                          const day = parseInt(key.split('-')[0], 10);
+                          const period = parseInt(key.split('-')[1], 10);
+                          return (period <= 4 && this.fullDayTeaching && !!this.fullDayTeaching[day]);
+                        };
                         const cellAKey = Object.keys(newTimetable).find(k => {
                           const c = newTimetable[k];
-                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && c.teacher === tA.name && c.subject === subA;
+                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tA.name && c.subject === subA;
                         });
                         const cellBKey = Object.keys(newTimetable).find(k => {
                           const c = newTimetable[k];
-                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && c.teacher === tB.name && c.subject === subB;
+                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tB.name && c.subject === subB;
                         });
 
                         if (cellAKey && cellBKey) {
@@ -5795,6 +5800,23 @@
             }
             if (!swapped) break;
           }
+        }
+
+        // Final Full-Day Teaching (전일제: 해당일 4교시 1교생 전담) Hard Enforcement
+        if (this.fullDayTeaching && Object.keys(this.fullDayTeaching).length > 0) {
+          Object.keys(this.fullDayTeaching).forEach(dayStr => {
+            const d = parseInt(dayStr, 10);
+            const fullDayTeacher = this.fullDayTeaching[d];
+            if (fullDayTeacher) {
+              for (let p = 1; p <= 4; p++) {
+                const key = `${d}-${p}`;
+                const cell = newTimetable[key];
+                if (cell && !cell.isLocked && cell.curriculumId) {
+                  cell.teacher = fullDayTeacher;
+                }
+              }
+            }
+          });
         }
 
         // 7. Remove unassigned classes from the timetable (미배정된 과목은 배당표에서 깨끗하게 제거)

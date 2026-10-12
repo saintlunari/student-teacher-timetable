@@ -1495,40 +1495,40 @@
           const autoCycleCount = Object.keys(App.fullDayTeaching || {}).length;
           const autoCyclePass = (autoCycleCount === App.teachers.length);
 
-          // 3. 특정 일자(1일차 = 1주차 화요일) 전일제 수동 선택 적용 검증 (김부설 1~4교시 전담)
+          // 3. 특정 일자(6일차 = 2주차 화요일) 전일제 수동 선택 적용 검증 (김부설 1~4교시 전담)
           App.loadPreset('grade2', false);
           App.runAutoAllocation(false);
-          App.fullDayTeaching = { 1: '김부설' };
-          App.applyFullDayTeachingToTimetable(1, false);
+          App.fullDayTeaching = { 6: '김부설' };
+          App.applyFullDayTeachingToTimetable(6, false);
+
+          let day6ClassesCount = 0;
+          let day6KimCount = 0;
+          for (let p = 1; p <= 4; p++) {
+            const key = `6-${p}`;
+            const cell = App.timetable[key];
+            if (cell && !cell.isLocked) {
+              day6ClassesCount++;
+              if (cell.teacher === '김부설') day6KimCount++;
+            }
+          }
+          const manualApplyPass = (day6ClassesCount > 0 && day6KimCount === day6ClassesCount);
+
+          // 4. 솔버 자동 배당 연동 검증 (1일차 = 1주차 화요일, 이공주 1~4교시 전담)
+          App.loadPreset('grade2', false);
+          App.fullDayTeaching = { 1: '이공주' };
+          App.runAutoAllocation(false);
 
           let day1ClassesCount = 0;
-          let day1KimCount = 0;
+          let day1LeeCount = 0;
           for (let p = 1; p <= 4; p++) {
             const key = `1-${p}`;
             const cell = App.timetable[key];
-            if (cell && !cell.isLocked) {
-              day1ClassesCount++;
-              if (cell.teacher === '김부설') day1KimCount++;
-            }
-          }
-          const manualApplyPass = (day1ClassesCount > 0 && day1KimCount === day1ClassesCount);
-
-          // 4. 솔버 자동 배당 연동 검증 (2일차 = 1주차 수요일, 이공주 1~4교시 전담)
-          App.loadPreset('grade2', false);
-          App.fullDayTeaching = { 2: '이공주' };
-          App.runAutoAllocation(false);
-
-          let day2ClassesCount = 0;
-          let day2LeeCount = 0;
-          for (let p = 1; p <= 4; p++) {
-            const key = `2-${p}`;
-            const cell = App.timetable[key];
             if (cell && !cell.isLocked && cell.curriculumId) {
-              day2ClassesCount++;
-              if (cell.teacher === '이공주') day2LeeCount++;
+              day1ClassesCount++;
+              if (cell.teacher === '이공주') day1LeeCount++;
             }
           }
-          const solverApplyPass = (day2ClassesCount > 0 && day2LeeCount === day2ClassesCount);
+          const solverApplyPass = (day1ClassesCount > 0 && day1LeeCount === day1ClassesCount);
 
           // 5. 시간표 헤더 배지 및 전체 해제 검증
           const headerHtml = frameDoc.getElementById('timetable-thead')?.innerHTML || '';
@@ -1545,7 +1545,7 @@
           return {
             pass,
             message: pass
-              ? `전일제 모달 및 툴바 정상, 교생 ${autoCycleCount}명 1일씩 자동 순환 지정, 수동 선택 적용(1주차 화요일 1~4교시 김부설 ${day1KimCount}/${day1ClassesCount} 전담) 및 솔버 연동(1주차 수요일 1~4교시 이공주 ${day2LeeCount}/${day2ClassesCount} 전담) 100% 무결성 검증 완료`
+              ? `전일제 모달 및 툴바 정상, 교생 ${autoCycleCount}명 1일씩 자동 순환 지정, 수동 선택 적용(2주차 화요일 1~4교시 김부설 ${day6KimCount}/${day6ClassesCount} 전담) 및 솔버 연동(1주차 화요일 1~4교시 이공주 ${day1LeeCount}/${day1ClassesCount} 전담) 100% 무결성 검증 완료`
               : `검증 실패: (ui:${hasUI}, modal:${modalOpen}, cycle:${autoCyclePass}, manual:${manualApplyPass}, solver:${solverApplyPass}, badge:${hasBadge}, clear:${clearPass})`
           };
         }
