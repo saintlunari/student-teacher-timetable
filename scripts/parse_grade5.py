@@ -96,7 +96,7 @@ print(f"Total parsed items across all 10 subjects: {total_count}")
 for s, info in summary.items():
     print(f"  {s} ({info['db_key']}): {info['count']} items")
 
-with open('grade5_curriculum_db.json', 'w', encoding='utf-8') as f:
+with open(os.path.join(os.path.dirname(__file__), '..', 'data', 'grade5_curriculum_db.json'), 'w', encoding='utf-8') as f:
     json.dump(parsed_db, f, ensure_ascii=False, indent=2)
 
 print("Saved grade5_curriculum_db.json successfully.")

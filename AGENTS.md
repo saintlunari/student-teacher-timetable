@@ -1,7 +1,7 @@
 # 🤖 AGENTS.md — 교생 수업 배당표 자동 완성 시스템
 
 > **대상**: 이 저장소(Codebase)를 분석, 유지보수, 기능 추가 및 리팩토링하는 모든 AI 코딩 에이전트(Antigravity, Claude Code, GitHub Copilot, Cursor 등) 및 개발자  
-> **핵심 원칙**: **하네스 엔지니어링(Harness Engineering)** 기반의 엄격한 제약조건 준수, **31대 벤치마크 테스트 100% 무결성 유지(31/31 PASS)**, 무설치 클라이언트 완결형 단일 SPA 구조 보존
+> **핵심 원칙**: **하네스 엔지니어링(Harness Engineering)** 기반의 엄격한 제약조건 준수, **36대 벤치마크 테스트 100% 무결성 유지(36/36 PASS)**, 무설치 클라이언트 완결형 단일 SPA 구조 보존
 
 ---
 
@@ -44,28 +44,36 @@
 c:/Users/user/Documents/GitHub/student-teacher-timetable/
 ├── AGENTS.md                            # [본 문서] AI 에이전트 및 개발자를 위한 전방위 아키텍처 및 작업 가이드
 ├── README.md                            # 사용자 안내 매뉴얼 및 릴리즈 노트
-├── index.html                           # [핵심] 7,200+ 라인의 단일 완결형 SPA 메인 웹 애플리케이션
-├── test_runner.html                     # [테스트 하네스] index.html을 iframe으로 구동하여 21개 시나리오를 검증하는 테스트 러너
+├── LOOP_ENGINEERING_GUIDE.md            # 하네스 엔지니어링 개발 및 루프 가이드
+├── TEST_STATUS.md                       # 테스트 상태 및 벤치마크 기록
+├── index.html                           # [핵심] 11,000+ 라인의 단일 완결형 SPA 메인 웹 애플리케이션
+├── test_runner.html                     # [테스트 하네스] index.html을 iframe으로 구동하여 36개 시나리오를 검증하는 테스트 러너
 ├── test_script.js                       # 테스트 전용 모듈 및 데이터베이스 백업 스크립트
+├── check_test_results.py                # Headless Edge 브라우저를 띄워 test_runner.html 36개 테스트를 전수 검증하는 자동 검증기
 │
-├── curriculum_db_grade2.json / .csv     # 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 745차시)
-├── grade3_parsed.json                   # 3학년 2학기 9개 전 교과 진도표 표준 데이터베이스 (총 423차시)
-├── grade5_curriculum_db.json            # 5학년 2학기 10개 전 교과 진도표 표준 데이터베이스 (총 452차시)
+├── data/                                # 교육과정 원본 데이터셋 및 표준 규격서
+│   ├── curriculum_db_grade2.json / .csv # 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 745차시)
+│   ├── grade3_parsed.json               # 3학년 2학기 9개 전 교과 진도표 표준 데이터베이스 (총 423차시)
+│   ├── grade5_curriculum_db.json        # 5학년 2학기 10개 전 교과 진도표 표준 데이터베이스 (총 452차시)
+│   ├── grade3_english_raw.csv           # 3학년 영어 원시 데이터셋
+│   ├── extracted_lesson_plans_data.json # 23개 대표수업 지도안 전수 분석 데이터셋
+│   ├── lesson_plan_format_specification.json # 공주교대부초 2026학년도 지도안 표준 규격 사양서 (본시안/세안)
+│   └── template_se_an_extracted.txt     # 2022 개정 교육과정 지도안 세안 HWP 텍스트 추출본
 │
-├── lesson_plan_format_specification.json # 공주교대부초 2026학년도 지도안 표준 규격 사양서 (본시안/세안)
-├── template_se_an_extracted.txt         # 2022 개정 교육과정 지도안 세안 HWP 텍스트 추출본
-├── extracted_lesson_plans_data.json     # 23개 대표수업 지도안 전수 분석 데이터셋
-│
-├── check_test_results.py                # Headless Edge 브라우저를 띄워 test_runner.html의 결과를 반환하는 자동 검증기
-├── run_wait_benchmark.py                # CDP 기반 벤치마크 및 타이머 모니터링 스크립트
-├── verify_and_capture.py                # 스크린샷 캡처 및 화면 무결성 검증 도구
-├── take_screenshots.py                  # 주요 단계별 화면 캡처 유틸리티
-│
-├── parse_grade3_data.py                 # 3학년 원시 데이터(영어 등) 파싱 스크립트
-├── parse_grade5.py                      # 5학년 엑셀 교육과정 데이터셋 정제 스크립트
-├── update_curriculum_db.py              # 2학년 통합교과(바·슬·즐) 진도표 업데이트 스크립트
-├── update_grade3_math_art.py            # 3학년 수학·미술 진도표 갱신 스크립트
-└── update_grade3_music.py               # 3학년 음악 진도표 갱신 스크립트
+└── scripts/                             # 보조 파이프라인 및 백엔드 스크립트군 (Python 3.14)
+    ├── parse_grade3_data.py             # 3학년 원시 데이터(영어 등) 파싱 스크립트
+    ├── parse_grade5.py                  # 5학년 엑셀 교육과정 데이터셋 정제 스크립트
+    ├── parse_music_dataset.py           # 음악 데이터셋 정제 스크립트
+    ├── parse_new_datasets.py            # 신규 교육과정 데이터셋 정제 스크립트
+    ├── update_curriculum_db.py          # 2학년 통합교과(바·슬·즐) 진도표 업데이트 스크립트
+    ├── update_grade3_math_art.py        # 3학년 수학·미술 진도표 갱신 스크립트
+    ├── update_grade3_music.py           # 3학년 음악 진도표 갱신 스크립트
+    ├── extract_all_data.py              # 지도안 데이터 전수 추출 스크립트
+    ├── generate_specification_json.py   # 지도안 규격 JSON 생성기
+    ├── verify_and_capture.py            # 스크린샷 캡처 및 화면 무결성 검증 도구
+    ├── take_screenshots.py              # 주요 단계별 화면 캡처 유틸리티
+    ├── run_wait_benchmark.py            # CDP 기반 벤치마크 및 모니터링 스크립트
+    └── watch_and_test.py                # 파일 감시 및 지속적 테스트 도구
 ```
 
 ---
@@ -213,15 +221,15 @@ AI 에이전트가 코드를 수정할 때 다음 5가지 원칙을 절대 위�
    - 실습생 간 배정 총 시수의 차이는 **최대 1시간 이내**여야 합니다. (골든 프리셋 2학년은 6, 6, 6으로 전원 일치, 3학년은 10, 10, 10, 10, 10으로 전원 일치 필수)
 4. 🔒 **압축 차시 1시수 인정 및 순서 보존**:
    - `3~4/15` 형태의 압축 차시는 1개 교시 슬롯을 차지하며, 진도표 상 3차시와 4차시의 역할을 동시에 수행하면서 이전/이후 차시와 완벽히 순서가 맞아야 합니다.
-5. 🔒 **34개 벤치마크 테스트 전원 통과 (34/34 All Passed)**:
-   - 코드를 한 줄이라도 수정한 후에는 반드시 테스트 러너를 실행하여 `34/34 passed`를 확인해야 합니다. 단 1건이라도 FAIL이 발생하면 작업을 완료로 선언할 수 없습니다.
+5. 🔒 **36개 벤치마크 테스트 전원 통과 (36/36 All Passed)**:
+   - 코드를 한 줄이라도 수정한 후에는 반드시 테스트 러너를 실행하여 `36/36 passed`를 확인해야 합니다. 단 1건이라도 FAIL이 발생하면 작업을 완료로 선언할 수 없습니다.
 
 ---
 
 ## 7. 🧪 테스트 및 무결성 검증 파이프라인 (Verification Workflow)
 
 ### 7.1 자동화 테스트 실행 (Headless Edge + CDP)
-저장소 루트에서 다음 파이썬 명령어를 실행하면 백그라운드에서 Headless Edge 브라우저를 띄워 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)의 34개 테스트를 전수 실행하고 결과를 콘솔에 출력합니다:
+저장소 루트에서 다음 파이썬 명령어를 실행하면 백그라운드에서 Headless Edge 브라우저를 띄워 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)의 36개 테스트를 전수 실행하고 결과를 콘솔에 출력합니다:
 
 ```powershell
 python check_test_results.py
@@ -229,7 +237,7 @@ python check_test_results.py
 
 **정상 출력 예시**:
 ```text
-Total: 34/34 passed
+Total: 36/36 passed
 tc1: PASS -> 차시 역전 0건: 완벽한 순서 보장
 tc2: PASS -> 잠긴 행사 30여 개 슬롯 100% 보존
 tc3: PASS -> 각 교생별 배정 시수: [6, 6, 6] -> 전원 6시수 완벽 일치
@@ -264,6 +272,8 @@ tc31: PASS -> 동일 요일 동일 학생 중복 0건, 동일 요일 동일 교�
 tc32: PASS -> 📌 고정 수업 3개 100% 보존, 대안 조합 재배정으로 미고정 수업 47건 변형 성공, 차시·페이지 역전 0건, 중복 0건 및 수업초기화 보존·일괄해제 무결성 100% 확인
 tc33: PASS -> 과목별 탭 자동 생성, [수학] 등 선택 과목 하이라이트 및 타과목 딤(dimmed-cell) 처리 100%, 맞춤 달력 전차시 오름차순·교생·마감일(D-3/D-1) 연동, 과목 일괄 선택 및 전체 뷰 복원 무결성 100% 확인
 tc34: PASS -> 우클릭 감지 및 기본메뉴 차단 100%, 모달 오픈·기존정보 로드 확인, [수학/90-93/7차시/이공주/📌고정/⭐대표] 수정·저장 및 DOM 100% 반영, 빈 슬롯 우클릭 배당 추가 및 모달 내 원클릭 삭제 무결성 100% 검증 완료
+tc35: PASS -> 시수 불일치 원인 진단 보고서 정상, 차시 순차 배정(건너뜀 0건), 수업자만 교환 vs 전체 교환 분기 성공, 진도표 선택기 원클릭 자동 입력 무결성 100% 검증 완료
+tc36: PASS -> 체육/영어/즐생(놀이) 특별실 사전 고정 슬롯 100% 매칭, 차시 순서성 보장, 모달/툴바 연동 및 기본시간표 동기화·초기화 무결성 100% 확인
 ```
 
 ---

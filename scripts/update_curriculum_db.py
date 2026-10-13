@@ -3,7 +3,7 @@ import os
 
 repo_dir = r'C:\Users\user\Documents\GitHub\student-teacher-timetable'
 index_path = os.path.join(repo_dir, 'index.html')
-grade3_json_path = os.path.join(repo_dir, 'grade3_parsed.json')
+grade3_json_path = os.path.join(repo_dir, 'data', 'grade3_parsed.json')
 
 with open(index_path, 'r', encoding='utf-8') as f:
     html = f.read()

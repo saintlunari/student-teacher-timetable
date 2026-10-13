@@ -2,7 +2,7 @@ import json
 import os
 
 repo_dir = r"C:\Users\user\Documents\GitHub\student-teacher-timetable"
-scratch_dir = r"C:\Users\user\.gemini\antigravity\scratch\student-teacher-timetable"
+scratch_dir = r"C:\Users\user\Documents\GitHub\student-teacher-timetable"
 os.makedirs(scratch_dir, exist_ok=True)
 
 index_file = os.path.join(repo_dir, "index.html")

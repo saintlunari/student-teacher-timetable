@@ -12,7 +12,7 @@ proc = subprocess.Popen([
     "--allow-file-access-from-files",
     "--disable-web-security",
     "--window-size=1550,1050",
-    "file:///C:/Users/user/.gemini/antigravity/scratch/student-teacher-timetable/test_runner.html"
+    "file:///C:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html"
 ])
 
 time.sleep(2)
