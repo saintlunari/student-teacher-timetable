@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>교생 수업 배당표 자동 완성 시스템 (Harness Engineering Pro)</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -867,16 +870,31 @@
       <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200/80 flex flex-wrap items-center justify-between gap-3">
         <div class="flex flex-wrap items-center gap-2">
           <!-- 자동 배당 실행 버튼 -->
-          <button onclick="App.runAutoAllocation()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-md transition transform active:scale-95">
+          <button onclick="App.runAutoAllocation()" class="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white text-xs font-bold rounded-xl shadow-md transition transform active:scale-95 cursor-pointer">
             <i data-lucide="play-circle" class="w-4 h-4"></i>
             자동 수업 배당 실행 (Solver)
           </button>
 
+          <!-- 새로운 조합으로 재배정 버튼 (고정 수업 유지) -->
+          <button onclick="App.runAlternativeAllocation()" id="btn-alternative-allocation" class="flex items-center gap-1.5 px-3.5 py-2 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-500 hover:to-purple-500 text-white text-xs font-bold rounded-xl shadow-md transition transform active:scale-95 cursor-pointer" title="📌 고정된 수업을 그대로 유지한 채, 나머지 수업에 한하여 기존과 다른 새로운 조합으로 다시 배정합니다">
+            <i data-lucide="shuffle" class="w-3.5 h-3.5"></i>
+            <span>새로운 조합으로 재배정 🎲</span>
+          </button>
+
           <!-- 리셋 / 지우기 -->
-          <button onclick="App.clearAllocatedClasses()" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition border border-slate-200">
+          <button onclick="App.clearAllocatedClasses()" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition border border-slate-200 cursor-pointer" title="배당된 일반 수업을 초기화합니다 (📌 고정된 수업은 보존됩니다)">
             수업만 초기화
           </button>
-          <button onclick="App.removeUnassignedClasses(true)" title="배당표에서 수업자(실습생)가 지정되지 않은 미배정 과목 일괄 제거" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl transition border border-slate-200 flex items-center gap-1">
+
+          <!-- 고정 수업 카운트 및 일괄 해제 버튼 -->
+          <button onclick="App.clearAllPinnedCells()" id="btn-pinned-count" class="hidden flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl transition shadow-xs cursor-pointer" title="클릭하면 고정(📌)된 모든 수업의 고정을 일괄 해제합니다">
+            <i data-lucide="pin" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span>고정</span>
+            <span id="pinned-classes-badge" class="px-1.5 py-0.2 rounded-full bg-indigo-200 text-indigo-950 font-black text-[10px]">0개</span>
+            <span class="text-[10px] text-indigo-500 font-normal ml-0.5">(해제)</span>
+          </button>
+
+          <button onclick="App.removeUnassignedClasses(true)" title="배당표에서 수업자(실습생)가 지정되지 않은 미배정 과목 일괄 제거" class="px-3 py-2 text-xs font-medium text-slate-600 hover:text-amber-700 hover:bg-amber-50 rounded-xl transition border border-slate-200 flex items-center gap-1 cursor-pointer">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-600"></i>
             미배정 과목 정리
           </button>
@@ -892,6 +910,12 @@
             <i data-lucide="sun-medium" class="w-3.5 h-3.5"></i>
             <span>전일제 선택 적용</span>
             <span id="fullday-btn-badge" class="hidden px-1.5 py-0.2 rounded-full bg-amber-200 text-amber-950 font-black text-[10px]">0일</span>
+          </button>
+
+          <!-- 교생 이름 편집 모달 열기 -->
+          <button onclick="App.openTeacherRenameModal()" id="btn-open-teacher-rename-modal" class="flex items-center gap-1.5 px-3 py-2 text-xs font-bold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-xl transition shadow-xs cursor-pointer" title="자동 배당 후 실습생 이름을 수정하고 배당표·요약표·지도안 달력에 즉시 일괄 반영합니다">
+            <i data-lucide="user-cog" class="w-3.5 h-3.5 text-indigo-600"></i>
+            <span>교생 이름 편집</span>
           </button>
 
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
@@ -991,8 +1015,12 @@
           <!-- 우측: 교육실습생 수업 교과 요약표 -->
           <div id="timetable-summary-box" class="w-full lg:w-72 shrink-0 space-y-4 no-print-responsive">
             <div class="border-2 border-slate-900 bg-white">
-              <div class="bg-slate-100 p-2 text-center font-black text-xs border-b-2 border-slate-900 tracking-wider">
-                교육실습생 수업 교과
+              <div class="bg-slate-100 p-2 text-center font-black text-xs border-b-2 border-slate-900 tracking-wider flex items-center justify-between px-3">
+                <span>교육실습생 수업 교과</span>
+                <button onclick="App.openTeacherRenameModal()" class="text-[11px] font-bold text-indigo-700 hover:text-indigo-900 bg-white hover:bg-indigo-50 border border-indigo-200 rounded px-1.5 py-0.5 transition shadow-2xs no-print flex items-center gap-1 cursor-pointer" title="실습생 이름 수정 및 배당표 반영">
+                  <i data-lucide="pencil" class="w-3 h-3 text-indigo-600"></i>
+                  <span>이름 편집</span>
+                </button>
               </div>
               <div id="teacher-summary-list" class="divide-y-2 divide-slate-900 text-xs">
                 <!-- JS rendered teacher stats blocks -->
@@ -1827,6 +1855,54 @@
     </div>
   </div>
 
+  <!-- ========================================================= -->
+  <!-- MODAL: 교생(실습생) 이름 편집 및 배당표 일괄 반영 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-teacher-rename" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden animate-fadeIn">
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-white">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-xs">
+            <i data-lucide="user-cog" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-slate-800 text-base sm:text-lg">실습생(교생) 이름 편집</h3>
+            <p class="text-xs text-slate-500">배당표 일정은 유지한 채 실습생 이름만 안전하게 일괄 변경합니다.</p>
+          </div>
+        </div>
+        <button onclick="App.closeTeacherRenameModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4">
+        <div class="bg-indigo-50/70 border border-indigo-200 rounded-xl p-3 text-xs text-indigo-900 leading-relaxed flex items-start gap-2">
+          <i data-lucide="sparkles" class="w-4 h-4 text-indigo-600 shrink-0 mt-0.5"></i>
+          <div>
+            이름을 변경하면 <strong>시간표 그리드, 행사표, 아침활동, 요약표, 지도안 마감일 달력, 엑셀/한글 복사</strong>에 실시간으로 즉시 반영됩니다.
+          </div>
+        </div>
+
+        <div id="teacher-rename-list" class="space-y-3">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
+        <span class="text-xs font-semibold text-slate-500" id="teacher-rename-count">총 0명 실습생</span>
+        <div class="flex items-center gap-2">
+          <button onclick="App.closeTeacherRenameModal()" class="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition cursor-pointer">
+            닫기
+          </button>
+          <button onclick="App.saveAllTeacherRenames()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>모두 저장 (배당표 반영)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC ENGINE -->
   <script>
     // --- 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 361차시) ---
@@ -1969,17 +2045,6 @@
       return res;
     }
 
-    function formatSubjectHours(hoursObj) {
-      if (!hoursObj || typeof hoursObj !== 'object') return '';
-      return Object.entries(hoursObj)
-        .filter(([_, h]) => typeof h === 'number' && h > 0)
-        .map(([sub, h]) => {
-          const short = SUBJECT_SHORT_MAP[sub] || sub;
-          return `${short}(${h})`;
-        })
-        .join(' ');
-    }
-
     // --- 교육실습생 배정 수업 교과 표준 정렬 목록 및 포맷터 ---
     const TEACHER_SUMMARY_SUBJECT_ORDER = [
       '국어', '수학', '사회', '도덕', '과학', '실과', '음악', '미술', '체육', '영어',
@@ -2005,6 +2070,28 @@
       if (trimmed.includes('슬생') || trimmed.includes('슬기로운생활') || trimmed === '슬') return '슬생';
       if (trimmed.includes('즐생') || trimmed.includes('즐거운생활') || trimmed === '즐') return '즐생';
       return trimmed;
+    }
+
+    function formatSubjectHours(hoursObj) {
+      if (!hoursObj || typeof hoursObj !== 'object') return '';
+      const entries = Object.entries(hoursObj)
+        .filter(([_, h]) => typeof h === 'number' && h > 0);
+      const orderMap = {};
+      TEACHER_SUMMARY_SUBJECT_ORDER.forEach((sub, idx) => { orderMap[sub] = idx; });
+      entries.sort(([subA], [subB]) => {
+        const normA = normalizeSubjectName(subA);
+        const normB = normalizeSubjectName(subB);
+        const idxA = (orderMap[normA] !== undefined) ? orderMap[normA] : 1000;
+        const idxB = (orderMap[normB] !== undefined) ? orderMap[normB] : 1000;
+        if (idxA !== idxB) return idxA - idxB;
+        return normA.localeCompare(normB, 'ko');
+      });
+      return entries
+        .map(([sub, h]) => {
+          const short = SUBJECT_SHORT_MAP[sub] || sub;
+          return `${short}(${h})`;
+        })
+        .join(' ');
     }
 
     function formatTeacherAssignedSubjects(subjectCountMap, emptyFallback = '배정 없음') {
@@ -2040,6 +2127,14 @@
       return entries.map(([sub, cnt]) => `${sub}(${cnt})`).join(' ') || emptyFallback;
     }
 
+    function parsePageNum(pStr) {
+      if (pStr === undefined || pStr === null) return null;
+      if (typeof pStr === 'number') return isNaN(pStr) ? null : pStr;
+      const match = String(pStr).match(/\d+/);
+      return match ? parseInt(match[0], 10) : null;
+    }
+
+    window.parsePageNum = parsePageNum;
     window.parseSubjectHours = parseSubjectHours;
     window.formatSubjectHours = formatSubjectHours;
     window.normalizeSubjectName = normalizeSubjectName;
@@ -2522,6 +2617,7 @@
       morningDuty: {},
       fullDayTeaching: {}, // { [dayIndex]: teacherName } - 전일제(해당일 4교시 1교생 전담)
       timetable: {},
+      allocationSeed: 0,
 
       // Charts instance
       radarChartInstance: null,
@@ -2555,6 +2651,7 @@
         this.normalizeDefaultTimetable();
         this.morningDuty = {};
         this.timetable = {};
+        this.allocationSeed = 0;
         this.selectedTeacherFilter = 'all';
 
         this.populateInputsFromConfig();
@@ -2954,7 +3051,7 @@
           tr.innerHTML = `
             <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="py-2 px-3 font-bold text-slate-800">
-              <input type="text" value="${t.name}" oninput="App.updateTeacherLive(${idx}, 'name', this.value)" onchange="App.updateTeacher(${idx}, 'name', this.value)" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
+              <input type="text" value="${t.name}" data-old-name="${t.name}" onfocus="this.dataset.oldName = this.value" oninput="App.updateTeacherLive(${idx}, 'name', this.value)" onchange="App.onTeacherNameInputChange(${idx}, this.value, this.dataset.oldName || '${t.name}'); this.dataset.oldName = this.value;" class="w-full px-2 py-1 border rounded bg-white font-bold text-xs focus:ring-1 focus:ring-indigo-500">
             </td>
             <td class="py-2 px-3">
               <input type="text" value="${t.major || ''}" placeholder="예: 국어" oninput="App.updateTeacherLive(${idx}, 'major', this.value)" onchange="App.updateTeacher(${idx}, 'major', this.value)" class="w-full px-2 py-1 border rounded bg-white text-xs">
@@ -3242,10 +3339,26 @@
 
       updateTeacherLive(idx, field, val) {
         if (!this.teachers[idx]) return;
-        this.teachers[idx][field] = val;
         if (field === 'name') {
           const badge = document.getElementById(`teacher-badge-${idx}`);
           if (badge) badge.innerText = val;
+        } else {
+          this.teachers[idx][field] = val;
+        }
+      },
+
+      onTeacherNameInputChange(idx, newName, oldName) {
+        const trimmed = (newName || '').trim();
+        const prev = oldName || (this.teachers[idx] ? this.teachers[idx].name : '');
+        if (!trimmed) {
+          if (this.teachers[idx]) this.teachers[idx].name = prev;
+          this.renderTeachersTable();
+          return;
+        }
+        if (prev && prev !== trimmed) {
+          this.renameTeacher(prev, trimmed, idx);
+        } else if (this.teachers[idx]) {
+          this.teachers[idx].name = trimmed;
         }
       },
 
@@ -3289,13 +3402,19 @@
         const tbody = document.getElementById('teacher-table-body');
         if (!tbody) return;
         const rows = tbody.querySelectorAll('tr');
+        const renames = [];
         rows.forEach((tr, idx) => {
           if (!this.teachers[idx]) return;
           const inputs = tr.querySelectorAll('input');
           const certSelect = tr.querySelector('select[data-field="certSubject"]');
           const demoSelect = tr.querySelector('select[data-field="demoSubject"]');
           if (inputs[0] && inputs[0].value.trim()) {
-            this.teachers[idx].name = inputs[0].value.trim();
+            const newName = inputs[0].value.trim();
+            const oldName = this.teachers[idx].name;
+            if (oldName && oldName !== newName) {
+              renames.push({ oldName, newName, idx });
+            }
+            this.teachers[idx].name = newName;
           }
           if (inputs[1]) {
             this.teachers[idx].major = inputs[1].value.trim();
@@ -3318,6 +3437,10 @@
             this.teachers[idx].note = noteInp.value.trim();
             this.teachers[idx].subjectHours = parseSubjectHours(this.teachers[idx].note);
           }
+        });
+
+        renames.forEach(r => {
+          this.cascadeTeacherRename(r.oldName, r.newName);
         });
       },
 
@@ -3344,6 +3467,13 @@
       updateTeacher(idx, field, val) {
         if (this.teachers[idx]) {
           const oldName = this.teachers[idx].name;
+          if (field === 'name') {
+            const trimmed = (val || '').trim();
+            if (trimmed && oldName !== trimmed) {
+              this.renameTeacher(oldName, trimmed, idx);
+            }
+            return;
+          }
           this.teachers[idx][field] = val;
           if (field === 'maxHours') {
             const num = val ? parseInt(val, 10) : (this.config.maxHours || 10);
@@ -3352,25 +3482,272 @@
             if (cfgInp) cfgInp.value = num;
             this.renderTeachersTable();
           }
-          if (field === 'name' && oldName !== val) {
-            this.curriculum.forEach(c => {
-              if (c.designatedTeacher === oldName) c.designatedTeacher = val;
-              if (c.demoTeacher === oldName) c.demoTeacher = val;
-            });
-            Object.keys(this.morningDuty).forEach(k => {
-              if (this.morningDuty[k] === oldName) this.morningDuty[k] = val;
-            });
-            Object.keys(this.events).forEach(k => {
-              if (this.events[k].teacher === oldName) this.events[k].teacher = val;
-            });
-            Object.keys(this.timetable).forEach(k => {
-              if (this.timetable[k].teacher === oldName) this.timetable[k].teacher = val;
-            });
-          }
           this.renderCurriculumTable();
           this.renderTeacherFilterTabs();
           this.renderTeacherSummary();
         }
+      },
+
+      // -----------------------------------------------------------------------
+      // TEACHER RENAMING & CASCADING UPDATE ENGINE (실습생 이름 일괄/개별 변경)
+      // -----------------------------------------------------------------------
+      cascadeTeacherRename(oldName, newName) {
+        if (!oldName || !newName) return;
+        const trimmedOld = String(oldName).trim();
+        const trimmedNew = String(newName).trim();
+        if (!trimmedOld || !trimmedNew || trimmedOld === trimmedNew) return;
+
+        // 1. Cascade to Timetable cells
+        if (this.timetable) {
+          Object.keys(this.timetable).forEach(k => {
+            const cell = this.timetable[k];
+            if (cell) {
+              if (cell.teacher === trimmedOld) cell.teacher = trimmedNew;
+              if (cell.demoTeacher === trimmedOld) cell.demoTeacher = trimmedNew;
+            }
+          });
+        }
+
+        // 2. Cascade to Events
+        if (this.events) {
+          Object.keys(this.events).forEach(k => {
+            const ev = this.events[k];
+            if (ev && ev.teacher === trimmedOld) {
+              ev.teacher = trimmedNew;
+            }
+          });
+        }
+
+        // 3. Cascade to Curriculum items
+        if (this.curriculum) {
+          this.curriculum.forEach(c => {
+            if (c.designatedTeacher === trimmedOld) c.designatedTeacher = trimmedNew;
+            if (c.demoTeacher === trimmedOld) c.demoTeacher = trimmedNew;
+          });
+        }
+
+        // 4. Cascade to Morning Duty (아침활동)
+        if (this.morningDuty) {
+          Object.keys(this.morningDuty).forEach(k => {
+            const val = this.morningDuty[k];
+            if (typeof val === 'string') {
+              if (val === trimmedOld) {
+                this.morningDuty[k] = trimmedNew;
+              } else if (val.includes(trimmedOld)) {
+                this.morningDuty[k] = val.split(',').map(s => s.trim() === trimmedOld ? trimmedNew : s.trim()).join(', ');
+              }
+            }
+          });
+        }
+
+        // 5. Cascade to Full-Day Teaching (전일제)
+        if (this.fullDayTeaching) {
+          Object.keys(this.fullDayTeaching).forEach(k => {
+            if (this.fullDayTeaching[k] === trimmedOld) {
+              this.fullDayTeaching[k] = trimmedNew;
+            }
+          });
+        }
+
+        // 6. Cascade to Filter view state
+        if (this.selectedTeacherFilter === trimmedOld) {
+          this.selectedTeacherFilter = trimmedNew;
+        }
+      },
+
+      renameTeacher(oldName, newName, teacherIdx = null) {
+        if (!oldName || !newName) return false;
+        const trimmedOld = String(oldName).trim();
+        const trimmedNew = String(newName).trim();
+        if (!trimmedOld || !trimmedNew || trimmedOld === trimmedNew) return false;
+
+        // 1. Update this.teachers list
+        if (teacherIdx !== null && this.teachers[teacherIdx]) {
+          this.teachers[teacherIdx].name = trimmedNew;
+        } else {
+          const t = this.teachers.find(x => x.name === trimmedOld);
+          if (t) t.name = trimmedNew;
+        }
+
+        // 2. Cascade across all data structures
+        this.cascadeTeacherRename(trimmedOld, trimmedNew);
+
+        // 3. Re-render UI components
+        this.renderTeachersTable();
+        this.renderCurriculumTable();
+        this.renderTeacherFilterTabs();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        if (typeof this.renderCustomCalendar === 'function') this.renderCustomCalendar();
+        if (typeof this.renderDashboard === 'function') this.renderDashboard();
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+
+        return true;
+      },
+
+      promptRenameTeacher(idx) {
+        const t = this.teachers[idx];
+        if (!t) return;
+        const currentName = t.name;
+        const newName = prompt(`실습생 [${currentName}]의 새로운 이름을 입력하세요:\n(배당표, 행사, 요약표, 지도안 달력에 즉시 일괄 반영됩니다)`, currentName);
+        if (newName !== null) {
+          const trimmed = newName.trim();
+          if (!trimmed) {
+            alert('실습생 이름을 입력해주세요.');
+            return;
+          }
+          if (trimmed !== currentName) {
+            this.renameTeacher(currentName, trimmed, idx);
+          }
+        }
+      },
+
+      openTeacherRenameModal() {
+        this.renderTeacherRenameModal();
+        const m = document.getElementById('modal-teacher-rename');
+        if (m) m.classList.remove('hidden');
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+      },
+
+      closeTeacherRenameModal() {
+        const m = document.getElementById('modal-teacher-rename');
+        if (m) m.classList.add('hidden');
+      },
+
+      renderTeacherRenameModal() {
+        const listContainer = document.getElementById('teacher-rename-list');
+        if (!listContainer) return;
+
+        const hoursMap = {};
+        Object.values(this.timetable || {}).forEach(cell => {
+          if (cell && cell.teacher) {
+            hoursMap[cell.teacher] = (hoursMap[cell.teacher] || 0) + 1;
+          }
+        });
+
+        let html = '';
+        this.teachers.forEach((t, idx) => {
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const hours = hoursMap[t.name] || 0;
+          html += `
+            <div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:border-indigo-300 transition shadow-2xs">
+              <span class="w-8 h-8 rounded-xl flex items-center justify-center font-bold text-xs shrink-0 border" style="background:${color.bg}; color:${color.text}; border-color:${color.border};">
+                ${idx + 1}
+              </span>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-semibold text-slate-600">${t.major || '교육'} 전공 · 배정 <strong class="text-indigo-600 font-bold">${hours}시수</strong></span>
+                  <span class="text-[11px] text-slate-400 font-mono">현재: <span class="font-bold text-slate-600">${t.name}</span></span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="text" id="rename-teacher-input-${idx}" value="${t.name}" data-orig="${t.name}" class="flex-1 px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-bold text-slate-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-slate-50/50" placeholder="실습생 이름">
+                  <button type="button" onclick="App.saveSingleTeacherRename(${idx})" class="px-3 py-1.5 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-xs font-bold rounded-lg transition shrink-0 cursor-pointer">
+                    변경
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        listContainer.innerHTML = html;
+        const countEl = document.getElementById('teacher-rename-count');
+        if (countEl) countEl.innerText = `총 ${this.teachers.length}명 실습생`;
+      },
+
+      saveSingleTeacherRename(idx) {
+        const t = this.teachers[idx];
+        if (!t) return;
+        const inp = document.getElementById(`rename-teacher-input-${idx}`);
+        if (!inp) return;
+        const newName = inp.value.trim();
+        if (!newName) {
+          alert('실습생 이름을 입력해주세요.');
+          inp.focus();
+          return;
+        }
+        const oldName = t.name;
+        if (oldName === newName) {
+          alert('이름이 기존과 동일합니다.');
+          return;
+        }
+        this.renameTeacher(oldName, newName, idx);
+        this.renderTeacherRenameModal();
+        alert(`실습생 이름이 '${oldName}'에서 '${newName}'(으)로 변경되어 배당표에 반영되었습니다.`);
+      },
+
+      saveAllTeacherRenames() {
+        const renames = [];
+        for (let idx = 0; idx < this.teachers.length; idx++) {
+          const t = this.teachers[idx];
+          const inp = document.getElementById(`rename-teacher-input-${idx}`);
+          if (!inp) continue;
+          const newName = inp.value.trim();
+          if (!newName) {
+            alert(`${idx + 1}번째 실습생의 이름을 입력해주세요.`);
+            inp.focus();
+            return;
+          }
+          const oldName = t.name;
+          if (oldName !== newName) {
+            renames.push({ idx, oldName, newName });
+          }
+        }
+        if (renames.length === 0) {
+          alert('변경된 실습생 이름이 없습니다.');
+          this.closeTeacherRenameModal();
+          return;
+        }
+
+        // Two-pass replacement to handle arbitrary swaps/cycles safely without collision
+        renames.forEach((r, i) => {
+          const tempName = `__TMP_RENAME_${r.idx}_${i}_${Date.now()}__`;
+          r.tempName = tempName;
+          this.renameTeacher(r.oldName, tempName, r.idx);
+        });
+        renames.forEach(r => {
+          this.renameTeacher(r.tempName, r.newName, r.idx);
+        });
+
+        this.closeTeacherRenameModal();
+        const summaryStr = renames.map(r => `'${r.oldName}' → '${r.newName}'`).join(', ');
+        alert(`실습생 이름이 변경되어 배당표에 성공적으로 반영되었습니다!\n(${summaryStr})`);
+      },
+
+      promptChangeCellTeacher(key, event) {
+        if (event) {
+          event.stopPropagation();
+          event.preventDefault();
+        }
+        const cell = this.timetable[key] || this.events[key];
+        if (!cell) return;
+        const currentTeacher = cell.teacher || '미배정';
+        const teacherListStr = this.teachers.map((t, i) => `${i + 1}. ${t.name} (${t.major || '교육'})`).join('\n');
+        const promptMsg = `[${cell.subject || '수업'} ${cell.lesson ? cell.lesson + '차시' : ''}] 수업자를 변경합니다.\n\n현재 수업자: ${currentTeacher}\n\n변경할 실습생 번호(1~${this.teachers.length}) 또는 이름을 입력하세요:\n${teacherListStr}\n(0 입력 시 미배정)`;
+        const input = prompt(promptMsg, currentTeacher !== '미배정' ? currentTeacher : '');
+        if (input === null) return;
+        const trimmed = input.trim();
+        let targetTeacher = '';
+        if (trimmed === '0') {
+          targetTeacher = '';
+        } else {
+          const num = parseInt(trimmed, 10);
+          if (!isNaN(num) && num >= 1 && num <= this.teachers.length) {
+            targetTeacher = this.teachers[num - 1].name;
+          } else {
+            const match = this.teachers.find(t => t.name === trimmed);
+            if (match) targetTeacher = match.name;
+            else if (trimmed) targetTeacher = trimmed;
+          }
+        }
+        cell.teacher = targetTeacher;
+        if (this.events[key] && (this.events[key].type === 'trainee_cert' || this.events[key].type === 'trainee_demo')) {
+          this.events[key].teacher = targetTeacher;
+        }
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        if (typeof this.renderCustomCalendar === 'function') this.renderCustomCalendar();
       },
 
       deleteTeacher(idx) {
@@ -5333,7 +5710,7 @@
       // -----------------------------------------------------------------------
       // ALLOCATION SOLVER ENGINE (Block Time & Compressed Lesson Support)
       // -----------------------------------------------------------------------
-      runAutoAllocation(showAlert = true) {
+      runAutoAllocation(showAlert = true, isAlternative = false) {
         if (this.curriculum.length === 0) {
           if (showAlert) alert('등록된 교과 진도표가 없습니다. Step 2에서 진도표를 먼저 등록해주세요.');
           return;
@@ -5346,16 +5723,21 @@
         const weekCount = this.config.weekCount || 2;
         const totalDays = weekCount * 5;
         const maxP = this.periodsPerDay || 8;
+        const seed = isAlternative ? (this.allocationSeed || 1) : 0;
 
         this.harmonizeTeacherSubjectsWithCurriculum();
 
-        // 1. Clear unlocked classes while preserving locked event blocks
+        // 1. Clear unlocked classes while preserving locked event blocks AND pinned classes
         const newTimetable = {};
+        const pinnedCells = {};
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             if (this.events[key] && this.events[key].isLocked) {
               newTimetable[key] = { ...this.events[key] };
+            } else if (this.timetable[key] && this.timetable[key].isPinned && this.timetable[key].subject) {
+              newTimetable[key] = { ...this.timetable[key] };
+              pinnedCells[key] = newTimetable[key];
             }
           }
         }
@@ -5367,6 +5749,14 @@
           return match ? parseInt(match[0], 10) : 1;
         };
 
+        // Helper to parse beginning page numeric value for ordering (e.g. '44-47' -> 44)
+        const parsePageNum = (pStr) => {
+          if (pStr === undefined || pStr === null) return null;
+          if (typeof pStr === 'number') return isNaN(pStr) ? null : pStr;
+          const match = String(pStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : null;
+        };
+
         // Clone curriculum so we can consume demo items without mutating this.curriculum
         const unassignedCurriculum = this.curriculum.map(c => ({ ...c }));
 
@@ -5376,8 +5766,51 @@
           teacherStats[t.name] = {
             totalHours: 0,
             subjectCount: {},
-            dailyCount: {}
+            dailyCount: {},
+            weeklyCount: {}
           };
+        });
+
+        // 1-B. Deduct curriculum items & credit teacher statistics for pinned classes
+        Object.keys(pinnedCells).forEach(key => {
+          const pCell = pinnedCells[key];
+          const [dStr, pStr] = key.split('-');
+          const d = parseInt(dStr, 10);
+          const week = Math.floor(d / 5);
+
+          let matchIdx = -1;
+          if (pCell.curriculumId) {
+            matchIdx = unassignedCurriculum.findIndex(c => !c._consumed && c.id === pCell.curriculumId);
+          }
+          if (matchIdx === -1) {
+            matchIdx = unassignedCurriculum.findIndex(c => 
+              !c._consumed && c.subject === pCell.subject && String(c.lesson) === String(pCell.lesson) && (pCell.pages ? c.pages === pCell.pages : true)
+            );
+          }
+          if (matchIdx === -1) {
+            matchIdx = unassignedCurriculum.findIndex(c => !c._consumed && c.subject === pCell.subject && String(c.lesson) === String(pCell.lesson));
+          }
+          if (matchIdx === -1) {
+            matchIdx = unassignedCurriculum.findIndex(c => !c._consumed && c.subject === pCell.subject);
+          }
+          if (matchIdx !== -1) {
+            const matched = unassignedCurriculum[matchIdx];
+            matched._consumed = true;
+            pCell.curriculumId = matched.id;
+            if (!pCell.topic && matched.topic) pCell.topic = matched.topic;
+            if (!pCell.pages && matched.pages) pCell.pages = matched.pages;
+            if (!pCell.lesson && matched.lesson) pCell.lesson = matched.lesson;
+            if (!pCell.totalLesson && matched.totalLesson) pCell.totalLesson = matched.totalLesson;
+          }
+
+          if (pCell.teacher && teacherStats[pCell.teacher]) {
+            const stat = teacherStats[pCell.teacher];
+            stat.totalHours++;
+            stat.subjectCount[pCell.subject] = (stat.subjectCount[pCell.subject] || 0) + 1;
+            stat.dailyCount[d] = (stat.dailyCount[d] || 0) + 1;
+            stat.weeklyCount = stat.weeklyCount || {};
+            stat.weeklyCount[week] = (stat.weeklyCount[week] || 0) + 1;
+          }
         });
 
         // 2-A. Pair Trainee Cert slots (🏅교생인증) with curriculum items
@@ -5560,7 +5993,14 @@
           subjectQueues[c.subject].push(c);
         });
         Object.keys(subjectQueues).forEach(sub => {
-          subjectQueues[sub].sort((a, b) => parseLessonNum(a.lesson) - parseLessonNum(b.lesson));
+          subjectQueues[sub].sort((a, b) => {
+            const pA = parsePageNum(a.pages);
+            const pB = parsePageNum(b.pages);
+            if (pA !== null && pB !== null && pA !== pB) return pA - pB;
+            const lA = parseLessonNum(a.lesson);
+            const lB = parseLessonNum(b.lesson);
+            return lA - lB;
+          });
         });
 
         // If teachers have quota configured and curriculum has more lessons than total quota,
@@ -5607,23 +6047,100 @@
           }
         }
 
+        // Helper to get time intervals and required slot count for subjects with pinned cells
+        const getSubjectIntervals = (sub) => {
+          const pinned = Object.keys(pinnedCells)
+            .filter(k => pinnedCells[k].subject === sub)
+            .map(k => {
+              const [d, p] = k.split('-').map(Number);
+              return {
+                day: d,
+                period: p,
+                time: d * 100 + p,
+                week: Math.floor(d / 5),
+                cell: pinnedCells[k],
+                lessonNum: parseLessonNum(pinnedCells[k].lesson),
+                pageNum: parsePageNum(pinnedCells[k].pages)
+              };
+            })
+            .sort((a, b) => a.time - b.time);
+
+          if (pinned.length === 0) return null;
+
+          const currList = subjectQueues[sub] || [];
+          const isBeforePinned = (currA, pinB) => {
+            const pA = parsePageNum(currA.pages);
+            const pB = pinB.pageNum;
+            if (pA !== null && pB !== null && pA !== pB) return pA < pB;
+            const lA = parseLessonNum(currA.lesson);
+            const lB = pinB.lessonNum;
+            return lA < lB;
+          };
+
+          const intervals = [];
+          intervals.push({
+            minTime: -1,
+            maxTime: pinned[0].time,
+            minW: 0,
+            maxW: pinned[0].week,
+            items: currList.filter(c => isBeforePinned(c, pinned[0]))
+          });
+          for (let j = 0; j < pinned.length - 1; j++) {
+            intervals.push({
+              minTime: pinned[j].time,
+              maxTime: pinned[j + 1].time,
+              minW: pinned[j].week,
+              maxW: pinned[j + 1].week,
+              items: currList.filter(c => !isBeforePinned(c, pinned[j]) && isBeforePinned(c, pinned[j + 1]))
+            });
+          }
+          intervals.push({
+            minTime: pinned[pinned.length - 1].time,
+            maxTime: Infinity,
+            minW: pinned[pinned.length - 1].week,
+            maxW: weekCount - 1,
+            items: currList.filter(c => !isBeforePinned(c, pinned[pinned.length - 1]))
+          });
+
+          return intervals;
+        };
+
         // 5. Match available slots to subjects evenly distributed across all weeks
         const subjectWeeklyTarget = {};
         let offset = 0;
         Object.keys(subjectQueues).forEach(sub => {
           const K = subjectQueues[sub].length;
           subjectWeeklyTarget[sub] = Array(weekCount).fill(0);
-          const base = Math.floor(K / weekCount);
-          const rem = K % weekCount;
-          for (let w = 0; w < weekCount; w++) {
-            subjectWeeklyTarget[sub][w] = base;
+          const intervals = getSubjectIntervals(sub);
+          if (!intervals) {
+            const base = Math.floor(K / weekCount);
+            const rem = K % weekCount;
+            for (let w = 0; w < weekCount; w++) {
+              subjectWeeklyTarget[sub][w] = base;
+            }
+            // Spread remainder smoothly across weeks
+            for (let i = 0; i < rem; i++) {
+              const targetW = (offset + i) % weekCount;
+              subjectWeeklyTarget[sub][targetW] += 1;
+            }
+            offset = (offset + rem) % weekCount;
+          } else {
+            intervals.forEach(iv => {
+              const cnt = iv.items.length;
+              if (cnt === 0) return;
+              const validWeeks = [];
+              for (let w = iv.minW; w <= iv.maxW && w < weekCount; w++) {
+                validWeeks.push(w);
+              }
+              if (validWeeks.length === 0) validWeeks.push(Math.min(iv.minW, weekCount - 1));
+              const base = Math.floor(cnt / validWeeks.length);
+              const rem = cnt % validWeeks.length;
+              validWeeks.forEach(w => subjectWeeklyTarget[sub][w] += base);
+              for (let i = 0; i < rem; i++) {
+                subjectWeeklyTarget[sub][validWeeks[i % validWeeks.length]] += 1;
+              }
+            });
           }
-          // Spread remainder smoothly across weeks
-          for (let i = 0; i < rem; i++) {
-            const targetW = (offset + i) % weekCount;
-            subjectWeeklyTarget[sub][targetW] += 1;
-          }
-          offset = (offset + rem) % weekCount;
         });
 
         const slotsForSubject = {};
@@ -5634,8 +6151,14 @@
         // Helper to check if a subject is already scheduled on a given day (1일 1교과 분산 원칙)
         const hasSubjectOnDay = (day, sub) => {
           for (let p = 1; p <= maxP; p++) {
-            const c = newTimetable[`${day}-${p}`];
-            if (c && c.subject === sub) return true;
+            const key = `${day}-${p}`;
+            const c = newTimetable[key] || this.events[key];
+            if (c) {
+              if (c.subject === sub) return true;
+              if ((c.type === 'trainee_cert' || c.isTraineeCert || c.type === 'trainee_demo' || c.isTraineeDemo) && (c.pages === sub || c.subject === sub)) {
+                return true;
+              }
+            }
           }
           if (slotsForSubject[sub] && slotsForSubject[sub].some(s => s.day === day)) {
             return true;
@@ -5646,8 +6169,12 @@
         const countSubjectOnDay = (day, sub) => {
           let cnt = 0;
           for (let p = 1; p <= maxP; p++) {
-            const c = newTimetable[`${day}-${p}`];
-            if (c && c.subject === sub) cnt++;
+            const key = `${day}-${p}`;
+            const c = newTimetable[key] || this.events[key];
+            if (c) {
+              if (c.subject === sub) cnt++;
+              else if ((c.type === 'trainee_cert' || c.isTraineeCert || c.type === 'trainee_demo' || c.isTraineeDemo) && (c.pages === sub || c.subject === sub)) cnt++;
+            }
           }
           if (slotsForSubject[sub]) {
             cnt += slotsForSubject[sub].filter(s => s.day === day).length;
@@ -5656,9 +6183,10 @@
         };
 
         // Smart slot selector that strictly avoids assigning the same subject to the same day
-        const assignSlotForSubject = (sub, pool) => {
+        const assignSlotForSubject = (sub, pool, allowDuplicate = false) => {
           let bestIdx = -1;
           let bestScore = -Infinity;
+          const intervals = getSubjectIntervals(sub);
 
           for (let i = 0; i < pool.length; i++) {
             const slot = pool[i];
@@ -5671,7 +6199,28 @@
               Object.keys(slotsForSubject).forEach(s => {
                 dayLoad += slotsForSubject[s].filter(sl => sl.day === slot.day).length;
               });
-              const score = 1000 - dayLoad * 10 - slot.period;
+              let score = 1000 - dayLoad * 10 - slot.period;
+              if (intervals) {
+                const slotTime = slot.day * 100 + slot.period;
+                const iv = intervals.find(item => slotTime > item.minTime && slotTime < item.maxTime);
+                if (iv) {
+                  const currentInIv = (slotsForSubject[sub] || []).filter(s => {
+                    const t = s.day * 100 + s.period;
+                    return t > iv.minTime && t < iv.maxTime;
+                  }).length;
+                  if (currentInIv < iv.items.length) {
+                    score += 5000;
+                  } else {
+                    score -= 10000;
+                  }
+                } else {
+                  score -= 10000;
+                }
+              }
+              if (isAlternative) {
+                const jitter = ((slot.day * 7 + slot.period * 13 + seed * 17) % 19) - 9;
+                score += jitter;
+              }
               if (score > bestScore) {
                 bestScore = score;
                 bestIdx = i;
@@ -5679,8 +6228,8 @@
             }
           }
 
-          // 불가피하게 주간 요일 수보다 해당 교과 시수가 많은 경우에만 중복 최소화 날짜 선택
-          if (bestIdx === -1 && pool.length > 0) {
+          // 불가피하게 전체 가용일수보다 해당 교과 시수가 많은 경우(allowDuplicate===true)에만 중복 최소화 날짜 선택
+          if (bestIdx === -1 && allowDuplicate && pool.length > 0) {
             let minOccur = Infinity;
             for (let i = 0; i < pool.length; i++) {
               const slot = pool[i];
@@ -5708,6 +6257,24 @@
           slotsByWeek[w].forEach(slot => {
             const matchSub = slot.defSubject;
             if (matchSub && subjectWeeklyTarget[matchSub] && subjectWeeklyTarget[matchSub][w] > 0 && !hasSubjectOnDay(slot.day, matchSub)) {
+              const intervals = getSubjectIntervals(matchSub);
+              if (intervals) {
+                const slotTime = slot.day * 100 + slot.period;
+                const iv = intervals.find(item => slotTime > item.minTime && slotTime < item.maxTime);
+                if (iv) {
+                  const currentInIv = (slotsForSubject[matchSub] || []).filter(s => {
+                    const t = s.day * 100 + s.period;
+                    return t > iv.minTime && t < iv.maxTime;
+                  }).length;
+                  if (currentInIv >= iv.items.length) {
+                    unassignedByWeek[w].push(slot);
+                    return;
+                  }
+                } else {
+                  unassignedByWeek[w].push(slot);
+                  return;
+                }
+              }
               slotsForSubject[matchSub].push(slot);
               subjectWeeklyTarget[matchSub][w]--;
             } else {
@@ -5720,11 +6287,20 @@
         for (let w = 0; w < weekCount; w++) {
           const subsToAssign = Object.keys(subjectWeeklyTarget)
             .filter(sub => subjectWeeklyTarget[sub][w] > 0)
-            .sort((a, b) => subjectWeeklyTarget[b][w] - subjectWeeklyTarget[a][w]);
+            .sort((a, b) => {
+              const diff = subjectWeeklyTarget[b][w] - subjectWeeklyTarget[a][w];
+              if (diff !== 0) return diff;
+              if (isAlternative) {
+                const aVal = (a.charCodeAt(0) + seed * 7) % 13;
+                const bVal = (b.charCodeAt(0) + seed * 7) % 13;
+                return aVal - bVal;
+              }
+              return 0;
+            });
 
           for (const sub of subsToAssign) {
             while (subjectWeeklyTarget[sub][w] > 0 && unassignedByWeek[w].length > 0) {
-              const assigned = assignSlotForSubject(sub, unassignedByWeek[w]);
+              const assigned = assignSlotForSubject(sub, unassignedByWeek[w], false);
               if (assigned) {
                 subjectWeeklyTarget[sub][w]--;
               } else {
@@ -5741,7 +6317,7 @@
               let borrowed = false;
               for (let otherW = 0; otherW < weekCount; otherW++) {
                 if (unassignedByWeek[otherW].length > 0) {
-                  const assigned = assignSlotForSubject(sub, unassignedByWeek[otherW]);
+                  const assigned = assignSlotForSubject(sub, unassignedByWeek[otherW], false);
                   if (assigned) {
                     subjectWeeklyTarget[sub][w]--;
                     borrowed = true;
@@ -5758,7 +6334,7 @@
         for (let w = 0; w < weekCount; w++) {
           Object.keys(subjectWeeklyTarget).forEach(sub => {
             while (subjectWeeklyTarget[sub][w] > 0 && fallbackSlots.length > 0) {
-              const assigned = assignSlotForSubject(sub, fallbackSlots);
+              const assigned = assignSlotForSubject(sub, fallbackSlots, false);
               if (assigned) {
                 subjectWeeklyTarget[sub][w]--;
               } else {
@@ -5768,26 +6344,144 @@
           });
         }
 
+        // Phase 5: Absolute Fallback (ONLY if total lessons of a subject exceed total days)
+        for (let w = 0; w < weekCount; w++) {
+          Object.keys(subjectWeeklyTarget).forEach(sub => {
+            while (subjectWeeklyTarget[sub][w] > 0) {
+              let assigned = false;
+              for (let otherW = 0; otherW < weekCount; otherW++) {
+                if (unassignedByWeek[otherW].length > 0) {
+                  assigned = assignSlotForSubject(sub, unassignedByWeek[otherW], true);
+                  if (assigned) {
+                    subjectWeeklyTarget[sub][w]--;
+                    break;
+                  }
+                }
+              }
+              if (!assigned && fallbackSlots.length > 0) {
+                assigned = assignSlotForSubject(sub, fallbackSlots, true);
+                if (assigned) {
+                  subjectWeeklyTarget[sub][w]--;
+                }
+              }
+              if (!assigned) break;
+            }
+          });
+        }
+
         // For each subject, sort its assigned slots chronologically and pair with sorted lessons
         Object.keys(slotsForSubject).forEach(sub => {
           const slots = slotsForSubject[sub];
-          slots.sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
           const currList = subjectQueues[sub];
-          for (let i = 0; i < slots.length && i < currList.length; i++) {
-            const slot = slots[i];
-            const curr = currList[i];
-            newTimetable[slot.key] = {
-              subject: curr.subject,
-              pages: curr.pages,
-              lesson: curr.lesson,
-              totalLesson: curr.totalLesson,
-              topic: curr.topic || '',
-              isCert: curr.isCert || false,
-              isDemo: curr.isDemo || false,
-              demoTeacher: curr.demoTeacher || '',
-              designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
-              curriculumId: curr.id
+          if (!currList || currList.length === 0) return;
+
+          const pinnedForSub = Object.keys(pinnedCells)
+            .filter(k => pinnedCells[k].subject === sub)
+            .map(k => {
+              const [d, p] = k.split('-').map(Number);
+              return {
+                key: k,
+                day: d,
+                period: p,
+                time: d * 100 + p,
+                cell: pinnedCells[k],
+                lessonNum: parseLessonNum(pinnedCells[k].lesson),
+                pageNum: parsePageNum(pinnedCells[k].pages)
+              };
+            })
+            .sort((a, b) => a.time - b.time);
+
+          if (pinnedForSub.length === 0) {
+            slots.sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
+            for (let i = 0; i < slots.length && i < currList.length; i++) {
+              const slot = slots[i];
+              const curr = currList[i];
+              newTimetable[slot.key] = {
+                subject: curr.subject,
+                pages: curr.pages,
+                lesson: curr.lesson,
+                totalLesson: curr.totalLesson,
+                topic: curr.topic || '',
+                isCert: curr.isCert || false,
+                isDemo: curr.isDemo || false,
+                demoTeacher: curr.demoTeacher || '',
+                designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
+                curriculumId: curr.id
+              };
+            }
+          } else {
+            // Sequence-aware pairing with pinned items
+            const isBeforePinned = (currA, pinB) => {
+              const pA = parsePageNum(currA.pages);
+              const pB = pinB.pageNum;
+              if (pA !== null && pB !== null && pA !== pB) return pA < pB;
+              const lA = parseLessonNum(currA.lesson);
+              const lB = pinB.lessonNum;
+              return lA < lB;
             };
+
+            // Partition currList into intervals defined by pinnedForSub
+            const intervals = [];
+            // Interval 0: before pinnedForSub[0]
+            intervals.push({
+              minTime: -1,
+              maxTime: pinnedForSub[0].time,
+              items: currList.filter(c => isBeforePinned(c, pinnedForSub[0]))
+            });
+            // Middle intervals
+            for (let j = 0; j < pinnedForSub.length - 1; j++) {
+              intervals.push({
+                minTime: pinnedForSub[j].time,
+                maxTime: pinnedForSub[j + 1].time,
+                items: currList.filter(c => !isBeforePinned(c, pinnedForSub[j]) && isBeforePinned(c, pinnedForSub[j + 1]))
+              });
+            }
+            // Last interval: after pinnedForSub[last]
+            intervals.push({
+              minTime: pinnedForSub[pinnedForSub.length - 1].time,
+              maxTime: Infinity,
+              items: currList.filter(c => !isBeforePinned(c, pinnedForSub[pinnedForSub.length - 1]))
+            });
+
+            // Match available slots for each interval
+            const remainingSlots = [...slots].sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
+            const assignedSlotKeys = new Set();
+
+            intervals.forEach(iv => {
+              if (iv.items.length === 0) return;
+              const matchingSlots = remainingSlots.filter(s => {
+                if (assignedSlotKeys.has(s.key)) return false;
+                const t = s.day * 100 + s.period;
+                return t > iv.minTime && t < iv.maxTime;
+              });
+              matchingSlots.sort((a, b) => (a.day !== b.day ? a.day - b.day : a.period - b.period));
+
+              for (let i = 0; i < iv.items.length; i++) {
+                let chosenSlot = null;
+                if (matchingSlots.length > 0) {
+                  chosenSlot = matchingSlots.shift();
+                } else {
+                  // Fallback: take earliest remaining unassigned slot
+                  chosenSlot = remainingSlots.find(s => !assignedSlotKeys.has(s.key));
+                }
+                if (chosenSlot) {
+                  assignedSlotKeys.add(chosenSlot.key);
+                  const curr = iv.items[i];
+                  newTimetable[chosenSlot.key] = {
+                    subject: curr.subject,
+                    pages: curr.pages,
+                    lesson: curr.lesson,
+                    totalLesson: curr.totalLesson,
+                    topic: curr.topic || '',
+                    isCert: curr.isCert || false,
+                    isDemo: curr.isDemo || false,
+                    demoTeacher: curr.demoTeacher || '',
+                    designatedTeacher: curr.designatedTeacher || curr.demoTeacher || '',
+                    curriculumId: curr.id
+                  };
+                }
+              }
+            });
           }
         });
 
@@ -5893,9 +6587,32 @@
                 }
               }
 
+              // 3. Daily Teaching Load Minimization (동일 요일 1인 1수업 원칙)
+              // 해당 날짜(d)에 아직 수업이 0개인 후보가 있다면, 이미 1개 이상 배정된 후보는 제외
+              if (candidates.length > 1) {
+                const minDayHours = Math.min(...candidates.map(t => teacherStats[t.name].dailyCount[d] || 0));
+                const dayFiltered = candidates.filter(t => (teacherStats[t.name].dailyCount[d] || 0) === minDayHours);
+                if (dayFiltered.length > 0) {
+                  candidates = dayFiltered;
+                }
+              }
+
               let bestTeacher = null;
               let lowestCost = Infinity;
-              const candidateTeachers = [...candidates].sort(() => Math.random() - 0.5);
+              const candidateTeachers = [...candidates].sort((a, b) => {
+                const da = teacherStats[a.name].dailyCount[d] || 0;
+                const db = teacherStats[b.name].dailyCount[d] || 0;
+                if (da !== db) return da - db;
+                const ha = teacherStats[a.name].totalHours || 0;
+                const hb = teacherStats[b.name].totalHours || 0;
+                if (ha !== hb) return ha - hb;
+                if (isAlternative) {
+                  const aVal = (a.colorIdx + seed * 3) % 11;
+                  const bVal = (b.colorIdx + seed * 3) % 11;
+                  return aVal - bVal;
+                }
+                return 0;
+              });
 
               candidateTeachers.forEach(t => {
                 const stat = teacherStats[t.name];
@@ -5910,7 +6627,11 @@
                 const curWeekHours = stat.weeklyCount[week] || 0;
                 const targetWeekHours = Math.ceil(tMax / weekCount);
 
-                let cost = curHours * 100 + (curSubHours * 15) + (curDayHours >= 2 ? curDayHours * 50 : curDayHours * 10);
+                let cost = curHours * 100 + (curSubHours * 15) + (curDayHours * 50000);
+                if (isAlternative) {
+                  const tJitter = ((t.colorIdx * 11 + seed * 13 + d * 7 + p * 3) % 17) - 8;
+                  cost += tJitter;
+                }
                 if (curWeekHours >= targetWeekHours) {
                   cost += (curWeekHours - targetWeekHours + 1) * 60; // weekly load balancing penalty
                 }
@@ -5987,20 +6708,36 @@
                         };
                         const cellAKey = Object.keys(newTimetable).find(k => {
                           const c = newTimetable[k];
-                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tA.name && c.subject === subA;
+                          return c && !c.isLocked && !c.isPinned && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tA.name && c.subject === subA;
                         });
                         const cellBKey = Object.keys(newTimetable).find(k => {
                           const c = newTimetable[k];
-                          return c && !c.isLocked && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tB.name && c.subject === subB;
+                          return c && !c.isLocked && !c.isPinned && !c.isDemo && !c.isCert && !c.designatedTeacher && !isFullDaySlot(k) && c.teacher === tB.name && c.subject === subB;
                         });
 
                         if (cellAKey && cellBKey) {
+                          const dayA = parseInt(cellAKey.split('-')[0], 10);
+                          const dayB = parseInt(cellBKey.split('-')[0], 10);
+
+                          // Check if swapping would create same-day duplicate for either teacher
+                          if (dayA !== dayB) {
+                            const tBCountOnA = Object.keys(newTimetable).filter(k => k.startsWith(`${dayA}-`) && k !== cellAKey && newTimetable[k].teacher === tB.name).length;
+                            const tACountOnB = Object.keys(newTimetable).filter(k => k.startsWith(`${dayB}-`) && k !== cellBKey && newTimetable[k].teacher === tA.name).length;
+                            if (tBCountOnA >= 1 || tACountOnB >= 1) {
+                              continue;
+                            }
+                          }
+
                           newTimetable[cellAKey].teacher = tB.name;
                           newTimetable[cellBKey].teacher = tA.name;
                           statA.subjectCount[subA]--;
                           statB.subjectCount[subA] = (statB.subjectCount[subA] || 0) + 1;
                           statB.subjectCount[subB]--;
                           statA.subjectCount[subB] = (statA.subjectCount[subB] || 0) + 1;
+                          statA.dailyCount[dayA] = (statA.dailyCount[dayA] || 1) - 1;
+                          statB.dailyCount[dayA] = (statB.dailyCount[dayA] || 0) + 1;
+                          statB.dailyCount[dayB] = (statB.dailyCount[dayB] || 1) - 1;
+                          statA.dailyCount[dayB] = (statA.dailyCount[dayB] || 0) + 1;
                           swapped = true;
                           break;
                         }
@@ -6015,6 +6752,93 @@
             }
             if (!swapped) break;
           }
+        }
+
+        // 6-C. Post-Processing: Daily Teacher De-duplication Pass (동일 요일 실습생 중복 배정 완벽 해소)
+        // 전일제 지정일을 제외하고, 어떤 교생이 하루에 2시간 이상 배정된 경우 다른 날(0시간인 날)의 교생과 맞교환
+        for (let pass = 0; pass < 20; pass++) {
+          let resolvedAny = false;
+          for (let d = 0; d < totalDays; d++) {
+            if (this.fullDayTeaching && this.fullDayTeaching[d]) continue; // 전일제 지정일 제외
+            
+            for (const t of this.teachers) {
+              const stat = teacherStats[t.name];
+              if ((stat.dailyCount[d] || 0) <= 1) continue;
+
+              // t has >= 2 classes on day d! Check all candidate cells of t on day d
+              const cellDKeys = Object.keys(newTimetable).filter(k => {
+                if (!k.startsWith(`${d}-`)) return false;
+                const c = newTimetable[k];
+                return c && !c.isLocked && !c.isPinned && !c.isDemo && !c.isCert && !c.designatedTeacher && c.teacher === t.name;
+              });
+              if (cellDKeys.length === 0) continue;
+
+              let swapped = false;
+              for (const cellDKey of cellDKeys) {
+                const cellD = newTimetable[cellDKey];
+                const subD = cellD.subject;
+
+                for (let dOther = 0; dOther < totalDays; dOther++) {
+                  if (dOther === d) continue;
+                  if (this.fullDayTeaching && this.fullDayTeaching[dOther]) continue;
+                  if ((stat.dailyCount[dOther] || 0) > 0) continue; // t already has class on dOther
+
+                  const cellOtherKey = Object.keys(newTimetable).find(k => {
+                    if (!k.startsWith(`${dOther}-`)) return false;
+                    const c = newTimetable[k];
+                    if (!c || c.isLocked || c.isPinned || c.isDemo || c.isCert || c.designatedTeacher || !c.teacher || c.teacher === t.name) return false;
+                    const tOther = c.teacher;
+                    const statOther = teacherStats[tOther];
+                    if (!statOther) return false;
+                    if ((statOther.dailyCount[d] || 0) > 0) return false; // tOther already has class on day d!
+
+                    // Check quota compatibility:
+                    if (c.subject === subD) return true; // Same subject is 100% quota neutral
+                    if (!anyTeacherHasQuota) return true; // Generalist elementary teachers without strict quotas
+                    const tTargetSubOther = getTeacherTarget(t, c.subject);
+                    const tOtherObj = this.teachers.find(tch => tch.name === tOther);
+                    const tOtherTargetSubD = tOtherObj ? getTeacherTarget(tOtherObj, subD) : undefined;
+                    if (tTargetSubOther !== undefined && tOtherTargetSubD !== undefined) {
+                      const tCurSubOther = stat.subjectCount[c.subject] || 0;
+                      const tOtherCurSubD = statOther.subjectCount[subD] || 0;
+                      return tCurSubOther < tTargetSubOther && tOtherCurSubD < tOtherTargetSubD;
+                    }
+                    return false;
+                  });
+
+                  if (cellOtherKey) {
+                    const cellOther = newTimetable[cellOtherKey];
+                    const tOther = cellOther.teacher;
+                    const subOther = cellOther.subject;
+                    const statOther = teacherStats[tOther];
+                    if (!statOther) continue;
+
+                    // Execute swap
+                    cellD.teacher = tOther;
+                    cellOther.teacher = t.name;
+
+                    stat.dailyCount[d]--;
+                    statOther.dailyCount[d] = (statOther.dailyCount[d] || 0) + 1;
+                    statOther.dailyCount[dOther]--;
+                    stat.dailyCount[dOther] = (stat.dailyCount[dOther] || 0) + 1;
+
+                    if (subD !== subOther) {
+                      stat.subjectCount[subD]--;
+                      statOther.subjectCount[subD] = (statOther.subjectCount[subD] || 0) + 1;
+                      statOther.subjectCount[subOther]--;
+                      stat.subjectCount[subOther] = (stat.subjectCount[subOther] || 0) + 1;
+                    }
+
+                    swapped = true;
+                    resolvedAny = true;
+                    break;
+                  }
+                }
+                if (swapped) break;
+              }
+            }
+          }
+          if (!resolvedAny) break;
         }
 
         // Final Full-Day Teaching (전일제: 해당일 4교시 1교생 전담) Hard Enforcement
@@ -6051,9 +6875,17 @@
         if (typeof this.renderSubjectQuotaComparisonBar === 'function') {
           this.renderSubjectQuotaComparisonBar();
         }
+        if (typeof this.updatePinnedBadgeUI === 'function') {
+          this.updatePinnedBadgeUI();
+        }
 
         if (showAlert) {
-          alert('자동 수업 배당이 완료되었습니다!\n• 하루 동일 교과 중복 배정 방지 완료 (1일 1교과 분산 원칙)\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 실습생 교과별 목표 시수 100% 연동 반영\n• 미배정 과목 정리 완료');
+          const pinnedCount = Object.keys(pinnedCells).length;
+          if (isAlternative) {
+            alert(`새로운 조합으로 수업 재배정이 완료되었습니다! 🎲\n• 📌 고정된 수업 ${pinnedCount}개 그대로 보존\n• 나머지 수업 대안 조합 재배치 완료\n• 하루 동일 교과 중복 배정 방지 완료 (1일 1교과 분산)\n• 1인 1수업 및 교생 시수 공평성 유지`);
+          } else {
+            alert(`자동 수업 배당이 완료되었습니다!\n${pinnedCount > 0 ? `• 📌 고정된 수업 ${pinnedCount}개 보존\n` : ''}• 하루 동일 교과 중복 배정 방지 완료 (1일 1교과 분산 원칙)\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 실습생 교과별 목표 시수 100% 연동 반영\n• 미배정 과목 정리 완료`);
+          }
         }
       },
 
@@ -6078,10 +6910,17 @@
       },
 
       clearAllocatedClasses() {
-        if (!confirm('배당된 일반 수업을 모두 지우시겠습니까? (행사 및 불가 시간은 보존됩니다)')) return;
+        const pinnedCount = Object.keys(this.timetable).filter(k => this.timetable[k] && this.timetable[k].isPinned).length;
+        let confirmMsg = '배당된 일반 수업을 모두 지우시겠습니까? (행사 및 불가 시간은 보존됩니다)';
+        if (pinnedCount > 0) {
+          confirmMsg = `배당된 일반 수업을 지우시겠습니까?\n(📌 현재 고정된 수업 ${pinnedCount}개와 행사/불가 시간은 그대로 보존됩니다)`;
+        }
+        if (!confirm(confirmMsg)) return;
         Object.keys(this.timetable).forEach(key => {
           if (!this.events[key] || !this.events[key].isLocked) {
-            delete this.timetable[key];
+            if (!this.timetable[key] || !this.timetable[key].isPinned) {
+              delete this.timetable[key];
+            }
           }
         });
         this.renderTimetableGrid();
@@ -6140,6 +6979,13 @@
           return match ? parseInt(match[0], 10) : 1;
         };
 
+        const parsePageNum = (pStr) => {
+          if (pStr === undefined || pStr === null) return null;
+          if (typeof pStr === 'number') return isNaN(pStr) ? null : pStr;
+          const match = String(pStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : null;
+        };
+
         // 1. Locked Event Collision Check (행사 슬롯 침범 오류)
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
@@ -6155,13 +7001,14 @@
           }
         }
 
-        // 2. Chronological Lesson Order Integrity Check per Subject (차시 순서 역전 오류)
+        // 2. Chronological Lesson & Page Order Integrity Check per Subject (차시 및 페이지 순서 역전 오류)
         const subjectOccurrences = {};
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = this.timetable[key];
-            if (cell && cell.subject && cell.lesson) {
+            if (cell && cell.subject && (cell.lesson || cell.pages)) {
+              if ((cell.type === 'trainee_demo' || cell.type === 'trainee_cert') && !cell.curriculumId) continue;
               if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
               subjectOccurrences[cell.subject].push({
                 key,
@@ -6169,7 +7016,7 @@
                 period: p,
                 time: d * 100 + p,
                 lessonNum: parseLessonNum(cell.lesson),
-                lessonStr: cell.lesson,
+                lessonStr: cell.lesson || '',
                 cell
               });
             }
@@ -6177,18 +7024,35 @@
         }
 
         Object.keys(subjectOccurrences).forEach(sub => {
-          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시 순서 오류 예외 (역전 허용)
+          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시/페이지 순서 오류 예외 (역전 허용)
           const list = subjectOccurrences[sub];
           for (let i = 0; i < list.length; i++) {
             for (let j = i + 1; j < list.length; j++) {
               const prev = list[i];
               const next = list[j];
-              if (prev.lessonNum > next.lessonNum) {
+              const pPrev = parsePageNum(prev.cell.pages);
+              const pNext = parsePageNum(next.cell.pages);
+
+              const isPageInversion = (pPrev !== null && pNext !== null && pPrev > pNext);
+              const isLessonInversion = (pPrev !== null && pNext !== null)
+                ? (isPageInversion && prev.lessonNum > next.lessonNum)
+                : (prev.lessonNum > next.lessonNum);
+
+              if (isLessonInversion || isPageInversion) {
                 if (!errorMap[prev.key]) errorMap[prev.key] = [];
                 if (!errorMap[next.key]) errorMap[next.key] = [];
 
-                const msgPrev = `[차시 역전] ${sub} ${prev.lessonStr}차시가 ${next.day+1}일차 ${next.period}교시(${next.lessonStr}차시)보다 늦은 차시인데 먼저 배치됨`;
-                const msgNext = `[차시 역전] ${sub} ${next.lessonStr}차시가 ${prev.day+1}일차 ${prev.period}교시(${prev.lessonStr}차시)보다 빠른 차시인데 나중에 배치됨`;
+                let reason = '';
+                if (isLessonInversion && isPageInversion) {
+                  reason = `차시 및 페이지 역전(${prev.lessonStr}차시 ${prev.cell.pages || ''}쪽 > ${next.lessonStr}차시 ${next.cell.pages || ''}쪽)`;
+                } else if (isPageInversion) {
+                  reason = `교과서 페이지 역전(${prev.cell.pages || ''}쪽 > ${next.cell.pages || ''}쪽)`;
+                } else {
+                  reason = `차시 순서 역전(${prev.lessonStr}차시 > ${next.lessonStr}차시)`;
+                }
+
+                const msgPrev = `[${isPageInversion ? '페이지 역전' : '차시 역전'}] ${sub}: ${reason} - ${next.day+1}일차 ${next.period}교시보다 나중 진도인데 먼저 배치됨`;
+                const msgNext = `[${isPageInversion ? '페이지 역전' : '차시 역전'}] ${sub}: ${reason} - ${prev.day+1}일차 ${prev.period}교시보다 앞 진도인데 나중에 배치됨`;
 
                 if (!errorMap[prev.key].includes(msgPrev)) errorMap[prev.key].push(msgPrev);
                 if (!errorMap[next.key].includes(msgNext)) errorMap[next.key].push(msgNext);
@@ -6419,7 +7283,7 @@
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_cert' ? cell.subject : '');
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
-              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-cert text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
                     <span>${subName}</span>
@@ -6445,7 +7309,7 @@
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
 
-              tbodyHtml += `<td onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-demo text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
                     <span>${subName}</span>
@@ -6494,26 +7358,34 @@
             if (cell && cell.subject) {
               const teacherObj = this.teachers.find(t => t.name === cell.teacher);
               const color = teacherObj ? TEACHER_COLORS[teacherObj.colorIdx % TEACHER_COLORS.length] : null;
-              let borderHighlight = 'border-2 border-slate-900';
+              const isPinned = !!cell.isPinned;
+              let borderHighlight = isPinned ? 'border-4 border-indigo-600 shadow-md ring-2 ring-indigo-400/80' : 'border-2 border-slate-900';
               if (cell.isDemo) {
-                borderHighlight = 'border-4 border-amber-500 shadow-sm';
+                borderHighlight = isPinned ? 'border-4 border-amber-600 ring-2 ring-indigo-500 shadow-md' : 'border-4 border-amber-500 shadow-sm';
               } else if (cell.isCert) {
-                borderHighlight = 'border-4 border-emerald-500 shadow-sm';
+                borderHighlight = isPinned ? 'border-4 border-emerald-600 ring-2 ring-indigo-500 shadow-md' : 'border-4 border-emerald-500 shadow-sm';
               }
               const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
               tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[78px] sm:min-w-[84px]">
+                <!-- 📌 수업 고정/해제 토글 버튼: 고정 시 상시 노출, 미고정 시 호버 노출 -->
+                <button onclick="App.toggleCellPin('${key}', event)" title="${isPinned ? '수업 고정 해제 (재배정 시 다른 슬롯/교생으로 변경 허용)' : '수업 고정 📌 (재배정 시 현재 시간·교생 그대로 보존)'}" class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] transition shadow-xs z-30 no-print cursor-pointer ${isPinned ? 'bg-indigo-600 text-white opacity-100 ring-1 ring-white' : 'bg-slate-700/80 hover:bg-indigo-600 text-white opacity-0 group-hover:opacity-100'}">
+                  📌
+                </button>
                 <!-- 원클릭 배당 삭제 버튼 (호버 시 표시) -->
-                <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print">
+                <button onclick="App.deleteCellClass('${key}', event)" title="이 차시 배당 삭제" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 hover:bg-rose-700 text-white rounded-full flex items-center justify-center text-[10px] font-bold opacity-0 group-hover:opacity-100 transition shadow-md z-30 no-print cursor-pointer">
                   ✕
                 </button>
                 <div class="tt-cell-box text-xs">
                   <!-- 교과명 -->
-                  <div class="tt-cell-row tt-row-sub cell-part bg-slate-50/70 text-slate-900">
-                    <span>${cell.subject}</span>
-                    ${cell.isCert ? this.renderBadge('cert') : ''}
-                    ${cell.isDemo ? this.renderBadge('demo') : ''}
+                  <div class="tt-cell-row tt-row-sub cell-part ${isPinned ? 'bg-indigo-100/90 text-indigo-950 font-black' : 'bg-slate-50/70 text-slate-900'}">
+                    <div class="flex items-center justify-center gap-0.5">
+                      ${isPinned ? '<span class="text-[10px] text-indigo-700 font-bold" title="고정된 수업">📌</span>' : ''}
+                      <span>${cell.subject}</span>
+                      ${cell.isCert ? this.renderBadge('cert') : ''}
+                      ${cell.isDemo ? this.renderBadge('demo') : ''}
+                    </div>
                   </div>
                   <!-- 단원 및 쪽수 -->
                   <div class="tt-cell-row tt-row-page cell-part" title="${cell.pages || ''}">${cell.pages || '-'}</div>
@@ -6522,7 +7394,7 @@
                     ${cell.lesson}/${cell.totalLesson}
                   </div>
                   <!-- 수업자 -->
-                  <div class="tt-cell-row tt-row-teacher cell-part" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
+                  <div class="tt-cell-row tt-row-teacher cell-part cursor-pointer hover:opacity-85 transition" onclick="App.promptChangeCellTeacher('${key}', event)" title="클릭하여 이 차시 수업자(교생) 변경" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
                     ${cell.teacher || '<span class="text-slate-300 font-normal">미배정</span>'}
                   </div>
                 </div>
@@ -6544,6 +7416,9 @@
         tbody.innerHTML = tbodyHtml;
         this.updateMultiSelectedClassOnDOM();
         this.updateMultiMoveBar();
+        if (typeof this.updatePinnedBadgeUI === 'function') {
+          this.updatePinnedBadgeUI();
+        }
       },
 
       // -----------------------------------------------------------------------
@@ -6560,12 +7435,19 @@
           const match = String(lStr).match(/\d+/);
           return match ? parseInt(match[0], 10) : 1;
         };
+        const parsePageNum = (pStr) => {
+          if (pStr === undefined || pStr === null) return null;
+          if (typeof pStr === 'number') return isNaN(pStr) ? null : pStr;
+          const match = String(pStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : null;
+        };
         const sourceLessonNum = parseLessonNum(sourceCell.lesson);
+        const sourcePageNum = parsePageNum(sourceCell.pages);
         const [sDay, sPeriod] = sourceKey.split('-').map(Number);
 
         // Helper: Check if placing a lesson preserves chronological sequence among other classes of the same subject
-        const isOrderValid = (sub, lNum, targetD, targetP, exKey1, exKey2) => {
-          if (isIntegratedSubject(sub)) return true; // 통합교과는 차시 순서 역전 예외
+        const isOrderValid = (sub, lNum, pNum, targetD, targetP, exKey1, exKey2) => {
+          if (isIntegratedSubject(sub)) return true; // 통합교과는 차시/페이지 순서 역전 예외
           const targetTime = targetD * 100 + targetP;
           for (const k in this.timetable) {
             if (k === exKey1 || k === exKey2) continue;
@@ -6574,8 +7456,15 @@
               const parts = k.split('-').map(Number);
               const cTime = parts[0] * 100 + parts[1];
               const cLessonNum = parseLessonNum(c.lesson);
-              if (cLessonNum < lNum && cTime >= targetTime) return false;
-              if (cLessonNum > lNum && cTime <= targetTime) return false;
+              const cPageNum = parsePageNum(c.pages);
+              if (cTime >= targetTime) {
+                if (cLessonNum < lNum) return false;
+                if (pNum !== null && cPageNum !== null && cPageNum < pNum) return false;
+              }
+              if (cTime <= targetTime) {
+                if (cLessonNum > lNum) return false;
+                if (pNum !== null && cPageNum !== null && cPageNum > pNum) return false;
+              }
             }
           }
           return true;
@@ -6604,8 +7493,9 @@
               }
               // 1:1 Swap check
               const targetLessonNum = parseLessonNum(targetCell.lesson);
-              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, key);
-              const targetSafe = isOrderValid(targetCell.subject, targetLessonNum, sDay, sPeriod, sourceKey, key);
+              const targetPageNum = parsePageNum(targetCell.pages);
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, sourcePageNum, d, p, sourceKey, key);
+              const targetSafe = isOrderValid(targetCell.subject, targetLessonNum, targetPageNum, sDay, sPeriod, sourceKey, key);
               if (sourceSafe && targetSafe) {
                 el.classList.add('swap-safe');
               } else {
@@ -6613,7 +7503,7 @@
               }
             } else {
               // Empty slot move check
-              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, d, p, sourceKey, null);
+              const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, sourcePageNum, d, p, sourceKey, null);
               if (sourceSafe) {
                 el.classList.add('swap-safe');
               } else {
@@ -6684,6 +7574,61 @@
         this.renderPersonalDeadlinePanel();
         this.runFullDiagnostic(false);
         this.renderDashboardCharts();
+      },
+
+      toggleCellPin(key, e) {
+        if (e) {
+          e.stopPropagation();
+          e.preventDefault();
+        }
+        const cell = this.timetable[key];
+        if (!cell || !cell.subject) return;
+        if (cell.isLocked) {
+          alert('행사, 참관, 강의 등 잠긴 일정은 이미 기본적으로 고정되어 있습니다.');
+          return;
+        }
+        cell.isPinned = !cell.isPinned;
+        this.renderTimetableGrid();
+        this.updatePinnedBadgeUI();
+        if (typeof this.renderPersonalDeadlinePanel === 'function') {
+          this.renderPersonalDeadlinePanel();
+        }
+      },
+
+      clearAllPinnedCells() {
+        let count = 0;
+        Object.keys(this.timetable).forEach(key => {
+          if (this.timetable[key] && this.timetable[key].isPinned) {
+            delete this.timetable[key].isPinned;
+            count++;
+          }
+        });
+        this.renderTimetableGrid();
+        this.updatePinnedBadgeUI();
+        if (count > 0) {
+          alert(`${count}개의 고정(📌)된 수업을 모두 해제하였습니다.`);
+        } else {
+          alert('현재 고정(📌)된 수업이 없습니다.');
+        }
+      },
+
+      updatePinnedBadgeUI() {
+        const btn = document.getElementById('btn-pinned-count');
+        const badge = document.getElementById('pinned-classes-badge');
+        if (!btn || !badge) return;
+        const count = Object.keys(this.timetable).filter(k => this.timetable[k] && this.timetable[k].isPinned).length;
+        if (count > 0) {
+          btn.classList.remove('hidden');
+          badge.textContent = `${count}개`;
+        } else {
+          btn.classList.add('hidden');
+          badge.textContent = '0개';
+        }
+      },
+
+      runAlternativeAllocation() {
+        this.allocationSeed = (this.allocationSeed || 0) + 1;
+        this.runAutoAllocation(true, true);
       },
 
       // -----------------------------------------------------------------------
@@ -7061,11 +8006,18 @@
           `.trim();
 
           html += `
-            <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900">
-              <div onclick="App.setTeacherFilter('${t.name}')" class="py-2.5 px-1.5 w-full sm:w-28 text-center flex flex-col justify-center items-center cursor-pointer hover:opacity-90 box-border" style="background:${color.bg}; color:${color.text}; min-height: 64px;">
-                <span class="font-black text-[13px] leading-tight mb-0.5">${t.name}</span>
-                <span class="text-[11px] font-semibold opacity-85 leading-tight mb-1.5">(${t.major || '교육'})</span>
-                ${badgeSvg}
+            <div class="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x-2 divide-slate-900 group/teacher-summary-card">
+              <div class="py-2.5 px-1.5 w-full sm:w-28 text-center flex flex-col justify-center items-center box-border relative" style="background:${color.bg}; color:${color.text}; min-height: 64px;">
+                <div class="flex items-center justify-center gap-1 w-full">
+                  <span onclick="App.setTeacherFilter('${t.name}')" class="font-black text-[13px] leading-tight cursor-pointer hover:underline" title="클릭하여 ${t.name} 수업만 보기">${t.name}</span>
+                  <button type="button" onclick="event.stopPropagation(); App.promptRenameTeacher(${this.teachers.indexOf(t)})" class="p-0.5 rounded hover:bg-black/10 text-current transition no-print opacity-70 hover:opacity-100 cursor-pointer" title="${t.name} 이름 수정">
+                    <i data-lucide="pencil" class="w-3 h-3"></i>
+                  </button>
+                </div>
+                <span onclick="App.setTeacherFilter('${t.name}')" class="text-[11px] font-semibold opacity-85 leading-tight mb-1.5 cursor-pointer">(${t.major || '교육'})</span>
+                <div onclick="App.setTeacherFilter('${t.name}')" class="cursor-pointer">
+                  ${badgeSvg}
+                </div>
               </div>
               <div class="p-3 flex-1 bg-white font-bold text-xs flex items-center leading-relaxed text-slate-800">
                 ${subText}
@@ -7075,6 +8027,7 @@
         });
 
         container.innerHTML = html;
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
       },
 
       editNotesPrompt() {
@@ -7518,17 +8471,24 @@
           const match = String(lStr).match(/\d+/);
           return match ? parseInt(match[0], 10) : 1;
         };
+        const parsePageNum = (pStr) => {
+          if (pStr === undefined || pStr === null) return null;
+          if (typeof pStr === 'number') return isNaN(pStr) ? null : pStr;
+          const match = String(pStr).match(/\d+/);
+          return match ? parseInt(match[0], 10) : null;
+        };
 
         const maxP = this.periodsPerDay || 8;
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = this.timetable[key];
-            if (cell && cell.subject && cell.lesson) {
+            if (cell && cell.subject && (cell.lesson || cell.pages)) {
+              if ((cell.type === 'trainee_demo' || cell.type === 'trainee_cert') && !cell.curriculumId) continue;
               if (!subjectOccurrences[cell.subject]) subjectOccurrences[cell.subject] = [];
               subjectOccurrences[cell.subject].push({
                 lessonNum: parseLessonNum(cell.lesson),
-                lessonStr: cell.lesson,
+                lessonStr: cell.lesson || '',
                 day: d,
                 period: p,
                 cell
@@ -7539,21 +8499,34 @@
 
         let orderingViolations = 0;
         Object.keys(subjectOccurrences).forEach(sub => {
-          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시 순서 오류 예외 (역전 허용)
+          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시/페이지 순서 오류 예외 (역전 허용)
           const list = subjectOccurrences[sub];
           for (let i = 0; i < list.length - 1; i++) {
-            if (list[i].lessonNum > list[i+1].lessonNum) {
+            const cur = list[i];
+            const next = list[i+1];
+            const pCur = parsePageNum(cur.cell.pages);
+            const pNext = parsePageNum(next.cell.pages);
+
+            const isPageInversion = (pCur !== null && pNext !== null && pCur > pNext);
+            const isLessonInversion = (pCur !== null && pNext !== null)
+              ? (isPageInversion && cur.lessonNum > next.lessonNum)
+              : (cur.lessonNum > next.lessonNum);
+
+            if (isLessonInversion || isPageInversion) {
               orderingViolations++;
-              const msg = `[차시 역전] ${sub}: ${list[i].day+1}일차 ${list[i].period}교시(${list[i].lessonStr}차시)가 ${list[i+1].day+1}일차 ${list[i+1].period}교시(${list[i+1].lessonStr}차시)보다 나중에 와야 합니다!`;
+              const reason = isPageInversion 
+                ? `페이지 역전(${cur.cell.pages || ''}쪽 > ${next.cell.pages || ''}쪽)`
+                : `차시 역전(${cur.lessonStr}차시 > ${next.lessonStr}차시)`;
+              const msg = `[순서 역전] ${sub}: ${cur.day+1}일차 ${cur.period}교시가 ${next.day+1}일차 ${next.period}교시보다 나중에 와야 합니다! (${reason})`;
               violations.push(msg);
             }
           }
         });
 
         if (orderingViolations === 0) {
-          reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 차시 순서성 무결성: 모든 교과의 차시가 오름차순으로 순차 진행됩니다.</div>`);
+          reports.push(`<div class="text-emerald-400">✓ [Pass] 교과 차시 및 페이지 순서성 무결성: 모든 교과의 차시와 진도 페이지가 오름차순으로 순차 진행됩니다.</div>`);
         } else {
-          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 차시 순서 역전 ${orderingViolations}건 발생!</div>`);
+          reports.push(`<div class="text-rose-400 font-bold">✗ [Fail] 차시/페이지 순서 역전 ${orderingViolations}건 발생!</div>`);
         }
 
         // Locked Slot Collision Check (잠긴 행사 슬롯 침범 오류 검사)
