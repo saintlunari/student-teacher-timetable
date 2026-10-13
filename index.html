@@ -1892,6 +1892,15 @@
       return s;
     }
 
+    // --- 통합교과 판별 함수 (즐생, 슬생, 바생, 즐생(놀이) 등) ---
+    function isIntegratedSubject(sub) {
+      if (!sub) return false;
+      const s = String(sub).replace(/\s+/g, '');
+      return ['즐생', '슬생', '바생', '즐생(놀이)', '통합', '바른생활', '슬기로운생활', '즐거운생활'].includes(s) ||
+             s.includes('즐생') || s.includes('슬생') || s.includes('바생') || s.includes('통합');
+    }
+    window.isIntegratedSubject = isIntegratedSubject;
+
     // --- 초등학교 교과명 축약 및 매핑 규칙 ---
     const SUBJECT_SHORT_MAP = {
       '국어': '국', '수학': '수', '바생': '바', '바른생활': '바', '바생(실천)': '바',
@@ -3162,6 +3171,10 @@
           const badge = document.getElementById(`teacher-badge-${idx}`);
           if (badge) badge.innerText = val;
         }
+      },
+
+      isIntegratedSubject(sub) {
+        return isIntegratedSubject(sub);
       },
 
       onTeacherMaxHoursInput(idx, val) {
@@ -6088,6 +6101,7 @@
         }
 
         Object.keys(subjectOccurrences).forEach(sub => {
+          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시 순서 오류 예외 (역전 허용)
           const list = subjectOccurrences[sub];
           for (let i = 0; i < list.length; i++) {
             for (let j = i + 1; j < list.length; j++) {
@@ -6475,6 +6489,7 @@
 
         // Helper: Check if placing a lesson preserves chronological sequence among other classes of the same subject
         const isOrderValid = (sub, lNum, targetD, targetP, exKey1, exKey2) => {
+          if (isIntegratedSubject(sub)) return true; // 통합교과는 차시 순서 역전 예외
           const targetTime = targetD * 100 + targetP;
           for (const k in this.timetable) {
             if (k === exKey1 || k === exKey2) continue;
@@ -7450,6 +7465,7 @@
 
         let orderingViolations = 0;
         Object.keys(subjectOccurrences).forEach(sub => {
+          if (isIntegratedSubject(sub)) return; // 통합교과(즐생, 슬생, 바생, 즐생(놀이))는 차시 순서 오류 예외 (역전 허용)
           const list = subjectOccurrences[sub];
           for (let i = 0; i < list.length - 1; i++) {
             if (list[i].lessonNum > list[i+1].lessonNum) {
