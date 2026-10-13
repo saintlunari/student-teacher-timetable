@@ -1980,8 +1980,71 @@
         .join(' ');
     }
 
+    // --- 교육실습생 배정 수업 교과 표준 정렬 목록 및 포맷터 ---
+    const TEACHER_SUMMARY_SUBJECT_ORDER = [
+      '국어', '수학', '사회', '도덕', '과학', '실과', '음악', '미술', '체육', '영어',
+      '바생', '슬생', '즐생', '즐생(놀이)'
+    ];
+
+    function normalizeSubjectName(s) {
+      if (!s) return '';
+      const trimmed = String(s).trim();
+      if (trimmed === '즐생(놀이)' || trimmed === '즐거운생활(놀이)' || trimmed.includes('놀이')) return '즐생(놀이)';
+      if (SHORT_TO_FULL_MAP[trimmed]) return SHORT_TO_FULL_MAP[trimmed];
+      if (trimmed.includes('국어') || trimmed === '국') return '국어';
+      if (trimmed.includes('수학') || trimmed === '수') return '수학';
+      if (trimmed.includes('사회') || trimmed === '사') return '사회';
+      if (trimmed.includes('도덕') || trimmed === '도') return '도덕';
+      if (trimmed.includes('과학') || trimmed === '과') return '과학';
+      if (trimmed.includes('실과') || trimmed === '실') return '실과';
+      if (trimmed.includes('음악') || trimmed === '음') return '음악';
+      if (trimmed.includes('미술') || trimmed === '미') return '미술';
+      if (trimmed.includes('체육') || trimmed === '체') return '체육';
+      if (trimmed.includes('영어') || trimmed === '영') return '영어';
+      if (trimmed.includes('바생') || trimmed.includes('바른생활') || trimmed === '바') return '바생';
+      if (trimmed.includes('슬생') || trimmed.includes('슬기로운생활') || trimmed === '슬') return '슬생';
+      if (trimmed.includes('즐생') || trimmed.includes('즐거운생활') || trimmed === '즐') return '즐생';
+      return trimmed;
+    }
+
+    function formatTeacherAssignedSubjects(subjectCountMap, emptyFallback = '배정 없음') {
+      if (!subjectCountMap || typeof subjectCountMap !== 'object') return emptyFallback;
+
+      // 1. 과목 정규화 및 배정 시수 합산
+      const normalizedCounts = {};
+      Object.entries(subjectCountMap).forEach(([rawSub, cnt]) => {
+        const num = parseInt(cnt, 10);
+        if (isNaN(num) || num <= 0) return;
+        const normSub = normalizeSubjectName(rawSub);
+        normalizedCounts[normSub] = (normalizedCounts[normSub] || 0) + num;
+      });
+
+      const entries = Object.entries(normalizedCounts).filter(([_, cnt]) => cnt > 0);
+      if (entries.length === 0) return emptyFallback;
+
+      // 2. 지정된 표준 교과 순서 매핑: 국어, 수학, 사회, 도덕, 과학, 실과, 음악, 미술, 체육, 영어, 바생, 슬생, 즐생, 즐생(놀이)
+      const orderMap = {};
+      TEACHER_SUMMARY_SUBJECT_ORDER.forEach((sub, idx) => {
+        orderMap[sub] = idx;
+      });
+
+      // 3. 교과 순서에 따라 정렬 (목록 외 과목은 후순위 한글 가나다순)
+      entries.sort(([subA], [subB]) => {
+        const idxA = (orderMap[subA] !== undefined) ? orderMap[subA] : (1000 + subA.charCodeAt(0));
+        const idxB = (orderMap[subB] !== undefined) ? orderMap[subB] : (1000 + subB.charCodeAt(0));
+        if (idxA !== idxB) return idxA - idxB;
+        return subA.localeCompare(subB, 'ko');
+      });
+
+      // 4. 배정되어 있는 과목만 배정 시수와 함께 공백 구분으로 표시 (예: "국어(4) 수학(3) 슬생(2)...")
+      return entries.map(([sub, cnt]) => `${sub}(${cnt})`).join(' ') || emptyFallback;
+    }
+
     window.parseSubjectHours = parseSubjectHours;
     window.formatSubjectHours = formatSubjectHours;
+    window.normalizeSubjectName = normalizeSubjectName;
+    window.formatTeacherAssignedSubjects = formatTeacherAssignedSubjects;
+    window.TEACHER_SUMMARY_SUBJECT_ORDER = TEACHER_SUMMARY_SUBJECT_ORDER;
     window.SUBJECT_SHORT_MAP = SUBJECT_SHORT_MAP;
     window.SHORT_TO_FULL_MAP = SHORT_TO_FULL_MAP;
     window.SUBJECT_THEMES = SUBJECT_THEMES;
@@ -2411,6 +2474,9 @@
     const App = {
       parseSubjectHours: parseSubjectHours,
       formatSubjectHours: formatSubjectHours,
+      formatTeacherAssignedSubjects: formatTeacherAssignedSubjects,
+      normalizeSubjectName: normalizeSubjectName,
+      TEACHER_SUMMARY_SUBJECT_ORDER: TEACHER_SUMMARY_SUBJECT_ORDER,
       TEACHER_COLORS: TEACHER_COLORS,
       activeTab: 1,
       selectedTeacherFilter: 'all', // 'all' or teacher name
@@ -2829,8 +2895,18 @@
             statusBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 shrink-0 shadow-2xs">합계 ${totalSubHours}/${tMax}h 🔴 (+${totalSubHours - tMax}h)</span>`;
           }
 
-          // Build Chips (2-Column Grid Layout)
+          // Build Chips (2-Column Grid Layout) - 표준 교과 순서 정렬
           const subEntries = Object.entries(subHours).filter(([_, h]) => typeof h === 'number' && h > 0);
+          const chipOrderMap = {};
+          TEACHER_SUMMARY_SUBJECT_ORDER.forEach((s, i) => { chipOrderMap[s] = i; });
+          subEntries.sort(([subA], [subB]) => {
+            const normA = normalizeSubjectName(subA);
+            const normB = normalizeSubjectName(subB);
+            const idxA = (chipOrderMap[normA] !== undefined) ? chipOrderMap[normA] : (1000 + normA.charCodeAt(0));
+            const idxB = (chipOrderMap[normB] !== undefined) ? chipOrderMap[normB] : (1000 + normB.charCodeAt(0));
+            if (idxA !== idxB) return idxA - idxB;
+            return normA.localeCompare(normB, 'ko');
+          });
           let chipsHtml = '';
           if (subEntries.length === 0) {
             chipsHtml = `<div class="col-span-2 py-1 text-center text-slate-400 text-[11px] italic">과목 없음 (+ 과목 추가 클릭)</div>`;
@@ -6961,9 +7037,7 @@
         this.teachers.forEach(t => {
           const st = stats[t.name];
           const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
-          const subText = Object.entries(st.subjects)
-            .map(([s, c]) => `${s}(${c})`)
-            .join(' ') || '배정 없음';
+          const subText = formatTeacherAssignedSubjects(st.subjects, '배정 없음');
           const tMax = (t.maxHours !== undefined && t.maxHours !== null && t.maxHours !== '' && !isNaN(t.maxHours))
             ? parseInt(t.maxHours, 10)
             : (this.config.maxHours || 10);
@@ -7155,7 +7229,7 @@
           Object.values(this.timetable).forEach(c => {
             if (c && c.teacher === t.name) subCounts[c.subject] = (subCounts[c.subject] || 0) + 1;
           });
-          const text = Object.entries(subCounts).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '-';
+          const text = formatTeacherAssignedSubjects(subCounts, '-');
           html += `<p style="margin:4px 0;"><strong>${t.name} (${t.major}):</strong> ${text}</p>`;
         });
         html += `</th></tr>`;
@@ -7943,7 +8017,7 @@
           // Assigned Subjects Box
           ws.mergeCells(curSummRow, totalDays + 3, endRow, totalDays + 3);
           const cSub = ws.getCell(curSummRow, totalDays + 3);
-          const text = Object.entries(st.subjects).map(([s, cnt]) => `${s}(${cnt})`).join(' ') || '배정 없음';
+          const text = formatTeacherAssignedSubjects(st.subjects, '배정 없음');
           cSub.value = text;
           cSub.font = fontBold;
           cSub.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFFFF' } };
