@@ -4852,13 +4852,83 @@
           slotsForSubject[sub] = [];
         });
 
+        // Helper to check if a subject is already scheduled on a given day (1일 1교과 분산 원칙)
+        const hasSubjectOnDay = (day, sub) => {
+          for (let p = 1; p <= maxP; p++) {
+            const c = newTimetable[`${day}-${p}`];
+            if (c && c.subject === sub) return true;
+          }
+          if (slotsForSubject[sub] && slotsForSubject[sub].some(s => s.day === day)) {
+            return true;
+          }
+          return false;
+        };
+
+        const countSubjectOnDay = (day, sub) => {
+          let cnt = 0;
+          for (let p = 1; p <= maxP; p++) {
+            const c = newTimetable[`${day}-${p}`];
+            if (c && c.subject === sub) cnt++;
+          }
+          if (slotsForSubject[sub]) {
+            cnt += slotsForSubject[sub].filter(s => s.day === day).length;
+          }
+          return cnt;
+        };
+
+        // Smart slot selector that strictly avoids assigning the same subject to the same day
+        const assignSlotForSubject = (sub, pool) => {
+          let bestIdx = -1;
+          let bestScore = -Infinity;
+
+          for (let i = 0; i < pool.length; i++) {
+            const slot = pool[i];
+            const alreadyHas = hasSubjectOnDay(slot.day, sub);
+            if (!alreadyHas) {
+              let dayLoad = 0;
+              for (let p = 1; p <= maxP; p++) {
+                if (newTimetable[`${slot.day}-${p}`]) dayLoad++;
+              }
+              Object.keys(slotsForSubject).forEach(s => {
+                dayLoad += slotsForSubject[s].filter(sl => sl.day === slot.day).length;
+              });
+              const score = 1000 - dayLoad * 10 - slot.period;
+              if (score > bestScore) {
+                bestScore = score;
+                bestIdx = i;
+              }
+            }
+          }
+
+          // 불가피하게 주간 요일 수보다 해당 교과 시수가 많은 경우에만 중복 최소화 날짜 선택
+          if (bestIdx === -1 && pool.length > 0) {
+            let minOccur = Infinity;
+            for (let i = 0; i < pool.length; i++) {
+              const slot = pool[i];
+              const occ = countSubjectOnDay(slot.day, sub);
+              if (occ < minOccur) {
+                minOccur = occ;
+                bestIdx = i;
+              }
+            }
+            if (bestIdx === -1) bestIdx = 0;
+          }
+
+          if (bestIdx !== -1) {
+            const [chosen] = pool.splice(bestIdx, 1);
+            slotsForSubject[sub].push(chosen);
+            return true;
+          }
+          return false;
+        };
+
         const unassignedByWeek = Array.from({ length: weekCount }, () => []);
 
-        // Phase 1: In each week, match slots that match defaultTimetable subject
+        // Phase 1: In each week, match slots that match defaultTimetable subject ONLY if day doesn't already have this subject
         for (let w = 0; w < weekCount; w++) {
           slotsByWeek[w].forEach(slot => {
             const matchSub = slot.defSubject;
-            if (matchSub && subjectWeeklyTarget[matchSub] && subjectWeeklyTarget[matchSub][w] > 0) {
+            if (matchSub && subjectWeeklyTarget[matchSub] && subjectWeeklyTarget[matchSub][w] > 0 && !hasSubjectOnDay(slot.day, matchSub)) {
               slotsForSubject[matchSub].push(slot);
               subjectWeeklyTarget[matchSub][w]--;
             } else {
@@ -4867,46 +4937,57 @@
           });
         }
 
-        // Phase 2: In each week, fill remaining weekly target for subjects from unassigned slots in the same week
+        // Phase 2: In each week, fill remaining weekly target for subjects from unassigned slots in the same week (하루 1교과 분산 원칙 적용)
         for (let w = 0; w < weekCount; w++) {
-          Object.keys(subjectWeeklyTarget).forEach(sub => {
+          const subsToAssign = Object.keys(subjectWeeklyTarget)
+            .filter(sub => subjectWeeklyTarget[sub][w] > 0)
+            .sort((a, b) => subjectWeeklyTarget[b][w] - subjectWeeklyTarget[a][w]);
+
+          for (const sub of subsToAssign) {
             while (subjectWeeklyTarget[sub][w] > 0 && unassignedByWeek[w].length > 0) {
-              const slot = unassignedByWeek[w].shift();
-              slotsForSubject[sub].push(slot);
-              subjectWeeklyTarget[sub][w]--;
+              const assigned = assignSlotForSubject(sub, unassignedByWeek[w]);
+              if (assigned) {
+                subjectWeeklyTarget[sub][w]--;
+              } else {
+                break;
+              }
             }
-          });
+          }
         }
 
         // Phase 3: If any subject still needs slots in week w (e.g. week w was dense with events), borrow from other weeks' unassigned slots (excluding last 2 days)
-        Object.keys(subjectWeeklyTarget).forEach(sub => {
-          for (let w = 0; w < weekCount; w++) {
+        for (let w = 0; w < weekCount; w++) {
+          Object.keys(subjectWeeklyTarget).forEach(sub => {
             while (subjectWeeklyTarget[sub][w] > 0) {
               let borrowed = false;
               for (let otherW = 0; otherW < weekCount; otherW++) {
                 if (unassignedByWeek[otherW].length > 0) {
-                  const slot = unassignedByWeek[otherW].shift();
-                  slotsForSubject[sub].push(slot);
-                  subjectWeeklyTarget[sub][w]--;
-                  borrowed = true;
-                  break;
+                  const assigned = assignSlotForSubject(sub, unassignedByWeek[otherW]);
+                  if (assigned) {
+                    subjectWeeklyTarget[sub][w]--;
+                    borrowed = true;
+                    break;
+                  }
                 }
               }
               if (!borrowed) break;
             }
-          }
-        });
+          });
+        }
 
         // Phase 4: Fallback to last 2 days ONLY IF regular days are completely exhausted
-        Object.keys(subjectWeeklyTarget).forEach(sub => {
-          for (let w = 0; w < weekCount; w++) {
+        for (let w = 0; w < weekCount; w++) {
+          Object.keys(subjectWeeklyTarget).forEach(sub => {
             while (subjectWeeklyTarget[sub][w] > 0 && fallbackSlots.length > 0) {
-              const slot = fallbackSlots.shift();
-              slotsForSubject[sub].push(slot);
-              subjectWeeklyTarget[sub][w]--;
+              const assigned = assignSlotForSubject(sub, fallbackSlots);
+              if (assigned) {
+                subjectWeeklyTarget[sub][w]--;
+              } else {
+                break;
+              }
             }
-          }
-        });
+          });
+        }
 
         // For each subject, sort its assigned slots chronologically and pair with sorted lessons
         Object.keys(slotsForSubject).forEach(sub => {
@@ -5133,7 +5214,7 @@
         }
 
         if (showAlert) {
-          alert('자동 수업 배당이 완료되었습니다!\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 실습생 교과별 목표 시수 100% 연동 반영\n• 미배정 과목 정리 완료');
+          alert('자동 수업 배당이 완료되었습니다!\n• 하루 동일 교과 중복 배정 방지 완료 (1일 1교과 분산 원칙)\n• 1~4주차 균등 분배 반영\n• 마지막 2일 수업 배제 완료\n• 실습생 교과별 목표 시수 100% 연동 반영\n• 미배정 과목 정리 완료');
         }
       },
 

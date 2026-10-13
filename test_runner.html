@@ -1247,6 +1247,70 @@
               : `검증 실패: (counts:${countsValid}, total:${totalGrade5}, badge:${gradeBadgePass}, pracTab:${hasPracTab}, pracRows:${pracRows.length}, search:${searchPass}, trans:${transportCountPass}, import:${importPass}, compat:${compatPass})`
           };
         }
+      },
+      {
+        id: 'tc22',
+        title: '[신규 기능] 자동 배정(runAutoAllocation) 시 하루 동일 교과 중복 배정 방지 (1일 1교과 분산 원칙) 무결성 검증',
+        desc: '공주교대부초 2학년(18차시/10일) 및 3학년(50차시/20일) 전체 일정 자동 배정 실행 시, 모든 날짜에서 동일 교과가 2시간 이상 중복 배정되지 않고 1일 1교과로 균등 분산되는지 무결성 검증 (중복 0건 보장)',
+        run: () => {
+          const maxP = App.periodsPerDay || 8;
+
+          // 1. 2학년 프리셋 검증 (10일간 18차시 배당)
+          App.loadPreset('grade2', false);
+          App.runAutoAllocation(false);
+          const totalDaysG2 = (App.config.weekCount || 2) * 5;
+          let g2Duplicates = 0;
+          const g2DupDetails = [];
+
+          for (let d = 0; d < totalDaysG2; d++) {
+            const subCount = {};
+            for (let p = 1; p <= maxP; p++) {
+              const cell = App.timetable[`${d}-${p}`];
+              if (cell && cell.subject && cell.curriculumId) {
+                subCount[cell.subject] = (subCount[cell.subject] || 0) + 1;
+              }
+            }
+            Object.keys(subCount).forEach(sub => {
+              if (subCount[sub] > 1) {
+                g2Duplicates++;
+                g2DupDetails.push(`${d+1}일차:${sub}(${subCount[sub]}차시)`);
+              }
+            });
+          }
+
+          // 2. 3학년 프리셋 검증 (20일간 50차시 대규모 배당)
+          App.loadPreset('grade3', false);
+          App.runAutoAllocation(false);
+          const totalDaysG3 = 20;
+          let g3Duplicates = 0;
+          const g3DupDetails = [];
+
+          for (let d = 0; d < totalDaysG3; d++) {
+            const subCount = {};
+            for (let p = 1; p <= maxP; p++) {
+              const cell = App.timetable[`${d}-${p}`];
+              if (cell && cell.subject && cell.curriculumId) {
+                subCount[cell.subject] = (subCount[cell.subject] || 0) + 1;
+              }
+            }
+            Object.keys(subCount).forEach(sub => {
+              if (subCount[sub] > 1) {
+                g3Duplicates++;
+                g3DupDetails.push(`${d+1}일차:${sub}(${subCount[sub]}차시)`);
+              }
+            });
+          }
+
+          const g2AllAssigned = App.curriculum.length === 50; // grade3 has 50
+          const pass = (g2Duplicates === 0) && (g3Duplicates === 0);
+
+          return {
+            pass,
+            message: pass
+              ? '2학년(10일간 18차시) 및 3학년(20일간 50차시) 전 일정에서 하루 동일 교과 중복 배정 0건: 1일 1교과 분산 원칙 100% 만족'
+              : `하루 동일 교과 중복 발견: 2학년(${g2Duplicates}건: ${g2DupDetails.join(', ')}), 3학년(${g3Duplicates}건: ${g3DupDetails.join(', ')})`
+          };
+        }
       }
     ];
 
