@@ -927,14 +927,21 @@
           </div>
         </div>
 
-        <!-- 보기 모드 전환 (전체 vs 교생 개인별) -->
-        <div class="flex items-center gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
-          <span class="text-[11px] font-bold text-slate-600 pl-2">보기 모드:</span>
-          <button onclick="App.setTeacherFilter('all')" id="filter-btn-all" class="px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition">
-            전체 배당표
+        <!-- 보기 모드 전환 (전체 vs 교생 개인별 vs 과목별) -->
+        <div class="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200 flex-wrap">
+          <span class="text-[11px] font-bold text-slate-600 pl-1.5">보기:</span>
+          <button onclick="App.clearAllViewFilters()" id="filter-btn-all" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300">
+            전체
           </button>
-          <div id="teacher-filter-tabs" class="flex items-center gap-1">
+          <div class="h-4 w-px bg-slate-300 mx-0.5"></div>
+          <span class="text-[10px] font-bold text-slate-500">교생</span>
+          <div id="teacher-filter-tabs" class="flex items-center gap-1 flex-wrap">
             <!-- Dynamic teacher buttons -->
+          </div>
+          <div class="h-4 w-px bg-slate-300 mx-0.5"></div>
+          <span class="text-[10px] font-bold text-slate-500">과목</span>
+          <div id="subject-filter-tabs" class="flex items-center gap-1 flex-wrap">
+            <!-- Dynamic subject buttons -->
           </div>
         </div>
 
@@ -1043,24 +1050,24 @@
         </div>
       </div>
 
-      <!-- 교생 개인별 맞춤 수업안(지도안) 제출 마감일 달력 카드 (1인 뷰일 때 활성화) -->
+      <!-- 교생 개인별 / 과목별 맞춤 수업안(지도안) 제출 마감일 달력 카드 -->
       <div id="personal-deadline-panel" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div class="flex items-center gap-2">
             <i data-lucide="clipboard-check" class="w-5 h-5 text-indigo-600"></i>
-            <h3 class="text-base font-bold text-slate-800">
-              <span id="selected-teacher-name" class="text-indigo-600 font-black">김부설</span> 실습생 수업 일정 및 지도안 제출 마감일 캘린더
+            <h3 class="text-base font-bold text-slate-800" id="calendar-panel-title">
+              <span id="selected-teacher-name" class="text-indigo-600 font-black">김부설</span> <span id="calendar-title-suffix">실습생 수업 일정 및 지도안 제출 마감일 캘린더</span>
             </h3>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="App.selectTeacherClassesForBulkMove()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-lg transition border border-amber-300" title="이 실습생의 모든 수업을 한 번에 선택하여 배당표에서 드래그/방향키로 일괄 이동합니다">
-              <i data-lucide="boxes" class="w-3.5 h-3.5 text-amber-600"></i> 전체 수업 일괄 선택(이동)
+            <button id="btn-calendar-bulk-move" onclick="App.handleCalendarBulkMoveClick()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-amber-50 hover:bg-amber-100 text-amber-900 rounded-lg transition border border-amber-300" title="현재 선택된 실습생 또는 과목의 모든 수업을 한 번에 선택하여 배당표에서 드래그/방향키로 일괄 이동합니다">
+              <i data-lucide="boxes" class="w-3.5 h-3.5 text-amber-600"></i> <span id="btn-calendar-bulk-move-text">전체 수업 일괄 선택(이동)</span>
             </button>
             <button onclick="App.copyDeadlinesToClipboard()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> 마감일 텍스트 복사 (카톡/메신저용)
             </button>
             <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
-              <i data-lucide="printer" class="w-3.5 h-3.5"></i> 개인 시간표 인쇄
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i> <span id="btn-calendar-print-text">개인 시간표 인쇄</span>
             </button>
           </div>
         </div>
@@ -1085,6 +1092,7 @@
                 <th class="py-2.5 px-3">교과명</th>
                 <th class="py-2.5 px-3 text-center">차시</th>
                 <th class="py-2.5 px-3">교과서 쪽수</th>
+                <th class="py-2.5 px-3 text-center">담당 교생</th>
                 <th class="py-2.5 px-3">D-3 지도안 1차 제출일</th>
                 <th class="py-2.5 px-3">D-1 최종안 제출일</th>
                 <th class="py-2.5 px-3 text-center">구분</th>
@@ -1903,6 +1911,153 @@
     </div>
   </div>
 
+  <!-- ========================================================= -->
+  <!-- MODAL: 수업 배당 상세 정보 수정 모달 (우클릭 편집) -->
+  <!-- ========================================================= -->
+  <div id="modal-class-edit" onclick="if(event.target === this) App.closeClassEditModal()" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col border border-slate-200 overflow-hidden animate-fadeIn">
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-gradient-to-r from-indigo-50 to-white shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-indigo-600 text-white rounded-xl shadow-xs">
+            <i data-lucide="edit-3" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-slate-800 text-base sm:text-lg">수업 배당 정보 수정</h3>
+            <p id="class-edit-slot-info" class="text-xs text-slate-500 font-medium">1주차 월요일 2교시 (2026-04-20)</p>
+          </div>
+        </div>
+        <button onclick="App.closeClassEditModal()" class="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition cursor-pointer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div class="p-4 sm:p-6 overflow-y-auto space-y-4">
+        <!-- 교과목 및 담당 실습생 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              교과명 <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="edit-class-subject" list="edit-class-subject-list" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white font-bold text-slate-800" placeholder="예: 국어, 수학...">
+            <datalist id="edit-class-subject-list">
+              <option value="국어"></option>
+              <option value="수학"></option>
+              <option value="사회"></option>
+              <option value="도덕"></option>
+              <option value="과학"></option>
+              <option value="실과"></option>
+              <option value="음악"></option>
+              <option value="미술"></option>
+              <option value="체육"></option>
+              <option value="영어"></option>
+              <option value="바생"></option>
+              <option value="슬생"></option>
+              <option value="즐생"></option>
+              <option value="즐생(놀이)"></option>
+              <option value="창체"></option>
+            </datalist>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              담당 실습생 (교생)
+            </label>
+            <select id="edit-class-teacher" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white font-bold text-slate-800">
+              <!-- JS populated -->
+            </select>
+          </div>
+        </div>
+
+        <!-- 퀵 교과목 선택 칩 태그 -->
+        <div>
+          <label class="block text-[11px] font-semibold text-slate-500 mb-1">빠른 교과목 선택</label>
+          <div class="flex flex-wrap gap-1">
+            <button type="button" onclick="App.setEditModalSubject('국어')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">국어</button>
+            <button type="button" onclick="App.setEditModalSubject('수학')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">수학</button>
+            <button type="button" onclick="App.setEditModalSubject('사회')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">사회</button>
+            <button type="button" onclick="App.setEditModalSubject('도덕')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">도덕</button>
+            <button type="button" onclick="App.setEditModalSubject('과학')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">과학</button>
+            <button type="button" onclick="App.setEditModalSubject('실과')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">실과</button>
+            <button type="button" onclick="App.setEditModalSubject('음악')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">음악</button>
+            <button type="button" onclick="App.setEditModalSubject('미술')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">미술</button>
+            <button type="button" onclick="App.setEditModalSubject('체육')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">체육</button>
+            <button type="button" onclick="App.setEditModalSubject('영어')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">영어</button>
+            <button type="button" onclick="App.setEditModalSubject('바생')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">바생</button>
+            <button type="button" onclick="App.setEditModalSubject('슬생')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">슬생</button>
+            <button type="button" onclick="App.setEditModalSubject('즐생')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">즐생</button>
+            <button type="button" onclick="App.setEditModalSubject('즐생(놀이)')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">즐생(놀이)</button>
+            <button type="button" onclick="App.setEditModalSubject('창체')" class="px-2 py-0.5 text-[11px] font-bold rounded bg-slate-100 hover:bg-indigo-100 hover:text-indigo-700 text-slate-700 transition cursor-pointer">창체</button>
+          </div>
+        </div>
+
+        <!-- 단원 쪽수 및 학습 주제 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">단원 및 쪽수</label>
+            <input type="text" id="edit-class-pages" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800" placeholder="예: 70-73, 봄건 68-69">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">학습 주제 (선택)</label>
+            <input type="text" id="edit-class-topic" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800" placeholder="예: 시의 분위기 살펴보기">
+          </div>
+        </div>
+
+        <!-- 차시 및 전체 차시 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              수업 차시 <span class="text-rose-500">*</span>
+            </label>
+            <input type="text" id="edit-class-lesson" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white font-bold text-slate-800" placeholder="예: 2 또는 3~4">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">단원 전체 차시</label>
+            <input type="number" id="edit-class-total-lesson" min="1" max="99" class="w-full text-xs px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500 bg-white text-slate-800" placeholder="예: 15">
+          </div>
+        </div>
+
+        <!-- 속성 체크박스: 인증수업, 대표수업, 수업고정 -->
+        <div class="p-3 bg-slate-50/90 rounded-xl border border-slate-200 space-y-2">
+          <label class="block text-xs font-bold text-slate-700 mb-1">수업 속성 및 고정 설정</label>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <label class="flex items-center gap-1.5 p-2 rounded-lg border bg-white cursor-pointer hover:bg-emerald-50/50 transition">
+              <input type="checkbox" id="edit-class-iscert" class="rounded text-emerald-600 focus:ring-emerald-500 cursor-pointer">
+              <span class="font-bold text-emerald-800">🏅 인증수업</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-lg border bg-white cursor-pointer hover:bg-amber-50/50 transition">
+              <input type="checkbox" id="edit-class-isdemo" class="rounded text-amber-600 focus:ring-amber-500 cursor-pointer">
+              <span class="font-bold text-amber-800">⭐ 대표수업</span>
+            </label>
+            <label class="flex items-center gap-1.5 p-2 rounded-lg border bg-white cursor-pointer hover:bg-indigo-50/50 transition">
+              <input type="checkbox" id="edit-class-ispinned" class="rounded text-indigo-600 focus:ring-indigo-500 cursor-pointer">
+              <span class="font-bold text-indigo-800">📌 수업 고정</span>
+            </label>
+          </div>
+          <p class="text-[11px] text-slate-500 leading-normal">
+            * <strong>수업 고정(📌)</strong> 시 [자동 배당]이나 [대안 조합]을 다시 실행해도 이 슬롯의 수업과 담당 교생이 절대 변경되지 않고 보존됩니다.
+          </p>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3 shrink-0">
+        <button type="button" onclick="App.deleteClassFromModal()" class="px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 text-xs font-semibold rounded-xl transition border border-rose-200 flex items-center gap-1 cursor-pointer">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> 이 배당 삭제
+        </button>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="App.closeClassEditModal()" class="px-4 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition cursor-pointer">
+            취소
+          </button>
+          <button type="button" onclick="App.saveClassEditModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>저장 및 배당표 반영</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- JAVASCRIPT LOGIC ENGINE -->
   <script>
     // --- 2학년 1·2학기 교과 진도표 표준 데이터베이스 (총 361차시) ---
@@ -2575,6 +2730,7 @@
       TEACHER_COLORS: TEACHER_COLORS,
       activeTab: 1,
       selectedTeacherFilter: 'all', // 'all' or teacher name
+      selectedSubjectFilter: 'all', // 'all' or subject name
       selectedCellKey: null,        // for click-to-swap
       draggedKey: null,             // for drag-and-drop
       currentStamp: null,
@@ -2653,6 +2809,7 @@
         this.timetable = {};
         this.allocationSeed = 0;
         this.selectedTeacherFilter = 'all';
+        this.selectedSubjectFilter = 'all';
 
         this.populateInputsFromConfig();
       },
@@ -2724,6 +2881,7 @@
           this.syncConfigFromInputs();
           this.renderConfigHeader();
           this.renderTeacherFilterTabs();
+          this.renderSubjectFilterTabs();
           this.renderTimetableGrid();
           this.renderTeacherSummary();
           this.renderPersonalDeadlinePanel();
@@ -2755,6 +2913,7 @@
         this.normalizeDefaultTimetable();
         this.timetable = {};
         this.selectedTeacherFilter = 'all';
+        this.selectedSubjectFilter = 'all';
 
         this.populateInputsFromConfig();
 
@@ -2775,6 +2934,7 @@
         this.renderCustomStamps();
         this.updateStampStatusUI();
         this.renderTeacherFilterTabs();
+        this.renderSubjectFilterTabs();
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
@@ -6867,6 +7027,7 @@
         });
 
         this.timetable = newTimetable;
+        this.renderSubjectFilterTabs();
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
@@ -6898,6 +7059,7 @@
             count++;
           }
         });
+        this.renderSubjectFilterTabs();
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
@@ -6923,6 +7085,7 @@
             }
           }
         });
+        this.renderSubjectFilterTabs();
         this.renderTimetableGrid();
         this.renderTeacherSummary();
         this.renderPersonalDeadlinePanel();
@@ -6931,8 +7094,61 @@
       },
 
       // -----------------------------------------------------------------------
-      // TEACHER FILTER (Personalized View & Deadlines)
+      // TEACHER & SUBJECT VIEW FILTER (Personalized View & Deadlines)
       // -----------------------------------------------------------------------
+      getActiveTimetableSubjects() {
+        const subs = new Set();
+        Object.values(this.timetable || {}).forEach(c => {
+          if (c && c.subject && !c.isLocked && c.type !== 'holiday' && c.type !== 'homeroom') {
+            subs.add(c.subject);
+          }
+        });
+        if (subs.size === 0) {
+          (this.curriculum || []).forEach(c => {
+            if (c && c.subject) subs.add(c.subject);
+          });
+        }
+        const order = [
+          '국어', '수학', '사회', '도덕', '과학', '실과', '음악', '미술', '체육', '영어',
+          '바른 생활', '슬기로운 생활', '즐거운 생활', '즐거운 생활(놀이)',
+          '바생', '슬생', '즐생'
+        ];
+        return Array.from(subs).sort((a, b) => {
+          let idxA = order.indexOf(a);
+          let idxB = order.indexOf(b);
+          if (idxA === -1) idxA = 999;
+          if (idxB === -1) idxB = 999;
+          return idxA - idxB || a.localeCompare(b);
+        });
+      },
+
+      getSubjectFilterStyle(subject, isSelected) {
+        const styles = {
+          '국어': { bg: '#e0f2fe', text: '#0369a1', border: '#7dd3fc', activeBg: '#0284c7', activeText: '#ffffff' },
+          '수학': { bg: '#dcfce7', text: '#15803d', border: '#86efac', activeBg: '#16a34a', activeText: '#ffffff' },
+          '사회': { bg: '#fef3c7', text: '#b45309', border: '#fcd34d', activeBg: '#d97706', activeText: '#ffffff' },
+          '도덕': { bg: '#f3e8ff', text: '#7e22ce', border: '#d8b4fe', activeBg: '#9333ea', activeText: '#ffffff' },
+          '과학': { bg: '#cffafe', text: '#0e7490', border: '#67e8f9', activeBg: '#0891b2', activeText: '#ffffff' },
+          '실과': { bg: '#ffedd5', text: '#c2410c', border: '#fdba74', activeBg: '#ea580c', activeText: '#ffffff' },
+          '음악': { bg: '#ede9fe', text: '#6d28d9', border: '#c4b5fd', activeBg: '#7c3aed', activeText: '#ffffff' },
+          '미술': { bg: '#fce7f3', text: '#be185d', border: '#f9a8d4', activeBg: '#db2777', activeText: '#ffffff' },
+          '체육': { bg: '#ecfccb', text: '#4d7c0f', border: '#bef264', activeBg: '#65a30d', activeText: '#ffffff' },
+          '영어': { bg: '#dbeafe', text: '#1d4ed8', border: '#93c5fd', activeBg: '#2563eb', activeText: '#ffffff' },
+          '바른 생활': { bg: '#ccfbf1', text: '#0f766e', border: '#5eead4', activeBg: '#0d9488', activeText: '#ffffff' },
+          '바생': { bg: '#ccfbf1', text: '#0f766e', border: '#5eead4', activeBg: '#0d9488', activeText: '#ffffff' },
+          '슬기로운 생활': { bg: '#fef9c3', text: '#a16207', border: '#fde047', activeBg: '#ca8a04', activeText: '#ffffff' },
+          '슬생': { bg: '#fef9c3', text: '#a16207', border: '#fde047', activeBg: '#ca8a04', activeText: '#ffffff' },
+          '즐거운 생활': { bg: '#ffe4e6', text: '#be123c', border: '#fda4af', activeBg: '#e11d48', activeText: '#ffffff' },
+          '즐생': { bg: '#ffe4e6', text: '#be123c', border: '#fda4af', activeBg: '#e11d48', activeText: '#ffffff' },
+          '즐거운 생활(놀이)': { bg: '#ffe4e6', text: '#9f1239', border: '#f43f5e', activeBg: '#be123c', activeText: '#ffffff' }
+        };
+        const def = { bg: '#f1f5f9', text: '#334155', border: '#cbd5e1', activeBg: '#475569', activeText: '#ffffff' };
+        const item = styles[subject] || def;
+        return isSelected
+          ? { bg: item.activeBg, text: item.activeText, border: item.activeBg }
+          : { bg: item.bg, text: item.text, border: item.border };
+      },
+
       renderTeacherFilterTabs() {
         const container = document.getElementById('teacher-filter-tabs');
         if (!container) return;
@@ -6941,7 +7157,7 @@
           const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
           const isSelected = (this.selectedTeacherFilter === t.name);
           html += `
-            <button onclick="App.setTeacherFilter('${t.name}')" class="px-2.5 py-1 text-xs font-bold rounded-lg transition ${isSelected ? 'shadow-sm' : 'opacity-70 hover:opacity-100'}" style="background:${isSelected ? color.bg : '#f1f5f9'}; color:${isSelected ? color.text : '#475569'}; border: 1px solid ${isSelected ? color.border : '#cbd5e1'};">
+            <button onclick="App.setTeacherFilter('${t.name}')" class="px-2 py-0.5 text-xs font-bold rounded-lg transition ${isSelected ? 'shadow-sm ring-2 ring-indigo-400' : 'opacity-70 hover:opacity-100'}" style="background:${isSelected ? color.bg : '#f1f5f9'}; color:${isSelected ? color.text : '#475569'}; border: 1px solid ${isSelected ? color.border : '#cbd5e1'};">
               ${t.name}
             </button>
           `;
@@ -6950,17 +7166,59 @@
 
         const allBtn = document.getElementById('filter-btn-all');
         if (allBtn) {
-          if (this.selectedTeacherFilter === 'all') {
-            allBtn.className = 'px-3 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300';
+          const isAll = (this.selectedTeacherFilter === 'all' && this.selectedSubjectFilter === 'all');
+          if (isAll) {
+            allBtn.className = 'px-2.5 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300';
           } else {
-            allBtn.className = 'px-3 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
+            allBtn.className = 'px-2.5 py-1 text-xs font-medium rounded-lg text-slate-600 hover:text-slate-900 transition';
           }
         }
       },
 
+      renderSubjectFilterTabs() {
+        const container = document.getElementById('subject-filter-tabs');
+        if (!container) return;
+        const subjects = this.getActiveTimetableSubjects();
+        if (subjects.length === 0) {
+          container.innerHTML = '<span class="text-[11px] text-slate-400">과목 없음</span>';
+          return;
+        }
+        let html = '';
+        subjects.forEach(sub => {
+          const isSelected = (this.selectedSubjectFilter === sub);
+          const style = this.getSubjectFilterStyle(sub, isSelected);
+          html += `
+            <button onclick="App.setSubjectFilter('${sub}')" class="px-2 py-0.5 text-xs font-bold rounded-lg transition ${isSelected ? 'shadow-sm ring-2 ring-indigo-400' : 'opacity-85 hover:opacity-100'}" style="background:${style.bg}; color:${style.text}; border: 1px solid ${style.border};">
+              ${sub}
+            </button>
+          `;
+        });
+        container.innerHTML = html;
+      },
+
       setTeacherFilter(tName) {
         this.selectedTeacherFilter = tName;
+        this.selectedSubjectFilter = 'all';
         this.renderTeacherFilterTabs();
+        this.renderSubjectFilterTabs();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+      },
+
+      setSubjectFilter(sName) {
+        this.selectedSubjectFilter = sName;
+        this.selectedTeacherFilter = 'all';
+        this.renderTeacherFilterTabs();
+        this.renderSubjectFilterTabs();
+        this.renderTimetableGrid();
+        this.renderPersonalDeadlinePanel();
+      },
+
+      clearAllViewFilters() {
+        this.selectedTeacherFilter = 'all';
+        this.selectedSubjectFilter = 'all';
+        this.renderTeacherFilterTabs();
+        this.renderSubjectFilterTabs();
         this.renderTimetableGrid();
         this.renderPersonalDeadlinePanel();
       },
@@ -7204,7 +7462,7 @@
           <td class="border-2 border-slate-900 font-bold text-center bg-slate-100 text-xs sticky left-0 z-20 shadow-[2px_0_4px_-1px_rgba(0,0,0,0.18)]">아침활동</td>`;
         for (let d = 0; d < totalDays; d++) {
           const dutyTeacher = this.morningDuty[d] || '';
-          const isDimmed = (this.selectedTeacherFilter !== 'all' && (!dutyTeacher || !dutyTeacher.includes(this.selectedTeacherFilter)));
+          const isDimmed = (this.selectedTeacherFilter !== 'all' && (!dutyTeacher || !dutyTeacher.includes(this.selectedTeacherFilter))) || (this.selectedSubjectFilter !== 'all');
 
           let dutyBadgeHtml = '';
           if (dutyTeacher) {
@@ -7267,7 +7525,7 @@
                   renderedCells[nextKey] = true;
                 } else break;
               }
-              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="클릭하여 공휴일/행사명 수정" class="border-2 border-slate-900 bg-rose-50 text-center font-black text-rose-600 text-sm tracking-widest cursor-pointer hover:bg-rose-100 select-none">
+              tbodyHtml += `<td rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="클릭/우클릭: 공휴일/행사명 수정" class="border-2 border-slate-900 bg-rose-50 text-center font-black text-rose-600 text-sm tracking-widest cursor-pointer hover:bg-rose-100 select-none">
                 <div class="py-4 writing-vertical">${cell.subject || '공휴일'}</div>
               </td>`;
               renderedCells[key] = true;
@@ -7281,9 +7539,10 @@
               const subName = (cell.type === 'trainee_cert' ? cell.pages : cell.subject) || '인증수업';
               const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '인증수업';
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_cert' ? cell.subject : '');
-              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter) ||
+                               (this.selectedSubjectFilter !== 'all' && subName !== this.selectedSubjectFilter && cell.subject !== this.selectedSubjectFilter);
 
-              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 인증수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" oncontextmenu="App.onCellContextMenu('${key}', event)" title="${errorTooltip || '클릭: 인증수업 정보 수정 / 우클릭: 수업 상세 정보 직접 수정'}" class="tt-cell ${errorClass} border-4 border-emerald-500 bg-emerald-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-cert text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
                     <span>${subName}</span>
@@ -7307,9 +7566,10 @@
               const subName = (cell.type === 'trainee_demo' ? cell.pages : cell.subject) || '대표수업';
               const lessonInfo = cell.lesson ? `${cell.lesson}/${cell.totalLesson}` : '대표수업';
               const pagesInfo = (cell.lesson && cell.pages) ? cell.pages : (cell.type === 'trainee_demo' ? cell.subject : '');
-              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter) ||
+                               (this.selectedSubjectFilter !== 'all' && subName !== this.selectedSubjectFilter && cell.subject !== this.selectedSubjectFilter);
 
-              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 대표수업 교생 및 교과 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
+              tbodyHtml += `<td id="cell-${key}" onclick="App.openEventEditModal(${d}, ${p})" oncontextmenu="App.onCellContextMenu('${key}', event)" title="${errorTooltip || '클릭: 대표수업 정보 수정 / 우클릭: 수업 상세 정보 직접 수정'}" class="tt-cell ${errorClass} border-4 border-amber-500 bg-amber-50 text-center p-0 cursor-pointer hover:brightness-95 select-none relative shadow-sm min-w-[78px] sm:min-w-[84px] ${isDimmed ? 'dimmed-cell' : ''}">
                 <div class="tt-cell-box grid-demo text-xs">
                   <div class="tt-cell-row tt-row-sub cell-part">
                     <span>${subName}</span>
@@ -7341,8 +7601,9 @@
               const style = this.getEventCellStyle(cell);
               const isSingle = (span === 1);
               const heightClass = isSingle ? 'h-24' : '';
+              const isDimmed = (this.selectedSubjectFilter !== 'all');
 
-              tbodyHtml += `<td id="cell-${key}" rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" title="${errorTooltip || '클릭하여 행사/강의명, 내용, 강사명 수정'}" class="tt-cell ${errorClass} border-2 ${style.border || 'border-slate-900'} ${style.cellClass} text-center font-bold p-1 text-xs cursor-pointer hover:brightness-105 transition min-w-[78px] sm:min-w-[84px] ${heightClass}">
+              tbodyHtml += `<td id="cell-${key}" rowspan="${span}" onclick="App.openEventEditModal(${d}, ${p})" oncontextmenu="event.preventDefault(); App.openEventEditModal(${d}, ${p}); return false;" title="${errorTooltip || '클릭/우클릭: 행사·강의명, 내용, 강사명 직접 수정'}" class="tt-cell ${errorClass} ${isDimmed ? 'dimmed-cell' : ''} border-2 ${style.border || 'border-slate-900'} ${style.cellClass} text-center font-bold p-1 text-xs cursor-pointer hover:brightness-105 transition min-w-[78px] sm:min-w-[84px] ${heightClass}">
                 <div class="flex flex-col justify-center items-center h-full space-y-1">
                   <span class="font-bold">${cell.subject}</span>
                   ${cell.pages ? `<span class="text-[11px] font-normal ${style.textSub || 'opacity-85'}">${cell.pages}</span>` : ''}
@@ -7365,10 +7626,11 @@
               } else if (cell.isCert) {
                 borderHighlight = isPinned ? 'border-4 border-emerald-600 ring-2 ring-indigo-500 shadow-md' : 'border-4 border-emerald-500 shadow-sm';
               }
-              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter);
+              const isDimmed = (this.selectedTeacherFilter !== 'all' && cell.teacher !== this.selectedTeacherFilter) ||
+                               (this.selectedSubjectFilter !== 'all' && cell.subject !== this.selectedSubjectFilter);
               const selectedClass = isSelected ? 'cell-selected' : '';
 
-              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" title="${errorTooltip || ''}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[78px] sm:min-w-[84px]">
+              tbodyHtml += `<td id="cell-${key}" draggable="true" ondragstart="App.onDragStart(event, '${key}')" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" oncontextmenu="App.onCellContextMenu('${key}', event)" title="${errorTooltip || '좌클릭: 수업 선택·이동 / 우클릭: 수업 상세 정보(교과·쪽수·차시·교생) 수정'}" class="tt-cell ${borderHighlight} ${errorClass} ${selectedClass} ${isDimmed ? 'dimmed-cell' : ''} bg-white p-0 text-center cursor-move select-none relative group min-w-[78px] sm:min-w-[84px]">
                 <!-- 📌 수업 고정/해제 토글 버튼: 고정 시 상시 노출, 미고정 시 호버 노출 -->
                 <button onclick="App.toggleCellPin('${key}', event)" title="${isPinned ? '수업 고정 해제 (재배정 시 다른 슬롯/교생으로 변경 허용)' : '수업 고정 📌 (재배정 시 현재 시간·교생 그대로 보존)'}" class="absolute top-0.5 left-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[9px] transition shadow-xs z-30 no-print cursor-pointer ${isPinned ? 'bg-indigo-600 text-white opacity-100 ring-1 ring-white' : 'bg-slate-700/80 hover:bg-indigo-600 text-white opacity-0 group-hover:opacity-100'}">
                   📌
@@ -7394,7 +7656,7 @@
                     ${cell.lesson}/${cell.totalLesson}
                   </div>
                   <!-- 수업자 -->
-                  <div class="tt-cell-row tt-row-teacher cell-part cursor-pointer hover:opacity-85 transition" onclick="App.promptChangeCellTeacher('${key}', event)" title="클릭하여 이 차시 수업자(교생) 변경" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
+                  <div class="tt-cell-row tt-row-teacher cell-part cursor-pointer hover:opacity-85 transition" onclick="App.promptChangeCellTeacher('${key}', event)" oncontextmenu="App.onCellContextMenu('${key}', event)" title="좌클릭: 수업자 빠른 변경 / 우클릭: 수업 상세 정보 수정" style="${color ? `background:${color.bg}; color:${color.text};` : ''}">
                     ${cell.teacher || '<span class="text-slate-300 font-normal">미배정</span>'}
                   </div>
                 </div>
@@ -7405,7 +7667,7 @@
 
             // 5. Empty Cell
             const selectedClass = isSelected ? 'cell-selected' : '';
-            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" title="${errorTooltip || ''}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[78px] sm:min-w-[84px]">
+            tbodyHtml += `<td id="cell-${key}" ondragover="App.onDragOver(event)" ondragleave="App.onDragLeave(event)" ondrop="App.onDrop(event, '${key}')" onclick="App.onCellClick('${key}', event)" oncontextmenu="App.onCellContextMenu('${key}', event)" title="${errorTooltip || '좌클릭: 수업 선택·이동 / 우클릭: 새 수업 배당'}" class="tt-cell ${errorClass} ${selectedClass} border-2 border-slate-900 bg-white hover:bg-slate-50 text-center cursor-pointer p-1 min-w-[78px] sm:min-w-[84px]">
               <span class="text-[10px] text-slate-300 block font-mono">+</span>
             </td>`;
             renderedCells[key] = true;
@@ -7632,6 +7894,194 @@
       },
 
       // -----------------------------------------------------------------------
+      // CLASS / TEACHER CELL EDIT MODAL (우클릭 마우스 상세 정보 수정)
+      // -----------------------------------------------------------------------
+      onCellContextMenu(key, event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        const cell = this.timetable[key] || this.events[key];
+        if (cell && cell.isLocked && cell.type !== 'trainee_cert' && cell.type !== 'trainee_demo') {
+          const parts = key.split('-');
+          this.openEventEditModal(parseInt(parts[0], 10), parseInt(parts[1], 10));
+          return false;
+        }
+        this.openClassEditModal(key);
+        return false;
+      },
+
+      setEditModalSubject(sub) {
+        const input = document.getElementById('edit-class-subject');
+        if (input) {
+          input.value = sub;
+          input.focus();
+        }
+      },
+
+      openClassEditModal(key) {
+        this.editingClassKey = key;
+        const parts = key.split('-');
+        const d = parseInt(parts[0], 10);
+        const p = parseInt(parts[1], 10);
+
+        // Header slot info
+        const weekNum = Math.floor(d / 5) + 1;
+        const dayNames = ['월', '화', '수', '목', '금'];
+        const dayName = dayNames[d % 5] || '';
+        let dateStr = '';
+        if (this.config.startDate) {
+          const base = new Date(this.config.startDate);
+          base.setDate(base.getDate() + Math.floor(d / 5) * 7 + (d % 5));
+          const m = base.getMonth() + 1;
+          const day = base.getDate();
+          dateStr = ` (${base.getFullYear()}-${String(m).padStart(2, '0')}-${String(day).padStart(2, '0')})`;
+        }
+        const slotInfoEl = document.getElementById('class-edit-slot-info');
+        if (slotInfoEl) {
+          slotInfoEl.textContent = `${weekNum}주차 ${dayName}요일 ${p}교시${dateStr}`;
+        }
+
+        // Teacher select
+        const teacherSelect = document.getElementById('edit-class-teacher');
+        if (teacherSelect) {
+          teacherSelect.innerHTML = `<option value="">(미배정)</option>` +
+            this.teachers.map(t => `<option value="${t.name}">${t.name} (${t.major || '교육'})</option>`).join('');
+        }
+
+        const cell = this.timetable[key] || {};
+        const evCell = this.events[key] || {};
+
+        const subject = cell.subject || (evCell.type === 'trainee_cert' || evCell.type === 'trainee_demo' ? evCell.subject : '') || '';
+        const pages = cell.pages || (evCell.type === 'trainee_cert' || evCell.type === 'trainee_demo' ? evCell.pages : '') || '';
+        let lesson = cell.lesson !== undefined ? cell.lesson : (evCell.lessonStr ? evCell.lessonStr.split('/')[0] : '');
+        let totalLesson = cell.totalLesson !== undefined ? cell.totalLesson : (evCell.lessonStr && evCell.lessonStr.includes('/') ? parseInt(evCell.lessonStr.split('/')[1], 10) : 15);
+        const topic = cell.topic || '';
+        const teacher = cell.teacher || evCell.teacher || '';
+        const isCert = !!(cell.isCert || evCell.type === 'trainee_cert');
+        const isDemo = !!(cell.isDemo || evCell.type === 'trainee_demo');
+        const isPinned = !!cell.isPinned;
+
+        const subEl = document.getElementById('edit-class-subject');
+        if (subEl) subEl.value = subject;
+
+        const pagesEl = document.getElementById('edit-class-pages');
+        if (pagesEl) pagesEl.value = pages;
+
+        const lessonEl = document.getElementById('edit-class-lesson');
+        if (lessonEl) lessonEl.value = lesson;
+
+        const totalEl = document.getElementById('edit-class-total-lesson');
+        if (totalEl) totalEl.value = totalLesson;
+
+        const topicEl = document.getElementById('edit-class-topic');
+        if (topicEl) topicEl.value = topic;
+
+        if (teacherSelect) {
+          if (teacher && !this.teachers.some(t => t.name === teacher)) {
+            const opt = document.createElement('option');
+            opt.value = teacher;
+            opt.textContent = teacher;
+            teacherSelect.appendChild(opt);
+          }
+          teacherSelect.value = teacher;
+        }
+
+        const certEl = document.getElementById('edit-class-iscert');
+        if (certEl) certEl.checked = isCert;
+
+        const demoEl = document.getElementById('edit-class-isdemo');
+        if (demoEl) demoEl.checked = isDemo;
+
+        const pinEl = document.getElementById('edit-class-ispinned');
+        if (pinEl) pinEl.checked = isPinned;
+
+        const modal = document.getElementById('modal-class-edit');
+        if (modal) {
+          modal.classList.remove('hidden');
+          if (window.lucide && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+          }
+          setTimeout(() => {
+            if (subEl) subEl.focus();
+          }, 50);
+        }
+      },
+
+      closeClassEditModal() {
+        this.editingClassKey = null;
+        const modal = document.getElementById('modal-class-edit');
+        if (modal) {
+          modal.classList.add('hidden');
+        }
+      },
+
+      deleteClassFromModal() {
+        const key = this.editingClassKey;
+        if (!key) return;
+        this.closeClassEditModal();
+        this.deleteCellClass(key, null, false);
+      },
+
+      saveClassEditModal() {
+        const key = this.editingClassKey;
+        if (!key) return;
+
+        const subEl = document.getElementById('edit-class-subject');
+        const subject = subEl ? subEl.value.trim() : '';
+        if (!subject) {
+          alert('교과명을 입력하거나 선택해주세요.');
+          if (subEl) subEl.focus();
+          return;
+        }
+
+        const pages = (document.getElementById('edit-class-pages')?.value || '').trim();
+        const lesson = (document.getElementById('edit-class-lesson')?.value || '').trim() || '1';
+        const totalLesson = parseInt(document.getElementById('edit-class-total-lesson')?.value, 10) || 15;
+        const topic = (document.getElementById('edit-class-topic')?.value || '').trim();
+        const teacher = document.getElementById('edit-class-teacher')?.value || '';
+        const isCert = !!document.getElementById('edit-class-iscert')?.checked;
+        const isDemo = !!document.getElementById('edit-class-isdemo')?.checked;
+        const isPinned = !!document.getElementById('edit-class-ispinned')?.checked;
+
+        if (!this.timetable[key]) {
+          this.timetable[key] = {};
+        }
+        const cell = this.timetable[key];
+        cell.subject = subject;
+        cell.pages = pages;
+        cell.lesson = lesson;
+        cell.totalLesson = totalLesson;
+        if (topic) cell.topic = topic;
+        else delete cell.topic;
+        cell.teacher = teacher;
+        cell.isCert = isCert;
+        cell.isDemo = isDemo;
+        cell.isPinned = isPinned;
+        cell.isLocked = false;
+
+        // Sync if cert / demo event exists
+        if (this.events[key] && (this.events[key].type === 'trainee_cert' || this.events[key].type === 'trainee_demo')) {
+          this.events[key].teacher = teacher;
+          this.events[key].subject = subject;
+          this.events[key].pages = pages;
+          this.events[key].lessonStr = `${lesson}/${totalLesson}`;
+          if (isDemo) this.events[key].type = 'trainee_demo';
+          else if (isCert) this.events[key].type = 'trainee_cert';
+        }
+
+        this.closeClassEditModal();
+        this.renderTimetableGrid();
+        this.renderTeacherSummary();
+        this.renderPersonalDeadlinePanel();
+        if (typeof this.renderCustomCalendar === 'function') this.renderCustomCalendar();
+        if (typeof this.renderDashboardCharts === 'function') this.renderDashboardCharts();
+        if (typeof this.runFullDiagnostic === 'function') this.runFullDiagnostic(false);
+        if (typeof this.updatePinnedBadgeUI === 'function') this.updatePinnedBadgeUI();
+        if (typeof this.renderSubjectFilterTabs === 'function') this.renderSubjectFilterTabs();
+      },
+
+      // -----------------------------------------------------------------------
       // MULTI-SELECTION & BULK MOVE ENGINE (배당표 및 맞춤 달력 일괄 드래그/이동)
       // -----------------------------------------------------------------------
       toggleMultiSelectMode() {
@@ -7650,6 +8100,10 @@
         this.multiSelectMode = false;
         this.updateMultiSelectedClassOnDOM();
         this.updateMultiMoveBar();
+      },
+
+      deselectAllCells() {
+        this.clearMultiSelection();
       },
 
       updateMultiSelectedClassOnDOM() {
@@ -7717,6 +8171,43 @@
         this.updateMultiMoveBar();
 
         alert(`[${targetTeacher}] 실습생의 모든 수업 ${keys.length}개가 한꺼번에 선택되었습니다!\n• 선택된 셀 중 하나를 빈 슬롯으로 드래그하면 그룹 전체가 함께 이동합니다.\n• 또는 하단 컨트롤 바의 방향키(◀, ▶, ▲, ▼)를 눌러 한꺼번에 이동할 수 있습니다.`);
+      },
+
+      selectSubjectClassesForBulkMove(subjectName) {
+        const targetSubject = subjectName || (this.selectedSubjectFilter !== 'all' ? this.selectedSubjectFilter : '');
+        if (!targetSubject) {
+          alert('선택할 과목 정보가 없습니다.');
+          return;
+        }
+
+        const keys = [];
+        Object.keys(this.timetable).forEach(k => {
+          const cell = this.timetable[k];
+          if (cell && cell.subject === targetSubject && !cell.isLocked) {
+            keys.push(k);
+          }
+        });
+
+        if (keys.length === 0) {
+          alert(`'${targetSubject}' 과목으로 배당된 일반 수업이 없습니다.`);
+          return;
+        }
+
+        this.selectedCellKeys = keys;
+        this.multiSelectMode = true;
+        this.clearAllViewFilters();
+        this.updateMultiSelectedClassOnDOM();
+        this.updateMultiMoveBar();
+
+        alert(`[${targetSubject}] 과목의 모든 수업 ${keys.length}개가 한꺼번에 선택되었습니다!\n• 선택된 셀 중 하나를 빈 슬롯으로 드래그하면 그룹 전체가 함께 이동합니다.\n• 또는 하단 컨트롤 바의 방향키(◀, ▶, ▲, ▼)를 눌러 한꺼번에 이동할 수 있습니다.`);
+      },
+
+      handleCalendarBulkMoveClick() {
+        if (this.selectedSubjectFilter && this.selectedSubjectFilter !== 'all') {
+          this.selectSubjectClassesForBulkMove(this.selectedSubjectFilter);
+        } else {
+          this.selectTeacherClassesForBulkMove(this.selectedTeacherFilter);
+        }
       },
 
       shiftSelectedCells(dDay, dPeriod) {
@@ -8040,20 +8531,40 @@
       },
 
       // -----------------------------------------------------------------------
-      // PERSONAL DEADLINE TRACKER CALENDAR
+      // PERSONAL / SUBJECT DEADLINE TRACKER CALENDAR
       // -----------------------------------------------------------------------
       renderPersonalDeadlinePanel() {
         const panel = document.getElementById('personal-deadline-panel');
         if (!panel) return;
 
-        if (this.selectedTeacherFilter === 'all') {
+        const isSubjectMode = (this.selectedSubjectFilter && this.selectedSubjectFilter !== 'all');
+        const isTeacherMode = (this.selectedTeacherFilter && this.selectedTeacherFilter !== 'all');
+
+        if (!isSubjectMode && !isTeacherMode) {
           panel.classList.add('hidden');
           return;
         }
 
         panel.classList.remove('hidden');
-        document.getElementById('selected-teacher-name').innerText = this.selectedTeacherFilter;
-        
+
+        // Title & subtitle update
+        const titleNameEl = document.getElementById('selected-teacher-name');
+        const titleSuffixEl = document.getElementById('calendar-title-suffix');
+        const btnBulkTextEl = document.getElementById('btn-calendar-bulk-move-text');
+        const btnPrintTextEl = document.getElementById('btn-calendar-print-text');
+
+        if (isSubjectMode) {
+          if (titleNameEl) titleNameEl.innerText = `[${this.selectedSubjectFilter}]`;
+          if (titleSuffixEl) titleSuffixEl.innerText = '과목별 전체 진도 일정 및 지도안 제출 마감 캘린더';
+          if (btnBulkTextEl) btnBulkTextEl.innerText = '과목 수업 일괄 선택(이동)';
+          if (btnPrintTextEl) btnPrintTextEl.innerText = '과목별 일정 인쇄';
+        } else {
+          if (titleNameEl) titleNameEl.innerText = this.selectedTeacherFilter;
+          if (titleSuffixEl) titleSuffixEl.innerText = '실습생 수업 일정 및 지도안 제출 마감일 캘린더';
+          if (btnBulkTextEl) btnBulkTextEl.innerText = '전체 수업 일괄 선택(이동)';
+          if (btnPrintTextEl) btnPrintTextEl.innerText = '개인 시간표 인쇄';
+        }
+
         // Sync metadata banner in personal deadline calendar
         const calSchool = document.getElementById('calendar-school');
         if (calSchool) calSchool.innerText = this.config.school || '';
@@ -8068,16 +8579,21 @@
         tbody.innerHTML = '';
 
         const startDate = new Date(this.config.startDate || getSystemTodayString());
-        const teacherClasses = [];
+        const classesList = [];
 
-        // Collect all classes for selected teacher
+        // Collect all classes for selected teacher or subject
         const totalDays = (this.config.weekCount || 2) * 5;
         const maxP = this.periodsPerDay || 8;
         for (let d = 0; d < totalDays; d++) {
           for (let p = 1; p <= maxP; p++) {
             const key = `${d}-${p}`;
             const cell = this.timetable[key];
-            if (cell && cell.teacher === this.selectedTeacherFilter) {
+            if (!cell || !cell.subject) continue;
+
+            const matchTeacher = isTeacherMode && cell.teacher === this.selectedTeacherFilter;
+            const matchSubject = isSubjectMode && cell.subject === this.selectedSubjectFilter;
+
+            if (matchTeacher || matchSubject) {
               const curDate = new Date(startDate);
               const weekOffset = Math.floor(d / 5);
               const dayOffset = d % 5;
@@ -8094,7 +8610,8 @@
               d1Date.setDate(curDate.getDate() - 1);
               if (d1Date.getDay() === 0) d1Date.setDate(d1Date.getDate() - 2);
 
-              teacherClasses.push({
+              classesList.push({
+                key: `${d}-${p}`,
                 dayIndex: d,
                 period: p,
                 dateStr: `${curDate.getMonth()+1}.${curDate.getDate()}(${['일','월','화','수','목','금','토'][curDate.getDay()]})`,
@@ -8106,24 +8623,39 @@
           }
         }
 
-        if (teacherClasses.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" class="py-4 text-center text-slate-400">배정된 수업이 없습니다.</td></tr>`;
+        if (classesList.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" class="py-4 text-center text-slate-400">배정된 수업이 없습니다.</td></tr>`;
           return;
         }
 
         let html = '';
-        teacherClasses.forEach(item => {
+        classesList.forEach(item => {
+          const tObj = this.teachers.find(t => t.name === item.cell.teacher);
+          const tColor = tObj ? TEACHER_COLORS[tObj.colorIdx % TEACHER_COLORS.length] : null;
+          const teacherBadge = item.cell.teacher
+            ? `<span class="px-2 py-0.5 rounded-md font-bold text-[11px] shadow-2xs inline-block" style="${tColor ? `background:${tColor.bg}; color:${tColor.text}; border: 1px solid ${tColor.border};` : 'background:#e2e8f0; color:#334155;'}">${item.cell.teacher}</span>`
+            : '<span class="text-slate-400 font-normal">미배정</span>';
+
+          const subStyle = this.getSubjectFilterStyle(item.cell.subject, false);
+          const subBadge = `<span class="px-2 py-0.5 rounded-md font-bold text-[11px] inline-block" style="background:${subStyle.bg}; color:${subStyle.text}; border: 1px solid ${subStyle.border};">${item.cell.subject}</span>`;
+
+          let badgeType = '<span class="text-slate-400 font-normal">일반</span>';
+          if (item.cell.isDemo) {
+            badgeType = '<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold border border-amber-300">⭐ 대표수업</span>';
+          } else if (item.cell.isCert) {
+            badgeType = '<span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold border border-emerald-300">🏅 인증수업</span>';
+          }
+
           html += `
-            <tr class="hover:bg-slate-50">
+            <tr class="hover:bg-slate-50 transition cursor-pointer" oncontextmenu="App.onCellContextMenu('${item.key}', event)" title="우클릭하여 수업 정보 수정">
               <td class="py-2.5 px-3 font-bold text-slate-900">${item.dateStr} ${item.period}교시</td>
-              <td class="py-2.5 px-3 font-bold text-indigo-700">${item.cell.subject}</td>
-              <td class="py-2.5 px-3 text-center">${item.cell.lesson}/${item.cell.totalLesson}</td>
+              <td class="py-2.5 px-3 font-bold">${subBadge}</td>
+              <td class="py-2.5 px-3 text-center font-bold text-slate-800">${item.cell.lesson}/${item.cell.totalLesson}</td>
               <td class="py-2.5 px-3 text-slate-600">${item.cell.pages || '-'}</td>
+              <td class="py-2.5 px-3 text-center">${teacherBadge}</td>
               <td class="py-2.5 px-3 text-amber-700 font-bold">${item.d3Str}</td>
               <td class="py-2.5 px-3 text-rose-700 font-bold">${item.d1Str}</td>
-              <td class="py-2.5 px-3 text-center">
-                ${item.cell.isDemo ? `<span class="px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 text-[10px] font-bold">대표수업</span>` : '<span class="text-slate-400">일반</span>'}
-              </td>
+              <td class="py-2.5 px-3 text-center">${badgeType}</td>
             </tr>
           `;
         });
@@ -8131,19 +8663,39 @@
       },
 
       copyDeadlinesToClipboard() {
-        const tName = this.selectedTeacherFilter;
-        if (tName === 'all') return;
+        const isSubjectMode = (this.selectedSubjectFilter && this.selectedSubjectFilter !== 'all');
+        const isTeacherMode = (this.selectedTeacherFilter && this.selectedTeacherFilter !== 'all');
+        if (!isSubjectMode && !isTeacherMode) return;
+
+        const targetName = isSubjectMode ? this.selectedSubjectFilter : this.selectedTeacherFilter;
         const rows = document.querySelectorAll('#personal-deadline-tbody tr');
-        let text = `[${this.config.school} ${this.config.gradeClass}] ${tName} 교생 수업안 제출 마감 일정표\n\n`;
+        let text = isSubjectMode
+          ? `[${this.config.school} ${this.config.gradeClass}] [${targetName}] 과목 수업 일정 및 지도안 마감일\n\n`
+          : `[${this.config.school} ${this.config.gradeClass}] ${targetName} 교생 수업안 제출 마감 일정표\n\n`;
+
         rows.forEach(tr => {
           const cols = tr.querySelectorAll('td');
-          if (cols.length >= 6) {
-            text += `▶ ${cols[0].innerText} | ${cols[1].innerText}(${cols[2].innerText}차시)\n   - D-3 1차안 제출: ${cols[4].innerText}\n   - D-1 최종안 제출: ${cols[5].innerText}\n\n`;
+          if (cols.length >= 7) {
+            const dt = cols[0].innerText.trim();
+            const sub = cols[1].innerText.trim();
+            const lesson = cols[2].innerText.trim();
+            const pages = cols[3].innerText.trim();
+            const teacher = cols[4].innerText.trim();
+            const d3 = cols[5].innerText.trim();
+            const d1 = cols[6].innerText.trim();
+            const type = (cols[7] ? cols[7].innerText.trim() : '') || '일반';
+            const typeStr = (type && type !== '일반') ? ` (${type})` : '';
+
+            if (isSubjectMode) {
+              text += `▶ ${dt} | ${sub}(${lesson}차시, ${pages}쪽) [담당: ${teacher}${typeStr}]\n   - D-3 1차안 제출: ${d3}\n   - D-1 최종안 제출: ${d1}\n\n`;
+            } else {
+              text += `▶ ${dt} | ${sub}(${lesson}차시, ${pages}쪽)${typeStr}\n   - D-3 1차안 제출: ${d3}\n   - D-1 최종안 제출: ${d1}\n\n`;
+            }
           }
         });
         text += `* 기한을 엄수하여 지도교사에게 제출 바랍니다.`;
         navigator.clipboard.writeText(text).then(() => {
-          alert(`${tName} 교생의 지도안 마감 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!`);
+          alert(`${targetName}의 지도안 마감 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!`);
         });
       },
 
