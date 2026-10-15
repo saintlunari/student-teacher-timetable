@@ -10023,48 +10023,62 @@
           };
         });
 
+        // 실습생 수업 대상 셀 판별 함수 (교생대표/인증/고정수업 및 배정된 교생 수업 100% 보존)
+        const isTraineeClass = (cell) => {
+          if (!cell || !cell.subject) return false;
+          // 제외할 순수 학교 행사/공휴일/협의회 타입
+          if (['holiday', 'lecture', 'observation', 'meeting', 'design', 'homeroom'].includes(cell.type)) return false;
+          // 교생대표수업(⭐) 및 교생인증수업(🏅)은 잠금 여부와 무관하게 항상 포함
+          if (cell.type === 'trainee_cert' || cell.type === 'trainee_demo' || cell.isCert || cell.isDemo) return true;
+          // 실습생 명단에 있는 교생(teacher)이 배정된 모든 수업은 고정/잠금 여부와 무관하게 항상 포함
+          if (cell.teacher && teacherMap[cell.teacher]) return true;
+          // 미배정 상태라도 일반 교과 차시가 등록된 슬롯이면 포함
+          if (!cell.isLocked && cell.lesson) return true;
+          return false;
+        };
+
         // 배당표에서 실제 배정된 일반 수업 슬롯 수집
         let allocatedItems = [];
-        const hasAllocatedClasses = Object.keys(this.timetable || {}).some(k => {
-          const cell = this.timetable[k];
-          return cell && cell.subject && !cell.isLocked && !['holiday', 'lecture', 'observation', 'meeting', 'design', 'homeroom'].includes(cell.type);
-        });
+        const hasAllocatedClasses = Object.keys(this.timetable || {}).some(k => isTraineeClass(this.timetable[k]));
 
         if (hasAllocatedClasses) {
-          for (let d = 0; d < totalDays; d++) {
-            for (let p = 1; p <= maxP; p++) {
-              const k = `${d}-${p}`;
-              const cell = this.timetable[k];
-              if (!cell || !cell.subject || cell.isLocked) continue;
-              if (['holiday', 'lecture', 'observation', 'meeting', 'design', 'homeroom'].includes(cell.type)) continue;
+          const allKeys = Object.keys(this.timetable || {}).sort((a, b) => {
+            const [dA, pA] = a.split('-').map(Number);
+            const [dB, pB] = b.split('-').map(Number);
+            return (dA - dB) || (pA - pB);
+          });
 
-              const dayName = ['월', '화', '수', '목', '금'][d % 5];
-              const weekNum = Math.floor(d / 5) + 1;
-              const curDate = new Date(startDate.getTime() + d * 86400000);
-              const dateStr = `${curDate.getMonth() + 1}/${curDate.getDate()}(${dayName})`;
-              const scheduleStr = `${weekNum}주 ${dayName} ${p}교시`;
+          for (const k of allKeys) {
+            const cell = this.timetable[k];
+            if (!isTraineeClass(cell)) continue;
 
-              allocatedItems.push({
-                key: k,
-                dayIndex: d,
-                period: p,
-                subject: cell.subject,
-                pages: cell.pages || '',
-                lesson: cell.lesson || '',
-                totalLesson: cell.totalLesson || 0,
-                topic: cell.topic || '',
-                teacher: cell.teacher || '',
-                curriculumId: cell.curriculumId || '',
-                isCert: !!cell.isCert,
-                isDemo: !!cell.isDemo,
-                isPinned: !!cell.isPinned,
-                dateStr,
-                scheduleStr,
-                lessonNum: parseL(cell.lesson),
-                unit: cell.unit || '',
-                place: cell.place || ''
-              });
-            }
+            const [d, p] = k.split('-').map(Number);
+            const dayName = ['월', '화', '수', '목', '금'][d % 5] || '월';
+            const weekNum = Math.floor(d / 5) + 1;
+            const curDate = new Date(startDate.getTime() + d * 86400000);
+            const dateStr = `${curDate.getMonth() + 1}/${curDate.getDate()}(${dayName})`;
+            const scheduleStr = `${weekNum}주 ${dayName} ${p}교시`;
+
+            allocatedItems.push({
+              key: k,
+              dayIndex: d,
+              period: p,
+              subject: cell.subject,
+              pages: cell.pages || '',
+              lesson: cell.lesson || '',
+              totalLesson: cell.totalLesson || 0,
+              topic: cell.topic || '',
+              teacher: cell.teacher || '',
+              curriculumId: cell.curriculumId || '',
+              isCert: !!(cell.isCert || cell.type === 'trainee_cert'),
+              isDemo: !!(cell.isDemo || cell.type === 'trainee_demo'),
+              isPinned: !!cell.isPinned,
+              dateStr,
+              scheduleStr,
+              lessonNum: parseL(cell.lesson),
+              unit: cell.unit || '',
+              place: cell.place || ''
+            });
           }
         } else {
           // 아직 배당 실행 전인 경우 진도표 기준으로 수집
