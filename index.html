@@ -382,7 +382,13 @@
 
         <div class="h-4 w-px bg-slate-700 mx-1"></div>
 
-        <!-- HWP 한글 표 복사 버튼 -->
+        <!-- 배당 진도표 모달 열기 버튼 (사진 양식) -->
+      <button onclick="App.openProgressAllocationModal()" title="교생에게 보여줄 과목별 진도 및 차시 배당 종합 안내표(사진 양식) 열람/인쇄/복사" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm transition cursor-pointer">
+        <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
+        <span>배당 진도표</span>
+      </button>
+
+      <!-- HWP 한글 표 복사 버튼 -->
         <button onclick="App.copyHwpTable()" title="아래아한글 빈 문서에서 Ctrl+V만 누르면 표가 그대로 복사됩니다" class="flex items-center gap-1 px-3 py-1.5 text-xs font-semibold bg-blue-600 hover:bg-blue-500 text-white rounded-lg shadow-sm transition">
           <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
           한글(HWP) 표 복사
@@ -918,6 +924,13 @@
             <span>교생 이름 편집</span>
           </button>
 
+        <!-- 교생 배당 진도표 (사진 양식) 모달 열기 버튼 -->
+        <button onclick="App.openProgressAllocationModal()" id="btn-open-progress-allocation" class="flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white rounded-xl shadow-md transition transform active:scale-95 cursor-pointer" title="배당표 확정 후 교생들에게 나누어줄 과목별 진도 및 차시 배당 종합 안내표(사진 양식)를 열람하고 인쇄·복사·저장합니다">
+          <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
+          <span>📋 배당 진도표</span>
+          <span id="badge-progress-count" class="px-1.5 py-0.2 rounded-full bg-emerald-200 text-emerald-950 font-black text-[10px]">0차시</span>
+        </button>
+
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
 
           <!-- 스마트 스왑 안내 표시기 -->
@@ -933,6 +946,10 @@
           <button onclick="App.clearAllViewFilters()" id="filter-btn-all" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-white text-slate-900 shadow-sm transition border border-slate-300">
             전체
           </button>
+        <button onclick="App.toggleProgressInlinePanel()" id="btn-toggle-progress-inline" class="px-2.5 py-1 text-xs font-bold rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 transition border border-emerald-300 flex items-center gap-1 cursor-pointer" title="시간표 하단에 배당 진도표 패널을 펼치거나 접습니다">
+          <i data-lucide="clipboard-list" class="w-3 h-3 text-emerald-600"></i>
+          <span>진도표</span>
+        </button>
           <div class="h-4 w-px bg-slate-300 mx-0.5"></div>
           <span class="text-[10px] font-bold text-slate-500">교생</span>
           <div id="teacher-filter-tabs" class="flex items-center gap-1 flex-wrap">
@@ -1051,7 +1068,49 @@
       </div>
 
       <!-- 교생 개인별 / 과목별 맞춤 수업안(지도안) 제출 마감일 달력 카드 -->
-      <div id="personal-deadline-panel" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+      <!-- 교생 배당 진도표 인라인 패널 (사진 양식) -->
+    <div id="progress-allocation-panel" class="hidden bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4 animate-fadeIn">
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-emerald-600 text-white rounded-xl shadow-xs">
+            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
+              <span>실습생 배당 진도표 (과목별 진도 및 차시 배당 종합 안내)</span>
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold border border-emerald-200">사진 양식</span>
+            </h3>
+            <p class="text-xs text-slate-500">배당표 확정 후 각 교생에게 나누어줄 단원, 차시, 쪽수 및 배당 매트릭스</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="App.copyProgressHwpTable()" class="flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="아래아한글 빈 문서에서 Ctrl+V만 누르면 표가 그대로 복사됩니다">
+            <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
+            <span>한글(HWP) 복사</span>
+          </button>
+          <button onclick="App.exportProgressPng('progress-inline-capture-area')" class="flex items-center gap-1 px-3 py-1.5 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="고화질 PNG 이미지로 저장합니다">
+            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+            <span>이미지 저장</span>
+          </button>
+          <button onclick="App.exportProgressExcel()" class="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="엑셀(.xlsx) 파일로 다운로드합니다">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+            <span>엑셀 저장</span>
+          </button>
+          <button onclick="App.printProgressAllocation('progress-inline-capture-area')" class="flex items-center gap-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="A4 가로 방향으로 인쇄합니다">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>인쇄</span>
+          </button>
+          <button onclick="App.toggleProgressInlinePanel(false)" class="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg transition cursor-pointer" title="패널 닫기">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <div id="progress-inline-capture-area" class="overflow-x-auto p-2 bg-white rounded-xl">
+        <!-- Rendered by App.renderProgressAllocationView() -->
+      </div>
+    </div>
+
+    <div id="personal-deadline-panel" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
         <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
           <div class="flex items-center gap-2">
             <i data-lucide="clipboard-check" class="w-5 h-5 text-indigo-600"></i>
@@ -2053,6 +2112,58 @@
             <i data-lucide="check" class="w-4 h-4"></i>
             <span>저장 및 배당표 반영</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 교생 배당 진도표 (과목별 진도 및 차시 배당 종합 안내 모달) -->
+  <!-- ========================================================= -->
+  <div id="modal-progress-allocation" onclick="if(event.target === this) App.closeProgressAllocationModal()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[96vh] flex flex-col border border-slate-200 overflow-hidden">
+      <!-- Modal Header -->
+      <div class="p-3.5 sm:p-4 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 bg-emerald-500 text-white rounded-xl shadow-xs">
+            <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-white text-base sm:text-lg flex items-center gap-2">
+              <span>실습생 배당 진도표</span>
+              <span class="text-[11px] font-normal px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">교생 안내용</span>
+            </h3>
+            <p class="text-xs text-slate-300 font-medium">배당표 확정 후 각 실습생에게 보여줄 과목별 진도 및 차시 분담 안내표 (사진 표준 양식)</p>
+          </div>
+        </div>
+        <!-- Action Toolbar -->
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button onclick="App.copyProgressHwpTable()" class="flex items-center gap-1 px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="아래아한글 빈 문서에서 Ctrl+V만 누르면 사진의 표 양식 그대로 복사됩니다">
+            <i data-lucide="clipboard-copy" class="w-3.5 h-3.5"></i>
+            <span>한글(HWP) 복사</span>
+          </button>
+          <button onclick="App.exportProgressPng('progress-allocation-capture-area')" class="flex items-center gap-1 px-3 py-1.5 bg-violet-600 hover:bg-violet-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="고화질 PNG 이미지로 저장하여 단톡방에 공유합니다">
+            <i data-lucide="image" class="w-3.5 h-3.5"></i>
+            <span>이미지 저장</span>
+          </button>
+          <button onclick="App.exportProgressExcel()" class="flex items-center gap-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="엑셀(.xlsx) 파일로 다운로드합니다">
+            <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i>
+            <span>엑셀 저장</span>
+          </button>
+          <button onclick="App.printProgressAllocation('progress-allocation-capture-area')" class="flex items-center gap-1 px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold rounded-lg shadow-sm transition cursor-pointer" title="A4 가로 방향으로 인쇄합니다">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+            <span>인쇄</span>
+          </button>
+          <button onclick="App.closeProgressAllocationModal()" class="p-1.5 text-slate-400 hover:text-white rounded-lg transition ml-1 cursor-pointer" title="닫기">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable & Printable Area) -->
+      <div class="p-4 sm:p-6 overflow-y-auto flex-1 bg-slate-50/50">
+        <div id="progress-allocation-capture-area" class="bg-white p-6 sm:p-8 rounded-2xl shadow-xs border border-slate-200/80 max-w-5xl mx-auto">
+          <!-- Rendered dynamically by App.renderProgressAllocationView() -->
         </div>
       </div>
     </div>
@@ -9882,7 +9993,826 @@
           }
         };
         reader.readAsText(file, 'utf-8');
-      }
+      },
+
+      // =========================================================================
+      // [신규 기능] 실습생 배당 진도표 (과목별 진도 및 차시 배당 종합 안내 - 사진 표준 양식)
+      // =========================================================================
+
+      // 1. 배당 진도표 데이터 수집 및 정규화
+      getProgressAllocationData() {
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const maxP = this.config.periodsPerDay || 8;
+        const startDateStr = this.config.startDate || (typeof getSystemTodayString === 'function' ? getSystemTodayString() : '2026-04-20');
+        const startDate = new Date(startDateStr);
+
+        const parseL = (lStr) => {
+          if (typeof lStr === 'number') return lStr;
+          const match = String(lStr || '').match(/\d+/);
+          return match ? parseInt(match[0], 10) : 0;
+        };
+
+        // 실습생 색상 맵
+        const teacherMap = {};
+        (this.teachers || []).forEach((t, idx) => {
+          const cIdx = (typeof t.colorIdx === 'number' && t.colorIdx >= 0) ? t.colorIdx : (idx % TEACHER_COLORS.length);
+          teacherMap[t.name] = {
+            ...t,
+            color: TEACHER_COLORS[cIdx] || TEACHER_COLORS[0]
+          };
+        });
+
+        // 배당표에서 실제 배정된 일반 수업 슬롯 수집
+        let allocatedItems = [];
+        const hasAllocatedClasses = Object.keys(this.timetable || {}).some(k => {
+          const cell = this.timetable[k];
+          return cell && cell.subject && !cell.isLocked && !['holiday', 'lecture', 'observation', 'meeting', 'design', 'homeroom'].includes(cell.type);
+        });
+
+        if (hasAllocatedClasses) {
+          for (let d = 0; d < totalDays; d++) {
+            for (let p = 1; p <= maxP; p++) {
+              const k = `${d}-${p}`;
+              const cell = this.timetable[k];
+              if (!cell || !cell.subject || cell.isLocked) continue;
+              if (['holiday', 'lecture', 'observation', 'meeting', 'design', 'homeroom'].includes(cell.type)) continue;
+
+              const dayName = ['월', '화', '수', '목', '금'][d % 5];
+              const weekNum = Math.floor(d / 5) + 1;
+              const curDate = new Date(startDate.getTime() + d * 86400000);
+              const dateStr = `${curDate.getMonth() + 1}/${curDate.getDate()}(${dayName})`;
+              const scheduleStr = `${weekNum}주 ${dayName} ${p}교시`;
+
+              allocatedItems.push({
+                key: k,
+                dayIndex: d,
+                period: p,
+                subject: cell.subject,
+                pages: cell.pages || '',
+                lesson: cell.lesson || '',
+                totalLesson: cell.totalLesson || 0,
+                topic: cell.topic || '',
+                teacher: cell.teacher || '',
+                curriculumId: cell.curriculumId || '',
+                isCert: !!cell.isCert,
+                isDemo: !!cell.isDemo,
+                isPinned: !!cell.isPinned,
+                dateStr,
+                scheduleStr,
+                lessonNum: parseL(cell.lesson),
+                unit: cell.unit || '',
+                place: cell.place || ''
+              });
+            }
+          }
+        } else {
+          // 아직 배당 실행 전인 경우 진도표 기준으로 수집
+          (this.curriculum || []).forEach((c, idx) => {
+            allocatedItems.push({
+              key: `curr-${idx}`,
+              dayIndex: -1,
+              period: -1,
+              subject: c.subject,
+              pages: c.pages || '',
+              lesson: c.lesson || '',
+              totalLesson: c.totalLesson || 0,
+              topic: c.topic || '',
+              teacher: c.designatedTeacher || c.demoTeacher || '',
+              curriculumId: c.id,
+              isCert: !!c.isCert,
+              isDemo: !!c.isDemo,
+              isPinned: false,
+              dateStr: '-',
+              scheduleStr: '미배정',
+              lessonNum: parseL(c.lesson),
+              unit: c.unit || '',
+              place: c.place || ''
+            });
+          });
+        }
+
+        // 단원명(unit) 및 제재명(topic) 스마트 보강 (curriculum 및 내장 DB 활용)
+        allocatedItems.forEach(item => {
+          // 1순위: App.curriculum 매칭
+          const matchCurr = (this.curriculum || []).find(c => (item.curriculumId && c.id === item.curriculumId) || (c.subject === item.subject && c.pages === item.pages && String(c.lesson) === String(item.lesson)));
+          if (matchCurr) {
+            if (!item.topic && matchCurr.topic) item.topic = matchCurr.topic;
+            if (!item.unit && matchCurr.unit) item.unit = matchCurr.unit;
+            if (!item.place && matchCurr.place) item.place = matchCurr.place;
+          }
+
+          // 2순위: 내장 학년별 교과 DB 탐색
+          if (!item.unit || !item.topic) {
+            const gDbs = [window.CURRICULUM_DB_GRADE2, window.CURRICULUM_DB_GRADE3, window.CURRICULUM_DB_GRADE5].filter(Boolean);
+            for (const db of gDbs) {
+              for (const tbl of Object.values(db)) {
+                if (!Array.isArray(tbl)) continue;
+                const found = tbl.find(row => {
+                  if (!row || !row.subject) return false;
+                  const rowSubFam = (typeof getSubjectFamily === 'function') ? getSubjectFamily(row.subject) : [row.subject];
+                  if (row.subject !== item.subject && !rowSubFam.includes(item.subject)) return false;
+                  
+                  const pA = String(row.pages || '').replace(/\s+/g, '');
+                  const pB = String(item.pages || '').replace(/\s+/g, '');
+                  const pMatch = pA && pB && (pA === pB || pA.includes(pB) || pB.includes(pA));
+                  const lMatch = String(row.lesson) === String(item.lesson);
+                  return pMatch || lMatch;
+                });
+                if (found) {
+                  if (!item.unit && found.unit) item.unit = found.unit;
+                  if (!item.topic && found.topic) item.topic = found.topic;
+                  if (!item.place && found.place) item.place = found.place;
+                  break;
+                }
+              }
+              if (item.unit && item.topic) break;
+            }
+          }
+
+          // 3순위: 디폴트 값 생성
+          if (!item.unit) item.unit = `${item.subject} 단원`;
+          if (!item.topic) item.topic = `${item.subject} 학습 (${item.lesson}차시)`;
+          // 통합교과/체육 추천장소 자동 추론
+          if (!item.place) {
+            const subName = item.subject;
+            if (subName.includes('체육') || subName.includes('놀이')) {
+              item.place = '강당, 소운동장';
+            } else if (subName.includes('즐생') || subName.includes('즐거운')) {
+              item.place = '교실 또는 꿈나무관';
+            }
+          }
+        });
+
+        // 과목별 그룹화 및 초등 표준 순서 정렬
+        const subjectsMap = {};
+        allocatedItems.forEach(item => {
+          const sub = item.subject;
+          if (!subjectsMap[sub]) subjectsMap[sub] = [];
+          subjectsMap[sub].push(item);
+        });
+
+        const getSubOrder = (s) => {
+          const STD_ORDER = ['국어', '수학', '사회', '도덕', '과학', '실과', '체육', '음악', '미술', '영어', '바생', '바른 생활', '바른생활', '슬생', '슬기로운 생활', '슬기로운생활', '즐생', '즐거운 생활', '즐거운생활', '즐생(놀이)', '창체'];
+          const idx = STD_ORDER.findIndex(o => o === s || s.includes(o) || o.includes(s));
+          return idx >= 0 ? idx : 999;
+        };
+
+        const sortedSubjectNames = Object.keys(subjectsMap).sort((a, b) => getSubOrder(a) - getSubOrder(b));
+
+        const subjectGroups = sortedSubjectNames.map(sub => {
+          const items = subjectsMap[sub];
+          // 차시 오름차순 정렬
+          items.sort((a, b) => {
+            const diff = a.lessonNum - b.lessonNum;
+            if (diff !== 0) return diff;
+            return (a.dayIndex - b.dayIndex) || (a.period - b.period);
+          });
+
+          // 단원별 그룹화
+          const unitGroupsMap = {};
+          items.forEach(it => {
+            const uName = it.unit || `${sub} 단원`;
+            if (!unitGroupsMap[uName]) unitGroupsMap[uName] = [];
+            unitGroupsMap[uName].push(it);
+          });
+
+          const units = Object.keys(unitGroupsMap).map(uName => ({
+            unitName: uName,
+            lessons: unitGroupsMap[uName]
+          }));
+
+          return {
+            subject: sub,
+            totalCount: items.length,
+            subTitle: `${items.length}차시`,
+            items: items,
+            units: units
+          };
+        });
+
+        return {
+          title: this.config.title || '4학년 종합실습',
+          school: this.config.school || '공주교육대학교부설초등학교',
+          gradeClass: this.config.gradeClass || '0학년 0반',
+          teacherName: this.config.teacherName || '김지도',
+          totalAllocatedCount: allocatedItems.length,
+          teachers: (this.teachers || []).map((t, idx) => ({
+            ...t,
+            color: teacherMap[t.name]?.color || TEACHER_COLORS[idx % TEACHER_COLORS.length],
+            count: allocatedItems.filter(it => it.teacher === t.name).length
+          })),
+          subjectGroups
+        };
+      },
+
+      // 2. 사진 표준 양식 HTML 렌더러
+      renderProgressAllocationView(targetId = 'progress-allocation-capture-area', filterTeacher = null) {
+        const container = document.getElementById(targetId);
+        if (!container) return;
+
+        const data = this.getProgressAllocationData();
+        const activeTeacher = filterTeacher || this.activeProgressTeacherFilter || null;
+
+        // Header Title & Meta Info
+        let html = `
+          <div class="mb-4 text-center">
+            <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight pb-1">${data.title}</h1>
+            <div class="flex flex-wrap items-center justify-between text-xs text-slate-600 border-b-2 border-slate-900 pb-2 mt-2 gap-2">
+              <div class="flex items-center gap-3">
+                <span class="font-bold text-slate-800">🏫 ${data.school}</span>
+                <span class="font-bold text-slate-800">🏷️ ${data.gradeClass}</span>
+                <span>담임교사: <strong class="text-slate-900 font-bold">${data.teacherName}</strong></span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 font-bold text-[11px] border border-emerald-300">
+                  총 배당: ${data.totalAllocatedCount}차시
+                </span>
+                <span class="text-[11px] text-slate-500">
+                  (실습생 ${data.teachers.length}명)
+                </span>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Teacher Legend Bar (실습생 색상 범례)
+        html += `
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-5 p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-slate-600 flex items-center gap-1">
+                <i data-lucide="users" class="w-3.5 h-3.5 text-slate-500"></i>
+                실습생 범례:
+              </span>
+              <button onclick="App.filterProgressAllocationByTeacher(null, '${targetId}')" class="px-2 py-1 text-[11px] font-bold rounded-lg border transition ${!activeTeacher ? 'bg-slate-800 text-white border-slate-800 shadow-xs' : 'bg-white text-slate-600 border-slate-300 hover:bg-slate-100'}">
+                전체 보기
+              </button>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+        `;
+
+        data.teachers.forEach(t => {
+          const isSelected = activeTeacher === t.name;
+          const bg = t.color?.bg || '#eff6ff';
+          const text = t.color?.text || '#1e40af';
+          const border = t.color?.border || '#bfdbfe';
+
+          html += `
+            <button onclick="App.filterProgressAllocationByTeacher('${t.name}', '${targetId}')" class="flex items-center gap-1.5 px-3 py-1 rounded-lg border text-xs font-bold transition shadow-xs cursor-pointer hover:scale-105 ${isSelected ? 'ring-2 ring-indigo-500 ring-offset-1 scale-105 shadow-md font-black' : ''}" style="background-color:${bg}; color:${text}; border-color:${border};" title="클릭하면 ${t.name} 실습생의 배당 수업만 강조합니다">
+              <span class="w-2.5 h-2.5 rounded-full inline-block" style="background-color:${t.color?.rgb || text};"></span>
+              <span>${t.name}</span>
+              <span class="text-[10px] px-1.5 py-0.2 rounded-full bg-white/80 border border-slate-300 text-slate-700 ml-0.5">${t.count}h</span>
+            </button>
+          `;
+        });
+
+        html += `
+            </div>
+          </div>
+        `;
+
+        // If no subjects found
+        if (!data.subjectGroups || data.subjectGroups.length === 0) {
+          html += `
+            <div class="text-center py-12 text-slate-400 border-2 border-dashed border-slate-300 rounded-2xl bg-white">
+              <p class="font-bold text-sm">등록된 수업 배당 진도표가 없습니다.</p>
+              <p class="text-xs mt-1 text-slate-500">먼저 4단계에서 '자동 수업 배당 실행'을 눌러 수업을 배정해주세요.</p>
+            </div>
+          `;
+          container.innerHTML = html;
+          if (typeof lucide !== 'undefined') lucide.createIcons();
+          return;
+        }
+
+        // Subject Groups Loop (사진의 좌측 표 + 우측 가로 표 조화 렌더링)
+        data.subjectGroups.forEach(sg => {
+          const totalLessons = sg.items.length;
+          // Calculate total rows in left table
+          let totalLeftRows = 0;
+          sg.units.forEach(u => {
+            totalLeftRows += 1; // unit header row
+            totalLeftRows += u.lessons.length; // lesson rows
+          });
+
+          html += `
+            <div class="subject-progress-block border-2 border-slate-900 rounded-xl overflow-hidden mb-6 bg-white shadow-xs">
+              <div class="flex flex-col xl:flex-row items-stretch divide-y xl:divide-y-0 xl:divide-x-2 divide-slate-900">
+                
+                <!-- 좌측 영역: [과목별 진도표 요약] -->
+                <div class="w-full xl:w-[54%] overflow-x-auto">
+                  <table class="w-full text-xs text-center border-collapse">
+                    <thead>
+                      <tr class="bg-slate-100 border-b-2 border-slate-900 font-bold text-slate-900">
+                        <th class="py-2.5 px-3 border-r border-slate-400 w-20">과목</th>
+                        <th class="py-2.5 px-3 border-r border-slate-400 w-16">분량</th>
+                        <th class="py-2.5 px-4 border-r border-slate-400">단원명 &amp; 차시명</th>
+                        <th class="py-2.5 px-3 border-r border-slate-400 w-24">쪽 범위</th>
+                        <th class="py-2.5 px-3 w-20">차시범위</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-300">
+          `;
+
+          let isFirstSubjectRow = true;
+          sg.units.forEach(unit => {
+            // Unit Header Row (사진: '국어-4. 분위기를 살려 읽어요', '수학-2. 여러가지 도형')
+            html += `
+              <tr class="bg-slate-100/90 font-bold text-slate-800 border-t border-b border-slate-300">
+            `;
+            if (isFirstSubjectRow) {
+              html += `
+                <td rowspan="${totalLeftRows}" class="py-3 px-2 font-black text-slate-900 border-r-2 border-slate-900 bg-slate-50 text-sm align-middle">
+                  ${sg.subject}
+                </td>
+                <td rowspan="${totalLeftRows}" class="py-3 px-2 font-bold text-slate-700 border-r-2 border-slate-900 bg-slate-50 align-middle">
+                  ${sg.subTitle}
+                </td>
+              `;
+              isFirstSubjectRow = false;
+            }
+            html += `
+                <td colspan="3" class="py-1.5 px-3 text-center font-bold text-slate-800 bg-slate-100 tracking-tight">
+                  ${unit.unitName}
+                </td>
+              </tr>
+            `;
+
+            // Unit Lessons Rows
+            unit.lessons.forEach(l => {
+              const isTeacherMatch = activeTeacher && l.teacher === activeTeacher;
+              const isOtherTeacher = activeTeacher && l.teacher && l.teacher !== activeTeacher;
+              const rowHighlightClass = isTeacherMatch ? 'bg-amber-50/70 font-semibold' : (isOtherTeacher ? 'opacity-40' : 'hover:bg-slate-50');
+
+              html += `
+                <tr class="transition ${rowHighlightClass}">
+                  <td class="py-2 px-3 text-left pl-4 border-r border-slate-300 text-slate-800">
+                    ${l.topic}
+                    ${l.isDemo ? '<span class="ml-1 text-[10px] text-amber-600 font-bold">⭐대표</span>' : ''}
+                    ${l.isCert ? '<span class="ml-1 text-[10px] text-emerald-600 font-bold">🏅인증</span>' : ''}
+                    ${l.isPinned ? '<span class="ml-1 text-[10px] text-indigo-600">📌</span>' : ''}
+                  </td>
+                  <td class="py-2 px-2 text-center border-r border-slate-300 font-mono text-slate-700">
+                    ${l.pages || '-'}
+                  </td>
+                  <td class="py-2 px-2 text-center font-mono font-bold text-slate-900">
+                    ${l.lesson}${l.totalLesson ? `/${l.totalLesson}` : ''}
+                  </td>
+                </tr>
+              `;
+            });
+          });
+
+          html += `
+                    </tbody>
+                  </table>
+                </div>
+
+                <!-- 우측 영역: [가로 차시 배당 블록] (사진과 100% 동일한 매트릭스) -->
+                <div class="w-full xl:w-[46%] overflow-x-auto p-3 sm:p-4 flex flex-col justify-center bg-slate-50/40">
+                  <div class="overflow-x-auto pb-1">
+                    <table class="w-full text-xs text-center border-collapse border-2 border-slate-900 bg-white shadow-xs">
+                      <tbody>
+                        <!-- 1행: 과목명 (열 수 = 차시 수) -->
+                        <tr class="border-b border-slate-900 bg-slate-100 font-bold text-slate-900">
+                          <td class="w-14 py-2 px-1 border-r border-slate-900 font-bold bg-slate-200/80 text-[11px]">과목</td>
+          `;
+
+          sg.items.forEach(it => {
+            html += `
+              <td class="py-2 px-2 border-r border-slate-900 font-bold min-w-[58px] sm:min-w-[64px]">
+                ${it.subject}
+              </td>
+            `;
+          });
+
+          html += `
+                        </tr>
+
+                        <!-- 2행: 쪽수 (헤더 '쪽수' + 쪽수 값들) -->
+                        <tr class="border-b border-slate-900">
+                          <td class="py-2 px-1 border-r border-slate-900 font-bold bg-slate-100 text-slate-700 text-[11px]">쪽수</td>
+          `;
+
+          sg.items.forEach(it => {
+            html += `
+              <td class="py-2 px-1 border-r border-slate-900 font-mono text-slate-800 text-[11px] leading-tight">
+                ${it.pages || '-'}
+              </td>
+            `;
+          });
+
+          html += `
+                        </tr>
+
+                        <!-- 3행: 차시 (헤더 '차시' + 차시 값들) -->
+                        <tr class="border-b-2 border-slate-900 bg-slate-50/50">
+                          <td class="py-2 px-1 border-r border-slate-900 font-bold bg-slate-100 text-slate-700 text-[11px]">차시</td>
+          `;
+
+          sg.items.forEach(it => {
+            html += `
+              <td class="py-2 px-1 border-r border-slate-900 font-mono font-bold text-slate-900 text-xs">
+                ${it.lesson}${it.totalLesson ? `/${it.totalLesson}` : ''}
+              </td>
+            `;
+          });
+
+          html += `
+                        </tr>
+
+                        <!-- 4행: 이름 (헤더 '이름' + 교생 이름 및 고유 테마 배경색) -->
+                        <tr class="border-b border-slate-900">
+                          <td class="py-2.5 px-1 border-r border-slate-900 font-black bg-slate-100 text-slate-800 text-[11px]">이름</td>
+          `;
+
+          sg.items.forEach(it => {
+            const tObj = data.teachers.find(t => t.name === it.teacher);
+            const bg = tObj?.color?.bg || '#ffffff';
+            const text = tObj?.color?.text || '#1e293b';
+            const border = tObj?.color?.border || '#cbd5e1';
+
+            const isTeacherMatch = activeTeacher && it.teacher === activeTeacher;
+            const isOtherTeacher = activeTeacher && it.teacher && it.teacher !== activeTeacher;
+            const cellHighlight = isTeacherMatch ? 'ring-2 ring-indigo-600 ring-inset scale-105 font-black shadow-sm' : (isOtherTeacher ? 'opacity-30' : '');
+
+            html += `
+              <td class="py-2.5 px-1.5 border-r border-slate-900 font-bold transition transform cursor-pointer ${cellHighlight}" style="background-color:${it.teacher ? bg : '#f8fafc'}; color:${it.teacher ? text : '#94a3b8'}; border-color:${it.teacher ? border : '#e2e8f0'};" title="${it.teacher || '미배정'} 실습생 | ${it.scheduleStr} (${it.dateStr})&#10;주제: ${it.topic}" onclick="App.filterProgressAllocationByTeacher('${it.teacher || ''}', '${targetId}')">
+                <span class="inline-block py-0.5 px-1 rounded">
+                  ${it.teacher || '<span class="text-slate-400 font-normal">미배정</span>'}
+                </span>
+                ${it.isDemo ? '<span class="block text-[9px] text-amber-700 font-black">⭐대표</span>' : ''}
+                ${it.isCert ? '<span class="block text-[9px] text-emerald-700 font-black">🏅인증</span>' : ''}
+              </td>
+            `;
+          });
+
+          // Check if any item has place or is physical/fun activity
+          const hasPlace = sg.items.some(it => !!it.place);
+          if (hasPlace || ['즐생', '체육', '즐생(놀이)', '즐거운생활'].includes(sg.subject)) {
+            html += `
+                        </tr>
+                        <!-- 5행: 추천장소 (옵션) -->
+                        <tr class="bg-slate-50 text-[10px] text-slate-600">
+                          <td class="py-1.5 px-1 border-r border-slate-900 font-semibold bg-slate-100 text-[10px]">추천장소</td>
+            `;
+            sg.items.forEach(it => {
+              html += `
+                <td class="py-1.5 px-1 border-r border-slate-900 truncate max-w-[80px]" title="${it.place || '교실'}">
+                  ${it.place || '교실'}
+                </td>
+              `;
+            });
+          }
+
+          html += `
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        if (typeof lucide !== 'undefined') lucide.createIcons();
+
+        // Update badge count
+        const badgeEl = document.getElementById('badge-progress-count');
+        if (badgeEl) {
+          badgeEl.innerText = `${data.totalAllocatedCount}차시`;
+        }
+      },
+
+      // 3. 교생별 하이라이트 필터 토글
+      filterProgressAllocationByTeacher(teacherName, targetId = 'progress-allocation-capture-area') {
+        if (this.activeProgressTeacherFilter === teacherName) {
+          this.activeProgressTeacherFilter = null;
+        } else {
+          this.activeProgressTeacherFilter = teacherName;
+        }
+        this.renderProgressAllocationView(targetId, this.activeProgressTeacherFilter);
+        // Also sync inline panel if target is modal and vice versa
+        if (targetId === 'progress-allocation-capture-area') {
+          const inlineEl = document.getElementById('progress-inline-capture-area');
+          if (inlineEl && !inlineEl.closest('#progress-allocation-panel').classList.contains('hidden')) {
+            this.renderProgressAllocationView('progress-inline-capture-area', this.activeProgressTeacherFilter);
+          }
+        }
+      },
+
+      // 4. 모달 열기 및 닫기
+      openProgressAllocationModal() {
+        const modal = document.getElementById('modal-progress-allocation');
+        if (!modal) return;
+        modal.classList.remove('hidden');
+        this.renderProgressAllocationView('progress-allocation-capture-area');
+      },
+
+      closeProgressAllocationModal() {
+        const modal = document.getElementById('modal-progress-allocation');
+        if (!modal) return;
+        modal.classList.add('hidden');
+      },
+
+      // 5. 탭 4 인라인 패널 토글
+      toggleProgressInlinePanel(forceState = null) {
+        const panel = document.getElementById('progress-allocation-panel');
+        const btn = document.getElementById('btn-toggle-progress-inline');
+        if (!panel) return;
+
+        const shouldOpen = (forceState !== null) ? forceState : panel.classList.contains('hidden');
+        if (shouldOpen) {
+          panel.classList.remove('hidden');
+          if (btn) {
+            btn.classList.add('bg-emerald-600', 'text-white');
+            btn.classList.remove('bg-emerald-50', 'text-emerald-700');
+          }
+          this.renderProgressAllocationView('progress-inline-capture-area');
+          panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          panel.classList.add('hidden');
+          if (btn) {
+            btn.classList.remove('bg-emerald-600', 'text-white');
+            btn.classList.add('bg-emerald-50', 'text-emerald-700');
+          }
+        }
+      },
+
+      // 6. 아래아한글(HWP) 복사 기능 (사진 양식 그대로 복사)
+      copyProgressHwpTable() {
+        const data = this.getProgressAllocationData();
+        if (!data || !data.subjectGroups || data.subjectGroups.length === 0) {
+          alert('복사할 배당 진도표 데이터가 없습니다. 먼저 수업 배당을 실행해주세요.');
+          return;
+        }
+
+        let html = `<table border="1" cellspacing="0" cellpadding="4" style="border-collapse:collapse; border: 1.5pt solid black; font-family:'맑은 고딕', sans-serif; font-size:9pt; text-align:center; width:100%;">`;
+        
+        // 1. 대제목 행
+        html += `<thead><tr><th colspan="12" style="font-size:14pt; font-weight:bold; padding:8px; border:1.5pt solid black; background-color:#f8fafc;">${data.title}</th></tr>`;
+        
+        // 2. 정보 및 범례 행
+        const legendStr = data.teachers.map(t => `${t.name}(${t.count}h)`).join(', ');
+        html += `<tr><td colspan="12" style="font-size:8.5pt; text-align:left; padding:5px 8px; border:1pt solid black; background-color:#ffffff;">`;
+        html += `<b>학교:</b> ${data.school} &nbsp;|&nbsp; <b>학년반:</b> ${data.gradeClass} &nbsp;|&nbsp; <b>지도교사:</b> ${data.teacherName} &nbsp;|&nbsp; <b>총 배당:</b> ${data.totalAllocatedCount}차시 &nbsp;|&nbsp; <b>실습생 명단:</b> ${legendStr}</td></tr></thead><tbody>`;
+
+        // 3. 각 과목 블록 생성
+        data.subjectGroups.forEach(sg => {
+          // 과목 타이틀 구분 헤더
+          html += `<tr><td colspan="12" style="background-color:#e2e8f0; font-weight:bold; font-size:10pt; text-align:left; padding:6px 10px; border:1.5pt solid black;">■ [${sg.subject}] 진도 및 차시 배당 (${sg.subTitle})</td></tr>`;
+
+          // 서브 테이블 래퍼 (좌측 진도표 5개 열 + 우측 가로 차시 배당표)
+          // 좌측 진도 헤더
+          html += `<tr style="background-color:#f1f5f9; font-weight:bold; font-size:8.5pt; border:1pt solid black;">`;
+          html += `<th style="width:12%; border:1pt solid black;">과목</th>`;
+          html += `<th style="width:8%; border:1pt solid black;">분량</th>`;
+          html += `<th style="width:28%; border:1pt solid black;">단원명 &amp; 차시명</th>`;
+          html += `<th style="width:10%; border:1pt solid black;">쪽 범위</th>`;
+          html += `<th style="width:8%; border:1pt solid black;">차시</th>`;
+          // 우측 가로 차시 헤더들
+          sg.items.forEach((it, idx) => {
+            html += `<th style="border:1pt solid black;">${it.subject} (${idx+1})</th>`;
+          });
+          html += `</tr>`;
+
+          // 각 차시 행들
+          let isFirst = true;
+          const totalRows = sg.items.length;
+          sg.items.forEach((it, idx) => {
+            const tObj = data.teachers.find(t => t.name === it.teacher);
+            const bg = tObj?.color?.bg || '#ffffff';
+            const color = tObj?.color?.text || '#000000';
+
+            html += `<tr style="font-size:8.5pt; border:1pt solid black;">`;
+            if (isFirst) {
+              html += `<td rowspan="${totalRows}" style="font-weight:bold; background-color:#f8fafc; border:1pt solid black; vertical-align:middle;">${sg.subject}</td>`;
+              html += `<td rowspan="${totalRows}" style="background-color:#f8fafc; border:1pt solid black; vertical-align:middle;">${sg.subTitle}</td>`;
+              isFirst = false;
+            }
+            html += `<td style="text-align:left; padding-left:6px; border:1pt solid black;">${it.topic || it.unit}</td>`;
+            html += `<td style="border:1pt solid black;">${it.pages || '-'}</td>`;
+            html += `<td style="font-weight:bold; border:1pt solid black;">${it.lesson}${it.totalLesson ? `/${it.totalLesson}` : ''}</td>`;
+            
+            // 우측 차시 배당 셀 (해당 행에서는 인덱스 일치 셀에 교생 표시)
+            sg.items.forEach((colIt, cIdx) => {
+              if (cIdx === idx) {
+                html += `<td style="background-color:${bg}; color:${color}; font-weight:bold; border:1pt solid black;">${it.teacher || '미배정'}${it.isDemo ? '⭐' : ''}${it.isCert ? '🏅' : ''}</td>`;
+              } else {
+                html += `<td style="background-color:#f8fafc; color:#94a3b8; border:1pt solid black;">-</td>`;
+              }
+            });
+            html += `</tr>`;
+          });
+        });
+
+        html += `</tbody></table>`;
+
+        // 클립보드에 HTML 복사
+        if (navigator.clipboard && window.ClipboardItem) {
+          const blob = new Blob([html], { type: 'text/html' });
+          const textBlob = new Blob([`[${data.title}] 실습생 배당 진도표`], { type: 'text/plain' });
+          navigator.clipboard.write([
+            new ClipboardItem({ 'text/html': blob, 'text/plain': textBlob })
+          ]).then(() => {
+            alert(`📋 배당 진도표(사진 양식)가 클립보드에 복사되었습니다!\n\n아래아한글 빈 문서에서 [Ctrl + V]를 누르면 표가 그대로 완성됩니다.`);
+          }).catch(err => {
+            console.error('Clipboard copy failed:', err);
+            this.fallbackCopyText(html);
+          });
+        } else {
+          this.fallbackCopyText(html);
+        }
+      },
+
+      // 7. 고화질 PNG 이미지 저장
+      exportProgressPng(elementId = 'progress-allocation-capture-area') {
+        const area = document.getElementById(elementId);
+        if (!area || typeof html2canvas === 'undefined') {
+          alert('이미지 캡처 모듈을 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        const data = this.getProgressAllocationData();
+        const fileName = `${data.school}_${data.gradeClass}_실습생배당진도표.png`.replace(/\s+/g, '_');
+
+        html2canvas(area, {
+          scale: 2,
+          backgroundColor: '#ffffff',
+          useCORS: true,
+          logging: false
+        }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = fileName;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        }).catch(err => {
+          console.error('PNG export failed:', err);
+          alert('이미지 저장 중 오류가 발생했습니다.');
+        });
+      },
+
+      // 8. 엑셀(.xlsx) 내보내기 (사진 양식 워크시트 생성)
+      exportProgressExcel() {
+        if (typeof ExcelJS === 'undefined') {
+          alert('ExcelJS 라이브러리를 불러오는 중입니다. 잠시 후 다시 시도해주세요.');
+          return;
+        }
+
+        const data = this.getProgressAllocationData();
+        const wb = new ExcelJS.Workbook();
+        wb.creator = 'Antigravity Timetable Harness Pro';
+        wb.created = new Date();
+
+        const ws = wb.addWorksheet('실습생배당진도표', {
+          pageSetup: { orientation: 'landscape', paperSize: 9, fitToPage: true, fitToWidth: 1, fitToHeight: 0 }
+        });
+
+        const toArgb = (hex, fallback = 'FFFFFFFF') => {
+          if (!hex) return fallback;
+          let c = String(hex).replace('#', '').trim();
+          if (c.length === 3) c = c[0] + c[0] + c[1] + c[1] + c[2] + c[2];
+          if (c.length === 6) return 'FF' + c.toUpperCase();
+          if (c.length === 8) return c.toUpperCase();
+          return fallback;
+        };
+
+        const borderThin = {
+          top: { style: 'thin', color: { argb: 'FF000000' } },
+          left: { style: 'thin', color: { argb: 'FF000000' } },
+          bottom: { style: 'thin', color: { argb: 'FF000000' } },
+          right: { style: 'thin', color: { argb: 'FF000000' } }
+        };
+
+        // Title
+        ws.mergeCells('A1:J1');
+        const titleCell = ws.getCell('A1');
+        titleCell.value = data.title;
+        titleCell.font = { name: '맑은 고딕', size: 16, bold: true };
+        titleCell.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(1).height = 36;
+
+        // Meta info
+        ws.mergeCells('A2:J2');
+        const metaCell = ws.getCell('A2');
+        metaCell.value = `학교: ${data.school} | 학년반: ${data.gradeClass} | 지도교사: ${data.teacherName} | 총 배당: ${data.totalAllocatedCount}차시`;
+        metaCell.font = { name: '맑은 고딕', size: 10 };
+        metaCell.alignment = { vertical: 'middle', horizontal: 'center' };
+        ws.getRow(2).height = 20;
+
+        let curRow = 4;
+
+        // Each subject
+        data.subjectGroups.forEach(sg => {
+          // Subject section header
+          ws.mergeCells(`A${curRow}:E${curRow}`);
+          const sHeader = ws.getCell(`A${curRow}`);
+          sHeader.value = `[${sg.subject}] 진도표 (${sg.subTitle})`;
+          sHeader.font = { name: '맑은 고딕', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+          sHeader.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1E293B' } };
+          sHeader.alignment = { vertical: 'middle', horizontal: 'left' };
+
+          // Right matrix title
+          ws.mergeCells(`G${curRow}:${String.fromCharCode(71 + Math.min(sg.items.length, 10))}${curRow}`);
+          const rHeader = ws.getCell(`G${curRow}`);
+          rHeader.value = `[${sg.subject}] 가로 차시 배당표`;
+          rHeader.font = { name: '맑은 고딕', size: 11, bold: true, color: { argb: 'FFFFFFFF' } };
+          rHeader.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF0F766E' } };
+          rHeader.alignment = { vertical: 'middle', horizontal: 'center' };
+          curRow++;
+
+          // Headers
+          const leftHeaders = ['과목', '분량', '단원명 & 차시명', '쪽 범위', '차시'];
+          leftHeaders.forEach((h, idx) => {
+            const cell = ws.getCell(curRow, idx + 1);
+            cell.value = h;
+            cell.font = { name: '맑은 고딕', size: 9, bold: true };
+            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+            cell.alignment = { vertical: 'middle', horizontal: 'center' };
+            cell.border = borderThin;
+          });
+
+          // Right matrix 4 rows (과목, 쪽수, 차시, 이름)
+          const startR = curRow;
+          ['과목', '쪽수', '차시', '이름'].forEach((label, rOffset) => {
+            const lblCell = ws.getCell(startR + rOffset, 7);
+            lblCell.value = label;
+            lblCell.font = { name: '맑은 고딕', size: 9, bold: true };
+            lblCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF1F5F9' } };
+            lblCell.alignment = { vertical: 'middle', horizontal: 'center' };
+            lblCell.border = borderThin;
+
+            sg.items.forEach((it, cIdx) => {
+              const valCell = ws.getCell(startR + rOffset, 8 + cIdx);
+              valCell.border = borderThin;
+              valCell.alignment = { vertical: 'middle', horizontal: 'center' };
+              if (rOffset === 0) {
+                valCell.value = it.subject;
+                valCell.font = { name: '맑은 고딕', size: 9, bold: true };
+              } else if (rOffset === 1) {
+                valCell.value = it.pages || '-';
+                valCell.font = { name: '맑은 고딕', size: 8.5 };
+              } else if (rOffset === 2) {
+                valCell.value = `${it.lesson}${it.totalLesson ? `/${it.totalLesson}` : ''}`;
+                valCell.font = { name: '맑은 고딕', size: 9, bold: true };
+              } else if (rOffset === 3) {
+                valCell.value = it.teacher || '미배정';
+                const tObj = data.teachers.find(t => t.name === it.teacher);
+                if (tObj && tObj.color) {
+                  valCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: toArgb(tObj.color.bg) } };
+                  valCell.font = { name: '맑은 고딕', size: 9, bold: true, color: { argb: toArgb(tObj.color.text) } };
+                }
+              }
+            });
+          });
+
+          curRow++;
+          // Fill left items
+          sg.items.forEach((it, idx) => {
+            const r = curRow + idx;
+            ws.getCell(r, 1).value = sg.subject;
+            ws.getCell(r, 2).value = sg.subTitle;
+            ws.getCell(r, 3).value = it.topic || it.unit;
+            ws.getCell(r, 4).value = it.pages || '-';
+            ws.getCell(r, 5).value = `${it.lesson}${it.totalLesson ? `/${it.totalLesson}` : ''}`;
+            for (let c = 1; c <= 5; c++) {
+              ws.getCell(r, c).border = borderThin;
+              ws.getCell(r, c).font = { name: '맑은 고딕', size: 9 };
+              ws.getCell(r, c).alignment = { vertical: 'middle', horizontal: (c === 3 ? 'left' : 'center') };
+            }
+          });
+
+          curRow += Math.max(sg.items.length, 4) + 2;
+        });
+
+        // Column widths
+        ws.getColumn(1).width = 12;
+        ws.getColumn(2).width = 10;
+        ws.getColumn(3).width = 30;
+        ws.getColumn(4).width = 14;
+        ws.getColumn(5).width = 10;
+        ws.getColumn(6).width = 4;
+        ws.getColumn(7).width = 10;
+        for (let col = 8; col <= 20; col++) {
+          ws.getColumn(col).width = 12;
+        }
+
+        const fileName = `${data.school}_${data.gradeClass}_실습생배당진도표.xlsx`.replace(/\s+/g, '_');
+        wb.xlsx.writeBuffer().then(buffer => {
+          saveAs(new Blob([buffer], { type: 'application/octet-stream' }), fileName);
+        }).catch(err => {
+          console.error('Excel export failed:', err);
+          alert('엑셀 파일 생성 중 오류가 발생했습니다.');
+        });
+      },
+
+      // 9. 인쇄 기능
+      printProgressAllocation(elementId = 'progress-allocation-capture-area') {
+        window.print();
+      },
+
     };
 
     window.App = App;
