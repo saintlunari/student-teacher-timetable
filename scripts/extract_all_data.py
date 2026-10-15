@@ -65,7 +65,7 @@ for pdf_name in pdf_files:
     }
 
 print(f"Extracted metadata for {len(extracted_db)} subjects.")
-with open("extracted_lesson_plans_data.json", "w", encoding="utf-8") as f:
+with open(os.path.join(os.path.dirname(__file__), "..", "data", "extracted_lesson_plans_data.json"), "w", encoding="utf-8") as f:
     json.dump(extracted_db, f, ensure_ascii=False, indent=2)
 
 for k, v in list(extracted_db.items())[:6]:
