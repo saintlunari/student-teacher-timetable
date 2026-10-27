@@ -382,6 +382,12 @@
 
         <div class="h-4 w-px bg-slate-700 mx-1"></div>
 
+        <!-- 카톡 일정 안내 버튼 -->
+        <button onclick="App.openKakaoScheduleModal()" title="각 교생에게 배당 차시별 과정안 제출 및 컨설팅 일정 안내 메시지를 생성하고 카카오톡으로 복사합니다" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-black bg-[#FEE500] hover:bg-[#FADA0A] text-[#3A1D1D] rounded-lg shadow-sm border border-[#E6CF00] transition cursor-pointer">
+          <i data-lucide="message-square" class="w-3.5 h-3.5 fill-[#3A1D1D]"></i>
+          <span>카톡 일정 안내</span>
+        </button>
+
         <!-- 배당 진도표 모달 열기 버튼 (사진 양식) -->
       <button onclick="App.openProgressAllocationModal()" title="교생에게 보여줄 과목별 진도 및 차시 배당 종합 안내표(사진 양식) 열람/인쇄/복사" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg shadow-sm transition cursor-pointer">
         <i data-lucide="clipboard-list" class="w-3.5 h-3.5"></i>
@@ -931,6 +937,12 @@
           <span id="badge-progress-count" class="px-1.5 py-0.2 rounded-full bg-emerald-200 text-emerald-950 font-black text-[10px]">0차시</span>
         </button>
 
+        <!-- 카톡 과정안 제출 일정 안내 모달 열기 버튼 -->
+        <button onclick="App.openKakaoScheduleModal()" id="btn-open-kakao-schedule" class="flex items-center gap-1.5 px-3.5 py-2 text-xs font-black bg-[#FEE500] hover:bg-[#FADA0A] text-[#3A1D1D] rounded-xl shadow-md transition transform active:scale-95 border border-[#E6CF00] cursor-pointer" title="각 교생에게 배당 차시별 과정안 제출 및 컨설팅 일정을 안내하는 카카오톡 메시지를 생성하고 복사합니다">
+          <i data-lucide="message-square" class="w-3.5 h-3.5 fill-[#3A1D1D]"></i>
+          <span>💬 카톡 일정 안내</span>
+        </button>
+
           <div class="h-5 w-px bg-slate-200 mx-1"></div>
 
           <!-- 스마트 스왑 안내 표시기 -->
@@ -1124,6 +1136,9 @@
             </button>
             <button onclick="App.copyDeadlinesToClipboard()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition border border-indigo-200">
               <i data-lucide="copy" class="w-3.5 h-3.5"></i> 마감일 텍스트 복사 (카톡/메신저용)
+            </button>
+            <button onclick="App.openKakaoScheduleModal()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-black bg-[#FEE500] hover:bg-[#FADA0A] text-[#3A1D1D] rounded-lg transition border border-[#E6CF00] shadow-2xs cursor-pointer" title="약안 5·3·2일전 컨설팅 및 세안 주차별 마일스톤 안내 메시지 생성 및 카카오톡 복사">
+              <i data-lucide="message-square" class="w-3.5 h-3.5 fill-[#3A1D1D]"></i> 카톡 일정 안내문 생성 & 복사
             </button>
             <button onclick="window.print()" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition border border-slate-200">
               <i data-lucide="printer" class="w-3.5 h-3.5"></i> <span id="btn-calendar-print-text">개인 시간표 인쇄</span>
@@ -2166,6 +2181,119 @@
           <!-- Rendered dynamically by App.renderProgressAllocationView() -->
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- MODAL: 교생 배당 차시별 과정안 제출 및 컨설팅 일정 카톡 안내 모달 -->
+  <!-- ========================================================= -->
+  <div id="modal-kakao-schedule" onclick="if(event.target === this) App.closeKakaoScheduleModal()" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[94vh] flex flex-col border border-slate-200 overflow-hidden animate-fadeIn">
+      
+      <!-- Modal Header -->
+      <div class="p-4 sm:p-5 border-b border-amber-200 flex items-center justify-between bg-gradient-to-r from-[#FEE500] via-[#FDD835] to-[#FBC02D] text-[#3A1D1D] shrink-0">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-2xl bg-[#3A1D1D] text-[#FEE500] flex items-center justify-center shadow-sm shrink-0">
+            <i data-lucide="message-square" class="w-5 h-5 fill-current"></i>
+          </div>
+          <div>
+            <h3 class="font-black text-base sm:text-lg tracking-tight flex items-center gap-2">
+              <span>과정안 제출 & 컨설팅 일정 카카오톡 안내</span>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#3A1D1D]/15 text-[#3A1D1D] border border-[#3A1D1D]/20">카톡 전송용</span>
+            </h3>
+            <p class="text-xs text-[#523315] font-medium">약안·약약안 5·3·2일전 컨설팅 / 세안 주차별 마일스톤 및 4·2일전 제출 일정</p>
+          </div>
+        </div>
+        <button onclick="App.closeKakaoScheduleModal()" class="text-[#3A1D1D]/70 hover:text-[#3A1D1D] p-1.5 rounded-lg hover:bg-black/5 transition cursor-pointer" title="닫기">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-4 sm:p-6 overflow-y-auto flex-1 space-y-4 bg-slate-50/50">
+        
+        <!-- 규정 요약 안내 뱃지 배너 -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div class="p-3 bg-amber-50/80 rounded-xl border border-amber-200 text-amber-950 space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-amber-900">
+              <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+              <span>약안 및 약약안 컨설팅 기준</span>
+            </div>
+            <div class="text-[11px] text-amber-800 leading-relaxed font-mono">
+              • <strong>5일 전</strong>: 1차 컨설팅 (17:00까지)<br>
+              • <strong>3일 전</strong>: 2차 컨설팅 (17:00까지)<br>
+              • <strong>2일 전</strong>: 최종 컨설팅 (14:00까지)
+            </div>
+          </div>
+          <div class="p-3 bg-emerald-50/80 rounded-xl border border-emerald-200 text-emerald-950 space-y-1">
+            <div class="font-bold flex items-center gap-1.5 text-emerald-900">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+              <span>세안(인증수업) 제출 및 마일스톤</span>
+            </div>
+            <div class="text-[11px] text-emerald-800 leading-relaxed font-mono">
+              • <strong>2·3주차 마일스톤</strong>: 구안협의(2주1일)·설문(2주3·5일)·1차(3주1일)·2차(3주3일)·최종(3주4일)<br>
+              • <strong>수업 4일 전</strong>: 프레젠테이션 & 활동지 1차<br>
+              • <strong>수업 2일 전</strong>: 프레젠테이션 & 활동지 2차
+            </div>
+          </div>
+        </div>
+
+        <!-- 실습생 선택 탭 바 -->
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <span class="text-xs font-bold text-slate-700 flex items-center gap-1">
+              <i data-lucide="users" class="w-3.5 h-3.5 text-slate-500"></i> 안내할 실습생 선택:
+            </span>
+            <span class="text-[11px] text-slate-400">교생 탭을 누르면 해당 메시지로 즉시 전환됩니다</span>
+          </div>
+          <div id="kakao-modal-teacher-tabs" class="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <!-- JS dynamically rendered teacher buttons -->
+          </div>
+        </div>
+
+        <!-- 메시지 프리뷰 및 편집 영역 -->
+        <div class="bg-[#FEE500]/15 border-2 border-[#FEE500] rounded-2xl p-3 sm:p-4 space-y-2">
+          <div class="flex items-center justify-between text-xs text-amber-950 font-bold px-1">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="message-circle" class="w-4 h-4 fill-[#FEE500] text-[#3A1D1D]"></i>
+              <span id="kakao-preview-target-title">김부설 교생선생님 카카오톡 안내 메시지</span>
+            </span>
+            <span class="text-[11px] text-amber-700 font-normal">✏️ 직접 내용을 추가·수정할 수 있습니다</span>
+          </div>
+          <textarea id="kakao-message-preview" rows="14" class="w-full bg-white rounded-xl border border-amber-300 p-3.5 text-xs font-mono text-slate-800 focus:ring-2 focus:ring-[#FDD835] focus:border-[#FBC02D] focus:outline-none leading-relaxed shadow-inner resize-y" placeholder="메시지를 생성하는 중입니다..."></textarea>
+        </div>
+
+        <div id="kakao-copy-toast" class="hidden p-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl text-center shadow-md animate-fadeIn flex items-center justify-center gap-2">
+          <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+          <span id="kakao-copy-toast-text">메시지가 클립보드에 복사되었습니다! 카카오톡에 붙여넣기(Ctrl+V) 하세요.</span>
+        </div>
+
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-3.5 sm:p-4 bg-slate-50 border-t border-slate-200 flex flex-wrap items-center justify-between gap-2 shrink-0">
+        <button type="button" onclick="App.resetKakaoScheduleMessage()" class="px-3 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-200 rounded-xl transition flex items-center gap-1.5 cursor-pointer" title="수정한 내용을 원래 자동 생성된 텍스트로 복원합니다">
+          <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+          <span>원문 재설정</span>
+        </button>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" onclick="App.copyAllKakaoSchedulesToClipboard()" class="px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white text-xs font-bold rounded-xl transition shadow-xs flex items-center gap-1.5 cursor-pointer" title="모든 실습생의 안내 메시지를 한 번에 복사합니다">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>전체 교생 일괄 복사</span>
+          </button>
+          
+          <button type="button" onclick="App.copyKakaoScheduleToClipboard()" class="px-4 py-2 bg-[#FEE500] hover:bg-[#FADA0A] text-[#3A1D1D] text-xs font-black rounded-xl transition shadow-sm border border-[#E6CF00] flex items-center gap-2 cursor-pointer active:scale-95" title="현재 선택된 메시지를 클립보드에 복사합니다">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span>카카오톡 메시지 복사</span>
+          </button>
+
+          <button type="button" onclick="App.closeKakaoScheduleModal()" class="px-3.5 py-2 border border-slate-300 text-slate-700 hover:bg-slate-100 text-xs font-semibold rounded-xl transition cursor-pointer">
+            닫기
+          </button>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -8615,6 +8743,9 @@
                   <button type="button" onclick="event.stopPropagation(); App.promptRenameTeacher(${this.teachers.indexOf(t)})" class="p-0.5 rounded hover:bg-black/10 text-current transition no-print opacity-70 hover:opacity-100 cursor-pointer" title="${t.name} 이름 수정">
                     <i data-lucide="pencil" class="w-3 h-3"></i>
                   </button>
+                  <button type="button" onclick="event.stopPropagation(); App.openKakaoScheduleModal('${t.name}')" class="p-0.5 rounded hover:bg-black/10 text-current transition no-print opacity-70 hover:opacity-100 cursor-pointer" title="${t.name} 과정안 제출 일정 카톡 메시지 생성 및 복사">
+                    <i data-lucide="message-square" class="w-3 h-3"></i>
+                  </button>
                 </div>
                 <span onclick="App.setTeacherFilter('${t.name}')" class="text-[11px] font-semibold opacity-85 leading-tight mb-1.5 cursor-pointer">(${t.major || '교육'})</span>
                 <div onclick="App.setTeacherFilter('${t.name}')" class="cursor-pointer">
@@ -8808,6 +8939,421 @@
         navigator.clipboard.writeText(text).then(() => {
           alert(`${targetName}의 지도안 마감 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!`);
         });
+      },
+
+      // -----------------------------------------------------------------------
+      // KAKAO LESSON PLAN NOTICE & CONSULTING SCHEDULE GENERATOR
+      // -----------------------------------------------------------------------
+
+      /**
+       * 평일(월~금) 기준으로 baseDate의 n일 전 날짜 계산
+       */
+      getBusinessDaysBefore(baseDate, nDays) {
+        const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+        let count = 0;
+        while (count < nDays) {
+          d.setDate(d.getDate() - 1);
+          const day = d.getDay();
+          if (day !== 0 && day !== 6) { // 토(6), 일(0) 제외
+            count++;
+          }
+        }
+        return d;
+      },
+
+      /**
+       * 실습 시작일(startDate) 기준 d일차(dayIndex, 0~19)에 해당하는 실제 Date 객체 반환
+       */
+      getDateForDayIndex(dayIndex) {
+        const startDateStr = this.config.startDate || getSystemTodayString();
+        const parts = startDateStr.split('-').map(Number);
+        const start = new Date(parts[0], parts[1] - 1, parts[2]);
+
+        // 실습 시작일이 월요일이 아닐 경우 해당 주의 월요일로 기준일 정규화
+        const dow = start.getDay();
+        let mondayOffset = 0;
+        if (dow === 0) mondayOffset = -6;
+        else if (dow !== 1) mondayOffset = 1 - dow;
+
+        const baseMonday = new Date(start);
+        baseMonday.setDate(start.getDate() + mondayOffset);
+
+        const weekOffset = Math.floor(dayIndex / 5);
+        const dayOffset = dayIndex % 5;
+        const cur = new Date(baseMonday);
+        cur.setDate(baseMonday.getDate() + (weekOffset * 7) + dayOffset);
+        return cur;
+      },
+
+      /**
+       * 날짜 포맷: M.D(요일)
+       */
+      formatNoticeDate(dateObj) {
+        const m = dateObj.getMonth() + 1;
+        const d = dateObj.getDate();
+        const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+        return `${m}.${d}(${dayNames[dateObj.getDay()]})`;
+      },
+
+      /**
+       * 세안(인증)수업 고정 마일스톤 날짜 정보 반환
+       * 2주차 1일: 세안 구안안 협의
+       * 2주차 3일: 세안 설문지 1차 컨설팅
+       * 2주차 5일: 세안 설문지 2차 컨설팅
+       * 3주차 1일: 세안 1차 완성(설문을 제외한 모든 내용이 완성되어야 함.) 및 설문지 배부
+       * 3주차 3일: 세안 2차 완성
+       * 3주차 4일: 세안 최종 완성
+       */
+      getCertFixedMilestones() {
+        const d2_1 = this.getDateForDayIndex(5);  // 2주차 1일 (월)
+        const d2_3 = this.getDateForDayIndex(7);  // 2주차 3일 (수)
+        const d2_5 = this.getDateForDayIndex(9);  // 2주차 5일 (금)
+        const d3_1 = this.getDateForDayIndex(10); // 3주차 1일 (월)
+        const d3_3 = this.getDateForDayIndex(12); // 3주차 3일 (수)
+        const d3_4 = this.getDateForDayIndex(13); // 3주차 4일 (목)
+
+        return [
+          { step: '2주차 1일', label: '세안 구안안 협의', dateObj: d2_1, dateStr: this.formatNoticeDate(d2_1) },
+          { step: '2주차 3일', label: '세안 설문지 1차 컨설팅', dateObj: d2_3, dateStr: this.formatNoticeDate(d2_3) },
+          { step: '2주차 5일', label: '세안 설문지 2차 컨설팅', dateObj: d2_5, dateStr: this.formatNoticeDate(d2_5) },
+          { step: '3주차 1일', label: '세안 1차 완성(설문을 제외한 모든 내용이 완성되어야 함.) 및 설문지 배부', dateObj: d3_1, dateStr: this.formatNoticeDate(d3_1) },
+          { step: '3주차 3일', label: '세안 2차 완성', dateObj: d3_3, dateStr: this.formatNoticeDate(d3_3) },
+          { step: '3주차 4일', label: '세안 최종 완성', dateObj: d3_4, dateStr: this.formatNoticeDate(d3_4) }
+        ];
+      },
+
+      /**
+       * 각 교생에게 배당 차시별 과정안 제출 일정을 안내하는 카카오톡 메시지 생성
+       * 
+       * 규칙:
+       * 1) 약안과 약약안:
+       *    - 5일전 1차 컨설팅
+       *    - 3일전 2차 컨설팅
+       *    - 2일전 최종 컨설팅
+       * 2) 세안(인증)수업:
+       *    - 2주차 1일: 세안 구안안 협의
+       *    - 2주차 3일: 세안 설문지 1차 컨설팅
+       *    - 2주차 5일: 세안 설문지 2차 컨설팅
+       *    - 3주차 1일: 세안 1차 완성(설문을 제외한 모든 내용이 완성되어야 함.) 및 설문지 배부
+       *    - 3주차 3일: 세안 2차 완성
+       *    - 3주차 4일: 세안 최종 완성
+       *    - 각 교생 인증 수업일 별:
+       *      - 4일전 프레젠테이션 및 활동지 1차 제출
+       *      - 2일전 프레젠테이션 및 활동지 2차 제출
+       */
+      generateKakaoLessonPlanNotice(teacherName, isAllTeachers = false) {
+        const school = this.config.school || '공주교육대학교부설초등학교';
+        const gradeClass = this.config.gradeClass || '0학년 0반';
+        const teacherLeader = this.config.teacherName || '김지도';
+        const startDateStr = this.config.startDate || getSystemTodayString();
+        const weekCount = this.config.weekCount || 2;
+        const totalDays = weekCount * 5;
+        const maxP = this.periodsPerDay || 8;
+
+        const milestones = this.getCertFixedMilestones();
+        let milestoneText = `━━━━━━━━━━━━━━━━━━━━━\n🌟 [세안(인증수업) 공통 추진 로드맵]\n━━━━━━━━━━━━━━━━━━━━━\n`;
+        milestones.forEach(m => {
+          milestoneText += `▫️ ${m.step}(${m.dateStr}): ${m.label}\n`;
+        });
+
+        const buildTeacherMessage = (tName) => {
+          const tObj = this.teachers.find(t => t.name === tName) || { name: tName };
+          const classes = [];
+
+          for (let d = 0; d < totalDays; d++) {
+            for (let p = 1; p <= maxP; p++) {
+              const key = `${d}-${p}`;
+              const cell = this.timetable[key];
+              if (!cell || !cell.subject || cell.teacher !== tName) continue;
+
+              const classDate = this.getDateForDayIndex(d);
+              const dateStr = this.formatNoticeDate(classDate);
+
+              const isCert = !!(cell.isCert || cell.type === 'trainee_cert');
+              const isDemo = !!(cell.isDemo || cell.type === 'trainee_demo');
+
+              if (isCert) {
+                // 세안(인증): 수업 4일전 프레젠테이션/활동지 1차, 2일전 2차
+                const d4 = this.getBusinessDaysBefore(classDate, 4);
+                const d2 = this.getBusinessDaysBefore(classDate, 2);
+                classes.push({
+                  key,
+                  dayIndex: d,
+                  period: p,
+                  classDate,
+                  dateStr,
+                  subject: cell.subject,
+                  lesson: cell.lesson || '1',
+                  totalLesson: cell.totalLesson || '1',
+                  pages: cell.pages || '-',
+                  topic: cell.topic || '',
+                  isCert: true,
+                  isDemo,
+                  d4Date: d4,
+                  d2Date: d2,
+                  d4Str: this.formatNoticeDate(d4),
+                  d2Str: this.formatNoticeDate(d2)
+                });
+              } else {
+                // 약안/약약안: 5일전 1차, 3일전 2차, 2일전 최종 컨설팅
+                const d5 = this.getBusinessDaysBefore(classDate, 5);
+                const d3 = this.getBusinessDaysBefore(classDate, 3);
+                const d2 = this.getBusinessDaysBefore(classDate, 2);
+                classes.push({
+                  key,
+                  dayIndex: d,
+                  period: p,
+                  classDate,
+                  dateStr,
+                  subject: cell.subject,
+                  lesson: cell.lesson || '1',
+                  totalLesson: cell.totalLesson || '1',
+                  pages: cell.pages || '-',
+                  topic: cell.topic || '',
+                  isCert: false,
+                  isDemo,
+                  d5Date: d5,
+                  d3Date: d3,
+                  d2Date: d2,
+                  d5Str: this.formatNoticeDate(d5),
+                  d3Str: this.formatNoticeDate(d3),
+                  d2Str: this.formatNoticeDate(d2)
+                });
+              }
+            }
+          }
+
+          // 시간순(날짜, 교시) 정렬
+          classes.sort((a, b) => (a.dayIndex * 100 + a.period) - (b.dayIndex * 100 + b.period));
+
+          const totalHours = classes.length;
+          const certClasses = classes.filter(c => c.isCert);
+          const certCount = certClasses.length;
+          const generalCount = totalHours - certCount;
+
+          let msg = `📢 [${school} ${gradeClass}]\n`;
+          msg += `💬 ${tName} 교생선생님 과정안 제출 & 컨설팅 일정 안내\n\n`;
+          msg += `👨‍🏫 지도교사: ${teacherLeader} 선생님\n`;
+          msg += `📅 실습 시작일: ${startDateStr}\n`;
+          msg += `📊 배정 시수: 총 ${totalHours}시수 (약안 ${generalCount}시수${certCount > 0 ? `, 🏅세안 ${certCount}시수` : ''})\n\n`;
+
+          // 세안(인증) 공통 추진 로드맵 포함
+          msg += `${milestoneText}\n`;
+
+          msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+          msg += `📋 [배당 차시별 과정안 제출 및 컨설팅 일정]\n`;
+          msg += `━━━━━━━━━━━━━━━━━━━━━\n`;
+
+          if (classes.length === 0) {
+            msg += `(현재 배정된 수업이 없습니다.)\n`;
+          } else {
+            classes.forEach((c, idx) => {
+              const typeBadge = c.isCert ? '🏅[세안(인증수업)]' : (c.isDemo ? '⭐[약안·대표수업]' : '[약안]');
+              const topicStr = c.topic ? `\n   • 수업 주제: ${c.topic}` : '';
+              const pagesStr = (c.pages && c.pages !== '-') ? `, ${c.pages}쪽` : '';
+
+              msg += `\n[${idx + 1}] ${c.dateStr} ${c.period}교시 | ${c.subject} (${c.lesson}/${c.totalLesson}차시${pagesStr}) ${typeBadge}${topicStr}\n`;
+
+              if (c.isCert) {
+                msg += `   • 과정안 유형: 세안(인증)\n`;
+                msg += `   - 프레젠테이션 및 활동지 1차 제출 (4일전): ${c.d4Str} 17:00까지\n`;
+                msg += `   - 프레젠테이션 및 활동지 2차 제출 (2일전): ${c.d2Str} 14:00까지\n`;
+                msg += `   * 상단 세안 공통 추진 로드맵(설문 및 단계별 완성본)을 반드시 준수해 주세요.\n`;
+              } else {
+                msg += `   • 과정안 유형: 약안\n`;
+                msg += `   - 1차 컨설팅 (5일전): ${c.d5Str} 17:00까지\n`;
+                msg += `   - 2차 컨설팅 (3일전): ${c.d3Str} 17:00까지\n`;
+                msg += `   - 최종 컨설팅 (2일전): ${c.d2Str} 14:00까지\n`;
+              }
+            });
+          }
+
+          msg += `\n━━━━━━━━━━━━━━━━━━━━━\n`;
+          msg += `💡 [지도교사 안내 사항]\n`;
+          msg += `• 과정안 및 수업 자료 제출 기한을 엄수해 주시기 바랍니다.\n`;
+          msg += `• 수업 준비 중 질문이나 일정 조율이 필요한 경우 언제든 지도교사에게 편하게 문의 바랍니다.\n`;
+
+          return msg;
+        };
+
+        if (isAllTeachers || teacherName === 'all') {
+          let allMsg = `📢 [${school} ${gradeClass}] 실습생 전원 과정안 제출 & 컨설팅 종합 일정표\n\n`;
+          allMsg += `👨‍🏫 지도교사: ${teacherLeader} 선생님 | 실습 시작일: ${startDateStr}\n\n`;
+          allMsg += `${milestoneText}\n`;
+
+          this.teachers.forEach((t, i) => {
+            allMsg += `\n=========================================\n`;
+            allMsg += `▶ [${i + 1}] ${t.name} 교생선생님 일정\n`;
+            allMsg += `=========================================\n`;
+            allMsg += buildTeacherMessage(t.name) + `\n`;
+          });
+          return allMsg;
+        }
+
+        const targetTeacher = teacherName || (this.selectedTeacherFilter && this.selectedTeacherFilter !== 'all' ? this.selectedTeacherFilter : (this.teachers[0] ? this.teachers[0].name : ''));
+        return buildTeacherMessage(targetTeacher);
+      },
+
+      /**
+       * 카카오톡 과정안 일정 모달 열기
+       */
+      openKakaoScheduleModal(initialTeacherName = null) {
+        if (!this.teachers || this.teachers.length === 0) {
+          alert('등록된 실습생이 없습니다.');
+          return;
+        }
+
+        if (initialTeacherName) {
+          this.selectedKakaoTeacher = initialTeacherName;
+        } else if (this.selectedTeacherFilter && this.selectedTeacherFilter !== 'all') {
+          this.selectedKakaoTeacher = this.selectedTeacherFilter;
+        } else if (!this.selectedKakaoTeacher) {
+          this.selectedKakaoTeacher = this.teachers[0].name;
+        }
+
+        this.renderKakaoScheduleModal();
+        const m = document.getElementById('modal-kakao-schedule');
+        if (m) m.classList.remove('hidden');
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+      },
+
+      /**
+       * 카카오톡 과정안 일정 모달 닫기
+       */
+      closeKakaoScheduleModal() {
+        const m = document.getElementById('modal-kakao-schedule');
+        if (m) m.classList.add('hidden');
+      },
+
+      /**
+       * 모달 렌더링 (교생 탭 및 카카오톡 텍스트 프리뷰)
+       */
+      renderKakaoScheduleModal() {
+        const tabsContainer = document.getElementById('kakao-modal-teacher-tabs');
+        const previewEl = document.getElementById('kakao-message-preview');
+        const titleEl = document.getElementById('kakao-preview-target-title');
+        if (!tabsContainer || !previewEl) return;
+
+        const currentTeacher = this.selectedKakaoTeacher || (this.teachers[0] ? this.teachers[0].name : 'all');
+
+        // Render Tabs
+        let tabsHtml = '';
+        this.teachers.forEach(t => {
+          const isSelected = (currentTeacher === t.name);
+          const color = TEACHER_COLORS[t.colorIdx % TEACHER_COLORS.length];
+          const activeStyle = isSelected
+            ? `background:#FEE500; color:#3A1D1D; border-color:#E6CF00; font-weight:800; box-shadow:0 1px 3px rgba(0,0,0,0.1);`
+            : `background:#ffffff; color:#475569; border-color:#cbd5e1; font-weight:600;`;
+
+          tabsHtml += `
+            <button type="button" onclick="App.selectKakaoScheduleTeacher('${t.name}')" class="px-3 py-1.5 rounded-xl border text-xs transition shrink-0 cursor-pointer flex items-center gap-1.5" style="${activeStyle}">
+              <span class="w-2 h-2 rounded-full" style="background:${color.border};"></span>
+              <span>${t.name}</span>
+            </button>
+          `;
+        });
+
+        // "전체 모아보기" 탭
+        const isAllSelected = (currentTeacher === 'all');
+        const allActiveStyle = isAllSelected
+          ? `background:#334155; color:#ffffff; border-color:#1e293b; font-weight:800;`
+          : `background:#f1f5f9; color:#475569; border-color:#cbd5e1; font-weight:600;`;
+        tabsHtml += `
+          <button type="button" onclick="App.selectKakaoScheduleTeacher('all')" class="px-3 py-1.5 rounded-xl border text-xs transition shrink-0 cursor-pointer flex items-center gap-1.5" style="${allActiveStyle}">
+            <i data-lucide="users" class="w-3.5 h-3.5"></i>
+            <span>전체 모아보기</span>
+          </button>
+        `;
+
+        tabsContainer.innerHTML = tabsHtml;
+
+        // Title update
+        if (titleEl) {
+          titleEl.innerText = (currentTeacher === 'all')
+            ? '전체 실습생 과정안 제출 & 컨설팅 종합 일정 (카카오톡 전송용)'
+            : `${currentTeacher} 교생선생님 카카오톡 안내 메시지`;
+        }
+
+        // Generate and set text
+        const noticeText = this.generateKakaoLessonPlanNotice(currentTeacher, currentTeacher === 'all');
+        previewEl.value = noticeText;
+
+        if (window.lucide && typeof window.lucide.createIcons === 'function') window.lucide.createIcons();
+      },
+
+      /**
+       * 모달 내에서 교생 선택 전환
+       */
+      selectKakaoScheduleTeacher(teacherName) {
+        this.selectedKakaoTeacher = teacherName;
+        this.renderKakaoScheduleModal();
+      },
+
+      /**
+       * 토스트 알림 표시
+       */
+      showKakaoToast(msg) {
+        const toast = document.getElementById('kakao-copy-toast');
+        const toastText = document.getElementById('kakao-copy-toast-text');
+        if (!toast || !toastText) return;
+
+        toastText.innerText = msg;
+        toast.classList.remove('hidden');
+        if (this._kakaoToastTimer) clearTimeout(this._kakaoToastTimer);
+        this._kakaoToastTimer = setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 3000);
+      },
+
+      /**
+       * 현재 메시지 클립보드 복사 (카카오톡 전송용)
+       */
+      copyKakaoScheduleToClipboard(teacherName = null) {
+        const previewEl = document.getElementById('kakao-message-preview');
+        const tName = teacherName || this.selectedKakaoTeacher || (this.teachers[0] ? this.teachers[0].name : '');
+        
+        let textToCopy = '';
+        if (previewEl && (!teacherName || teacherName === this.selectedKakaoTeacher)) {
+          textToCopy = previewEl.value;
+        } else {
+          textToCopy = this.generateKakaoLessonPlanNotice(tName, tName === 'all');
+        }
+
+        const label = (tName === 'all') ? '전체 교생' : `${tName} 교생선생님`;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          this.showKakaoToast(`✅ [${label}]의 과정안 제출 일정 메시지가 복사되었습니다! 카카오톡에 Ctrl+V로 붙여넣으세요.`);
+        }).catch(err => {
+          // 폴백: textarea 선택 후 복사
+          if (previewEl) {
+            previewEl.select();
+            document.execCommand('copy');
+            this.showKakaoToast(`✅ [${label}]의 과정안 일정이 클립보드에 복사되었습니다!`);
+          }
+        });
+      },
+
+      /**
+       * 전체 실습생 일정 일괄 복사
+       */
+      copyAllKakaoSchedulesToClipboard() {
+        const textToCopy = this.generateKakaoLessonPlanNotice('all', true);
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          this.showKakaoToast(`✅ 전체 교생 과정안 제출 일정이 일괄 복사되었습니다! 카카오톡 단톡방에 붙여넣기(Ctrl+V) 하세요.`);
+        }).catch(err => {
+          alert('전체 일정이 클립보드에 복사되었습니다. 단톡방에 붙여넣기(Ctrl+V) 하세요!');
+        });
+      },
+
+      /**
+       * 수정한 메시지를 원본 자동 생성본으로 재설정
+       */
+      resetKakaoScheduleMessage() {
+        const currentTeacher = this.selectedKakaoTeacher || (this.teachers[0] ? this.teachers[0].name : 'all');
+        const previewEl = document.getElementById('kakao-message-preview');
+        if (previewEl) {
+          previewEl.value = this.generateKakaoLessonPlanNotice(currentTeacher, currentTeacher === 'all');
+          this.showKakaoToast('원문 메시지로 복원되었습니다.');
+        }
       },
 
       // -----------------------------------------------------------------------
