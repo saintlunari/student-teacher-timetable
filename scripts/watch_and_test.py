@@ -29,7 +29,7 @@ import datetime
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8', errors='replace')
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 INDEX_FILE = os.path.join(BASE_DIR, "index.html")
 TEST_RUNNER_FILE = os.path.join(BASE_DIR, "test_runner.html")
 STATUS_FILE = os.path.join(BASE_DIR, "TEST_STATUS.md")

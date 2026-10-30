@@ -213,15 +213,15 @@ AI 에이전트가 코드를 수정할 때 다음 5가지 원칙을 절대 위�
    - 실습생 간 배정 총 시수의 차이는 **최대 1시간 이내**여야 합니다. (골든 프리셋 2학년은 6, 6, 6으로 전원 일치, 3학년은 10, 10, 10, 10, 10으로 전원 일치 필수)
 4. 🔒 **압축 차시 1시수 인정 및 순서 보존**:
    - `3~4/15` 형태의 압축 차시는 1개 교시 슬롯을 차지하며, 진도표 상 3차시와 4차시의 역할을 동시에 수행하면서 이전/이후 차시와 완벽히 순서가 맞아야 합니다.
-5. 🔒 **35개 벤치마크 테스트 전원 통과 (34/34 All Passed)**:
-   - 코드를 한 줄이라도 수정한 후에는 반드시 테스트 러너를 실행하여 `35/35 passed`를 확인해야 합니다. 단 1건이라도 FAIL이 발생하면 작업을 완료로 선언할 수 없습니다.
+5. 🔒 **37개 누적 벤치마크 및 오류 회귀 테스트 전원 통과 (37/37 All Passed)**:
+   - 코드를 한 줄이라도 수정하거나 신규 오류를 조치한 후에는 반드시 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)에 누적 회귀 테스트 케이스를 등록하고 테스트 러너를 실행하여 `37/37 passed`를 확인해야 합니다. 단 1건이라도 FAIL이 발생하면 작업을 완료로 선언할 수 없습니다.
 
 ---
 
 ## 7. 🧪 테스트 및 무결성 검증 파이프라인 (Verification Workflow)
 
 ### 7.1 자동화 테스트 실행 (Headless Edge + CDP)
-저장소 루트에서 다음 파이썬 명령어를 실행하면 백그라운드에서 Headless Edge 브라우저를 띄워 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)의 34개 테스트를 전수 실행하고 결과를 콘솔에 출력합니다:
+저장소 루트에서 다음 파이썬 명령어를 실행하면 백그라운드에서 Headless Edge 브라우저를 띄워 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html)의 37개 테스트를 전수 실행하고 결과를 콘솔 및 [`TEST_STATUS.md`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/TEST_STATUS.md)에 자동 기록합니다:
 
 ```powershell
 python check_test_results.py
@@ -229,7 +229,7 @@ python check_test_results.py
 
 **정상 출력 예시**:
 ```text
-Total: 36/36 passed
+Total: 37/37 passed
 tc1: PASS -> 차시 역전 0건: 완벽한 순서 보장
 tc2: PASS -> 잠긴 행사 30여 개 슬롯 100% 보존
 tc3: PASS -> 각 교생별 배정 시수: [6, 6, 6] -> 전원 6시수 완벽 일치
@@ -266,6 +266,7 @@ tc33: PASS -> 과목별 탭 자동 생성, [수학] 등 선택 과목 하이라�
 tc34: PASS -> 우클릭 감지 및 기본메뉴 차단 100%, 모달 오픈·기존정보 로드 확인, [수학/90-93/7차시/이공주/📌고정/⭐대표] 수정·저장 및 DOM 100% 반영, 빈 슬롯 우클릭 배당 추가 및 모달 내 원클릭 삭제 무결성 100% 검증 완료
 tc35: PASS -> 총 18차시 배당 진도표 완벽 집계, 표준 교과 순서(국어·수학·바생·슬생·즐생) 및 전차시 오름차순 100% 보장, 좌측 진도표 & 우측 가로 매트릭스(과목/쪽수/차시/이름/색상) DOM 렌더링, 실습생 하이라이트 및 모달·인라인 패널 연동 무결성 100% 검증 완료
 tc36: PASS -> 약안 5일전(1차)·3일전(2차)·2일전(최종) 컨설팅 완벽 산출, 세안 6대 주차별 마일스톤(구안협의·설문1·2차·1·2차완성·최종) 및 4·2일전 활동지 제출 100% 반영, 교생별/전체 카톡 메시지 생성, 모달 오픈·탭전환·복사 무결성 100% 검증 완료
+tc37: PASS -> 다단원 수학(8/10→2/8) 및 동일쪽수 국어(78~83쪽) 오탐지 0건, 12-1 선택 시 유효 슬롯(11-3·11-4·12-2·12-3·13-1) 이동가능 표시 및 앞뒤 동과목(11-2·14-2·14-3) 교환 차단(pairSafe) 100%, 과목 필터 백업 손상 방지 검증 완료
 ```
 
 ---
@@ -317,11 +318,28 @@ tc36: PASS -> 약안 5일전(1차)·3일전(2차)·2일전(최종) 컨설팅 완
 코드베이스를 변경한 에이전트는 다음 사항을 전수 점검한 후에만 최종 응답을 제공해야 합니다:
 
 - [ ] `index.html` 문법 에러 및 콘솔 에러가 없는가?
-- [ ] `python check_test_results.py`를 실행하여 **`Total: 29/29 passed`** (100% All Passed)가 출력되는가?
+- [ ] 발견된 오류나 신규 요구사항이 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html), [`TEST_STATUS.md`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/TEST_STATUS.md), [`AGENTS.md`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/AGENTS.md)에 누적 등록되었는가?
+- [ ] `python check_test_results.py`를 실행하여 **`Total: 37/37 passed`** (100% All Passed)가 출력되는가?
 - [ ] 2학년 및 3학년 골든 시나리오 프리셋 로드 시 차시 역전(Inversion)이 0건인가?
 - [ ] 행사 슬롯 침범이 0건인가?
 - [ ] 실습생 간 배정 시수 차이가 0~1시간 이내인가?
 - [ ] 모든 신규 코드에 기존 네이밍 컨벤션과 한글 주석이 충실히 반영되었는가?
 
 ---
-*Last Updated: 2026-10-12 (Harness Engineering Team)*
+
+## 11. 🗂️ 누적 오류 및 회귀 방지 관리 대장 (Cumulative Error & Regression Ledger)
+
+시스템 운영 및 사용자 실전 백업 검증 과정에서 발견된 모든 결함(Bug)은 해결 즉시 아래 대장과 [`test_runner.html`](file:///c:/Users/user/Documents/GitHub/student-teacher-timetable/test_runner.html) 회귀 테스트로 영구 누적 관리됩니다:
+
+| 오류 ID | 발견 일자 | 오류 현상 요약 | 근본 원인 (Root Cause) | 조치 내역 및 코드 위치 | 연동 테스트 |
+| :--- | :---: | :--- | :--- | :--- | :---: |
+| **`ERR-01`** | 2026-10-12 | 이동가능(초록색) 슬롯으로 이동 시 잠긴 행사 침범 경고 오탐지 | 강의/참관 슬롯의 강사명(`teacher`)을 실습생 수업 중복으로 잘못 집계 | `runFullDiagnostic` 및 `executeSwap`에서 `this.teachers`에 등록된 실습생 이름만 검사하도록 필터링 | `tc15` |
+| **`ERR-02`** | 2026-10-15 | 통합교과(바생·슬생·즐생·즐생(놀이)) 주제별 차시 배치 시 역전 오류 발생 | 통합교과는 주제 중심 모듈형 수업으로 차시 번호 역전이 허용되어야 하나 일반 교과와 동일하게 검사 | `isIntegratedSubject(sub)` 헬퍼 도입 후 `detectTimetableErrors`, `runFullDiagnostic`, `highlightSwapTargets`에서 역전 검사 예외 처리 | `tc28` |
+| **`ERR-03`** | 2026-10-20 | 자동 배당 완료 후 Step 1에서 실습생 이름 변경 시 배당표 미반영 | `timetable`, `events`, `morningDuty`, `fullDayTeaching`, `curriculum`에 이전 교생 이름이 그대로 잔류 | `renameTeacherCascade(oldName, newName)` 구현으로 전 상태 객체 및 DOM/모달 100% 연쇄 갱신 | `tc30` |
+| **`ERR-04`** | 2026-10-22 | 동일 요일 동일 교생/동일 교과 중복 배정 및 교과서 페이지 역전 미탐지 | 솔버 비용 함수에 일일 동일 교생·교과 하드 페널티 부족 및 차시 번호만 비교하고 페이지(`pages`) 선후 미비교 | 솔버에 일일 중복 금지 제약 추가 및 `parsePageNum` 기반 교과서 페이지 역전 탐지 추가 | `tc31` |
+| **`ERR-05`** | 2026-10-30 | 다단원 과목(예: 수학 `98~101쪽 8/10` → 다음 단원 `110~111쪽 2/8`) 선택 시 모든 슬롯이 `🚫불가`로 표시됨 | `highlightSwapTargets`의 `isOrderValid`가 교과서 쪽수(`pages`) 대신 단순 차시 번호(`2 < 8`)만 비교하여 이후 슬롯을 전부 역전으로 차단 | `isOrderValid`에서 쪽수(`pNum`, `cPageNum`)가 존재하면 쪽수 선후 관계를 우선 비교하도록 `detectTimetableErrors`와 판정 기준 100% 통일 | `tc37` |
+| **`ERR-06`** | 2026-10-30 | 동일 쪽수 범위(예: 국어 `78~83쪽` 본책 `6/15` & 국어활동 `5/15`) 수업 간 오류 오탐지 및 동일 과목 1:1 교환(`12-1 수학 8/10` ↔ `11-2 수학 7/10`) 허용 버그 | 1) `pPrev >= pNext` 조건으로 인해 동일 쪽수 내 차시 차이가 오류/불가로 판정됨, 2) `isOrderValid`가 교환 대상 두 셀(`sourceKey`, `key`)을 모두 제외하여 동일 과목 두 셀 간 상대 순서를 미검증 | 1) 동일 쪽수 범위 내 차시 병행 허용(`isPageInversion && prev.lessonNum > next.lessonNum`), 2) 1:1 교환 시 동일 과목 간 상대적 쪽수·차시 순서(`pairSafe`) 검증 추가 | `tc37` |
+| **`ERR-07`** | 2026-10-30 | Step 2에서 과목 필터(예: `즐생`) 적용 중 백업 저장 시 원본 진도표 앞쪽(`0..N`)이 덮어써짐 | `renderCurriculumTable`에서 필터링된 행에 원본 배열 인덱스를 보존하지 않고 `syncCurriculumFromDOM`이 화면 행 순서(`0..N`)로 덮어씀 | `tr.dataset.idx = idx`로 원본 인덱스를 바인딩하여 정확히 동기화하고, `loadJsonBackup` 시 `timetable`의 `curriculumId`를 기준으로 손상된 진도표 자동 복원 | `tc37` |
+
+---
+*Last Updated: 2026-10-30 (Harness Engineering Team)*

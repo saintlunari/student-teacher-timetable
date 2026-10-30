@@ -3447,6 +3447,7 @@
 
           const tr = document.createElement('tr');
           tr.className = 'hover:bg-slate-50 transition';
+          tr.dataset.idx = idx;
           tr.innerHTML = `
             <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="py-2 px-3 font-bold text-slate-800">
@@ -4274,6 +4275,7 @@
 
           const tr = document.createElement('tr');
           tr.className = 'hover:bg-slate-50 transition';
+          tr.dataset.idx = idx;
           tr.innerHTML = `
             <td class="py-2 px-3 text-center text-slate-400 font-mono">${idx + 1}</td>
             <td class="py-2 px-3 font-semibold text-slate-800">
@@ -4339,7 +4341,8 @@
         const rows = document.querySelectorAll('#curriculum-table-body tr');
         if (!rows || rows.length === 0) return;
         rows.forEach((row, idx) => {
-          if (!this.curriculum[idx]) return;
+          const origIdx = row.dataset.idx !== undefined ? parseInt(row.dataset.idx, 10) : idx;
+          if (!this.curriculum[origIdx]) return;
           const subInput = row.querySelector('input[data-field="subject"]');
           const pageInput = row.querySelector('input[data-field="pages"]');
           const lessonInput = row.querySelector('input[data-field="lesson"]');
@@ -4349,17 +4352,17 @@
           const demoInput = row.querySelector('input[data-field="isDemo"]');
           const teacherSelect = row.querySelector('select[data-field="designatedTeacher"]');
 
-          if (subInput) this.curriculum[idx].subject = subInput.value.trim();
-          if (pageInput) this.curriculum[idx].pages = pageInput.value.trim();
-          if (lessonInput) this.curriculum[idx].lesson = lessonInput.value.trim();
+          if (subInput) this.curriculum[origIdx].subject = subInput.value.trim();
+          if (pageInput) this.curriculum[origIdx].pages = pageInput.value.trim();
+          if (lessonInput) this.curriculum[origIdx].lesson = lessonInput.value.trim();
           if (totalInput) {
             const v = parseInt(totalInput.value, 10);
-            if (!isNaN(v)) this.curriculum[idx].totalLesson = v;
+            if (!isNaN(v)) this.curriculum[origIdx].totalLesson = v;
           }
-          if (topicInput) this.curriculum[idx].topic = topicInput.value.trim();
-          if (certInput) this.curriculum[idx].isCert = certInput.checked;
-          if (demoInput) this.curriculum[idx].isDemo = demoInput.checked;
-          if (teacherSelect) this.curriculum[idx].designatedTeacher = teacherSelect.value;
+          if (topicInput) this.curriculum[origIdx].topic = topicInput.value.trim();
+          if (certInput) this.curriculum[origIdx].isCert = certInput.checked;
+          if (demoInput) this.curriculum[origIdx].isDemo = demoInput.checked;
+          if (teacherSelect) this.curriculum[origIdx].designatedTeacher = teacherSelect.value;
         });
       },
 
@@ -6889,6 +6892,59 @@
           }
         });
 
+        // 5-B. Chronological Lesson/Page Reconciliation across Trainee Cert/Demo Slots & Regular Unpinned Slots
+        const bySubForReconcile = {};
+        Object.keys(newTimetable).forEach(k => {
+          const c = newTimetable[k];
+          if (!c || !c.subject || isIntegratedSubject(c.subject)) return;
+          if (pinnedCells[k]) return;
+          const isCertOrDemoSlot = (c.type === 'trainee_cert' || c.type === 'trainee_demo' || c.isTraineeCert || c.isTraineeDemo);
+          if (c.isLocked && !isCertOrDemoSlot) return;
+          if (!c.curriculumId && !c.lesson) return;
+          const [d, p] = k.split('-').map(Number);
+          if (!bySubForReconcile[c.subject]) bySubForReconcile[c.subject] = [];
+          bySubForReconcile[c.subject].push({ key: k, day: d, period: p, cell: c, isCertOrDemoSlot });
+        });
+        Object.keys(bySubForReconcile).forEach(sub => {
+          const list = bySubForReconcile[sub];
+          if (list.length <= 1 || !list.some(x => x.isCertOrDemoSlot)) return;
+          list.sort((a, b) => (a.day - b.day) || (a.period - b.period));
+          let hasInversion = false;
+          for (let i = 0; i < list.length - 1; i++) {
+            const pA = parsePageNum(list[i].cell.pages);
+            const pB = parsePageNum(list[i + 1].cell.pages);
+            const lA = parseLessonNum(list[i].cell.lesson);
+            const lB = parseLessonNum(list[i + 1].cell.lesson);
+            if (pA !== null && pB !== null) {
+              if (pA > pB || (pA === pB && lA > lB)) { hasInversion = true; break; }
+            } else if (lA > lB) {
+              hasInversion = true; break;
+            }
+          }
+          if (hasInversion) {
+            const payloads = list.map(x => ({
+              pages: x.cell.pages,
+              lesson: x.cell.lesson,
+              totalLesson: x.cell.totalLesson,
+              topic: x.cell.topic || '',
+              curriculumId: x.cell.curriculumId
+            })).sort((a, b) => {
+              const pA = parsePageNum(a.pages);
+              const pB = parsePageNum(b.pages);
+              if (pA !== null && pB !== null && pA !== pB) return pA - pB;
+              return parseLessonNum(a.lesson) - parseLessonNum(b.lesson);
+            });
+            list.forEach((x, idx) => {
+              const pl = payloads[idx];
+              x.cell.pages = pl.pages;
+              x.cell.lesson = pl.lesson;
+              x.cell.totalLesson = pl.totalLesson;
+              x.cell.topic = pl.topic;
+              x.cell.curriculumId = pl.curriculumId;
+            });
+          }
+        });
+
         // 6. Teacher Allocation Optimizer
         // First: Fix designated teachers and demo teachers
         Object.keys(newTimetable).forEach(key => {
@@ -7537,7 +7593,7 @@
 
               const isPageInversion = (pPrev !== null && pNext !== null && pPrev > pNext);
               const isLessonInversion = (pPrev !== null && pNext !== null)
-                ? (pPrev >= pNext && prev.lessonNum > next.lessonNum)
+                ? (isPageInversion && prev.lessonNum > next.lessonNum)
                 : (prev.lessonNum > next.lessonNum);
 
               if (isLessonInversion || isPageInversion) {
@@ -7925,6 +7981,10 @@
         if (typeof this.updatePinnedBadgeUI === 'function') {
           this.updatePinnedBadgeUI();
         }
+        const progBadge = document.getElementById('badge-progress-count');
+        if (progBadge && typeof this.getProgressAllocationData === 'function') {
+          progBadge.innerText = `${this.getProgressAllocationData().totalAllocatedCount}차시`;
+        }
       },
 
       // -----------------------------------------------------------------------
@@ -7968,7 +8028,6 @@
               if (cTime >= targetTime) {
                 if (pNum !== null && cPageNum !== null) {
                   if (cPageNum < pNum) return false;
-                  if (cPageNum === pNum && cLessonNum < lNum) return false;
                 } else {
                   if (cLessonNum < lNum) return false;
                 }
@@ -7976,7 +8035,6 @@
               if (cTime <= targetTime) {
                 if (pNum !== null && cPageNum !== null) {
                   if (cPageNum > pNum) return false;
-                  if (cPageNum === pNum && cLessonNum > lNum) return false;
                 } else {
                   if (cLessonNum > lNum) return false;
                 }
@@ -8012,7 +8070,29 @@
               const targetPageNum = parsePageNum(targetCell.pages);
               const sourceSafe = isOrderValid(sourceSubject, sourceLessonNum, sourcePageNum, d, p, sourceKey, key);
               const targetSafe = isOrderValid(targetCell.subject, targetLessonNum, targetPageNum, sDay, sPeriod, sourceKey, key);
-              if (sourceSafe && targetSafe) {
+              let pairSafe = true;
+              if (targetCell.subject === sourceSubject && !isIntegratedSubject(sourceSubject)) {
+                const targetTime = d * 100 + p;
+                const sourceTime = sDay * 100 + sPeriod;
+                if (targetTime < sourceTime) {
+                  // After swap, sourceCell is at targetTime (earlier) and targetCell is at sourceTime (later)
+                  if (sourcePageNum !== null && targetPageNum !== null) {
+                    if (sourcePageNum > targetPageNum) pairSafe = false;
+                    if (sourcePageNum === targetPageNum && sourceLessonNum > targetLessonNum) pairSafe = false;
+                  } else {
+                    if (sourceLessonNum > targetLessonNum) pairSafe = false;
+                  }
+                } else if (targetTime > sourceTime) {
+                  // After swap, targetCell is at sourceTime (earlier) and sourceCell is at targetTime (later)
+                  if (sourcePageNum !== null && targetPageNum !== null) {
+                    if (targetPageNum > sourcePageNum) pairSafe = false;
+                    if (targetPageNum === sourcePageNum && targetLessonNum > sourceLessonNum) pairSafe = false;
+                  } else {
+                    if (targetLessonNum > sourceLessonNum) pairSafe = false;
+                  }
+                }
+              }
+              if (sourceSafe && targetSafe && pairSafe) {
                 el.classList.add('swap-safe');
               } else {
                 el.classList.add('swap-unsafe');
@@ -9733,7 +9813,7 @@
 
             const isPageInversion = (pCur !== null && pNext !== null && pCur > pNext);
             const isLessonInversion = (pCur !== null && pNext !== null)
-              ? (pCur >= pNext && cur.lessonNum > next.lessonNum)
+              ? (isPageInversion && cur.lessonNum > next.lessonNum)
               : (cur.lessonNum > next.lessonNum);
 
             if (isLessonInversion || isPageInversion) {
@@ -10521,6 +10601,21 @@
             }
             if (data.timetable) {
               this.timetable = JSON.parse(JSON.stringify(data.timetable));
+              if (Array.isArray(this.curriculum) && this.curriculum.length > 0) {
+                Object.keys(this.timetable).forEach(k => {
+                  const cell = this.timetable[k];
+                  if (cell && cell.curriculumId && cell.subject && cell.lesson) {
+                    const currItem = this.curriculum.find(c => c.id === cell.curriculumId);
+                    if (currItem && currItem.subject !== cell.subject) {
+                      currItem.subject = cell.subject;
+                      currItem.pages = cell.pages || currItem.pages;
+                      currItem.lesson = String(cell.lesson);
+                      if (cell.totalLesson) currItem.totalLesson = cell.totalLesson;
+                      if (cell.topic !== undefined) currItem.topic = cell.topic;
+                    }
+                  }
+                });
+              }
             }
             if (data.basicStampColors) {
           this.basicStampColors = Object.assign({}, DEFAULT_TYPE_COLORS, JSON.parse(JSON.stringify(data.basicStampColors)));
