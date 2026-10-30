@@ -4194,6 +4194,11 @@
           const oB = getSubOrder(b.subject);
           if (oA !== oB) return oA - oB;
           if (a.subject !== b.subject) return (a.subject || '').localeCompare(b.subject || '', 'ko');
+          if (!isIntegratedSubject(a.subject)) {
+            const pA = parsePageNum(a.pages);
+            const pB = parsePageNum(b.pages);
+            if (pA !== null && pB !== null && pA !== pB) return pA - pB;
+          }
           const lA = parseNum(a.lesson);
           const lB = parseNum(b.lesson);
           if (lA !== lB) return lA - lB;
@@ -7532,7 +7537,7 @@
 
               const isPageInversion = (pPrev !== null && pNext !== null && pPrev > pNext);
               const isLessonInversion = (pPrev !== null && pNext !== null)
-                ? (isPageInversion && prev.lessonNum > next.lessonNum)
+                ? (pPrev >= pNext && prev.lessonNum > next.lessonNum)
                 : (prev.lessonNum > next.lessonNum);
 
               if (isLessonInversion || isPageInversion) {
@@ -7953,18 +7958,28 @@
           for (const k in this.timetable) {
             if (k === exKey1 || k === exKey2) continue;
             const c = this.timetable[k];
-            if (c && c.subject === sub) {
+            if (c && c.subject === sub && (c.lesson || c.pages)) {
+              if ((c.type === 'trainee_demo' || c.type === 'trainee_cert') && !c.curriculumId) continue;
+              if (c.isLocked && !c.curriculumId && !c.lesson) continue;
               const parts = k.split('-').map(Number);
               const cTime = parts[0] * 100 + parts[1];
               const cLessonNum = parseLessonNum(c.lesson);
               const cPageNum = parsePageNum(c.pages);
               if (cTime >= targetTime) {
-                if (cLessonNum < lNum) return false;
-                if (pNum !== null && cPageNum !== null && cPageNum < pNum) return false;
+                if (pNum !== null && cPageNum !== null) {
+                  if (cPageNum < pNum) return false;
+                  if (cPageNum === pNum && cLessonNum < lNum) return false;
+                } else {
+                  if (cLessonNum < lNum) return false;
+                }
               }
               if (cTime <= targetTime) {
-                if (cLessonNum > lNum) return false;
-                if (pNum !== null && cPageNum !== null && cPageNum > pNum) return false;
+                if (pNum !== null && cPageNum !== null) {
+                  if (cPageNum > pNum) return false;
+                  if (cPageNum === pNum && cLessonNum > lNum) return false;
+                } else {
+                  if (cLessonNum > lNum) return false;
+                }
               }
             }
           }
@@ -9718,7 +9733,7 @@
 
             const isPageInversion = (pCur !== null && pNext !== null && pCur > pNext);
             const isLessonInversion = (pCur !== null && pNext !== null)
-              ? (isPageInversion && cur.lessonNum > next.lessonNum)
+              ? (pCur >= pNext && cur.lessonNum > next.lessonNum)
               : (cur.lessonNum > next.lessonNum);
 
             if (isLessonInversion || isPageInversion) {
@@ -10722,8 +10737,13 @@
 
         const subjectGroups = sortedSubjectNames.map(sub => {
           const items = subjectsMap[sub];
-          // 차시 오름차순 정렬
+          // 페이지 및 차시 오름차순 정렬 (단원 전환 시에도 교과서 쪽수 순서 보장)
           items.sort((a, b) => {
+            if (!isIntegratedSubject(sub)) {
+              const pA = parsePageNum(a.pages);
+              const pB = parsePageNum(b.pages);
+              if (pA !== null && pB !== null && pA !== pB) return pA - pB;
+            }
             const diff = a.lessonNum - b.lessonNum;
             if (diff !== 0) return diff;
             return (a.dayIndex - b.dayIndex) || (a.period - b.period);
